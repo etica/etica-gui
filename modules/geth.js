@@ -66,7 +66,9 @@ class Geth {
         "--networkid",
         "1313500",
         "--syncmode",
-        "fast"
+        "fast",
+        "--ethstats",
+        "def:xerom@192.168.0.161:3000"
       ]);
 
       if (!this.gethProcess) {
