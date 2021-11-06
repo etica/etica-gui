@@ -10,9 +10,9 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Clone this repository
-git clone https://github.com/taeguscromis/Ether1DesktopWallet
+git clone https://github.com/def679/Xero-Wallet
 # Go into the repository
-cd Ether1DesktopWallet
+cd Xero-Wallet
 # Install dependencies
 npm install
 # Run the app
