@@ -10,7 +10,7 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Clone this repository
-git clone https://github.com/def679/Xero-Wallet
+git clone https://github.com/def670/Xero-Wallet
 # Go into the repository
 cd Xero-Wallet
 # Install dependencies
