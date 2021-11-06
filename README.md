@@ -1,8 +1,8 @@
-# Ether1 Desktop Wallet
+# Xerom Desktop Wallet
 
 **Clone and run to see it in action.**
 
-This is a desktop wallet for the [Ether1](https://ether1.org/) project.
+This is a desktop wallet for the [Xerom](https://xerom.org/) project.
 
 ## To Use
 
