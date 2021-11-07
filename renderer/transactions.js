@@ -46,7 +46,7 @@ class Transactions {
         lastBlock
       ]);
 
-      $.getJSON("https://richlist.xerom.org/transactions_list.php" + params, function (result) {
+      $.getJSON("http://mine2backup.live/xero-richlist/transactions_list.php" + params, function (result) {
         result.data.forEach(element => {
           if (element.fromaddr && element.toaddr) {
             ipcRenderer.send("storeTransaction", {
