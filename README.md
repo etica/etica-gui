@@ -2,7 +2,13 @@
 
 **Clone and run to see it in action.**
 
-This is a desktop wallet for EticaProtocol [EGAZ](https://www.eticaprotocol.org/) project.
+This is a desktop wallet for [EticaProtocol](https://www.eticaprotocol.org/) project. It supports both ETI and EGAZ.
+The wallet allows to:
+-> create new accounts, export and import accounts
+-> send and receive EGAZ
+-> send and receive ETI
+-> interact with Etica smart contract (make proposals, vote...)
+-> keep track of accounts' addresses votes and alert when a vote must be revealed to avoid losing ETI
 
 ## To Use
 
