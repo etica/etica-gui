@@ -23,16 +23,16 @@ body.pg-loaded>.inner {
   z-index: 1;
   top: 0;
   left: 0;
-  background-color: #000;
+  background-color: #09090a;
   overflow-x: hidden;
-  padding-top: 16px;
+  padding-top: 7px;
 }
 
 /* Style sidebar links */
 .sidebar a {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
-  font-size: 20px;
+  font-size: 16px;
   color: #818181;
   display: block;
 }
@@ -51,6 +51,24 @@ body.pg-loaded>.inner {
   padding-left: 5px;
 }
 
+#localBlock {
+  bottom: 2vh;
+  height: 20px;
+  color: #aaa;
+  position: absolute;
+  font-size: 0.8em;
+  padding-left: 5px;
+}
+
+#debugdiv {
+  bottom: 4vh;
+  height: 20px;
+  color: #aaa;
+  position: absolute;
+  font-size: 0.8em;
+  padding-left: 5px;
+}
+
 #syncProgress {
   height: 20px;
   position: fixed;
@@ -58,7 +76,7 @@ body.pg-loaded>.inner {
   left: 120px;
   right: 0;
   bottom: 0;
-  background-color: #000;
+  background-color: #18523c;
   border-top: 1px solid #000;
 }
 
@@ -69,7 +87,7 @@ body.pg-loaded>.inner {
   top: 0;
   right: 0;
   bottom: 20px;
-  background-color: #212529;
+  background-color: #000000;
 }
 
 /* Style the main content */
@@ -82,11 +100,11 @@ body.pg-loaded>.inner {
 /* Add media queries for small screens (when the height of the screen is less than 450px, add a smaller padding and font-size) */
 @media screen and (max-height: 450px) {
   .sidebar {
-    padding-top: 15px;
+    padding-top: 7px;
   }
 
   .sidebar a {
-    font-size: 18px;
+    font-size: 16px;
   }
 }
 
@@ -184,12 +202,12 @@ body.pg-loaded>.inner {
 
 .modalDialog {
   display: none;
-  border-bottom: 3px solid #308968 !important;
+  border-bottom: 3px solid #399999 !important;
   border-radius: 0px !important;
 }
 
 .iziModal-header {
-  background: #308968 !important;
+  background: #399999 !important;
 }
 
 #walletsToolbar {
@@ -205,8 +223,10 @@ body.pg-loaded>.inner {
 }
 
 div.iconSelected {
-  background-color: ivory;
-  border: 1px solid slategray;
+  /*background-color: ivory;
+  border: 1px solid slategray;*/
+  background-color: #1d1d1d;
+  border: 1px solid #000000;
 }
 
 div.loadingText {
@@ -219,7 +239,7 @@ div.loadingText {
 }
 
 div.sidebar svg {
-  color: #308968;
+  color: #399999;
 }
 
 #tableTransactionsForAll_filter {
@@ -244,7 +264,7 @@ div.sidebar svg {
 }
 
 .floatThead-container {
-  background-color: #212529;
+  background-color: #0e0e0e;
 }
 
 .dataTables_scrollBody .transactionsBlockNum {
@@ -296,7 +316,7 @@ div.sidebar svg {
 }
 
 .txInfo label+label {
-  color: #308968;
+  color: #399999;
   margin-left: 0px;
 }
 
@@ -309,13 +329,13 @@ div.sidebar svg {
 #toAddressInfo,
 #valueToSendInfo,
 #feeToPayInfo {
-  color: #308968;
+  color: #399999;
   margin-left: 5px;
   margin-right: 5px;
 }
 
 .accountName {
-  color: #308968;
+  color: #399999;
 }
 
 .accountAddr {
@@ -426,7 +446,7 @@ div.noAddressWrapper {
 }
 
 .etho-red {
-  background-color: #308968 !important;
+  background-color: #399999 !important;
 }
 
 #chartMarketPrice {

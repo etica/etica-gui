@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="UTF-8">
-    <title>Etica Desktop Wallet for EGAZ</title>
+    <title>Etica GUI Wallet</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="./assets/styles/materialize.min.css">
     <link rel="stylesheet" href="./assets/styles/datatables.min.css">
@@ -69,9 +69,12 @@
         EticaBlockchain.closeConnection();
       })
     </script>
-    <div class="inner">
+     <div class="inner">
       <!-- The sidebar -->
       <div class="sidebar">
+        <div style="margin-bottom: 1vh;">
+            <img src='assets/images/etica-logo-sanstexte.png' style="width: 44px;position: relative;left: 37%;top:0.25vh;"></img>
+        </div>
         <div class="sidebarIconWrapper iconSelected" id="mainNavBtnWalletsWrapper" data-tippy="Wallets" data-tippy-delay="500">
           <a class="sidebarIcon" id="mainNavBtnWallets" href="#">
             <i class="fas fa-wallet fa-2x"></i>
@@ -84,7 +87,7 @@
         </div>
         <div class="sidebarIconWrapper" id="mainNavBtnSendWrapper" data-tippy="Send Funds" data-tippy-delay="500">
           <a class="sidebarIcon" id="mainNavBtnSend" href="#">
-            <i class="fas fas fa-share-square fa-2x"></i>
+            <i class="fas fas fa-paper-plane fa-2x"></i>
           </a>
         </div>
         <div class="sidebarIconWrapper" id="mainNavBtnTransactionsWrapper" data-tippy="Transactions" data-tippy-delay="500">
@@ -104,6 +107,12 @@
         </div>
         <div id="peerCount">
           Peer Count: 0
+        </div>
+        <div id="localBlock">
+          Local block number: 
+        </div>
+        <div id="debugdiv">
+          Debug data: 
         </div>
       </div>
       <div id="mainContent"></div>

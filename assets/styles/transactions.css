@@ -5,7 +5,7 @@
 .dt-button { 
   margin-left: 10px !important;
   color: #ffffff !important; 
-  background-color: #308968 !important; 
+  background-color: #399999 !important; 
   border: 1px solid #450118 !important; 
   background-image: none !important; 
 } 
@@ -40,12 +40,12 @@ fieldset[disabled] .dt-button:active,
 .dt-button.disabled.active, 
 .dt-button[disabled].active, 
 fieldset[disabled] .dt-button.active { 
-  background-color: #308968 !important; 
+  background-color: #399999 !important; 
   border-color: #450118 !important; 
 } 
   
 .dt-button .badge { 
-  color: #308968 !important; 
+  color: #399999 !important; 
   background-color: #ffffff !important; 
 }  
 

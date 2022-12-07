@@ -1,6 +1,6 @@
 .btn-etica {
   color: #ffffff;
-  background-color: #308968;
+  background-color: #399999;
   border-color: #103024;
 }
 
@@ -39,12 +39,12 @@ fieldset[disabled] .btn-etica:active,
 .btn-etica.disabled.active,
 .btn-etica[disabled].active,
 fieldset[disabled] .btn-etica.active {
-  background-color: #308968;
+  background-color: #399999;
   border-color: #450118;
 }
 
 .btn-etica .badge {
-  color: #308968;
+  color: #399999;
   background-color: #ffffff;
 }
 
@@ -55,7 +55,7 @@ fieldset[disabled] .btn-etica.active {
   font-size: 12px;
   letter-spacing: 2px;
   position: relative;
-  background-color: #308968;
+  background-color: #399999;
   border: none;
   color: #fff;
   padding: 2px;
@@ -102,7 +102,7 @@ fieldset[disabled] .btn-etica.active {
   font-size: 10px;
   letter-spacing: 1px;
   position: relative;
-  background-color: #308968;
+  background-color: #399999;
   border: none;
   color: #fff;
   padding: 2px;
@@ -149,7 +149,7 @@ fieldset[disabled] .btn-etica.active {
   font-size: 12px;
   letter-spacing: 2px;
   position: relative;
-  background-color: #308968;
+  background-color: #399999;
   border: none;
   color: #fff;
   padding: 8px;

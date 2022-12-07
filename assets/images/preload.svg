@@ -18,7 +18,7 @@
   <g filter="url(#gooey)" style="animation-play-state: running; animation-delay: 1s;">
     <g transform="translate(50 50)" style="animation-play-state: running; animation-delay: 1s;">
       <g transform="rotate(258)" style="animation-play-state: running; animation-delay: 1s;">
-        <circle cx="25" cy="0" r="10.5333" fill="#308968" style="animation-play-state: running; animation-delay: 1s;">
+        <circle cx="25" cy="0" r="10.5333" fill="#399999" style="animation-play-state: running; animation-delay: 1s;">
           <animate attributeName="r" keyTimes="0;0.5;1" values="6;14;6" dur="4s" repeatCount="indefinite" begin="-4s" style="animation-play-state: running; animation-delay: 1s;"></animate>
         </circle>
         <animateTransform attributeName="transform" type="rotate" keyTimes="0;1" values="0;360" dur="4s" repeatCount="indefinite" begin="1s" style="animation-play-state: running; animation-delay: 1s;"></animateTransform>
@@ -26,7 +26,7 @@
     </g>
     <g transform="translate(50 50)" style="animation-play-state: running; animation-delay: 1s;">
       <g transform="rotate(276)" style="animation-play-state: running; animation-delay: 1s;">
-        <circle cx="25" cy="0" r="7.6" fill="#308968" style="animation-play-state: running; animation-delay: 1s;">
+        <circle cx="25" cy="0" r="7.6" fill="#399999" style="animation-play-state: running; animation-delay: 1s;">
           <animate attributeName="r" keyTimes="0;0.5;1" values="6;14;6" dur="2s" repeatCount="indefinite" begin="-3.3333333333333335s" style="animation-play-state: running; animation-delay: 1s;"></animate>
         </circle>
         <animateTransform attributeName="transform" type="rotate" keyTimes="0;1" values="0;360" dur="2s" repeatCount="indefinite" begin="-0.6666666666666666s" style="animation-play-state: running; animation-delay: 1s;"></animateTransform>
