@@ -10,11 +10,22 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Clone this repository
-git clone https://github.com/def670/Xero-Wallet/tree/EticaProtocol-Desktop-Wallet Etica-wallet
+git clone https://github.com/etica/etica-gui.git
 # Go into the repository
-cd Etica-wallet
+cd etica-gui
 # Install dependencies
 npm install
+# create .etica directory
+mkdir ./etica
+# copy enodes default list on .etica directory
+cp needs/static-nodes.json .etica
+# initiate Blockchain with etica_genesis.json (windows)
+./bin/win/geth --datadir ".etica" --networkid 61803 init needs/etica_genesis.json
+# initiate Blockchain with etica_genesis.json (linux)
+./bin/linux/geth --datadir ".etica" --networkid 61803 init needs/etica_genesis.json
+# initiate Blockchain with etica_genesis.json (macos)
+./bin/macos/geth --datadir ".etica" --networkid 61803 init needs/etica_genesis.json
+
 # Run the app
 npm start
 ```
