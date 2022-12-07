@@ -1,49 +1,49 @@
-.btn-etho {
+.btn-etica {
   color: #ffffff;
   background-color: #308968;
   border-color: #103024;
 }
 
-.btn-etho:hover {
+.btn-etica:hover {
   background: #fff;
   box-shadow: 0px 2px 10px 5px #1abc9c;
   color: #000;
   },
-.btn-etho:focus,
-.btn-etho:active,
-.btn-etho.active,
-.open .dropdown-toggle.btn-etho {
+.btn-etica:focus,
+.btn-etica:active,
+.btn-etica.active,
+.open .dropdown-toggle.btn-etica {
   color: #ffffff;
   background-color: #3cc492;
   border-color: #103024;
 }
 
-.btn-etho:active,
-.btn-etho.active,
-.open .dropdown-toggle.btn-etho {
+.btn-etica:active,
+.btn-etica.active,
+.open .dropdown-toggle.btn-etica {
   background-image: none;
 }
 
-.btn-etho.disabled,
-.btn-etho[disabled],
-fieldset[disabled] .btn-etho,
-.btn-etho.disabled:hover,
-.btn-etho[disabled]:hover,
-fieldset[disabled] .btn-etho:hover,
-.btn-etho.disabled:focus,
-.btn-etho[disabled]:focus,
-fieldset[disabled] .btn-etho:focus,
-.btn-etho.disabled:active,
-.btn-etho[disabled]:active,
-fieldset[disabled] .btn-etho:active,
-.btn-etho.disabled.active,
-.btn-etho[disabled].active,
-fieldset[disabled] .btn-etho.active {
+.btn-etica.disabled,
+.btn-etica[disabled],
+fieldset[disabled] .btn-etica,
+.btn-etica.disabled:hover,
+.btn-etica[disabled]:hover,
+fieldset[disabled] .btn-etica:hover,
+.btn-etica.disabled:focus,
+.btn-etica[disabled]:focus,
+fieldset[disabled] .btn-etica:focus,
+.btn-etica.disabled:active,
+.btn-etica[disabled]:active,
+fieldset[disabled] .btn-etica:active,
+.btn-etica.disabled.active,
+.btn-etica[disabled].active,
+fieldset[disabled] .btn-etica.active {
   background-color: #308968;
   border-color: #450118;
 }
 
-.btn-etho .badge {
+.btn-etica .badge {
   color: #308968;
   background-color: #ffffff;
 }

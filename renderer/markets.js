@@ -4,12 +4,12 @@ class Markets {
   constructor() {}
 
   renderMarkets() {
-    EthoMainGUI.renderTemplate("markets.html", {});
+    EticaMainGUI.renderTemplate("markets.html", {});
     $(document).trigger("render_markets");
 
-    $.getJSON("https://api.coingecko.com/api/v3/coins/xero?sparkline=true", function (data) {
-      $("#ETHOToUSD").html(data.market_data.current_price.usd.toFixed(5) + " $");
-      $("#ETHOToBTC").html(data.market_data.current_price.btc.toFixed(8)) + " sats";
+    $.getJSON("https://api.coingecko.com/api/v3/coins/egaz?sparkline=true", function (data) {
+      $("#EGAZToUSD").html(data.market_data.current_price.usd.toFixed(5) + " $");
+      $("#EGAZToBTC").html(data.market_data.current_price.btc.toFixed(8)) + " sats";
       $("#marketcap").html(data.market_data.market_cap.usd.toFixed(0) + " $ (" + data.market_cap_rank + ")");
       $("#dailyVolume").html(data.market_data.total_volume.usd.toFixed(0) + " $");
 
@@ -72,4 +72,4 @@ class Markets {
 }
 
 // create new markets variable
-EthoMarkets = new Markets();
+EticaMarkets = new Markets();

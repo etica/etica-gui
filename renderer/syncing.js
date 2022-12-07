@@ -31,7 +31,7 @@ SyncProgress = new ProgressBar.Line("#syncProgress", {
 });
 
 // set initial value for the progress text
-SyncProgress.setText("Waiting for blockchain, please wait...");
+SyncProgress.setText("Syncing blockchain, please wait...");
 isFullySynced = false;
 
 var peerCountInterval = setInterval(function () {
@@ -55,7 +55,7 @@ function StartSyncProcess() {
           web3Local.eth.getBlock("latest", function (error, localBlock) {
             if (!error) {
               if (localBlock.number > 0) {
-                if (!EthoTransactions.getIsSyncing()) {
+                if (!EticaTransactions.getIsSyncing()) {
                   SyncProgress.animate(1);
                   SyncProgress.setText(vsprintf("%d/%d (100%%)", [localBlock.number, localBlock.number]));
                 }
@@ -67,22 +67,22 @@ function StartSyncProcess() {
                   isFullySynced = true;
 
                   // enable the keep in sync feature
-                  EthoTransactions.enableKeepInSync();
+                  EticaTransactions.enableKeepInSync();
                   // sync all the transactions to the current block
-                  EthoTransactions.syncTransactionsForAllAddresses(localBlock.number);
+                  EticaTransactions.syncTransactionsForAllAddresses(localBlock.number);
 
                   // signal that the sync is complete
                   $(document).trigger("onSyncComplete");
                 }
               }
             } else {
-              EthoMainGUI.showGeneralError(error);
+              EticaMainGUI.showGeneralError(error);
             }
           });
         }, 10000);
       }
     } else {
-      EthoMainGUI.showGeneralError(error);
+      EticaMainGUI.showGeneralError(error);
     }
   }).on("data", function (sync) {
     if (sync && sync.HighestBlock > 0) {
@@ -105,7 +105,7 @@ function StartSyncProcess() {
               Math.floor(sync.currentBlock / sync.highestBlock * 100)
             ]));
           } else if (error) {
-            EthoMainGUI.showGeneralError(error);
+            EticaMainGUI.showGeneralError(error);
           }
         });
       }, 2000);
@@ -119,7 +119,7 @@ function StartSyncProcess() {
 
 var InitWeb3 = setInterval(function () {
   try {
-    web3Local = new Web3(new Web3.providers.WebsocketProvider("ws://localhost:8549"));
+    web3Local = new Web3(new Web3.providers.WebsocketProvider("ws://localhost:8551"));
 
     web3Local.eth.net.isListening(function (error, success) {
       if (!error) {
@@ -129,6 +129,6 @@ var InitWeb3 = setInterval(function () {
       }
     });
   } catch (err) {
-    EthoMainGUI.showGeneralError(err);
+    EticaMainGUI.showGeneralError(err);
   }
 }, 2000);

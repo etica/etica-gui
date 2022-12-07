@@ -1,7 +1,7 @@
 {
-  "name": "XEROWallet",
+  "name": "EticaWallet",
   "version": "1.2.0",
-  "description": "Desktop wallet for XERO currency",
+  "description": "Desktop wallet for EGAZ currency",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -11,7 +11,7 @@
     "dist-osx": "build --platform=mac --arch=x64"
   },
   "build": {
-    "appId": "com.xerom.wallet",
+    "appId": "com.etica.wallet",
     "files": [
       "modules/*",
       "assets/**/*",
@@ -45,13 +45,14 @@
       ]
     }
   },
-  "repository": "https://github.com/xero-official/Xero-Wallet",
+  "repository": "https://github.com/def670/Xero-Wallet/tree/EticaProtocol-Desktop-Wallet",
   "keywords": [
-    "XERO",
+    "EGAZ",
+    "Etica",
     "Desktop",
     "Wallet"
   ],
-  "author": "Xerom",
+  "author": "Edited by def",
   "license": "CC0-1.0",
   "dependencies": {
     "@unibeautify/beautifier-js-beautify": "^0.4.0",
@@ -63,10 +64,12 @@
     "handlebars": "^4.1.0",
     "moment": "^2.23.0",
     "nedb": "^1.8.0",
-    "single-instance": "0.0.1"
+    "pm2": "^5.2.2",
+    "single-instance": "0.0.1",
+    "update-electron-app": "^2.0.1"
   },
   "devDependencies": {
-    "electron": "^3.0.12",
+    "electron": "^3.1.13",
     "electron-builder": "^20.38.3",
     "js-beautify": "^1.9.0",
     "unibeautify": "^0.17.0",

@@ -9,7 +9,7 @@ const singleInstance = require("single-instance");
 const path = require("path");
 const fs = require("fs");
 
-var locker = new singleInstance("Ether1DesktopWallet");
+var locker = new singleInstance("EticaDesktopWallet");
 
 locker.lock().then(function() {
   // Keep a global reference of the window object, if you don't, the window will
@@ -29,7 +29,7 @@ locker.lock().then(function() {
 
     // and load the index.html of the app.
     mainWindow.loadFile("index.html");
-    EthoGeth.startGeth();
+    EticaGeth.startGeth();
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
@@ -55,7 +55,7 @@ locker.lock().then(function() {
     // On OS X it is common for applications and their menu bar
     // to stay active until the user quits explicitly with Cmd + Q
     if (process.platform !== "darwin") {
-      EthoGeth.stopGeth();
+      EticaGeth.stopGeth();
       app.quit();
     }
   });

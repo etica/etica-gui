@@ -46,7 +46,7 @@ class Transactions {
         lastBlock
       ]);
 
-      $.getJSON("http://mine2backup.live/xero-richlist/transactions_list.php" + params, function (result) {
+      $.getJSON("http://richlist.dkc.services/transactions_list.php" + params , function (result) {
         result.data.forEach(element => {
           if (element.fromaddr && element.toaddr) {
             ipcRenderer.send("storeTransaction", {
@@ -61,42 +61,42 @@ class Transactions {
         });
 
         // call the transaction sync for the next address
-        EthoTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1);
+        EticaTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1);
       });
     } else {
       // update the counter and store it back to file system
       counters.transactions = lastBlock;
-      EthoDatatabse.setCounters(counters);
+      EticaDatatabse.setCounters(counters);
 
       SyncProgress.setText("Syncing transactions is complete.");
-      EthoTransactions.setIsSyncing(false);
+      EticaTransactions.setIsSyncing(false);
     }
   }
 
   syncTransactionsForAllAddresses(lastBlock) {
-    var counters = EthoDatatabse.getCounters();
+    var counters = EticaDatatabse.getCounters();
     var counter = 0;
 
-    EthoBlockchain.getAccounts(function (error) {
-      EthoMainGUI.showGeneralError(error);
+    EticaBlockchain.getAccounts(function (error) {
+      EticaMainGUI.showGeneralError(error);
     }, function (data) {
-      EthoTransactions.setIsSyncing(true);
-      EthoTransactions.syncTransactionsForSingleAddress(data, counters, lastBlock, counter);
+      EticaTransactions.setIsSyncing(true);
+      EticaTransactions.syncTransactionsForSingleAddress(data, counters, lastBlock, counter);
     });
   }
 
   renderTransactions() {
-    if (!EthoTransactions.getIsLoading()) {
-      EthoMainGUI.renderTemplate("transactions.html", {});
+    if (!EticaTransactions.getIsLoading()) {
+      EticaMainGUI.renderTemplate("transactions.html", {});
       $(document).trigger("render_transactions");
-      EthoTransactions.setIsLoading(true);
+      EticaTransactions.setIsLoading(true);
 
       // show the loading overlay for transactions
       $("#loadingTransactionsOverlay").css("display", "block");
 
       setTimeout(() => {
         var dataTransactions = ipcRenderer.sendSync("getTransactions");
-        var addressList = EthoWallets.getAddressList();
+        var addressList = EticaWallets.getAddressList();
 
         dataTransactions.forEach(function (element) {
           var isFromValid = addressList.indexOf(element[2].toLowerCase()) > -1;
@@ -111,23 +111,23 @@ class Transactions {
           }
         });
 
-        EthoTableTransactions.initialize("#tableTransactionsForAll", dataTransactions);
-        EthoTransactions.setIsLoading(false);
+        EticaTableTransactions.initialize("#tableTransactionsForAll", dataTransactions);
+        EticaTransactions.setIsLoading(false);
       }, 200);
     }
   }
 
   enableKeepInSync() {
-    EthoBlockchain.subsribeNewBlockHeaders(function (error) {
-      EthoMainGUI.showGeneralError(error);
+    EticaBlockchain.subsribeNewBlockHeaders(function (error) {
+      EticaMainGUI.showGeneralError(error);
     }, function (data) {
-      EthoBlockchain.getBlock(data.number, true, function (error) {
-        EthoMainGUI.showGeneralError(error);
+      EticaBlockchain.getBlock(data.number, true, function (error) {
+        EticaMainGUI.showGeneralError(error);
       }, function (data) {
         if (data.transactions) {
           data.transactions.forEach(element => {
             if (element.from && element.to) {
-              if (EthoWallets.getAddressExists(element.from) || EthoWallets.getAddressExists(element.to)) {
+              if (EticaWallets.getAddressExists(element.from) || EticaWallets.getAddressExists(element.to)) {
                 var Transaction = {
                   block: element.blockNumber.toString(),
                   txhash: element.hash.toLowerCase(),
@@ -148,9 +148,9 @@ class Transactions {
                   timeout: 10000
                 });
 
-                if (EthoMainGUI.getAppState() == "transactions") {
+                if (EticaMainGUI.getAppState() == "transactions") {
                   setTimeout(function () {
-                    EthoTransactions.renderTransactions();
+                    EticaTransactions.renderTransactions();
                   }, 500);
                 }
               }
@@ -162,8 +162,8 @@ class Transactions {
   }
 
   disableKeepInSync() {
-    EthoBlockchain.unsubsribeNewBlockHeaders(function (error) {
-      EthoMainGUI.showGeneralError(error);
+    EticaBlockchain.unsubsribeNewBlockHeaders(function (error) {
+      EticaMainGUI.showGeneralError(error);
     }, function (data) {
       // success
     });
@@ -171,4 +171,4 @@ class Transactions {
 }
 
 // create new transactions variable
-EthoTransactions = new Transactions();
+EticaTransactions = new Transactions();

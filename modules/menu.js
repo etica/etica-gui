@@ -78,21 +78,21 @@ const template = [
     role: "help",
     submenu: [
       {
-        label: "About the XERO wallet",
+        label: "About the Etica wallet",
         click() {
           var infoData = {};
           infoData.version = app.getVersion();
           mainWindow.webContents.send("showAboutDialog", infoData);
         }
       }, {
-        label: "XERO documentation",
+        label: "Etica documentation",
         click() {
-          shell.openExternal("https://docs.xerom.org");
+          shell.openExternal("https://www.eticaprotocol.org/");
         }
       }, {
         label: "Report issue on GitHub",
         click() {
-          shell.openExternal("https://github.com/xero-official/Xero-Wallet/issues");
+          shell.openExternal("https://github.com/def670/Xero-Wallet/issues");
         }
       }
     ]
@@ -167,3 +167,4 @@ ipcMain.on("openURL", (event, arg) => {
 
 const menu = Menu.buildFromTemplate(template);
 Menu.setApplicationMenu(menu);
+

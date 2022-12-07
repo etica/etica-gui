@@ -57,4 +57,4 @@ class Utils {
   }
 }
 
-EthoUtils = new Utils();
+EticaUtils = new Utils();

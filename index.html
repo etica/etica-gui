@@ -3,7 +3,7 @@
 
   <head>
     <meta charset="UTF-8">
-    <title>Xero Desktop Wallet</title>
+    <title>Etica Desktop Wallet for EGAZ</title>
     <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
     <link rel="stylesheet" href="./assets/styles/materialize.min.css">
     <link rel="stylesheet" href="./assets/styles/datatables.min.css">
@@ -66,7 +66,7 @@
       });
 
       $(window).on("beforeunload", function () {
-        EthoBlockchain.closeConnection();
+        EticaBlockchain.closeConnection();
       })
     </script>
     <div class="inner">
@@ -131,7 +131,7 @@
         <div class="form-group">
           <span id="txtGeneralError"></span>
         </div>
-        <button type="button" class="btn btn-etho btn-dialog-confirm" id="btnGeneralErrorOK">OK</button>
+        <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnGeneralErrorOK">OK</button>
       </div>
     </div>
 
@@ -141,18 +141,18 @@
         <div class="form-group">
           <span id="txtGeneralConfirm"></span>
         </div>
-        <button type="button" class="btn btn-etho btn-dialog-cancel" id="btnGeneralConfirmNo">No</button>
-        <button type="button" class="btn btn-etho btn-dialog-confirm" id="btnGeneralConfirmYes">Yes</button>
+        <button type="button" class="btn btn-etica btn-dialog-cancel" id="btnGeneralConfirmNo">No</button>
+        <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnGeneralConfirmYes">Yes</button>
       </div>
     </div>
 
     <!-- The modal for about info -->
-    <div id="dlgAboutInfo" class="modalDialog" data-izimodal-title="About XERO Wallet" data-izimodal-icon="icon-home">
+    <div id="dlgAboutInfo" class="modalDialog" data-izimodal-title="About Etica Wallet" data-izimodal-icon="icon-home">
       <div class="modalBody">
         <div class="aboutInfo">
-          <div class="infoText" id="aboutInfoWallet">XERO Wallet</div>
+          <div class="infoText" id="aboutInfoWallet">Etica Wallet</div>
           <div class="infoText" id="aboutInfoGitHub">GitHub:
-            <a id="urlOpenGitHub" href="https://github.com/xero-official/Xero-Wallet">https://github.com/xero-official/Xero-Wallet</a>
+            <a id="urlOpenGitHub" href="https://github.com/def670/Xero-Wallet/tree/EticaProtocol-Desktop-Wallet">https://github.com/def670/Xero-Wallet/tree/EticaProtocol-Desktop-Wallet</a>
           </div>
           <div class="infoText" id="aboutInfoLicence">Made under
             <a id="urlOpenLicence" href="https://choosealicense.com/licenses/gpl-3.0">GPL v3.0</a>
@@ -161,7 +161,7 @@
           <div class="infoText" id="aboutInfoVersion">Version:
             <span id="versionNumber"></span></div>
         </div>
-        <button type="button" class="btn btn-etho btn-dialog-confirm" id="btnAboutInfoClose">Close</button>
+        <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnAboutInfoClose">Close</button>
       </div>
     </div>
   </body>
@@ -170,7 +170,7 @@
   <div id="dlgShowAddressQRCode" class="modalDialog" data-izimodal-title="Address QR-Code" data-izimodal-subtitle="Scan the QR-Code to get the address..." data-izimodal-icon="icon-home">
     <div class="modalBody">
       <div id="addrQRCode"></div>
-      <button type="button" class="btn btn-etho btn-dialog-confirm" id="btnScanQRCodeClose">Close</button>
+      <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnScanQRCodeClose">Close</button>
     </div>
   </div>
 

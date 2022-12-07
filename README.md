@@ -1,8 +1,8 @@
-# Xerom Desktop Wallet
+# Etica Desktop Wallet
 
 **Clone and run to see it in action.**
 
-This is a desktop wallet for the [Xerom](https://xerom.org/) project.
+This is a desktop wallet for EticaProtocol [EGAZ](https://www.eticaprotocol.org/) project.
 
 ## To Use
 
@@ -10,9 +10,9 @@ To clone and run this repository you'll need [Git](https://git-scm.com) and [Nod
 
 ```bash
 # Clone this repository
-git clone https://github.com/def670/Xero-Wallet
+git clone https://github.com/def670/Xero-Wallet/tree/EticaProtocol-Desktop-Wallet Etica-wallet
 # Go into the repository
-cd Xero-Wallet
+cd Etica-wallet
 # Install dependencies
 npm install
 # Run the app

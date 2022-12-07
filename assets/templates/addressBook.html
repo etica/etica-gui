@@ -1,5 +1,5 @@
 <div id="walletsToolbar">
-  <button type="button" class="btn btn-etho" id="btnNewAddress">
+  <button type="button" class="btn btn-etica" id="btnNewAddress">
     <i class="fas fa-plus"></i>
   </button>
 </div>
@@ -18,16 +18,16 @@
         {{#addressData}}
           <tr>
             <th scope="row" class="colEdit">
-              <button type="button" class="btn btn-etho btnChangAddressName" data-address="{{address}}" data-name="{{name}}">Edit</button>
+              <button type="button" class="btn btn-etica btnChangAddressName" data-address="{{address}}" data-name="{{name}}">Edit</button>
             </th>
             <td>{{name}}</td>
             <td>
               <span class="textAddress">{{address}}</span></td>
             <td>
-              <button type="button" class="btn btn-etho btnDeleteAddress" data-address="{{address}}">
+              <button type="button" class="btn btn-etica btnDeleteAddress" data-address="{{address}}">
                 <i class="far fa-trash-alt"></i>
               </button>
-              <button type="button" class="btn btn-etho btnShowQRCode" data-address="{{address}}">
+              <button type="button" class="btn btn-etica btnShowQRCode" data-address="{{address}}">
                 <i class="fas fa-qrcode"></i>
               </button>
             </td>
@@ -50,7 +50,7 @@
       <label for="addressHash">Address:</label>
       <input type="text" class="form-control" id="addressHash">
     </div>
-    <button type="button" class="btn btn-etho btn-dialog-confirm" id="btnCreateAddressConfirm">Confirm</button>
+    <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnCreateAddressConfirm">Confirm</button>
   </div>
 </div>
 
@@ -61,7 +61,7 @@
       <label for="usr">Enter a name:</label>
       <input type="text" class="form-control" id="inputAddressName">
     </div>
-    <button type="button" class="btn btn-etho btn-dialog-confirm" id="btnChangeAddressNameConfirm">Confirm</button>
+    <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnChangeAddressNameConfirm">Confirm</button>
   </div>
 </div>
 
@@ -71,7 +71,7 @@
     <div class="form-group">
       <span>Do you really want to delete the address?</span>
     </div>
-    <button type="button" class="btn btn-etho btn-dialog-cancel" id="btnDeleteAddressCancel">No</button>
-    <button type="button" class="btn btn-etho btn-dialog-confirm" id="btnDeleteAddressConfirm">Yes</button>
+    <button type="button" class="btn btn-etica btn-dialog-cancel" id="btnDeleteAddressCancel">No</button>
+    <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnDeleteAddressConfirm">Yes</button>
   </div>
 </div>

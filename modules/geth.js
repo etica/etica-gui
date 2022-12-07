@@ -52,23 +52,27 @@ class Geth {
       this.isRunning = true;
       const gethPath = path.join(this.binaries, "geth");
       this.gethProcess = child_process.spawn(gethPath, [
+        "--allow-insecure-unlock",
         "--ws",
-        "--wsorigins",
+        "--ws.origins",
         "*",
-        "--wsaddr",
+        "--ws.addr",
         "127.0.0.1",
-        "--wsport",
-        "8549",
+        "--ws.port",
+        "8551",
         "--port",
-        "30307",
-        "--wsapi",
-        "admin,db,eth,net,miner,personal,web3",
+        "30317",
+        "--datadir=./.etica",
+        "--ws.api",
+        "admin,eth,net,miner,personal,web3",
         "--networkid",
-        "1313500",
+        "61803",
         "--syncmode",
-        "fast",
+        "snap",
+        "--ethstats",
+        "wall:etica@72.137.255.182:3100",
         "--bootnodes",
-        "enode://2ede5452542cfe7738c5d18beff2749a25db0b5f4f54ae9920119e89fbcaaba2c520c8c59aa81cec209b859700a2f46bf3db32de9b10d7d79c64a5dacde91257@72.137.255.178:30306,enode://aa8fee1ab4be3c2d0bb7280926b0f6e39bb0ae059e7f27b91ac9a066ee0397dbedd9877d12a5183bf1912c14b463387a714dae8a2fc09654bdea89bc512c3a7f@72.137.255.181:30305,enode://58f90f827a937aa624a47bb6b4e533074fa5845e36237759a4a5dfe8e495b3b2a95b858e1a88b124cea376b7d167b89676f3211f4b86a0e78aa118ac0f343e9c@72.137.255.181:30305,enode://f92ae84be6d19fd7afe691cd88e5440489c6b039012f87e24ded093bdbc96e1991c28812ce0c180c0f3823eb8b561fb09e8f4c5c91e114bcd30c0ccb0cf25a23@192.168.0.161:30303,enode://58f90f827a937aa624a47bb6b4e533074fa5845e36237759a4a5dfe8e495b3b2a95b858e1a88b124cea376b7d167b89676f3211f4b86a0e78aa118ac0f343e9c@72.137.255.181:30305"
+        "enode://98e3be4308da968b5e3fff851294b4f179c0542a8bdf6d981fb298d493b63ac0a31f35a67ab99bc0fcc293b38c120ddcc3ba659bb97554e8dfb0c2439f6601f3@72.137.255.180:30320",
       ]);
 
       if (!this.gethProcess) {
@@ -86,10 +90,10 @@ class Geth {
           }
         });
         this.gethProcess.stderr.on("data", function (data) {
-          EthoGeth._writeLog(data.toString() + "\n");
+          EticaGeth._writeLog(data.toString() + "\n");
         });
         this.gethProcess.stdout.on("data", function (data) {
-          EthoGeth._writeLog(data.toString() + "\n");
+          EticaGeth._writeLog(data.toString() + "\n");
         });
       }
     } catch (err) {
@@ -111,7 +115,7 @@ class Geth {
 }
 
 ipcMain.on("stopGeth", (event, arg) => {
-  EthoGeth.stopGeth();
+  EticaGeth.stopGeth();
 });
 
-EthoGeth = new Geth();
+EticaGeth = new Geth();

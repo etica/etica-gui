@@ -27,13 +27,13 @@ class tableTransactions {
       ],
       data: data,
       oSearch: {
-        sSearch: EthoTransactions.getFilter()
+        sSearch: EticaTransactions.getFilter()
       },
       buttons: [
         {
           text: '<i class="fas fa-sync-alt"></i>',
           action: function (e, dt, node, config) {
-            EthoTransactions.renderTransactions();
+            EticaTransactions.renderTransactions();
           }
         }
       ],
@@ -64,7 +64,7 @@ class tableTransactions {
         }, {
           targets: 6,
           render: function (data, type, row) {
-            return parseFloat(web3Local.utils.fromWei(EthoUtils.toFixed(parseFloat(data)).toString(), "ether")).toFixed(2);
+            return parseFloat(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(data)).toString(), "ether")).toFixed(2);
           }
         }, {
           targets: 7,
@@ -92,12 +92,12 @@ class tableTransactions {
         $("#txBlockHeight").html(rowData[1]);
         $("#txTimestamp").html(rowData[2]);
         $("#txHash").html(rowData[3]);
-        $("#txHash").attr("href", vsprintf("http://explorer-x3.mine2.live/tx/%s", [rowData[3]]));
+        $("#txHash").attr("href", vsprintf("http://etica.dkc.services:4100/tx/%s", [rowData[3]]));
         $("#txFromAddress").html(rowData[4]);
-        $("#txFromAddress").attr("href", vsprintf("http://explorer-x3.mine2.live/address/%s", [rowData[4]]));
+        $("#txFromAddress").attr("href", vsprintf("http://etica.dkc.services:4100/address/%s", [rowData[4]]));
         $("#txToAddress").html(rowData[5]);
-        $("#txToAddress").attr("href", vsprintf("http://explorer-x3.mine2.live/address/%s", [rowData[5]]));
-        $("#txValue").html(web3Local.utils.fromWei(EthoUtils.toFixed(parseFloat(rowData[6])).toString(), "ether"));
+        $("#txToAddress").attr("href", vsprintf("http://etica.dkc.services:4100/address/%s", [rowData[5]]));
+        $("#txValue").html(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(rowData[6])).toString(), "egaz"));
 
         $("#dlgTransactionInfo a").off("click").on("click", function (even) {
           event.preventDefault();
@@ -115,4 +115,5 @@ class tableTransactions {
 }
 
 // create new tables variable
-EthoTableTransactions = new tableTransactions();
+EticaTableTransactions = new tableTransactions();
+

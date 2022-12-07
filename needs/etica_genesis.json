@@ -1,0 +1,24 @@
+{
+    "config": {
+      "chainId": 61803,
+      "homesteadBlock": 0,
+      "eip150Block": 0,
+      "eip155Block": 0,
+      "eip158Block": 0,
+      "byzantiumBlock": 0,
+      "constantinopleBlock": 0,
+      "petersburgBlock": 0
+    },
+    "alloc": {
+    },
+    "coinbase": "0x0000000000000000000000000000000000000000",
+    "difficulty": "0x1E8480",
+    "extraData": "",
+    "gasLimit": "0x2faf080",
+    "nonce": "0x0000000000000055",
+    "mixhash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "parentHash": "0x0000000000000000000000000000000000000000000000000000000000000000",
+    "timestamp": "0x616bb268",
+    "Timeproof": "Mixed response to COVID-19 intellectual property waiver. The Lancet 2 April 2022. CRISPR beef cattle get FDA green light. Nature 13 04 2022. This Blockchain was created to only host the Etica Smart Contract. Any other contract deployed will very likely become unusable at some point"
+  }
+  

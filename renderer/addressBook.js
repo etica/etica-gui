@@ -4,34 +4,34 @@ class AddressBook {
   constructor() {}
 
   setAddressName(address, name) {
-    var addressBook = EthoDatatabse.getAddresses();
+    var addressBook = EticaDatatabse.getAddresses();
 
     // set the wallet name from the dialog box
     addressBook.names[address.toUpperCase()] = name;
-    EthoDatatabse.setAddresses(addressBook);
+    EticaDatatabse.setAddresses(addressBook);
   }
 
   getAddressName(address) {
-    var addressBook = EthoDatatabse.getAddresses();
+    var addressBook = EticaDatatabse.getAddresses();
     // set the wallet name from the dialog box
     return addressBook.names[address.toUpperCase()] || "";
   }
 
   getAddressList() {
-    var addressBook = EthoDatatabse.getAddresses();
+    var addressBook = EticaDatatabse.getAddresses();
     return addressBook.names;
   }
 
   deleteAddress(address) {
-    var addressBook = EthoDatatabse.getAddresses();
+    var addressBook = EticaDatatabse.getAddresses();
     delete addressBook.names[address];
-    EthoDatatabse.setAddresses(addressBook);
+    EticaDatatabse.setAddresses(addressBook);
   }
 
   enableButtonTooltips() {}
 
   renderAddressBook() {
-    var addressObject = EthoAddressBook.getAddressList();
+    var addressObject = EticaAddressBook.getAddressList();
     var renderData = {
       addressData: []
     };
@@ -46,9 +46,9 @@ class AddressBook {
     }
 
     // render the wallets current state
-    EthoMainGUI.renderTemplate("addressBook.html", renderData);
+    EticaMainGUI.renderTemplate("addressBook.html", renderData);
     $(document).trigger("render_addressBook");
-    EthoAddressBook.enableButtonTooltips();
+    EticaAddressBook.enableButtonTooltips();
   }
 }
 
@@ -68,11 +68,11 @@ $(document).on("render_addressBook", function () {
     function doCreateNewWallet() {
       $("#dlgCreateAddressAndName").iziModal("close");
 
-      if (!EthoBlockchain.isAddress($("#addressHash").val())) {
-        EthoMainGUI.showGeneralError("Address must be a valid address!");
+      if (!EticaBlockchain.isAddress($("#addressHash").val())) {
+        EticaMainGUI.showGeneralError("Address must be a valid address!");
       } else {
-        EthoAddressBook.setAddressName($("#addressHash").val(), $("#addressName").val());
-        EthoAddressBook.renderAddressBook();
+        EticaAddressBook.setAddressName($("#addressHash").val(), $("#addressName").val());
+        EticaAddressBook.renderAddressBook();
 
         iziToast.success({title: "Created", message: "New address was successfully created", position: "topRight", timeout: 5000});
       }
@@ -98,9 +98,9 @@ $(document).on("render_addressBook", function () {
     $("#dlgChangeAddressName").iziModal("open");
 
     function doChangeAddressName() {
-      EthoAddressBook.setAddressName(walletAddress, $("#inputAddressName").val());
+      EticaAddressBook.setAddressName(walletAddress, $("#inputAddressName").val());
       $("#dlgChangeAddressName").iziModal("close");
-      EthoAddressBook.renderAddressBook();
+      EticaAddressBook.renderAddressBook();
     }
 
     $("#btnChangeAddressNameConfirm").off("click").on("click", function () {
@@ -126,8 +126,8 @@ $(document).on("render_addressBook", function () {
 
     $("#btnDeleteAddressConfirm").off("click").on("click", function () {
       $("#dlgDeleteAddressConfirm").iziModal("close");
-      EthoAddressBook.deleteAddress(deleteAddress);
-      EthoAddressBook.renderAddressBook();
+      EticaAddressBook.deleteAddress(deleteAddress);
+      EticaAddressBook.renderAddressBook();
     });
   });
 
@@ -144,10 +144,10 @@ $(document).on("render_addressBook", function () {
   });
 
   $(".textAddress").off("click").on("click", function () {
-    EthoMainGUI.copyToClipboard($(this).html());
+    EticaMainGUI.copyToClipboard($(this).html());
 
     iziToast.success({title: "Copied", message: "Address was copied to clipboard", position: "topRight", timeout: 2000});
   });
 });
 
-EthoAddressBook = new AddressBook();
+EticaAddressBook = new AddressBook();

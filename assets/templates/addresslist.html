@@ -1,6 +1,6 @@
 <div id="addressToolbar">
     <input id="addressListFilter" placeholder="Enter address name" type="text">
-    <button type="button" class="btn btn-etho" id="btnClearSearchField"><i class="far fa-trash-alt"></i></button>
+    <button type="button" class="btn btn-etica" id="btnClearSearchField"><i class="far fa-trash-alt"></i></button>
 </div>
 <div id="addressList" class="{{#if addressData.length}}walletsWrapper{{else}}noWalletsWrapper{{/if}}">
     {{#if addressData.length}}
@@ -15,7 +15,7 @@
             <tbody>
                 {{#addressData}}
                     <tr>
-                        <th scope="row" class="colEdit"><button type="button" class="btn btn-etho btnSelectToAddress" data-wallet="{{address}}" data-name="{{name}}"">Select</button></th>
+                        <th scope="row" class="colEdit"><button type="button" class="btn btn-etica btnSelectToAddress" data-wallet="{{address}}" data-name="{{name}}"">Select</button></th>
                         <td>{{name}}</td>
                         <td><span class="textAddress">{{address}}</span></td>
                     </tr>

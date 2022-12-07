@@ -131,7 +131,7 @@ class Blockchain {
     rendererData.sumBalance = 0;
     rendererData.addressData = [];
 
-    var wallets = EthoDatatabse.getWallets();
+    var wallets = EticaDatatabse.getWallets();
     var counter = 0;
 
     web3Local.eth.getAccounts(function (err, res) {
@@ -179,7 +179,7 @@ class Blockchain {
     var rendererData = {};
     rendererData.addressData = [];
 
-    var wallets = EthoDatatabse.getWallets();
+    var wallets = EticaDatatabse.getWallets();
     var counter = 0;
 
     web3Local.eth.getAccounts(function (err, res) {
@@ -281,4 +281,4 @@ class Blockchain {
 }
 
 // create new blockchain variable
-EthoBlockchain = new Blockchain();
+EticaBlockchain = new Blockchain();

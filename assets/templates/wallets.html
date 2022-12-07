@@ -1,23 +1,23 @@
 <div id="walletsToolbar">
-  <button type="button" class="btn btn-etho" id="btnNewAddress">
+  <button type="button" class="btn btn-etica" id="btnNewAddress">
     <i class="fas fa-plus"></i>
   </button>
-  <button type="button" class="btn btn-etho" id="btnRefreshAddress">
+  <button type="button" class="btn btn-etica" id="btnRefreshAddress">
     <i class="fas fa-sync-alt"></i>
   </button>
-  <button type="button" class="btn btn-etho" id="btnExportAccounts">
+  <button type="button" class="btn btn-etica" id="btnExportAccounts">
     <i class="fas fa-file-export"></i>
   </button>
-  <button type="button" class="btn btn-etho" id="btnImportAccounts">
+  <button type="button" class="btn btn-etica" id="btnImportAccounts">
     <i class="fas fa-file-import"></i>
   </button>
-  <button type="button" class="btn btn-etho" id="btnImportFromPrivateKey">
+  <button type="button" class="btn btn-etica" id="btnImportFromPrivateKey">
     <i class="fas fa-key"></i>
   </button>
   <div id="sumBalance">
     <span class="sumBalance" id="labelSumBalance">{{sumBalance}}</span>
-    <span class="sumCurrency" id="labelSumCurrency">XERO</span>
-    <span class="sumDollars" id="labelSumDollars">/ 0.00 $ / 0.00 $ per XERO</span></div>
+    <span class="sumCurrency" id="labelSumCurrency">EGAZ</span>
+    <span class="sumDollars" id="labelSumDollars">/ 0.00 $ / 0.00 $ per EGAZ</span></div>
 </div>
 <div id="addressList" class="{{#if addressData.length}}walletsWrapper{{else}}noWalletsWrapper{{/if}}">
   {{#if addressData.length}}
@@ -35,16 +35,16 @@
         {{#addressData}}
           <tr>
             <th scope="row" class="colEdit">
-              <button type="button" class="btn btn-etho btnChangWalletName" data-wallet="{{address}}" data-name="{{name}}">Edit</button>
+              <button type="button" class="btn btn-etica btnChangWalletName" data-wallet="{{address}}" data-name="{{name}}">Edit</button>
             </th>
             <td>{{name}}</td>
             <td>
               <span class="textAddress">{{address}}</span></td>
             <td>
-              <button type="button" class="btn btn-etho btnShowAddressTransactions" data-wallet="{{address}}">
+              <button type="button" class="btn btn-etica btnShowAddressTransactions" data-wallet="{{address}}">
                 <i class="fas fa-exchange-alt"></i>
               </button>
-              <button type="button" class="btn btn-etho btnShowQRCode" data-address="{{address}}">
+              <button type="button" class="btn btn-etica btnShowQRCode" data-address="{{address}}">
                 <i class="fas fa-qrcode"></i>
               </button>
             </td>
@@ -69,7 +69,7 @@
       <label for="walletPasswordSecond">Confirm Password:</label>
       <input type="password" class="form-control" id="walletPasswordSecond">
     </div>
-    <button type="button" class="btn btn-etho btn-dialog-confirm" id="btnCreateWalletConfirm">Confirm</button>
+    <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnCreateWalletConfirm">Confirm</button>
   </div>
 </div>
 </div>
@@ -81,7 +81,7 @@
     <label for="inputWalletName">Name:</label>
     <input type="text" class="form-control" id="inputWalletName">
   </div>
-  <button type="button" class="btn btn-etho btn-dialog-confirm" id="btnChangeWalletNameConfirm">Confirm</button>
+  <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnChangeWalletNameConfirm">Confirm</button>
 </div>
 </div>
 
@@ -100,6 +100,6 @@
     <label for="walletPasswordSecond">Confirm Password:</label>
     <input type="password" class="form-control" id="keyPasswordSecond">
   </div>
-  <button type="button" class="btn btn-etho btn-dialog-confirm" id="btnImportFromPrivateKeyConfirm">Import</button>
+  <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnImportFromPrivateKeyConfirm">Import</button>
 </div>
 </div>

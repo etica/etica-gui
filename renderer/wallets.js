@@ -4,8 +4,8 @@ class Wallets {
   constructor() {
     this.addressList = [];
 
-    $.getJSON("https://min-api.cryptocompare.com/data/price?fsym=XERO&tsyms=USD", function (price) {
-      EthoWallets._setPrice(price.USD);
+    $.getJSON("https://min-api.cryptocompare.com/data/price?fsym=EGAZ&tsyms=USD", function (price) {
+      EticaWallets._setPrice(price.USD);
     });
   }
 
@@ -40,27 +40,27 @@ class Wallets {
   }
 
   enableButtonTooltips() {
-    EthoUtils.createToolTip("#btnNewAddress", "Create New Address");
-    EthoUtils.createToolTip("#btnRefreshAddress", "Refresh Address List");
-    EthoUtils.createToolTip("#btnExportAccounts", "Export Accounts");
-    EthoUtils.createToolTip("#btnImportAccounts", "Import Accounts");
-    EthoUtils.createToolTip("#btnImportFromPrivateKey", "Import From Private Key");
+    EticaUtils.createToolTip("#btnNewAddress", "Create New Address");
+    EticaUtils.createToolTip("#btnRefreshAddress", "Refresh Address List");
+    EticaUtils.createToolTip("#btnExportAccounts", "Export Accounts");
+    EticaUtils.createToolTip("#btnImportAccounts", "Import Accounts");
+    EticaUtils.createToolTip("#btnImportFromPrivateKey", "Import From Private Key");
   }
 
   validateNewAccountForm() {
-    if (EthoMainGUI.getAppState() == "account") {
+    if (EticaMainGUI.getAppState() == "account") {
       if (!$("#walletPasswordFirst").val()) {
-        EthoMainGUI.showGeneralError("Password cannot be empty!");
+        EticaMainGUI.showGeneralError("Password cannot be empty!");
         return false;
       }
 
       if (!$("#walletPasswordSecond").val()) {
-        EthoMainGUI.showGeneralError("Password cannot be empty!");
+        EticaMainGUI.showGeneralError("Password cannot be empty!");
         return false;
       }
 
       if ($("#walletPasswordFirst").val() !== $("#walletPasswordSecond").val()) {
-        EthoMainGUI.showGeneralError("Passwords do not match!");
+        EticaMainGUI.showGeneralError("Passwords do not match!");
         return false;
       }
 
@@ -71,24 +71,24 @@ class Wallets {
   }
 
   validateImportFromKeyForm() {
-    if (EthoMainGUI.getAppState() == "account") {
+    if (EticaMainGUI.getAppState() == "account") {
       if (!$("#inputPrivateKey").val()) {
-        EthoMainGUI.showGeneralError("Private key cannot be empty!");
+        EticaMainGUI.showGeneralError("Private key cannot be empty!");
         return false;
       }
 
       if (!$("#keyPasswordFirst").val()) {
-        EthoMainGUI.showGeneralError("Password cannot be empty!");
+        EticaMainGUI.showGeneralError("Password cannot be empty!");
         return false;
       }
 
       if (!$("#keyPasswordSecond").val()) {
-        EthoMainGUI.showGeneralError("Password cannot be empty!");
+        EticaMainGUI.showGeneralError("Password cannot be empty!");
         return false;
       }
 
       if ($("#keyPasswordFirst").val() !== $("#keyPasswordSecond").val()) {
-        EthoMainGUI.showGeneralError("Passwords do not match!");
+        EticaMainGUI.showGeneralError("Passwords do not match!");
         return false;
       }
 
@@ -100,23 +100,23 @@ class Wallets {
 
   renderWalletsState() {
     // clear the list of addresses
-    EthoWallets.clearAddressList();
+    EticaWallets.clearAddressList();
 
-    EthoBlockchain.getAccountsData(function (error) {
-      EthoMainGUI.showGeneralError(error);
+    EticaBlockchain.getAccountsData(function (error) {
+      EticaMainGUI.showGeneralError(error);
     }, function (data) {
       data.addressData.forEach(element => {
-        EthoWallets.addAddressToList(element.address);
+        EticaWallets.addAddressToList(element.address);
       });
 
       // render the wallets current state
-      EthoMainGUI.renderTemplate("wallets.html", data);
+      EticaMainGUI.renderTemplate("wallets.html", data);
       $(document).trigger("render_wallets");
-      EthoWallets.enableButtonTooltips();
+      EticaWallets.enableButtonTooltips();
 
-      $("#labelSumDollars").html(vsprintf("/ %.2f $ / %.4f $ per XERO", [
-        data.sumBalance * EthoWallets._getPrice(),
-        EthoWallets._getPrice()
+      $("#labelSumDollars").html(vsprintf("/ %.2f $ / %.4f $ per EGAZ", [
+        data.sumBalance * EticaWallets._getPrice(),
+        EticaWallets._getPrice()
       ]));
     });
   }
@@ -138,12 +138,12 @@ $(document).on("render_wallets", function () {
     function doCreateNewWallet() {
       $("#dlgCreateWalletPassword").iziModal("close");
 
-      if (EthoWallets.validateNewAccountForm()) {
-        EthoBlockchain.createNewAccount($("#walletPasswordFirst").val(), function (error) {
-          EthoMainGUI.showGeneralError(error);
+      if (EticaWallets.validateNewAccountForm()) {
+        EticaBlockchain.createNewAccount($("#walletPasswordFirst").val(), function (error) {
+          EticaMainGUI.showGeneralError(error);
         }, function (account) {
-          EthoWallets.addAddressToList(account);
-          EthoWallets.renderWalletsState();
+          EticaWallets.addAddressToList(account);
+          EticaWallets.renderWalletsState();
 
           iziToast.success({title: "Created", message: "New wallet was successfully created", position: "topRight", timeout: 5000});
         });
@@ -162,9 +162,9 @@ $(document).on("render_wallets", function () {
   });
 
   $(".btnShowAddressTransactions").off("click").on("click", function () {
-    EthoTransactions.setFilter($(this).attr("data-wallet"));
-    EthoMainGUI.changeAppState("transactions");
-    EthoTransactions.renderTransactions();
+    EticaTransactions.setFilter($(this).attr("data-wallet"));
+    EticaMainGUI.changeAppState("transactions");
+    EticaTransactions.renderTransactions();
   });
 
   $(".btnShowQRCode").off("click").on("click", function () {
@@ -188,14 +188,14 @@ $(document).on("render_wallets", function () {
     $("#dlgChangeWalletName").iziModal("open");
 
     function doChangeWalletName() {
-      var wallets = EthoDatatabse.getWallets();
+      var wallets = EticaDatatabse.getWallets();
 
       // set the wallet name from the dialog box
       wallets.names[walletAddress] = $("#inputWalletName").val();
-      EthoDatatabse.setWallets(wallets);
+      EticaDatatabse.setWallets(wallets);
 
       $("#dlgChangeWalletName").iziModal("close");
-      EthoWallets.renderWalletsState();
+      EticaWallets.renderWalletsState();
     }
 
     $("#btnChangeWalletNameConfirm").off("click").on("click", function () {
@@ -210,7 +210,7 @@ $(document).on("render_wallets", function () {
   });
 
   $("#btnRefreshAddress").off("click").on("click", function () {
-    EthoWallets.renderWalletsState();
+    EticaWallets.renderWalletsState();
   });
 
   $("#btnExportAccounts").off("click").on("click", function () {
@@ -223,7 +223,7 @@ $(document).on("render_wallets", function () {
     if (ImportResult.success) {
       iziToast.success({title: "Imported", message: ImportResult.text, position: "topRight", timeout: 2000});
     } else if (ImportResult.success == false) {
-      EthoMainGUI.showGeneralError(ImportResult.text);
+      EticaMainGUI.showGeneralError(ImportResult.text);
     }
   });
 
@@ -235,15 +235,15 @@ $(document).on("render_wallets", function () {
     function doImportFromPrivateKeys() {
       $("#dlgImportFromPrivateKey").iziModal("close");
 
-      if (EthoWallets.validateImportFromKeyForm()) {
-        var account = EthoBlockchain.importFromPrivateKey($("#inputPrivateKey").val(), $("#keyPasswordFirst").val(), function (error) {
-          EthoMainGUI.showGeneralError(error);
+      if (EticaWallets.validateImportFromKeyForm()) {
+        var account = EticaBlockchain.importFromPrivateKey($("#inputPrivateKey").val(), $("#keyPasswordFirst").val(), function (error) {
+          EticaMainGUI.showGeneralError(error);
         }, function (account) {
           if (account) {
-            EthoWallets.renderWalletsState();
+            EticaWallets.renderWalletsState();
             iziToast.success({title: "Imported", message: "Account was succesfully imported", position: "topRight", timeout: 2000});
           } else {
-            EthoMainGUI.showGeneralError("Error importing account from private key!");
+            EticaMainGUI.showGeneralError("Error importing account from private key!");
           }
         });
       }
@@ -261,7 +261,7 @@ $(document).on("render_wallets", function () {
   });
 
   $(".textAddress").off("click").on("click", function () {
-    EthoMainGUI.copyToClipboard($(this).html());
+    EticaMainGUI.copyToClipboard($(this).html());
 
     iziToast.success({title: "Copied", message: "Address was copied to clipboard", position: "topRight", timeout: 2000});
   });
@@ -269,14 +269,14 @@ $(document).on("render_wallets", function () {
 
 // event that tells us that geth is ready and up
 $(document).on("onGethReady", function () {
-  EthoMainGUI.changeAppState("account");
-  EthoWallets.renderWalletsState();
+  EticaMainGUI.changeAppState("account");
+  EticaWallets.renderWalletsState();
 });
 
 $(document).on("onNewAccountTransaction", function () {
-  if (EthoMainGUI.getAppState() == "account") {
-    EthoWallets.renderWalletsState();
+  if (EticaMainGUI.getAppState() == "account") {
+    EticaWallets.renderWalletsState();
   }
 });
 
-EthoWallets = new Wallets();
+EticaWallets = new Wallets();

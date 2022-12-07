@@ -105,38 +105,38 @@ class MainGUI {
 }
 
 ipcRenderer.on("showAboutDialog", function (event, message) {
-  EthoMainGUI.showAboutDialog(message);
+  EticaMainGUI.showAboutDialog(message);
 });
 
 $("#mainNavBtnTransactions").click(function () {
-  EthoTransactions.clearFilter();
-  EthoMainGUI.changeAppState("transactions");
-  EthoTransactions.renderTransactions();
+  EticaTransactions.clearFilter();
+  EticaMainGUI.changeAppState("transactions");
+  EticaTransactions.renderTransactions();
 });
 
 $("#mainNavBtnAddressBoook").click(function () {
-  EthoMainGUI.changeAppState("addressBook");
-  EthoAddressBook.renderAddressBook();
+  EticaMainGUI.changeAppState("addressBook");
+  EticaAddressBook.renderAddressBook();
 });
 
 $("#mainNavBtnSend").click(function () {
-  EthoMainGUI.changeAppState("send");
-  EthoSend.renderSendState();
+  EticaMainGUI.changeAppState("send");
+  EticaSend.renderSendState();
 });
 
 $("#mainNavBtnWallets").click(function () {
-  EthoMainGUI.changeAppState("account");
-  EthoWallets.renderWalletsState();
+  EticaMainGUI.changeAppState("account");
+  EticaWallets.renderWalletsState();
 });
 
 $("#mainNavBtnMarkets").click(function () {
-  EthoMainGUI.changeAppState("markets");
-  EthoMarkets.renderMarkets();
+  EticaMainGUI.changeAppState("markets");
+  EticaMarkets.renderMarkets();
 });
 
 $("#mainNavBtnSettings").click(function () {
-  EthoMainGUI.changeAppState("settings");
-  EthoSettings.renderSettingsState();
+  EticaMainGUI.changeAppState("settings");
+  EticaSettings.renderSettingsState();
 });
 
-EthoMainGUI = new MainGUI();
+EticaMainGUI = new MainGUI();

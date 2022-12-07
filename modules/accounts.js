@@ -10,10 +10,10 @@ class Accounts {
   getKeyStoreLocation() {
     switch (os.type()) {
       case "Darwin":
-        return path.join(os.homedir(), "Library", "Xerom", "keystore");
+        return path.join(os.homedir(), "Library", "Etica", "keystore");
         break;
       default:
-        return path.join(process.env.APPDATA.replace('Roaming', 'Local'), "Xerom", "keystore");
+        return path.join(process.env.APPDATA.replace('Roaming', 'Local'), "Etica", "keystore");
     }
   }
 
@@ -23,7 +23,7 @@ class Accounts {
     });
 
     if (savePath) {
-      const accPath = EthoAccounts.getKeyStoreLocation();
+      const accPath = EticaAccounts.getKeyStoreLocation();
 
       fs.readdir(accPath, function (err, files) {
         var zip = new admZip();
@@ -40,7 +40,7 @@ class Accounts {
 
   importAccounts(accountsFile) {
     var extName = path.extname(accountsFile).toUpperCase();
-    const accPath = EthoAccounts.getKeyStoreLocation();
+    const accPath = EticaAccounts.getKeyStoreLocation();
 
     if (extName == ".ZIP") {
       var zip = new admZip(accountsFile);
@@ -57,14 +57,14 @@ class Accounts {
   }
 
   saveAccount(account) {
-    fs.writeFile(path.join(tEthoAccountshis.getKeyStoreLocation(), "0x" + account.address), JSON.stringify(account), "utf8", function () {
+    fs.writeFile(path.join(EticaAccounts.getKeyStoreLocation(), "0x" + account.address), JSON.stringify(account), "utf8", function () {
       // file was written
     });
   }
 }
 
 ipcMain.on("exportAccounts", (event, arg) => {
-  EthoAccounts.exportAccounts();
+  EticaAccounts.exportAccounts();
 });
 
 ipcMain.on("importAccounts", (event, arg) => {
@@ -85,15 +85,15 @@ ipcMain.on("importAccounts", (event, arg) => {
   });
 
   if (openPath) {
-    event.returnValue = EthoAccounts.importAccounts(openPath[0]);
+    event.returnValue = EticaAccounts.importAccounts(openPath[0]);
   } else {
     event.returnValue = {};
   }
 });
 
 ipcMain.on("saveAccount", (event, arg) => {
-  EthoAccounts.saveAccount(arg);
+  EticaAccounts.saveAccount(arg);
   event.returnValue = true;
 });
 
-EthoAccounts = new Accounts();
+EticaAccounts = new Accounts();
