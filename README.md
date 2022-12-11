@@ -22,9 +22,9 @@ cd etica-gui
 # Install dependencies
 npm install
 # create .etica directory
-mkdir ./etica
+mkdir .etica
 # copy enodes default list on .etica directory
-cp needs/static-nodes.json .etica
+cp needs/static-nodes.json .etica/
 # initiate Blockchain with etica_genesis.json (windows)
 ./bin/win/geth --datadir ".etica" --networkid 61803 init needs/etica_genesis.json
 # initiate Blockchain with etica_genesis.json (linux)
