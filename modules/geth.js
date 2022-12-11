@@ -51,7 +51,7 @@ class Geth {
     try {
       this.isRunning = true;
       const gethPath = path.join(this.binaries, "geth");
-      this.gethProcess = child_process.spawn(gethPath, [
+      /*this.gethProcess = child_process.spawn(gethPath, [
         "--allow-insecure-unlock",
         "--ws",
         "--ws.origins",
@@ -71,6 +71,28 @@ class Geth {
         "snap",
         "--ethstats",
         "wall:etica@72.137.255.182:3100",
+        "--bootnodes",
+        "enode://98e3be4308da968b5e3fff851294b4f179c0542a8bdf6d981fb298d493b63ac0a31f35a67ab99bc0fcc293b38c120ddcc3ba659bb97554e8dfb0c2439f6601f3@72.137.255.180:30320",
+      ]); */
+
+      this.gethProcess = child_process.spawn(gethPath, [
+        "--allow-insecure-unlock",
+        "--ws",
+        "--ws.origins",
+        "*",
+        "--ws.addr",
+        "127.0.0.1",
+        "--ws.port",
+        "8551",
+        "--port",
+        "30317",
+        "--datadir=./.etica",
+        "--ws.api",
+        "admin,eth,net,miner,personal,web3",
+        "--networkid",
+        "61803",
+        "--syncmode",
+        "snap",
         "--bootnodes",
         "enode://98e3be4308da968b5e3fff851294b4f179c0542a8bdf6d981fb298d493b63ac0a31f35a67ab99bc0fcc293b38c120ddcc3ba659bb97554e8dfb0c2439f6601f3@72.137.255.180:30320",
       ]);

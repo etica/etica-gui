@@ -36,10 +36,22 @@ class Transactions {
   }
 
   syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter) {
+   console.log('in syncTransactionsForSingleAddress');
+   console.log('in syncTransactionsForSingleAddress addressList is', addressList);
+   console.log('in syncTransactionsForSingleAddress counters is', counters);
+   console.log('in syncTransactionsForSingleAddress lastBlock is', lastBlock);
+   console.log('in syncTransactionsForSingleAddress counter is', counter);
+
     if (counter < addressList.length) {
       SyncProgress.setText(vsprintf("Syncing address transactions %d/%d, please wait...", [counter, addressList.length]));
 
       var startBlock = parseInt(counters.transactions) || 0;
+
+      console.log('startBlock is', startBlock);
+      console.log('lastBlock is', lastBlock);
+
+
+/*
       var params = vsprintf("?address=%s&fromBlock=%d&toBlock=%d", [
         addressList[counter].toLowerCase(),
         startBlock,
@@ -58,11 +70,41 @@ class Transactions {
               value: element.value
             });
           }
+        }); */
+
+
+      for(let blocknb=startBlock; blocknb <= lastBlock; blocknb++){
+        EticaBlockchain.getBlock(blocknb, true, function (error) {
+          EticaMainGUI.showGeneralError(error);
+        }, function (data) {
+          if (data.transactions) {
+            data.transactions.forEach(element => {
+              if (element.from && element.to) {
+                if (EticaWallets.getAddressExists(element.from) || EticaWallets.getAddressExists(element.to)) {
+                  var Transaction = {
+                    block: element.blockNumber.toString(),
+                    txhash: element.hash.toLowerCase(),
+                    fromaddr: element.from.toLowerCase(),
+                    timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
+                    toaddr: element.to.toLowerCase(),
+                    value: Number(element.value).toExponential(5).toString().replace("+", "")
+                  };
+  
+                  // store transaction and notify about new transactions
+                  ipcRenderer.send("storeTransaction", Transaction);
+                  console.log('stored Transaction is', Transaction);
+                }
+              }
+            });
+          }
         });
+
+      }
+
 
         // call the transaction sync for the next address
         EticaTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1);
-      });
+      
     } else {
       // update the counter and store it back to file system
       counters.transactions = lastBlock;
