@@ -1,7 +1,12 @@
 // In renderer process (web page).
 const {ipcRenderer} = require("electron");
 
+let EticaContractJSON = require('../EticaRelease.json');
+
+const ETICA_ADDRESS = '0x34c61EA91bAcdA647269d4e310A86b875c09946f';
+
 class Blockchain {
+  
   constructor() {
     this.txSubscribe = null;
     this.bhSubscribe = null;
@@ -129,6 +134,7 @@ class Blockchain {
   getAccountsData(clbError, clbSuccess) {
     var rendererData = {};
     rendererData.sumBalance = 0;
+    rendererData.sumBalance_eti = 0;
     rendererData.addressData = [];
 
     var wallets = EticaDatatabse.getWallets();
@@ -146,6 +152,7 @@ class Blockchain {
 
           var addressInfo = {};
           addressInfo.balance = 0;
+          addressInfo.balance_eti = 0;
           addressInfo.address = res[i];
           addressInfo.name = walletName;
           rendererData.addressData.push(addressInfo);
@@ -153,6 +160,7 @@ class Blockchain {
 
         if (rendererData.addressData.length > 0) {
           updateBalance(counter);
+          updateBalanceETI(counter);
         } else {
           clbSuccess(rendererData);
         }
@@ -173,6 +181,23 @@ class Blockchain {
         }
       });
     }
+
+    async function updateBalanceETI(index) {
+      let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let balance = await contract.methods.balanceOf(rendererData.addressData[index].address).call();
+
+        rendererData.addressData[index].balance_eti = parseFloat(web3Local.utils.fromWei(balance, "ether")).toFixed(2);
+        rendererData.sumBalance_eti = rendererData.sumBalance_eti + parseFloat(web3Local.utils.fromWei(balance, "ether"));
+
+        if (counter < rendererData.addressData.length - 1) {
+          counter++;
+          updateBalanceETI(counter);
+        } else {
+          rendererData.sumBalance_eti = parseFloat(rendererData.sumBalance_eti).toFixed(2);
+          clbSuccess(rendererData);
+        }
+    }
+
   }
 
   getAddressListData(clbError, clbSuccess) {
