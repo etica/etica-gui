@@ -18,7 +18,8 @@ body.pg-loaded>.inner {
 /* Style the sidebar - fixed full height */
 .sidebar {
   height: 100%;
-  width: 120px;
+  /*width: 120px;*/
+  width: 160px;
   position: fixed;
   z-index: 1;
   top: 0;
@@ -73,7 +74,8 @@ body.pg-loaded>.inner {
   height: 20px;
   position: fixed;
   z-index: 1;
-  left: 120px;
+  /*left: 120px;*/
+  left: 160px;
   right: 0;
   bottom: 0;
   background-color: #18523c;
@@ -83,7 +85,8 @@ body.pg-loaded>.inner {
 #mainContent {
   position: fixed;
   z-index: 1;
-  left: 120px;
+  /*left: 120px;*/
+  left: 160px;
   top: 0;
   right: 0;
   bottom: 20px;
