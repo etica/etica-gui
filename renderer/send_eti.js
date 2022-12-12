@@ -151,7 +151,7 @@ $(document).on("render_send", function () {
   });
 
   $("#btnSendTransaction").off("click").on("click", function () {
-    if (EgazSend.validateSendForm()) {
+    if (EticaSend.validateSendForm()) {
       EticaBlockchain.getTranasctionFee($("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
@@ -172,7 +172,7 @@ $(document).on("render_send", function () {
             EticaBlockchain.sendTransaction(data.raw, function (error) {
               EticaMainGUI.showGeneralError(error);
             }, function (data) {
-              EgazSend.resetSendForm();
+              EticaSend.resetSendForm();
 
               iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});
 
@@ -207,5 +207,5 @@ $(document).on("render_send", function () {
 });
 
 // create new account variable
-EgazSend = new SendTransaction();
+EticaSend = new SendTransaction();
 
