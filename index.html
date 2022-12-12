@@ -85,8 +85,13 @@
             <i class="far fa-address-book fa-2x"></i>
           </a>
         </div>
-        <div class="sidebarIconWrapper" id="mainNavBtnSendWrapper" data-tippy="Send Funds" data-tippy-delay="500">
+        <div class="sidebarIconWrapper" id="mainNavBtnSendWrapper" data-tippy="Send EGAZ" data-tippy-delay="500">
           <a class="sidebarIcon" id="mainNavBtnSend" href="#">
+            <i class="fas fas fa-paper-plane fa-2x"></i>
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnSendEtiWrapper" data-tippy="Send ETI" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnSendEti" href="#">
             <i class="fas fas fa-paper-plane fa-2x"></i>
           </a>
         </div>
@@ -137,6 +142,8 @@
         require('./renderer/addressBook.js');
         require('./renderer/transactions.js');
         require('./renderer/tableTransactions.js');
+
+        require('./renderer/sendeti.js');
       </script>
     </div>
 

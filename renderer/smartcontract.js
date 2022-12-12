@@ -20,7 +20,56 @@ class SmartContract {
   }
 
 
-  prepareTransaction_SendETI(password, fromAddress, receiverAddress, amount, clbError, clbSuccess) {
+  getTranasctionFee_sendEti(fromAddress, toAddress, amount, clbError, clbSuccess) {
+    web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+      if (error) {
+        clbError(error);
+      } else {
+        
+        toAddress = toAddress.toLowerCase(); // make sure toAddress is in lower case to avoid invalid type address error in txData object:
+        var amountToSend = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+        var txData = web3Local.eth.abi.encodeFunctionCall({
+          name: 'transfer',
+          type: 'function',
+          inputs: [{
+              type: 'address',
+              name: 'address'
+          },
+          {
+              type: 'uint256',
+              name: 'amount'
+          }]
+      }, [toAddress, amountToSend ]);
+
+        var RawTransaction = {
+          from: fromAddress,
+          to: ETICA_ADDRESS,
+          value: 0,
+          nonce: result,
+          data: txData
+        };
+
+        web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+            var usedGas = result + 1;
+            web3Local.eth.getGasPrice(function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                clbSuccess(result * usedGas);
+              }
+            });
+          }
+        });
+
+      }
+    });
+  }
+
+
+  prepareTransaction_SendEti(password, fromAddress, toAddress, amount, clbError, clbSuccess) {
     web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
       if (error) {
         clbError("Wrong password for the selected address!");
@@ -30,8 +79,9 @@ class SmartContract {
             clbError(error);
           } else {
 
-
-            var txData = this.web3.eth.abi.encodeFunctionCall({
+            toAddress = toAddress.toLowerCase(); // make sure toAddress is in lower case to avoid invalid type address error in txData object:
+            var amountToSend = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+            var txData = web3Local.eth.abi.encodeFunctionCall({
               name: 'transfer',
               type: 'function',
               inputs: [{
@@ -42,7 +92,7 @@ class SmartContract {
                   type: 'uint256',
                   name: 'amount'
               }]
-          }, [receiverAddress, amount ]);
+          }, [toAddress, amountToSend ]);
 
             var RawTransaction = {
               from: fromAddress,

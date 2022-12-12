@@ -1,20 +1,20 @@
 // In renderer process (web page).
 const {ipcRenderer} = require("electron");
 
-class SendTransaction {
+class SendEti {
   constructor() {}
 
   renderSendState() {
     EticaBlockchain.getAccountsData(function (error) {
       EticaMainGUI.showGeneralError(error);
     }, function (data) {
-      EticaMainGUI.renderTemplate("send.html", data);
+      EticaMainGUI.renderTemplate("sendeti.html", data);
       $(document).trigger("render_send");
     });
   }
 
   validateSendForm() {
-    if (EticaMainGUI.getAppState() == "send") {
+    if (EticaMainGUI.getAppState() == "sendEti") {
       if (!$("#sendFromAddress").val()) {
         EticaMainGUI.showGeneralError("Sender address must be specified!");
         return false;
@@ -150,9 +150,13 @@ $(document).on("render_send", function () {
     });
   });
 
-  $("#btnSendTransaction").off("click").on("click", function () {
-    if (EticaSend.validateSendForm()) {
-      EticaBlockchain.getTranasctionFee($("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
+  $("#btnSendEti").off("click").on("click", function () {
+    if (EtiSend.validateSendForm()) {
+      console.log('EtiSend.validateSendForm() true');
+      console.log('$("#sendFromAddress").val()', $("#sendFromAddress").val());
+      console.log('$("#sendToAddress").val()', $("#sendToAddress").val());
+      console.log('$("#sendAmmount").val()', $("#sendAmmount").val());
+      EticaContract.getTranasctionFee_sendEti($("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
         $("#dlgSendWalletPassword").iziModal();
@@ -166,13 +170,13 @@ $(document).on("render_send", function () {
         function doSendTransaction() {
           $("#dlgSendWalletPassword").iziModal("close");
 
-          EticaBlockchain.prepareTransaction($("#walletPassword").val(), $("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
+          EticaContract.prepareTransaction_SendEti($("#walletPassword").val(), $("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {
               EticaMainGUI.showGeneralError(error);
             }, function (data) {
-              EticaSend.resetSendForm();
+              EtiSend.resetSendForm();
 
               iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});
 
@@ -207,5 +211,5 @@ $(document).on("render_send", function () {
 });
 
 // create new account variable
-EticaSend = new SendTransaction();
+EtiSend = new SendEti();
 

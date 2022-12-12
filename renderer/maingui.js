@@ -20,6 +20,9 @@ class MainGUI {
       case "send":
         $("#mainNavBtnSendWrapper").addClass("iconSelected");
         break;
+      case "sendEti":
+        $("#mainNavBtnSendEtiWrapper").addClass("iconSelected");
+        break;
       case "transactions":
         $("#mainNavBtnTransactionsWrapper").addClass("iconSelected");
         break;
@@ -124,7 +127,12 @@ $("#mainNavBtnAddressBoook").click(function () {
 
 $("#mainNavBtnSend").click(function () {
   EticaMainGUI.changeAppState("send");
-  EticaSend.renderSendState();
+  EgazSend.renderSendState();
+});
+
+$("#mainNavBtnSendEti").click(function () {
+  EticaMainGUI.changeAppState("sendEti");
+  EtiSend.renderSendState();
 });
 
 $("#mainNavBtnWallets").click(function () {
