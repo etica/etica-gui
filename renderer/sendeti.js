@@ -9,33 +9,33 @@ class SendEti {
       EticaMainGUI.showGeneralError(error);
     }, function (data) {
       EticaMainGUI.renderTemplate("sendeti.html", data);
-      $(document).trigger("render_send");
+      $(document).trigger("render_sendEti");
     });
   }
 
   validateSendForm() {
     if (EticaMainGUI.getAppState() == "sendEti") {
-      if (!$("#sendFromAddress").val()) {
+      if (!$("#sendEtiFromAddress").val()) {
         EticaMainGUI.showGeneralError("Sender address must be specified!");
         return false;
       }
 
-      if (!EticaBlockchain.isAddress($("#sendFromAddress").val())) {
+      if (!EticaBlockchain.isAddress($("#sendEtiFromAddress").val())) {
         EticaMainGUI.showGeneralError("Sender address must be a valid address!");
         return false;
       }
 
-      if (!$("#sendToAddress").val()) {
+      if (!$("#sendEtiToAddress").val()) {
         EticaMainGUI.showGeneralError("Recipient address must be specified!");
         return false;
       }
 
-      if (!EticaBlockchain.isAddress($("#sendToAddress").val())) {
+      if (!EticaBlockchain.isAddress($("#sendEtiToAddress").val())) {
         EticaMainGUI.showGeneralError("Recipient address must be a valid address!");
         return false;
       }
 
-      if (Number($("#sendAmmount").val()) <= 0) {
+      if (Number($("#sendEtiAmmount").val()) <= 0) {
         EticaMainGUI.showGeneralError("Send ammount must be greater then zero!");
         return false;
       }
@@ -48,46 +48,46 @@ class SendEti {
 
   resetSendForm() {
     if (EticaMainGUI.getAppState() == "send") {
-      $("#sendToAddressName").html("");
-      $("#sendToAddress").val("");
-      $("#sendAmmount").val(0);
+      $("#sendEtiToAddressName").html("");
+      $("#sendEtiToAddress").val("");
+      $("#sendEtiAmmount").val(0);
     }
   }
 }
 
-$(document).on("render_send", function () {
+$(document).on("render_sendEti", function () {
   $("select").formSelect({classes: "fromAddressSelect"});
 
-  $("#sendFromAddress").on("change", function () {
+  $("#sendEtiFromAddress").on("change", function () {
     var optionText = $(this).find("option:selected").text();
     var addrName = optionText.substr(0, optionText.indexOf("-"));
     var addrValue = optionText.substr(optionText.indexOf("-") + 1);
     $(".fromAddressSelect input").val(addrValue.trim());
-    $("#sendFromAddressName").html(addrName.trim());
+    $("#sendEtiFromAddressName").html(addrName.trim());
 
     web3Local.eth.getBalance(this.value, function (error, balance) {
-      $("#sendMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
+      $("#sendEtiMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
     });
   });
 
-  $("#btnSendAll").off("click").on("click", function () {
-    $("#sendAmmount").focus();
-    $("#sendAmmount").val($("#sendMaxAmmount").html());
+  $("#btnSendEtiAll").off("click").on("click", function () {
+    $("#sendEtiAmmount").focus();
+    $("#sendEtiAmmount").val($("#sendEtiMaxAmmount").html());
   });
 
-  $("#sendToAddress").off("input").on("input", function () {
+  $("#sendEtiToAddress").off("input").on("input", function () {
     var addressName = null;
-    $("#sendToAddressName").html("");
-    addressName = EticaAddressBook.getAddressName($("#sendToAddress").val());
+    $("#sendEtiToAddressName").html("");
+    addressName = EticaAddressBook.getAddressName($("#sendEtiToAddress").val());
 
     if (!addressName) {
       var wallets = EticaDatatabse.getWallets();
-      addressName = wallets.names[$("#sendToAddress").val()];
+      addressName = wallets.names[$("#sendEtiToAddress").val()];
     }
-    $("#sendToAddressName").html(addressName);
+    $("#sendEtiToAddressName").html(addressName);
   });
 
-  $("#btnLookForToAddress").off("click").on("click", function () {
+  $("#btnLookForToAddressEti").off("click").on("click", function () {
     EticaBlockchain.getAddressListData(function (error) {
       EticaMainGUI.showGeneralError(error);
     }, function (addressList) {
@@ -102,14 +102,14 @@ $(document).on("render_send", function () {
         }
       }
 
-      $("#dlgAddressList").iziModal({width: "800px"});
-      EticaMainGUI.renderTemplate("addresslist.html", addressList, $("#dlgAddressListBody"));
-      $("#dlgAddressList").iziModal("open");
+      $("#dlgAddressListEti").iziModal({width: "800px"});
+      EticaMainGUI.renderTemplate("addresslist.html", addressList, $("#dlgAddressListEtiBody"));
+      $("#dlgAddressListEti").iziModal("open");
 
       $(".btnSelectToAddress").off("click").on("click", function () {
-        $("#sendToAddressName").html($(this).attr("data-name"));
-        $("#sendToAddress").val($(this).attr("data-wallet"));
-        $("#dlgAddressList").iziModal("close");
+        $("#sendEtiToAddressName").html($(this).attr("data-name"));
+        $("#sendEtiToAddress").val($(this).attr("data-wallet"));
+        $("#dlgAddressListEti").iziModal("close");
       });
 
       $("#addressListFilter").off("input").on("input", function (e) {
@@ -123,15 +123,15 @@ $(document).on("render_send", function () {
     });
   });
 
-  $("#btnAddToAddressBook").off("click").on("click", function () {
-    if (EticaBlockchain.isAddress($("#sendToAddress").val())) {
-      $("#dlgAddAddressToBook").iziModal();
-      $("#inputAddressName").val("");
-      $("#dlgAddAddressToBook").iziModal("open");
+  $("#btnAddToAddressBookEti").off("click").on("click", function () {
+    if (EticaBlockchain.isAddress($("#sendEtiToAddress").val())) {
+      $("#dlgEtiAddAddressToBook").iziModal();
+      $("#inputAddressNameEti").val("");
+      $("#dlgEtiAddAddressToBook").iziModal("open");
 
       function doAddAddressToAddressBook() {
-        EticaAddressBook.setAddressName($("#sendToAddress").val(), $("#inputAddressName").val());
-        $("#dlgAddAddressToBook").iziModal("close");
+        EticaAddressBook.setAddressName($("#sendEtiToAddress").val(), $("#inputAddressNameEti").val());
+        $("#dlgEtiAddAddressToBook").iziModal("close");
 
         iziToast.success({title: "Success", message: "Address was added to address book", position: "topRight", timeout: 2000});
       }
@@ -139,11 +139,11 @@ $(document).on("render_send", function () {
       EticaMainGUI.showGeneralError("Recipient address is not valid!");
     }
 
-    $("#btnAddAddressToBookConfirm").off("click").on("click", function () {
+    $("#btnAddAddressToBookConfirmEti").off("click").on("click", function () {
       doAddAddressToAddressBook();
     });
 
-    $("#dlgAddAddressToBook").off("keypress").on("keypress", function (e) {
+    $("#dlgEtiAddAddressToBook").off("keypress").on("keypress", function (e) {
       if (e.which == 13) {
         doAddAddressToAddressBook();
       }
@@ -153,24 +153,24 @@ $(document).on("render_send", function () {
   $("#btnSendEti").off("click").on("click", function () {
     if (EtiSend.validateSendForm()) {
       console.log('EtiSend.validateSendForm() true');
-      console.log('$("#sendFromAddress").val()', $("#sendFromAddress").val());
-      console.log('$("#sendToAddress").val()', $("#sendToAddress").val());
-      console.log('$("#sendAmmount").val()', $("#sendAmmount").val());
-      EticaContract.getTranasctionFee_sendEti($("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
+      console.log('$("#sendEtiFromAddress").val()', $("#sendEtiFromAddress").val());
+      console.log('$("#sendEtiToAddress").val()', $("#sendEtiToAddress").val());
+      console.log('$("#sendEtiAmmount").val()', $("#sendEtiAmmount").val());
+      EticaContract.getTranasctionFee_sendEti($("#sendEtiFromAddress").val(), $("#sendEtiToAddress").val(), $("#sendEtiAmmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
-        $("#dlgSendWalletPassword").iziModal();
-        $("#walletPassword").val("");
-        $("#fromAddressInfo").html($("#sendFromAddress").val());
-        $("#toAddressInfo").html($("#sendToAddress").val());
-        $("#valueToSendInfo").html($("#sendAmmount").val());
-        $("#feeToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
-        $("#dlgSendWalletPassword").iziModal("open");
+        $("#dlgSendEtiWalletPassword").iziModal();
+        $("#walletPasswordEti").val("");
+        $("#fromEtiAddressInfo").html($("#sendEtiFromAddress").val());
+        $("#toEtiAddressInfo").html($("#sendEtiToAddress").val());
+        $("#valueToSendEtiInfo").html($("#sendEtiAmmount").val());
+        $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#dlgSendEtiWalletPassword").iziModal("open");
 
         function doSendTransaction() {
-          $("#dlgSendWalletPassword").iziModal("close");
+          $("#dlgSendEtiWalletPassword").iziModal("close");
 
-          EticaContract.prepareTransaction_SendEti($("#walletPassword").val(), $("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
+          EticaContract.prepareTransaction_SendEti($("#walletPasswordEti").val(), $("#sendEtiFromAddress").val(), $("#sendEtiToAddress").val(), $("#sendEtiAmmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {
@@ -196,11 +196,11 @@ $(document).on("render_send", function () {
           });
         }
 
-        $("#btnSendWalletPasswordConfirm").off("click").on("click", function () {
+        $("#btnSendEtiWalletPasswordConfirm").off("click").on("click", function () {
           doSendTransaction();
         });
 
-        $("#dlgSendWalletPassword").off("keypress").on("keypress", function (e) {
+        $("#dlgSendEtiWalletPassword").off("keypress").on("keypress", function (e) {
           if (e.which == 13) {
             doSendTransaction();
           }

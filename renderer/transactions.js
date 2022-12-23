@@ -167,6 +167,7 @@ class Transactions {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
         if (data.transactions) {
+          let unique_txs = [];
           data.transactions.forEach(element => {
             if (element.from && element.to) {
               if (EticaWallets.getAddressExists(element.from) || EticaWallets.getAddressExists(element.to)) {
@@ -182,13 +183,17 @@ class Transactions {
                 // store transaction and notify about new transactions
                 ipcRenderer.send("storeTransaction", Transaction);
                 $(document).trigger("onNewAccountTransaction");
-
-                iziToast.info({
-                  title: "New Transaction",
-                  message: vsprintf("Transaction from address %s to address %s was just processed", [Transaction.fromaddr, Transaction.toaddr]),
-                  position: "topRight",
-                  timeout: 10000
-                });
+                console.log('new tx before iziToast.info is: ', Transaction);
+                if(!unique_txs.includes(element.hash.toLowerCase())){
+                  iziToast.info({
+                    title: "New Transaction",
+                    message: vsprintf("Transaction from address %s to address %s was just processed", [Transaction.fromaddr, Transaction.toaddr]),
+                    position: "topRight",
+                    timeout: 10000
+                  });
+                  unique_txs.push(element.hash.toLowerCase());
+                }
+                
 
                 if (EticaMainGUI.getAppState() == "transactions") {
                   setTimeout(function () {

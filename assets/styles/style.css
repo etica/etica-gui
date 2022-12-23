@@ -175,6 +175,11 @@ body.pg-loaded>.inner {
   height: 300px;
 }
 
+#dlgSendEtiWalletPassword .modalBody,
+#dlgImportFromPrivateKey .modalBody {
+  height: 300px;
+}
+
 #dlgTransactionInfo {
   width: 700px;
   max-width: 700px !important;
@@ -185,18 +190,24 @@ body.pg-loaded>.inner {
 }
 
 #dlgAddAddressToBook .modalBody,
+#dlgEtiAddAddressToBook .modalBody,
 #dlgChangeWalletName .modalBody,
 #dlgChangeAddressName .modalBody {
   height: 150px;
 }
 
-#dlgAddressListBody {
+#dlgAddressListBody,
+#dlgAddressListEtiBody {
   margin: 0px;
   padding: 20px;
   background-color: #333;
 }
 
 #dlgAddressList .modalBody {
+  color: #aaa;
+}
+
+#dlgAddressListEti .modalBody {
   color: #aaa;
 }
 
@@ -343,9 +354,13 @@ div.sidebar svg {
 }
 
 #fromAddressInfo,
+#fromEtiAddressInfo,
 #toAddressInfo,
+#toEtiAddressInfo,
 #valueToSendInfo,
-#feeToPayInfo {
+#valueToSendEtiInfo,
+#feeToPayInfo,
+#feeEtiToPayInfo {
   color: #399999;
   margin-left: 5px;
   margin-right: 5px;
@@ -445,6 +460,10 @@ div.noAddressWrapper {
 }
 
 #btnAddToAddressBook {
+  margin-right: 3px;
+}
+
+#btnAddToAddressBookEti {
   margin-right: 3px;
 }
 

@@ -3,7 +3,7 @@
     <form class="col s12">
       <div class="row">
         <div class="input-field col s6">
-          <select id="sendFromAddress">
+          <select id="sendEtiFromAddress">
             <option value="" disabled="disabled" selected="selected">Choose your address</option>
             {{#addressData}}
               <option value="{{address}}">{{name}}
@@ -11,32 +11,32 @@
                 {{address}}</option>
             {{/addressData}}
           </select>
-          <label for="sendFromAddress">From address:</label>
-          <small id="sendFromAddressName" class="form-text text-muted"></small>
+          <label for="sendEtiFromAddress">From address:</label>
+          <small id="sendEtiFromAddressName" class="form-text text-muted"></small>
         </div>
         <div class="input-field col s6">
-          <label for="sendToAddress" class="active">To address:</label>
+          <label for="sendEtiToAddress" class="active">To address:</label>
           <div class="addressInputWrapper">
-            <input id="sendToAddress" class="" placeholder="recipient address" type="text">
-            <button type="button" class="btn button3 btnSendToolButton" id="btnAddToAddressBook">
+            <input id="sendEtiToAddress" class="" placeholder="recipient address" type="text">
+            <button type="button" class="btn button3 btnSendToolButton" id="btnAddToAddressBookEti">
               <i class="fas fa-plus"></i>
             </button>
-            <button type="button" class="btn button3 btnSendToolButton" id="btnLookForToAddress">
+            <button type="button" class="btn button3 btnSendToolButton" id="btnLookForToAddressEti">
               <i class="fas fa-search"></i>
             </button>
           </div>
-          <small id="sendToAddressName" class="form-text text-muted"></small>
+          <small id="sendEtiToAddressName" class="form-text text-muted"></small>
         </div>
       </div>
       <div class="row">
         <div class="input-field col s6">
-          <input id="sendAmmount" class="" placeholder="0" type="number" value="0">
-          <label for="sendAmmount" class="active">Amount:</label>
+          <input id="sendEtiAmmount" class="" placeholder="0" type="number" value="0">
+          <label for="sendEtiAmmount" class="active">Amount:</label>
         </div>
         <div class="input-field col s6">
           <div class="input-field col s12">
-            <span id="sendMaxAmmount">0</span><span>ETI</span>
-            <button type="button" class="button4" id="btnSendAll">Send All</button>
+            <span id="sendEtiMaxAmmount">0</span><span>ETI</span>
+            <button type="button" class="button4" id="btnSendEtiAll">Send All</button>
           </div>
         </div>
       </div>
@@ -70,51 +70,51 @@
 </div>
 
 <!-- send details dialog -->
-<div id="dlgSendWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To send from this wallet, please enter the wallet password" data-izimodal-icon="icon-home">
+<div id="dlgSendEtiWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To send from this wallet, please enter the wallet password" data-izimodal-icon="icon-home">
   <div class="modalBody">
     <div class="form-group sendTXInfo">
       <i class="fas fa-wallet"></i>
       <label>From address:</label>
-      <label id="fromAddressInfo"></label>
+      <label id="fromEtiAddressInfo"></label>
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-wallet"></i>
       <label>To address:</label>
-      <label id="toAddressInfo"></label>
+      <label id="toEtiAddressInfo"></label>
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-dollar-sign"></i>
       <label>Value to send:</label>
-      <label id="valueToSendInfo"></label>
+      <label id="valueToSendEtiInfo"></label>
       <label class="currencyTicker">ETI</label>
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-dollar-sign"></i>
       <label>Fee to pay:</label>
-      <label id="feeToPayInfo"></label>
+      <label id="feeEtiToPayInfo"></label>
       <label class="currencyTicker">ETI</label>
     </div>
     <hr class="sendTXdivider">
     <div class="form-group sendTXPass">
       <label for="usr">Enter your Password:</label>
-      <input type="password" class=" form-control" id="walletPassword">
+      <input type="password" class=" form-control" id="walletPasswordEti">
     </div>
-    <button type="button" class="btn button3 btn-dialog-confirm" id="btnSendWalletPasswordConfirm">Confirm</button>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnSendEtiWalletPasswordConfirm">Confirm</button>
   </div>
 </div>
 
 <!-- The modal for address list -->
-<div id="dlgAddressList" class="modalDialog" data-izimodal-title="Address List" data-izimodal-subtitle="Please select an address from the list" data-izimodal-icon="icon-home">
-  <div class="modalBody" id="dlgAddressListBody"></div>
+<div id="dlgAddressListEti" class="modalDialog" data-izimodal-title="Address List" data-izimodal-subtitle="Please select an address from the list" data-izimodal-icon="icon-home">
+  <div class="modalBody" id="dlgAddressListEtiBody"></div>
 </div>
 
 <!-- The modal to add address to address book -->
-<div id="dlgAddAddressToBook" class="modalDialog" data-izimodal-title="Address Name" data-izimodal-subtitle="Enter the name for this address" data-izimodal-icon="icon-home">
+<div id="dlgEtiAddAddressToBook" class="modalDialog" data-izimodal-title="Address Name" data-izimodal-subtitle="Enter the name for this address" data-izimodal-icon="icon-home">
   <div class="modalBody">
     <div class="form-group">
       <label for="usr">Address Name:</label>
-      <input type="text" class=" form-control" id="inputAddressName">
+      <input type="text" class=" form-control" id="inputAddressNameEti">
     </div>
-    <button type="button" class="btn button3 btn-dialog-confirm" id="btnAddAddressToBookConfirm">Confirm</button>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnAddAddressToBookConfirmEti">Confirm</button>
   </div>
 </div>
