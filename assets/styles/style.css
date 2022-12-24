@@ -129,7 +129,7 @@ body.pg-loaded>.inner {
   text-align: left;
   vertical-align: middle;
   padding-left: 8px;
-  border-left: 2.75px solid #3999;
+  border-left: 0.75px solid #3fff00b5;
   margin-bottom: 1vh;
   margin-left: 0px;
 }
@@ -250,7 +250,7 @@ div.iconSelected {
   border: 1px solid slategray;*/
   background-color: #131313;
   border: 1px solid #ffffff00;
-  border-left: 4.5px solid #fff9;
+  border-left: 1px solid #399999;
 }
 
 div.iconSelected a {
