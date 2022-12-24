@@ -146,6 +146,12 @@ body.pg-loaded>.inner {
   margin-right: 10px;
 }
 
+.sumBalanceHeader {
+  float: right;
+  line-height: 38px;
+  margin-right: 10px;
+}
+
 .modalBody {
   margin: 20px;
   color: #333;
@@ -240,6 +246,13 @@ body.pg-loaded>.inner {
 }
 
 #walletsToolbar {
+  padding: 10px;
+  border-bottom: 1px solid #111;
+  border-radius: 0px;
+  height: 60px;
+}
+
+.walletsHeader {
   padding: 10px;
   border-bottom: 1px solid #111;
   border-radius: 0px;

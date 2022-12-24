@@ -2,6 +2,14 @@
   <button type="button" class="btn btn-etica" id="btnNewAddress">
     <i class="fas fa-plus"></i>
   </button>
+  
+    <div class="sumBalanceHeader">
+      <span class="sumBalance">{{sumBalance}}</span>
+      <span class="sumCurrency">EGAZ</span>
+      <span class="sumBalance">{{sumBalanceEti}}</span>
+      <span class="sumCurrency">ETI</span>
+    </div>
+
 </div>
 <div id="addressList" class="{{#if addressData.length}}addressWrapper{{else}}noAddressWrapper{{/if}}">
   {{#if addressData.length}}

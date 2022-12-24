@@ -129,8 +129,14 @@ class Transactions {
 
   renderTransactions() {
     if (!EticaTransactions.getIsLoading()) {
-      EticaMainGUI.renderTemplate("transactions.html", {});
-      $(document).trigger("render_transactions");
+
+      EticaBlockchain.getAccountsData(function (error) {
+        EticaMainGUI.showGeneralError(error);
+      }, function (data) {
+        EticaMainGUI.renderTemplate("transactions.html", data);
+        $(document).trigger("render_transactions");
+      });
+      
       EticaTransactions.setIsLoading(true);
 
       // show the loading overlay for transactions
