@@ -134,7 +134,7 @@ class Blockchain {
   getAccountsData(clbError, clbSuccess) {
     var rendererData = {};
     rendererData.sumBalance = 0;
-    rendererData.sumBalance_eti = 0;
+    rendererData.sumBalanceEti = 0;
     rendererData.addressData = [];
 
     var wallets = EticaDatatabse.getWallets();
@@ -187,13 +187,13 @@ class Blockchain {
       let balance = await contract.methods.balanceOf(rendererData.addressData[index].address).call();
 
         rendererData.addressData[index].balance_eti = parseFloat(web3Local.utils.fromWei(balance, "ether")).toFixed(2);
-        rendererData.sumBalance_eti = rendererData.sumBalance_eti + parseFloat(web3Local.utils.fromWei(balance, "ether"));
+        rendererData.sumBalanceEti = rendererData.sumBalanceEti + parseFloat(web3Local.utils.fromWei(balance, "ether"));
 
         if (counter < rendererData.addressData.length - 1) {
           counter++;
           updateBalanceETI(counter);
         } else {
-          rendererData.sumBalance_eti = parseFloat(rendererData.sumBalance_eti).toFixed(2);
+          rendererData.sumBalanceEti = parseFloat(rendererData.sumBalanceEti).toFixed(2);
           clbSuccess(rendererData);
         }
     }

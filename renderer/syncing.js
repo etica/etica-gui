@@ -43,6 +43,7 @@ var peerCountInterval = setInterval(function () {
 function StartSyncProcess() {
   var alreadyCatchedUp = false;
   var nodeSyncInterval = null;
+  var SyncBalancesInterval = null;
 
   var subscription = web3Local.eth.subscribe("syncing", function (error, sync) {
     if (!error) {
@@ -115,6 +116,20 @@ function StartSyncProcess() {
       }
     }
   });
+
+  // Updates balances every 60 seconds
+  SyncBalancesInterval = setInterval(function () {
+
+    EticaBlockchain.getAccountsData(function (error) {
+      EticaMainGUI.showGeneralError(error);
+    }, function (data) {
+      //console.log('updated Balances');
+    });
+
+  }, 30000);
+
+
+  
 }
 
 var InitWeb3 = setInterval(function () {

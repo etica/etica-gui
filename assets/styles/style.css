@@ -140,6 +140,12 @@ body.pg-loaded>.inner {
   margin-right: 10px;
 }
 
+#sumBalanceEti {
+  float: right;
+  line-height: 38px;
+  margin-right: 10px;
+}
+
 .modalBody {
   margin: 20px;
   color: #333;
@@ -413,6 +419,7 @@ div.sidebar svg {
 
 .sumDollars,
 .sumBalance,
+.sumBalanceEti,
 .sumCurrency {
   color: #ccc;
   margin-right: 5px;
