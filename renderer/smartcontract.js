@@ -129,12 +129,1067 @@ class SmartContract {
     });
   }
 
+   // SEND ETI //
+
+
+   // STAKE ETI //
+
+   getTranasctionFee_stakeEti(fromAddress, amount, clbError, clbSuccess) {
+    web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+      if (error) {
+        clbError(error);
+      } else {
+        
+        fromAddress_lowercase = fromAddress.toLowerCase(); // make sure fromAddress is in lower case to avoid invalid type address error in txData object:
+        var amountToStake = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+        var txData = web3Local.eth.abi.encodeFunctionCall({
+          name: 'eticatobosoms',
+          type: 'function',
+          inputs: [{
+              type: 'address',
+              name: 'address'
+          },
+          {
+              type: 'uint256',
+              name: 'amount'
+          }]
+      }, [fromAddress_lowercase, amountToStake ]);
+
+        var RawTransaction = {
+          from: fromAddress,
+          to: ETICA_ADDRESS,
+          value: 0,
+          nonce: result,
+          data: txData
+        };
+
+        web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+            var usedGas = result + 1;
+            web3Local.eth.getGasPrice(function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                clbSuccess(result * usedGas);
+              }
+            });
+          }
+        });
+
+      }
+    });
+  }
+
+
+  prepareTransaction_StakeEti(password, fromAddress, amount, clbError, clbSuccess) {
+    web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
+      if (error) {
+        clbError("Wrong password for the selected address!");
+      } else {
+        web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+
+            fromAddress_lowercase = fromAddress.toLowerCase(); // make sure fromAddress_lowercase is in lower case to avoid invalid type address error in txData object:
+            var amountToSend = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+            var txData = web3Local.eth.abi.encodeFunctionCall({
+              name: 'eticatobosoms',
+              type: 'function',
+              inputs: [{
+                  type: 'address',
+                  name: 'address'
+              },
+              {
+                  type: 'uint256',
+                  name: 'amount'
+              }]
+          }, [fromAddress, amountToSend ]);
+
+            var RawTransaction = {
+              from: fromAddress,
+              to: ETICA_ADDRESS,
+              value: 0,
+              nonce: result,
+              data: txData
+            };
+
+            web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                RawTransaction.gas = result + 1;
+                web3Local.eth.getGasPrice(function (error, result) {
+                  if (error) {
+                    clbError(error);
+                  } else {
+                    RawTransaction.gasPrice = result;
+                    web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                      if (error) {
+                        clbError(error);
+                      } else {
+                        clbSuccess(result);
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  }
 
 
 
+   // STAKE ETI //
+
+
+
+      //  CREATE DISEASE //
+
+      getTranasctionFee_createdisease(fromAddress, _diseasename, clbError, clbSuccess) {
+        web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+            
+            var txData = web3Local.eth.abi.encodeFunctionCall({
+              name: 'createdisease',
+              type: 'function',
+              inputs: [{
+                  type: 'string',
+                  name: 'name'
+              }]
+          }, [_diseasename]);
+    
+            var RawTransaction = {
+              from: fromAddress,
+              to: ETICA_ADDRESS,
+              value: 0,
+              nonce: result,
+              data: txData
+            };
+    
+            web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                var usedGas = result + 1;
+                web3Local.eth.getGasPrice(function (error, result) {
+                  if (error) {
+                    clbError(error);
+                  } else {
+                    clbSuccess(result * usedGas);
+                  }
+                });
+              }
+            });
+    
+          }
+        });
+      }
+    
+    
+      prepareTransaction_createdisease(password, fromAddress, _diseasename, clbError, clbSuccess) {
+        web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
+          if (error) {
+            clbError("Wrong password for the selected address!");
+          } else {
+            web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+    
+                var amountToSend = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+                var txData = web3Local.eth.abi.encodeFunctionCall({
+                  name: 'createdisease',
+                  type: 'function',
+                  inputs: [{
+                      type: 'string',
+                      name: 'name'
+                  }]
+              }, [_diseasename]);
+    
+                var RawTransaction = {
+                  from: fromAddress,
+                  to: ETICA_ADDRESS,
+                  value: 0,
+                  nonce: result,
+                  data: txData
+                };
+    
+                web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                  if (error) {
+                    clbError(error);
+                  } else {
+                    RawTransaction.gas = result + 1;
+                    web3Local.eth.getGasPrice(function (error, result) {
+                      if (error) {
+                        clbError(error);
+                      } else {
+                        RawTransaction.gasPrice = result;
+                        web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                          if (error) {
+                            clbError(error);
+                          } else {
+                            clbSuccess(result);
+                          }
+                        });
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    
+    
+    
+       // CREATE DISEASE //
   
 
-  
+        //  CREATE CHUNK //
+
+        getTranasctionFee_createchunk(fromAddress, _diseasehash, _title, _description, clbError, clbSuccess) {
+          web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+            if (error) {
+              clbError(error);
+            } else {
+              
+              var txData = web3Local.eth.abi.encodeFunctionCall({
+                name: 'createchunk',
+                type: 'function',
+                inputs: [{
+                    type: 'bytes32',
+                    name: 'diseasehash'
+                },
+                {
+                  type: 'string',
+                  name: 'title'
+              },
+              {
+                type: 'string',
+                name: 'description'
+            }]
+            }, [_diseasehash, _title, _description]);
+      
+              var RawTransaction = {
+                from: fromAddress,
+                to: ETICA_ADDRESS,
+                value: 0,
+                nonce: result,
+                data: txData
+              };
+      
+              web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+                  var usedGas = result + 1;
+                  web3Local.eth.getGasPrice(function (error, result) {
+                    if (error) {
+                      clbError(error);
+                    } else {
+                      clbSuccess(result * usedGas);
+                    }
+                  });
+                }
+              });
+      
+            }
+          });
+        }
+      
+      
+        prepareTransaction_createchunk(password, fromAddress, _diseasehash, _title, _description, clbError, clbSuccess) {
+          web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
+            if (error) {
+              clbError("Wrong password for the selected address!");
+            } else {
+              web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+      
+                  var txData = web3Local.eth.abi.encodeFunctionCall({
+                    name: 'createchunk',
+                type: 'function',
+                inputs: [{
+                    type: 'bytes32',
+                    name: 'diseasehash'
+                },
+                {
+                  type: 'string',
+                  name: 'title'
+                },
+                {
+                type: 'string',
+                name: 'description'
+                }]
+                }, [_diseasehash, _title, _description]);
+      
+                  var RawTransaction = {
+                    from: fromAddress,
+                    to: ETICA_ADDRESS,
+                    value: 0,
+                    nonce: result,
+                    data: txData
+                  };
+      
+                  web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                    if (error) {
+                      clbError(error);
+                    } else {
+                      RawTransaction.gas = result + 1;
+                      web3Local.eth.getGasPrice(function (error, result) {
+                        if (error) {
+                          clbError(error);
+                        } else {
+                          RawTransaction.gasPrice = result;
+                          web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                            if (error) {
+                              clbError(error);
+                            } else {
+                              clbSuccess(result);
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      
+      
+      
+         // CREATE CHUNK //
+
+
+
+        //  CREATE PROPOSAL //
+
+        getTranasctionFee_createproposal(fromAddress, _diseasehash, _title, _description, raw_release_hash, _freefield, _chunkid, clbError, clbSuccess) {
+          web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+            if (error) {
+              clbError(error);
+            } else {
+              
+              var txData = web3Local.eth.abi.encodeFunctionCall({
+                name: 'propose',
+                type: 'function',
+                inputs: [{
+                    type: 'bytes32',
+                    name: 'diseasehash'
+                },
+                {
+                  type: 'string',
+                  name: 'title'
+              },
+              {
+                type: 'string',
+                name: 'description'
+              },
+              {
+                type: 'string',
+                name: 'raw_release_hash'
+              },
+              {
+                type: 'string',
+                name: 'freefield'
+              },
+              {
+                type: 'uint256',
+                name: 'chunkid'
+              }
+          ]
+            }, [_diseasehash, _title, _description, raw_release_hash, _freefield, _chunkid]);
+      
+              var RawTransaction = {
+                from: fromAddress,
+                to: ETICA_ADDRESS,
+                value: 0,
+                nonce: result,
+                data: txData
+              };
+      
+              web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+                  var usedGas = result + 1;
+                  web3Local.eth.getGasPrice(function (error, result) {
+                    if (error) {
+                      clbError(error);
+                    } else {
+                      clbSuccess(result * usedGas);
+                    }
+                  });
+                }
+              });
+      
+            }
+          });
+        }
+      
+      
+        prepareTransaction_createproposal(password, fromAddress, _diseasehash, _title, _description, raw_release_hash, _freefield, _chunkid, clbError, clbSuccess) {
+          web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
+            if (error) {
+              clbError("Wrong password for the selected address!");
+            } else {
+              web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+      
+                  var txData = web3Local.eth.abi.encodeFunctionCall({
+                    name: 'propose',
+                type: 'function',
+                inputs: [{
+                  type: 'bytes32',
+                  name: 'diseasehash'
+              },
+              {
+                type: 'string',
+                name: 'title'
+            },
+            {
+              type: 'string',
+              name: 'description'
+            },
+            {
+              type: 'string',
+              name: 'raw_release_hash'
+            },
+            {
+              type: 'string',
+              name: 'freefield'
+            },
+            {
+              type: 'uint256',
+              name: 'chunkid'
+            }]
+                }, [_diseasehash, _title, _description, raw_release_hash, _freefield, _chunkid]);
+      
+                  var RawTransaction = {
+                    from: fromAddress,
+                    to: ETICA_ADDRESS,
+                    value: 0,
+                    nonce: result,
+                    data: txData
+                  };
+      
+                  web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                    if (error) {
+                      clbError(error);
+                    } else {
+                      RawTransaction.gas = result + 1;
+                      web3Local.eth.getGasPrice(function (error, result) {
+                        if (error) {
+                          clbError(error);
+                        } else {
+                          RawTransaction.gasPrice = result;
+                          web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                            if (error) {
+                              clbError(error);
+                            } else {
+                              clbSuccess(result);
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      
+      
+      
+         // CREATE PROPOSAL //
+
+
+         //  COMMIT VOTE //
+
+        getTranasctionFee_commitvote(fromAddress, _votehash, amount, clbError, clbSuccess) {
+          web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+            if (error) {
+              clbError(error);
+            } else {
+              
+            var amountToVote = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+              var txData = web3Local.eth.abi.encodeFunctionCall({
+                name: 'commitvote',
+                type: 'function',
+                inputs: [{
+                    type: 'bytes32',
+                    name: 'votehash'
+                },
+                {
+                  type: 'uint256',
+                  name: 'amount'
+                }
+          ]
+            }, [_votehash, amountToVote]);
+      
+              var RawTransaction = {
+                from: fromAddress,
+                to: ETICA_ADDRESS,
+                value: 0,
+                nonce: result,
+                data: txData
+              };
+      
+              web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+                  var usedGas = result + 1;
+                  web3Local.eth.getGasPrice(function (error, result) {
+                    if (error) {
+                      clbError(error);
+                    } else {
+                      clbSuccess(result * usedGas);
+                    }
+                  });
+                }
+              });
+      
+            }
+          });
+        }
+      
+      
+        prepareTransaction_commitvote(password, fromAddress, _votehash, amount, clbError, clbSuccess) {
+          web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
+            if (error) {
+              clbError("Wrong password for the selected address!");
+            } else {
+              web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+      
+                  var amountToVote = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+                  var txData = web3Local.eth.abi.encodeFunctionCall({
+                    name: 'commitvote',
+                    type: 'function',
+                    inputs: [{
+                        type: 'bytes32',
+                        name: 'votehash'
+                    },
+                    {
+                      type: 'uint256',
+                      name: 'amount'
+                    }
+              ]
+                }, [_votehash, amountToVote]);
+      
+                  var RawTransaction = {
+                    from: fromAddress,
+                    to: ETICA_ADDRESS,
+                    value: 0,
+                    nonce: result,
+                    data: txData
+                  };
+      
+                  web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                    if (error) {
+                      clbError(error);
+                    } else {
+                      RawTransaction.gas = result + 1;
+                      web3Local.eth.getGasPrice(function (error, result) {
+                        if (error) {
+                          clbError(error);
+                        } else {
+                          RawTransaction.gasPrice = result;
+                          web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                            if (error) {
+                              clbError(error);
+                            } else {
+                              clbSuccess(result);
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      
+         // COMMIT VOTE //
+
+         //  REVEAL VOTE //
+
+        getTranasctionFee_revealvote(fromAddress, _proposed_release_hash, _approved, _vary, clbError, clbSuccess) {
+          web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+            if (error) {
+              clbError(error);
+            } else {
+
+              var txData = web3Local.eth.abi.encodeFunctionCall({
+                name: 'revealvote',
+                type: 'function',
+                inputs: [{
+                    type: 'bytes32',
+                    name: '_proposed_release_hash'
+                },
+                {
+                  type: 'bool',
+                  name: '_approved'
+                },
+                {
+                  type: 'string',
+                  name: '_vary'
+                }
+            ]
+            }, [_proposed_release_hash, _approved, _vary]);
+      
+              var RawTransaction = {
+                from: fromAddress,
+                to: ETICA_ADDRESS,
+                value: 0,
+                nonce: result,
+                data: txData
+              };
+      
+              web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+                  var usedGas = result + 1;
+                  web3Local.eth.getGasPrice(function (error, result) {
+                    if (error) {
+                      clbError(error);
+                    } else {
+                      clbSuccess(result * usedGas);
+                    }
+                  });
+                }
+              });
+      
+            }
+          });
+        }
+      
+      
+        prepareTransaction_revealvote(password, fromAddress, _proposed_release_hash, _approved, _vary, clbError, clbSuccess) {
+          web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
+            if (error) {
+              clbError("Wrong password for the selected address!");
+            } else {
+              web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+      
+                var txData = web3Local.eth.abi.encodeFunctionCall({
+                    name: 'revealvote',
+                type: 'function',
+                inputs: [{
+                    type: 'bytes32',
+                    name: '_proposed_release_hash'
+                },
+                {
+                  type: 'bool',
+                  name: '_approved'
+                },
+                {
+                  type: 'string',
+                  name: '_vary'
+                }
+                ]
+                }, [_proposed_release_hash, _approved, _vary]);
+      
+                  var RawTransaction = {
+                    from: fromAddress,
+                    to: ETICA_ADDRESS,
+                    value: 0,
+                    nonce: result,
+                    data: txData
+                  };
+      
+                  web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                    if (error) {
+                      clbError(error);
+                    } else {
+                      RawTransaction.gas = result + 1;
+                      web3Local.eth.getGasPrice(function (error, result) {
+                        if (error) {
+                          clbError(error);
+                        } else {
+                          RawTransaction.gasPrice = result;
+                          web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                            if (error) {
+                              clbError(error);
+                            } else {
+                              clbSuccess(result);
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      
+         // REVEAL VOTE //
+
+
+         //  CLAIM PROPOSAL //
+
+        getTranasctionFee_claimproposal(fromAddress, _proposed_release_hash, clbError, clbSuccess) {
+          web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+            if (error) {
+              clbError(error);
+            } else {
+
+              var txData = web3Local.eth.abi.encodeFunctionCall({
+                name: 'clmpropbyhash',
+                type: 'function',
+                inputs: [{
+                    type: 'bytes32',
+                    name: '_proposed_release_hash'
+                }
+            ]
+            }, [_proposed_release_hash]);
+      
+              var RawTransaction = {
+                from: fromAddress,
+                to: ETICA_ADDRESS,
+                value: 0,
+                nonce: result,
+                data: txData
+              };
+      
+              web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+                  var usedGas = result + 1;
+                  web3Local.eth.getGasPrice(function (error, result) {
+                    if (error) {
+                      clbError(error);
+                    } else {
+                      clbSuccess(result * usedGas);
+                    }
+                  });
+                }
+              });
+      
+            }
+          });
+        }
+      
+      
+        prepareTransaction_claimproposal(password, fromAddress, _proposed_release_hash, clbError, clbSuccess) {
+          web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
+            if (error) {
+              clbError("Wrong password for the selected address!");
+            } else {
+              web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+      
+                var txData = web3Local.eth.abi.encodeFunctionCall({
+                  name: 'clmpropbyhash',
+                  type: 'function',
+                  inputs: [{
+                      type: 'bytes32',
+                      name: '_proposed_release_hash'
+                  }
+                  ]
+                }, [_proposed_release_hash]);
+      
+                  var RawTransaction = {
+                    from: fromAddress,
+                    to: ETICA_ADDRESS,
+                    value: 0,
+                    nonce: result,
+                    data: txData
+                  };
+      
+                  web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                    if (error) {
+                      clbError(error);
+                    } else {
+                      RawTransaction.gas = result + 1;
+                      web3Local.eth.getGasPrice(function (error, result) {
+                        if (error) {
+                          clbError(error);
+                        } else {
+                          RawTransaction.gasPrice = result;
+                          web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                            if (error) {
+                              clbError(error);
+                            } else {
+                              clbSuccess(result);
+                            }
+                          });
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+        }
+      
+         // CLAIM PROPOSAL //
+
+
+        //  CONSOLIDATE STAKE //
+
+   getTranasctionFee_stakescsldt(fromAddress, _endTime, _min_limit, _maxidx, clbError, clbSuccess) {
+    web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+      if (error) {
+        clbError(error);
+      } else {
+        
+        var txData = web3Local.eth.abi.encodeFunctionCall({
+          name: 'stakescsldt',
+          type: 'function',
+          inputs: [{
+              type: 'uint256',
+              name: '_endTime'
+          },
+          {
+            type: 'uint256',
+            name: '_min_limit'
+         },
+         {
+          type: 'uint256',
+          name: '_maxidx'
+         }]
+      }, [_endTime, _min_limit, _maxidx]);
+
+        var RawTransaction = {
+          from: fromAddress,
+          to: ETICA_ADDRESS,
+          value: 0,
+          nonce: result,
+          data: txData
+        };
+
+        web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+            var usedGas = result + 1;
+            web3Local.eth.getGasPrice(function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                clbSuccess(result * usedGas);
+              }
+            });
+          }
+        });
+
+      }
+    });
+  }
+
+
+  prepareTransaction_stakescsldt(password, fromAddress, _endTime, _min_limit, _maxidx, clbError, clbSuccess) {
+    web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
+      if (error) {
+        clbError("Wrong password for the selected address!");
+      } else {
+        web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+
+            fromAddress_lowercase = fromAddress.toLowerCase(); // make sure fromAddress_lowercase is in lower case to avoid invalid type address error in txData object:
+            var amountToSend = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+            var txData = web3Local.eth.abi.encodeFunctionCall({
+              name: 'stakescsldt',
+              type: 'function',
+              inputs: [{
+               type: 'uint256',
+               name: '_endTime'
+              },
+            {
+             type: 'uint256',
+             name: '_min_limit'
+            },
+            {
+             type: 'uint256',
+             name: '_maxidx'
+            }]
+          }, [_endTime, _min_limit, _maxidx]);
+
+            var RawTransaction = {
+              from: fromAddress,
+              to: ETICA_ADDRESS,
+              value: 0,
+              nonce: result,
+              data: txData
+            };
+
+            web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                RawTransaction.gas = result + 1;
+                web3Local.eth.getGasPrice(function (error, result) {
+                  if (error) {
+                    clbError(error);
+                  } else {
+                    RawTransaction.gasPrice = result;
+                    web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                      if (error) {
+                        clbError(error);
+                      } else {
+                        clbSuccess(result);
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+
+
+   // CONSOLIDATE STAKE // 
+
+   //  SNAP STAKE //
+
+   getTranasctionFee_stakesnap(fromAddress, stakeidx, amount, clbError, clbSuccess) {
+    web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+      if (error) {
+        clbError(error);
+      } else {
+        
+        var amountToSnap = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+        var txData = web3Local.eth.abi.encodeFunctionCall({
+          name: 'stakesnap',
+          type: 'function',
+          inputs: [{
+              type: 'uint256',
+              name: '_stakeidx'
+          },
+          {
+            type: 'uint256',
+            name: '_snapamount'
+         }]
+      }, [stakeidx, amountToSnap]);
+
+        var RawTransaction = {
+          from: fromAddress,
+          to: ETICA_ADDRESS,
+          value: 0,
+          nonce: result,
+          data: txData
+        };
+
+        web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+            var usedGas = result + 1;
+            web3Local.eth.getGasPrice(function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                clbSuccess(result * usedGas);
+              }
+            });
+          }
+        });
+
+      }
+    });
+  }
+
+
+  prepareTransaction_stakesnap(password, fromAddress, stakeidx, amount, clbError, clbSuccess) {
+    web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
+      if (error) {
+        clbError("Wrong password for the selected address!");
+      } else {
+        web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+
+            fromAddress_lowercase = fromAddress.toLowerCase(); // make sure fromAddress_lowercase is in lower case to avoid invalid type address error in txData object:
+            var amountToSnap = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+            var txData = web3Local.eth.abi.encodeFunctionCall({
+              name: 'stakesnap',
+              type: 'function',
+              inputs: [{
+                type: 'uint256',
+                name: '_stakeidx'
+              },
+              {
+                type: 'uint256',
+                name: '_snapamount'
+              }]
+          }, [stakeidx, amountToSnap]);
+
+            var RawTransaction = {
+              from: fromAddress,
+              to: ETICA_ADDRESS,
+              value: 0,
+              nonce: result,
+              data: txData
+            };
+
+            web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                RawTransaction.gas = result + 1;
+                web3Local.eth.getGasPrice(function (error, result) {
+                  if (error) {
+                    clbError(error);
+                  } else {
+                    RawTransaction.gasPrice = result;
+                    web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                      if (error) {
+                        clbError(error);
+                      } else {
+                        clbSuccess(result);
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+   // SNAP STAKE // 
+
 
 
 }
