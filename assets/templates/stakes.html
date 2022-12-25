@@ -82,6 +82,24 @@
   </div>
 </div>
 
+
+
+<div>
+  <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+    <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+    Wallet Stakes: {{sumStakedEti}} ETI
+  </span>
+  <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+    <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+    Wallet Bosoms: {{sumBosoms}} BOSOMS
+  </span>
+  <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+    <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+    Wallet Locked ETI: {{sumBlockedEti}} ETI
+  </span>
+</div>
+
+
 <!-- send details dialog -->
 <div id="dlgSendEtiWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To send from this wallet, please enter the wallet password" data-izimodal-icon="icon-home">
   <div class="modalBody">
@@ -141,6 +159,8 @@
           <th scope="col">Name</th>
           <th scope="col">Address</th>
           <th scope="col" data-sort-method='number'>Stakes</th>
+          <th scope="col" data-sort-method='number'>Available Bosoms</th>
+          <th scope="col" data-sort-method='number'>ETI locked</th>
           <th scope="col" data-sort-method='number'>Balance</th>
         </tr>
       </thead>
@@ -151,17 +171,21 @@
             <td><span class="textAddress">{{address}}</span></td>
             <td><span style="color:rgb(48, 162, 140);display: inline-block;">
                 <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-                {{stakesamount}} ETI</span><br>
-                <span style="color:rgb(48, 162, 140);display: inline-block;">
-                  <img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-                  {{blockedeticas}} ETI</span>
-            </td> 
+                {{stakesamount}} ETI</span>
+            </td>
+            <td>
+              <span style="color:rgb(48, 162, 140);display: inline-block;">
+              <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+              {{bosoms}} BOSOMS
+              </span>
+          </td> 
             <td><span style="color:rgb(48, 162, 140);display: inline-block;">
               <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-              {{balance_eti}} ETI</span><br>
-              <span style="color:rgb(48, 162, 140);display: inline-block;">
-                <img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-                {{balance}} EGAZ</span>
+              {{blockedeticas}} ETI</span>
+            </td>
+            <td><span style="color:rgb(48, 162, 140);display: inline-block;">
+              <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+              {{balance_eti}} ETI</span>
             </td>
           </tr>
         {{/addressData}}

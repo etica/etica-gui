@@ -25,8 +25,9 @@ class SmartContract {
     var rendererData = {};
     rendererData.sumBalance = 0;
     rendererData.sumBalanceEti = 0;
-    rendererData.SumStakedEti = 0;
-    rendererData.SumBlockedEti = 0;
+    rendererData.sumStakedEti = 0;
+    rendererData.sumBlockedEti = 0;
+    rendererData.sumBosoms = 0;
     rendererData.addressData = [];
 
     var wallets = EticaDatatabse.getWallets();
@@ -47,6 +48,7 @@ class SmartContract {
           addressInfo.balance_eti = 0;
           addressInfo.stakesamount = 0;
           addressInfo.blockedeticas = 0;
+          addressInfo.bosoms = 0;
           addressInfo.address = res[i];
           addressInfo.name = walletName;
           rendererData.addressData.push(addressInfo);
@@ -57,6 +59,7 @@ class SmartContract {
           updateBalanceETI(counter);
           updateStakeAmount(counter);
           updateBlockedEticas(counter);
+          updateBalanceBosoms(counter);
         } else {
           clbSuccess(rendererData);
         }
@@ -99,13 +102,13 @@ class SmartContract {
       let amount = await contract.methods.stakesAmount(rendererData.addressData[index].address).call();
 
         rendererData.addressData[index].stakesamount = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
-        rendererData.SumStakedEti = rendererData.SumStakedEti + parseFloat(web3Local.utils.fromWei(amount, "ether"));
+        rendererData.sumStakedEti = rendererData.sumStakedEti + parseFloat(web3Local.utils.fromWei(amount, "ether"));
 
         if (counter < rendererData.addressData.length - 1) {
           counter++;
           updateStakeAmount(counter);
         } else {
-          rendererData.SumStakedEti = parseFloat(rendererData.SumStakedEti).toFixed(2);
+          rendererData.sumStakedEti = parseFloat(rendererData.sumStakedEti).toFixed(2);
           clbSuccess(rendererData);
         }
     }
@@ -122,6 +125,22 @@ class SmartContract {
           updateBlockedEticas(counter);
         } else {
           rendererData.sumBlockedEti = parseFloat(rendererData.sumBlockedEti).toFixed(4);
+          clbSuccess(rendererData);
+        }
+    }
+
+    async function updateBalanceBosoms(index) {
+      let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let amount = await contract.methods.bosoms(rendererData.addressData[index].address).call();
+
+        rendererData.addressData[index].bosoms = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
+        rendererData.sumBosoms = rendererData.sumBosoms + parseFloat(web3Local.utils.fromWei(amount, "ether"));
+
+        if (counter < rendererData.addressData.length - 1) {
+          counter++;
+          updateBalanceBosoms(counter);
+        } else {
+          rendererData.sumBosoms = parseFloat(rendererData.sumBosoms).toFixed(4);
           clbSuccess(rendererData);
         }
     }

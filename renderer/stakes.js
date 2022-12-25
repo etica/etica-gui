@@ -32,6 +32,7 @@ class EticaStakes {
     EticaContract.getStakesData(function (error) {
       EticaMainGUI.showGeneralError(error);
     }, function (data) {
+      console.log('getStakesData data is ', data);
       EticaMainGUI.renderTemplate("stakes.html", data);
       $(document).trigger("render_stakes");
     });
