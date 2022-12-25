@@ -32,6 +32,9 @@ class MainGUI {
       case "etica":
         $("#mainNavBtnEticaWrapper").addClass("iconSelected");
         break;
+      case "stakes":
+        $("#mainNavBtnStakesWrapper").addClass("iconSelected");
+        break;
       case "settings":
         $("#mainNavBtnSettingsWrapper").addClass("iconSelected");
         break;
@@ -148,6 +151,11 @@ $("#mainNavBtnMarkets").click(function () {
 $("#mainNavBtnEtica").click(function () {
   EticaMainGUI.changeAppState("etica");
   EticaMarkets.renderMarkets();
+});
+
+$("#mainNavBtnStakes").click(function () {
+  EticaMainGUI.changeAppState("stakes");
+  StakesEtica.renderStakesState();
 });
 
 $("#mainNavBtnSettings").click(function () {

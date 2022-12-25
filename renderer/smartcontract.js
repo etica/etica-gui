@@ -20,6 +20,130 @@ class SmartContract {
   }
 
 
+
+  getStakesData(clbError, clbSuccess) {
+    var rendererData = {};
+    rendererData.sumBalance = 0;
+    rendererData.sumBalanceEti = 0;
+    rendererData.SumStakedEti = 0;
+    rendererData.SumBlockedEti = 0;
+    rendererData.addressData = [];
+
+    var wallets = EticaDatatabse.getWallets();
+    var counter = 0;
+
+    web3Local.eth.getAccounts(function (err, res) {
+      if (err) {
+        clbError(err);
+      } else {
+        for (var i = 0; i < res.length; i++) {
+          var walletName = vsprintf("Account %d", [i + 1]);
+          if (wallets) {
+            walletName = wallets.names[res[i]] || walletName;
+          }
+
+          var addressInfo = {};
+          addressInfo.balance = 0;
+          addressInfo.balance_eti = 0;
+          addressInfo.stakesamount = 0;
+          addressInfo.blockedeticas = 0;
+          addressInfo.address = res[i];
+          addressInfo.name = walletName;
+          rendererData.addressData.push(addressInfo);
+        }
+
+        if (rendererData.addressData.length > 0) {
+          updateBalance(counter);
+          updateBalanceETI(counter);
+          updateStakeAmount(counter);
+          updateBlockedEticas(counter);
+        } else {
+          clbSuccess(rendererData);
+        }
+      }
+    });
+
+    function updateBalance(index) {
+      web3Local.eth.getBalance(rendererData.addressData[index].address, function (error, balance) {
+        rendererData.addressData[index].balance = parseFloat(web3Local.utils.fromWei(balance, "ether")).toFixed(4);
+        rendererData.sumBalance = rendererData.sumBalance + parseFloat(web3Local.utils.fromWei(balance, "ether"));
+
+        if (counter < rendererData.addressData.length - 1) {
+          counter++;
+          updateBalance(counter);
+        } else {
+          rendererData.sumBalance = parseFloat(rendererData.sumBalance).toFixed(4);
+          clbSuccess(rendererData);
+        }
+      });
+    }
+
+    async function updateBalanceETI(index) {
+      let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let balance = await contract.methods.balanceOf(rendererData.addressData[index].address).call();
+
+        rendererData.addressData[index].balance_eti = parseFloat(web3Local.utils.fromWei(balance, "ether")).toFixed(4);
+        rendererData.sumBalanceEti = rendererData.sumBalanceEti + parseFloat(web3Local.utils.fromWei(balance, "ether"));
+
+        if (counter < rendererData.addressData.length - 1) {
+          counter++;
+          updateBalanceETI(counter);
+        } else {
+          rendererData.sumBalanceEti = parseFloat(rendererData.sumBalanceEti).toFixed(2);
+          clbSuccess(rendererData);
+        }
+    }
+
+    async function updateStakeAmount(index) {
+      let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let amount = await contract.methods.stakesAmount(rendererData.addressData[index].address).call();
+
+        rendererData.addressData[index].stakesamount = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
+        rendererData.SumStakedEti = rendererData.SumStakedEti + parseFloat(web3Local.utils.fromWei(amount, "ether"));
+
+        if (counter < rendererData.addressData.length - 1) {
+          counter++;
+          updateStakeAmount(counter);
+        } else {
+          rendererData.SumStakedEti = parseFloat(rendererData.SumStakedEti).toFixed(2);
+          clbSuccess(rendererData);
+        }
+    }
+
+    async function updateBlockedEticas(index) {
+      let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let amount = await contract.methods.blockedeticas(rendererData.addressData[index].address).call();
+
+        rendererData.addressData[index].blockedeticas = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
+        rendererData.sumBlockedEti = rendererData.sumBlockedEti + parseFloat(web3Local.utils.fromWei(amount, "ether"));
+
+        if (counter < rendererData.addressData.length - 1) {
+          counter++;
+          updateBlockedEticas(counter);
+        } else {
+          rendererData.sumBlockedEti = parseFloat(rendererData.sumBlockedEti).toFixed(4);
+          clbSuccess(rendererData);
+        }
+    }
+
+  }
+
+
+
+  stakesAmount(fromAddress, clbError, clbSuccess) {
+
+  let _stakesAmount = get_stakesAmount(fromAddress);
+  clbSuccess(_stakesAmount);
+
+  async function get_stakesAmount(fromAddress) {
+          let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+          let amount = await contract.methods.stakesAmount(fromAddress).call();
+          return amount;
+      }
+
+  }
+
+
   getTranasctionFee_sendEti(fromAddress, toAddress, amount, clbError, clbSuccess) {
     web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
       if (error) {
@@ -1245,7 +1369,7 @@ class SmartContract {
           if (error) {
             clbError(error);
           } else {
-            
+
             var txData = web3Local.eth.abi.encodeFunctionCall({
               name: 'stakeclmidx',
               type: 'function',
