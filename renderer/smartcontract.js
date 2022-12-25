@@ -1191,6 +1191,108 @@ class SmartContract {
    // SNAP STAKE // 
 
 
+   //  CLAIM STAKE //
+
+   getTranasctionFee_stakeclmidx(fromAddress, stakeidx, clbError, clbSuccess) {
+    web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+      if (error) {
+        clbError(error);
+      } else {
+        
+        var txData = web3Local.eth.abi.encodeFunctionCall({
+          name: 'stakeclmidx',
+          type: 'function',
+          inputs: [{
+              type: 'uint256',
+              name: '_stakeidx'
+          }]
+      }, [stakeidx]);
+
+        var RawTransaction = {
+          from: fromAddress,
+          to: ETICA_ADDRESS,
+          value: 0,
+          nonce: result,
+          data: txData
+        };
+
+        web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+            var usedGas = result + 1;
+            web3Local.eth.getGasPrice(function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                clbSuccess(result * usedGas);
+              }
+            });
+          }
+        });
+
+      }
+    });
+  }
+
+
+  prepareTransaction_stakeclmidx(password, fromAddress, stakeidx, clbError, clbSuccess) {
+    web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
+      if (error) {
+        clbError("Wrong password for the selected address!");
+      } else {
+        web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+            
+            var txData = web3Local.eth.abi.encodeFunctionCall({
+              name: 'stakeclmidx',
+              type: 'function',
+              inputs: [{
+                type: 'uint256',
+                name: '_stakeidx'
+              }]
+          }, [stakeidx]);
+
+            var RawTransaction = {
+              from: fromAddress,
+              to: ETICA_ADDRESS,
+              value: 0,
+              nonce: result,
+              data: txData
+            };
+
+            web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                RawTransaction.gas = result + 1;
+                web3Local.eth.getGasPrice(function (error, result) {
+                  if (error) {
+                    clbError(error);
+                  } else {
+                    RawTransaction.gasPrice = result;
+                    web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                      if (error) {
+                        clbError(error);
+                      } else {
+                        clbSuccess(result);
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+      }
+    });
+  }
+
+   // CLAIM STAKE // 
+
+
 
 }
 
