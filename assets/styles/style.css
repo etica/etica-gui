@@ -252,6 +252,13 @@ body.pg-loaded>.inner {
   height: 60px;
 }
 
+.walletsToolbar {
+  padding: 10px;
+  border-bottom: 1px solid #111;
+  border-radius: 0px;
+  height: 60px;
+}
+
 .walletsHeader {
   padding: 10px;
   border-bottom: 1px solid #111;
@@ -328,7 +335,15 @@ div.sidebar svg {
   margin-right: 5px;
 }
 
+#sendEtiMaxAmmount {
+  margin-right: 5px;
+}
+
 #btnSendAll {
+  margin-left: 10px;
+}
+
+#btnSendEtiAll {
   margin-left: 10px;
 }
 
@@ -477,6 +492,7 @@ div.noAddressWrapper {
 .btnSendToolButton {
   width: 40px;
   padding: 0px;
+  margin-left: 5px;
 }
 
 #btnAddToAddressBook {

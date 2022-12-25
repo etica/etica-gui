@@ -1,9 +1,13 @@
 <div class="walletsHeader">
   <div class="sumBalanceHeader">
-    <span class="sumBalance">{{sumBalance}}</span>
-    <span class="sumCurrency">EGAZ</span>
-    <span class="sumBalance">{{sumBalanceEti}}</span>
-    <span class="sumCurrency">ETI</span>
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+      <img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+      {{sumBalance}} EGAZ
+    </span>
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+      <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+      {{sumBalanceEti}} ETI
+    </span>
   </div>
 </div>
 
@@ -27,11 +31,11 @@
           <label for="sendEtiToAddress" class="active">To address:</label>
           <div class="addressInputWrapper">
             <input id="sendEtiToAddress" class="" placeholder="recipient address" type="text">
-            <button type="button" class="btn button3 btnSendToolButton" id="btnAddToAddressBookEti">
-              <i class="fas fa-plus"></i>
-            </button>
             <button type="button" class="btn button3 btnSendToolButton" id="btnLookForToAddressEti">
               <i class="fas fa-search"></i>
+            </button>
+            <button type="button" class="btn button3 btnSendToolButton" id="btnAddToAddressBookEti">
+              <i class="fas fa-plus"></i>
             </button>
           </div>
           <small id="sendEtiToAddressName" class="form-text text-muted"></small>

@@ -5,8 +5,13 @@ class Settings {
   constructor() {}
 
   renderSettingsState() {
-    EticaMainGUI.renderTemplate("settings.html", {});
+    EticaBlockchain.getAccountsData(function (error) {
+      EticaMainGUI.showGeneralError(error);
+    }, function (data) {
+      console.log('data from settings is', data);
+      EticaMainGUI.renderTemplate("settings.html", data);
     $(document).trigger("render_settings");
+    });
   }
 }
 

@@ -1,14 +1,18 @@
-<div id="walletsToolbar">
-  <button type="button" class="btn btn-etica" id="btnNewAddress">
+<div class="walletsToolbar">
+  <button type="button" class="btn btn-etica" id="btnNewAddress2">
     <i class="fas fa-plus"></i>
   </button>
-  
-    <div class="sumBalanceHeader">
-      <span class="sumBalance">{{sumBalance}}</span>
-      <span class="sumCurrency">EGAZ</span>
-      <span class="sumBalance">{{sumBalanceEti}}</span>
-      <span class="sumCurrency">ETI</span>
-    </div>
+
+  <div class="sumBalanceHeader">
+      <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+        <img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+        {{sumBalance}} EGAZ
+      </span>
+      <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+        <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+        {{sumBalanceEti}} ETI
+      </span>
+  </div>
 
 </div>
 <div id="addressList" class="{{#if addressData.length}}addressWrapper{{else}}noAddressWrapper{{/if}}">

@@ -32,9 +32,9 @@ class AddressBook {
 
   renderAddressBook() {
     var addressObject = EticaAddressBook.getAddressList();
-    var renderData = {
-      addressData: []
-    };
+    var renderData = {};
+    renderData.addressData = [];
+  
 
     for (var key in addressObject) {
       if (addressObject.hasOwnProperty(key)) {
@@ -45,11 +45,21 @@ class AddressBook {
       }
     }
 
-    // render the wallets current state
-    EticaMainGUI.renderTemplate("addressBook.html", renderData);
-    $(document).trigger("render_addressBook");
-    EticaAddressBook.enableButtonTooltips();
+    EticaBlockchain.getAccountsData(function (error) {
+      EticaMainGUI.showGeneralError(error);
+    }, function (data) {
+      console.log('data from renderAddressBook is', data);
+      renderData.sumBalanceEti = data.sumBalanceEti;
+      renderData.sumBalance = data.sumBalance;
+      data.addressData = renderData.addressData;
+      
+      EticaMainGUI.renderTemplate("addressBook.html", data);
+      $(document).trigger("render_addressBook");
+      EticaAddressBook.enableButtonTooltips();
+    
+  });
   }
+
 }
 
 // the event to tell us that the wallets are rendered
@@ -59,7 +69,7 @@ $(document).on("render_addressBook", function () {
     $("#addressTable").floatThead();
   }
 
-  $("#btnNewAddress").off("click").on("click", function () {
+  $("#btnNewAddress2").off("click").on("click", function () {
     $("#dlgCreateAddressAndName").iziModal();
     $("#addressName").val("");
     $("#addressHash").val("");
