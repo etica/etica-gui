@@ -16,7 +16,7 @@
     <form class="col s12">
       <div class="row">
         <div class="input-field col s6">
-          <select id="sendEtiFromAddress">
+          <select id="stakeEtiFromAddress">
             <option value="" disabled="disabled" selected="selected">Choose your address</option>
             {{#addressData}}
               <option value="{{address}}">{{name}}
@@ -24,38 +24,25 @@
                 {{address}}</option>
             {{/addressData}}
           </select>
-          <label for="sendEtiFromAddress">From address:</label>
-          <small id="sendEtiFromAddressName" class="form-text text-muted"></small>
-        </div>
-        <div class="input-field col s6">
-          <label for="sendEtiToAddress" class="active">To address:</label>
-          <div class="addressInputWrapper">
-            <input id="sendEtiToAddress" class="" placeholder="recipient address" type="text">
-            <button type="button" class="btn button3 btnSendToolButton" id="btnLookForToAddressEti">
-              <i class="fas fa-search"></i>
-            </button>
-            <button type="button" class="btn button3 btnSendToolButton" id="btnAddToAddressBookEti">
-              <i class="fas fa-plus"></i>
-            </button>
-          </div>
-          <small id="sendEtiToAddressName" class="form-text text-muted"></small>
+          <label for="stakeEtiFromAddress">From address:</label>
+          <small id="stakeEtiFromAddressName" class="form-text text-muted"></small>
         </div>
       </div>
       <div class="row">
         <div class="input-field col s6">
-          <input id="sendEtiAmmount" class="" placeholder="0" type="number" value="0">
-          <label for="sendEtiAmmount" class="active">Amount:</label>
+          <input id="stakeEtiAmount" class="" placeholder="0" type="number" value="0">
+          <label for="stakeEtiAmount" class="active">Amount:</label>
         </div>
         <div class="input-field col s6">
           <div class="input-field col s12">
-            <span id="sendEtiMaxAmmount">0</span><span>ETI</span>
-            <button type="button" class="button4" id="btnSendEtiAll">Send All</button>
+            <span id="StakeEtiMaxAmmount" class="MarginRight5">0</span><span>ETI</span>
+            <button type="button" class="button4 MarginLeft10" id="btnStakeEtiAll">Stake All</button>
           </div>
         </div>
       </div>
       <div class="row">
         <div class="input-field col s12">
-          <button type="button" class="button4" id="btnSendEti">Send</button>
+          <button type="button" class="button4" id="btnStakeEti">Stake</button>
         </div>
       </div>
     </form>
@@ -101,12 +88,12 @@
 
 
 <!-- send details dialog -->
-<div id="dlgSendEtiWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To send from this wallet, please enter the wallet password" data-izimodal-icon="icon-home">
+<div id="dlgStakeEtiWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To stake from this wallet, please enter the wallet password" data-izimodal-icon="icon-home">
   <div class="modalBody">
     <div class="form-group sendTXInfo">
       <i class="fas fa-wallet"></i>
       <label>From address:</label>
-      <label id="fromEtiAddressInfo"></label>
+      <label id="fromStakeEtiAddressInfo"></label>
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-wallet"></i>
@@ -115,22 +102,22 @@
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-dollar-sign"></i>
-      <label>Value to send:</label>
-      <label id="valueToSendEtiInfo"></label>
+      <label>Value to stake:</label>
+      <label id="valueToStakeEtiInfo"></label>
       <label class="currencyTicker">ETI</label>
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-dollar-sign"></i>
       <label>Fee to pay:</label>
-      <label id="feeEtiToPayInfo"></label>
+      <label id="feeStakeEtiToPayInfo"></label>
       <label class="currencyTicker">ETI</label>
     </div>
     <hr class="sendTXdivider">
     <div class="form-group sendTXPass">
       <label for="usr">Enter your Password:</label>
-      <input type="password" class=" form-control" id="walletPasswordEti">
+      <input type="password" class=" form-control" id="walletPasswordStakeEti">
     </div>
-    <button type="button" class="btn button3 btn-dialog-confirm" id="btnSendEtiWalletPasswordConfirm">Confirm</button>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnStakeEtiWalletPasswordConfirm">Confirm</button>
   </div>
 </div>
 

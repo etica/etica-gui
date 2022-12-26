@@ -283,7 +283,7 @@ class SmartContract {
         clbError(error);
       } else {
         
-        fromAddress_lowercase = fromAddress.toLowerCase(); // make sure fromAddress is in lower case to avoid invalid type address error in txData object:
+        var fromAddress_lowercase = fromAddress.toLowerCase(); // make sure fromAddress is in lower case to avoid invalid type address error in txData object:
         var amountToStake = web3Local.utils.toWei(amount, "ether"); //convert to wei value
         var txData = web3Local.eth.abi.encodeFunctionCall({
           name: 'eticatobosoms',
@@ -336,7 +336,7 @@ class SmartContract {
             clbError(error);
           } else {
 
-            fromAddress_lowercase = fromAddress.toLowerCase(); // make sure fromAddress_lowercase is in lower case to avoid invalid type address error in txData object:
+            var fromAddress_lowercase = fromAddress.toLowerCase(); // make sure fromAddress_lowercase is in lower case to avoid invalid type address error in txData object:
             var amountToSend = web3Local.utils.toWei(amount, "ether"); //convert to wei value
             var txData = web3Local.eth.abi.encodeFunctionCall({
               name: 'eticatobosoms',
@@ -349,7 +349,7 @@ class SmartContract {
                   type: 'uint256',
                   name: 'amount'
               }]
-          }, [fromAddress, amountToSend ]);
+          }, [fromAddress_lowercase, amountToSend ]);
 
             var RawTransaction = {
               from: fromAddress,
@@ -1163,8 +1163,6 @@ class SmartContract {
             clbError(error);
           } else {
 
-            fromAddress_lowercase = fromAddress.toLowerCase(); // make sure fromAddress_lowercase is in lower case to avoid invalid type address error in txData object:
-            var amountToSend = web3Local.utils.toWei(amount, "ether"); //convert to wei value
             var txData = web3Local.eth.abi.encodeFunctionCall({
               name: 'stakescsldt',
               type: 'function',
@@ -1281,7 +1279,6 @@ class SmartContract {
             clbError(error);
           } else {
 
-            fromAddress_lowercase = fromAddress.toLowerCase(); // make sure fromAddress_lowercase is in lower case to avoid invalid type address error in txData object:
             var amountToSnap = web3Local.utils.toWei(amount, "ether"); //convert to wei value
             var txData = web3Local.eth.abi.encodeFunctionCall({
               name: 'stakesnap',

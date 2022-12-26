@@ -347,6 +347,14 @@ div.sidebar svg {
   margin-left: 10px;
 }
 
+.MarginRight5 {
+  margin-right: 5px;
+}
+
+.MarginLeft10 {
+  margin-left: 10px;
+}
+
 #addressList {
   overflow-y: auto;
   height: calc(100vh - 80px);
