@@ -75,6 +75,7 @@ class Geth {
         "enode://98e3be4308da968b5e3fff851294b4f179c0542a8bdf6d981fb298d493b63ac0a31f35a67ab99bc0fcc293b38c120ddcc3ba659bb97554e8dfb0c2439f6601f3@72.137.255.180:30320",
       ]); */
 
+      /* PROD
       this.gethProcess = child_process.spawn(gethPath, [
         "--allow-insecure-unlock",
         "--ws",
@@ -95,7 +96,30 @@ class Geth {
         "snap",
         "--bootnodes",
         "enode://b0e97d2f1a37b2035a34b97f32fb31ddd93ae822b603c56b7f17cfb189631ea2ef17bfbed904f8bc564765634f2d9db0a128835178c8af9f1dde68ee6b5e2bf7@167.172.47.195:30303",
-      ]);
+      ]); PROD */
+
+      // LOCAL DEV NODE FOR TESTING //
+      this.gethProcess = child_process.spawn(gethPath, [
+        "--allow-insecure-unlock",
+        "--ws",
+        "--ws.origins",
+        "*",
+        "--ws.addr",
+        "127.0.0.1",
+        "--ws.port",
+        "8551",
+        "--port",
+        "30317",
+        "--datadir=./.eticadev",
+        "--ws.api",
+        "admin,eth,net,miner,personal,web3",
+        "--networkid",
+        "616962",
+        "--syncmode",
+        "snap",
+        "--bootnodes",
+        "enode://2321e3d5fb801183dbdd1fa75ee667519857cdea422e971ac1c74033fb1f4ec6d25ad66ab87bebf0485c909815ddc1652cd0bc0aeb7d3a721fbf53ab40b11a91@127.0.0.1:30303",
+      ]); // LOCAL DEV NODE FOR TESTING //
 
       if (!this.gethProcess) {
         dialog.showErrorBox("Error starting application", "Geth failed to start!");

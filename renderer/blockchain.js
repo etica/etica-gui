@@ -3,7 +3,8 @@ const {ipcRenderer} = require("electron");
 
 let EticaContractJSON = require('../EticaRelease.json');
 
-const ETICA_ADDRESS = '0x34c61EA91bAcdA647269d4e310A86b875c09946f';
+//const ETICA_ADDRESS = '0x34c61EA91bAcdA647269d4e310A86b875c09946f'; // mainnet
+const ETICA_ADDRESS = '0xa61B0CE4A212abdea3bA72D4681DB00e54a004C8'; // local dev blockchain
 
 class Blockchain {
   

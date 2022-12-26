@@ -1,0 +1,98 @@
+<div class="walletsHeader">
+  <div class="sumBalanceHeader">
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+      <img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+      {{sumBalance}} EGAZ
+    </span>
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+      <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+      {{sumBalanceEti}} ETI
+    </span>
+  </div>
+</div>
+
+<div class="sendWrapper">
+  <div class="card-panel">
+    <form class="col s12">
+      <div class="row">
+        <div class="input-field col s6">
+          <select id="createDiseaseFromAddress">
+            <option value="" disabled="disabled" selected="selected">Choose your address</option>
+            {{#addressData}}
+              <option value="{{address}}">{{name}}
+                -
+                {{address}}</option>
+            {{/addressData}}
+          </select>
+          <label for="createDiseaseFromAddress">From address:</label>
+          <small id="createDiseaseFromAddressName" class="form-text text-muted"></small>
+        </div>
+        <div class="input-field col s6" style="top:2vh;">
+          <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" class="MarginRight5" /><span id="createDiseaseMaxAmmount" class="MarginRight5">0</span><span>ETI available</span>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <input id="createDiseaseName" class="" placeholder="Enter English disease name" type="text" value="">
+          <label for="createDiseaseName" class="active">Name:</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s12">
+          <button type="button" class="button4 MarginRight5" id="btnCreateDisease">Create Disease</button>
+        </div>
+        <div class="input-field col s12">
+          <i>cost: <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" class="MarginRight5" /> 100 ETI</i>    
+        </div>
+      </div>
+    </form>
+  </div>
+  <div id="cardTransactionsForAddress" class="card-panel" style="display: none;">
+    <table id="tableTransactionsForAddress" class="display" style="width:100%">
+      <thead>
+        <tr>
+          <th>Block</th>
+          <th>Timestamp</th>
+          <th>To</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th>Block</th>
+          <th>Timestamp</th>
+          <th>To</th>
+          <th>Value</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- send details dialog -->
+<div id="dlgCreateDiseaseiWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To add a disease to Etica from this wallet, please enter the wallet password" data-izimodal-icon="icon-home">
+  <div class="modalBody">
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-wallet"></i>
+      <label>From address:</label>
+      <label id="fromEtiAddressInfo"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Disease Name:</label>
+      <label id="valueToCreateDiseaseInfo"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Fee to pay:</label>
+      <label id="feeEtiToPayInfo"></label>
+      <label class="currencyTicker">ETI</label>
+    </div>
+    <hr class="sendTXdivider">
+    <div class="form-group sendTXPass">
+      <label for="usr">Enter your Password:</label>
+      <input type="password" class=" form-control" id="walletPasswordEti">
+    </div>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnCreateDiseaseWalletPasswordConfirm">Confirm</button>
+  </div>
+</div>
