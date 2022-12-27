@@ -164,10 +164,10 @@ class SmartContract {
   }
 
 
-  balanceEti(fromAddress, clbError, clbSuccess) {
+  balanceEti(fromAddress) {
 
     let _balanceEti = get_balanceEti(fromAddress);
-    clbSuccess(_balanceEti);
+    return _balanceEti;
   
     async function get_balanceEti(fromAddress) {
             let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);

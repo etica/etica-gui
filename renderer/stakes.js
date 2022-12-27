@@ -71,16 +71,16 @@ class EticaStakes {
 $(document).on("render_stakes", function () {
   $("select").formSelect({classes: "fromAddressSelect"});
 
-  $("#stakeEtiFromAddress").on("change", function () {
+  $("#stakeEtiFromAddress").on("change", async function () {
     var optionText = $(this).find("option:selected").text();
     var addrName = optionText.substr(0, optionText.indexOf("-"));
     var addrValue = optionText.substr(optionText.indexOf("-") + 1);
     $(".fromAddressSelect input").val(addrValue.trim());
     $("#stakeEtiFromAddressName").html(addrName.trim());
 
-    web3Local.eth.getBalance(this.value, function (error, balance) {
-      $("#StakeEtiMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
-    });
+    let balance = await EticaContract.balanceEti(this.value);
+    $("#StakeEtiMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
+
   });
 
   $("#btnStakeEtiAll").off("click").on("click", function () {

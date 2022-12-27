@@ -54,18 +54,15 @@ class CreateDisease {
 $(document).on("render_createDisease", function () {
   $("select").formSelect({classes: "fromAddressSelect"});
 
-  $("#createDiseaseFromAddress").on("change", function () {
+  $("#createDiseaseFromAddress").on("change", async function () {
     var optionText = $(this).find("option:selected").text();
     var addrName = optionText.substr(0, optionText.indexOf("-"));
     var addrValue = optionText.substr(optionText.indexOf("-") + 1);
     $(".fromAddressSelect input").val(addrValue.trim());
     $("#createDiseaseFromAddressName").html(addrName.trim());
 
-    EticaContract.balanceEti(this.value, function (error) {
-      EticaMainGUI.showGeneralError(error);
-    },function (balance) {
-      $("#createDiseaseMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
-    });
+    let balance = await EticaContract.balanceEti(this.value);
+    $("#createDiseaseMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
 
   });
 

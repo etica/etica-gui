@@ -58,16 +58,16 @@ class SendEti {
 $(document).on("render_sendEti", function () {
   $("select").formSelect({classes: "fromAddressSelect"});
 
-  $("#sendEtiFromAddress").on("change", function () {
+  $("#sendEtiFromAddress").on("change", async function () {
     var optionText = $(this).find("option:selected").text();
     var addrName = optionText.substr(0, optionText.indexOf("-"));
     var addrValue = optionText.substr(optionText.indexOf("-") + 1);
     $(".fromAddressSelect input").val(addrValue.trim());
     $("#sendEtiFromAddressName").html(addrName.trim());
 
-    web3Local.eth.getBalance(this.value, function (error, balance) {
-      $("#sendEtiMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
-    });
+    let balance = await EticaContract.balanceEti(this.value);
+    $("#sendEtiMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
+  
   });
 
   $("#btnSendEtiAll").off("click").on("click", function () {
