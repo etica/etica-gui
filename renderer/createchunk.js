@@ -25,15 +25,28 @@ class CreateChunk {
         return false;
       }
 
-      // check disease name is right format:
-      if (!JSON.stringify($("#createChunkName").val())) {
+      
+      // check disease hash exists:
+      if (!JSON.stringify($("#createChunkDiseaseHash").val())) {
+        EticaMainGUI.showGeneralError("This disease hash is invalid!");
+        return false;
+      }
+
+      // check title name is in right format:
+      if (!JSON.stringify($("#createChunkTitle").val())) {
         EticaMainGUI.showGeneralError("This disease name is invalid!");
         return false;
       }
 
-      // check disease name is available:
-      if (!JSON.stringify($("#createChunkName").val())) {
-        EticaMainGUI.showGeneralError("This disease name already exists!");
+      // check chunk title name doesnt already exists for this disease:
+      if (!JSON.stringify($("#createChunkTitle").val())) {
+        EticaMainGUI.showGeneralError("This chunk Title already exists!");
+        return false;
+      }
+
+      // check description is in right format:
+      if (!JSON.stringify($("#createChunkDescription").val())) {
+        EticaMainGUI.showGeneralError("This description is invalid!");
         return false;
       }
 
@@ -46,7 +59,7 @@ class CreateChunk {
   resetSendForm() {
     if (EticaMainGUI.getAppState() == "createChunk") {
       $("#createChunkFromAddress").val("");
-      $("#createChunkName").val("");
+      $("#createChunkTitle").val("");
     }
   }
 }
@@ -69,20 +82,22 @@ $(document).on("render_createChunk", function () {
   $("#btnCreateChunk").off("click").on("click", function () {
     if (ChunkCreate.validateSendForm()) {
 
-      EticaContract.getTranasctionFee_createchunk($("#createChunkFromAddress").val(), $("#createChunkName").val(), function (error) {
+      EticaContract.getTranasctionFee_createchunk($("#createChunkFromAddress").val(), $("#createChunkDiseaseHash").val(), $("#createChunkTitle").val(), $("#createChunkDescription").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
         $("#dlgCreateChunkiWalletPassword").iziModal();
         $("#walletPasswordEti").val("");
         $("#fromEtiAddressInfo").html($("#createChunkFromAddress").val());
-        $("#valueToCreateChunkInfo").html($("#createChunkName").val());
+        $("#valueToCreateChunkDiseaseHash").html($("#createChunkDiseaseHash").val());
+        $("#valueToCreateChunkTitle").html($("#createChunkTitle").val());
+        $("#valueToCreateChunkDescription").html($("#createChunkDescription").val());
         $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCreateChunkiWalletPassword").iziModal("open");
 
         function doSendTransaction() {
           $("#dlgCreateChunkiWalletPassword").iziModal("close");
 
-          EticaContract.prepareTransaction_createchunk($("#walletPasswordEti").val(), $("#createChunkFromAddress").val(), $("#createChunkName").val(), function (error) {
+          EticaContract.prepareTransaction_createchunk($("#walletPasswordEti").val(), $("#createChunkFromAddress").val(), $("#createChunkDiseaseHash").val(), $("#createChunkTitle").val(), $("#createChunkDescription").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {
@@ -122,6 +137,6 @@ $(document).on("render_createChunk", function () {
   });
 });
 
-// create new disease
+// create new chunk
 ChunkCreate = new CreateChunk();
 

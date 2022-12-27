@@ -12,7 +12,7 @@
 </div>
 
 <div class="sendWrapper">
-  <div class="card-panel">
+  <div class="card-panel" style="padding-bottom: 0px;">
     <form class="col s12">
       <div class="row">
         <div class="input-field col s6">
@@ -33,16 +33,28 @@
       </div>
       <div class="row">
         <div class="input-field col s6">
-          <input id="createChunkName" class="" placeholder="Enter English chunk name" type="text" value="">
-          <label for="createChunkName" class="active">Name:</label>
+          <input id="createChunkDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="">
+          <label for="createChunkDiseaseHash" class="active">Disease hash:</label>
         </div>
       </div>
       <div class="row">
+        <div class="input-field col s6">
+          <input id="createChunkTitle" class="" placeholder="Enter chunk title" type="text" value="">
+          <label for="createChunkTitle" class="active">Title:</label>
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 0;">
+        <div class="input-field col s12">
+          <textarea id="createChunkDescription" class="materialize-textarea" placeholder="Enter chunk description" type="textarea" value="" style="height: 11vh;color:#aaa;"></textarea>
+          <label for="createChunkDescription" class="active">Description:</label>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 0;">
         <div class="input-field col s12">
           <button type="button" class="button4 MarginRight5" id="btnCreateChunk">Create Chunk</button>
         </div>
         <div class="input-field col s12">
-          <i>cost: <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" class="MarginRight5" /> 100 ETI</i>    
+          <i>cost: <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" class="MarginRight5" /> 5 ETI</i>    
         </div>
       </div>
     </form>
@@ -79,8 +91,18 @@
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-dollar-sign"></i>
-      <label>Chunk Name:</label>
-      <label id="valueToCreateChunkInfo"></label>
+      <label>Disease Hash:</label>
+      <label id="valueToCreateChunkDiseaseHash"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Chunk Title:</label>
+      <label id="valueToCreateChunkTitle"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Chunk Description:</label>
+      <label id="valueToCreateChunkDescription"></label>
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-dollar-sign"></i>
