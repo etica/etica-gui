@@ -23,8 +23,11 @@ class MainGUI {
       case "sendEti":
         $("#mainNavBtnSendEtiWrapper").addClass("iconSelected");
         break;
-        case "createDisease":
+      case "createDisease":
         $("#mainNavBtnCreateDiseaseWrapper").addClass("iconSelected");
+        break;
+      case "createChunk":
+        $("#mainNavBtnCreateChunkWrapper").addClass("iconSelected");
         break;
       case "transactions":
         $("#mainNavBtnTransactionsWrapper").addClass("iconSelected");
@@ -144,6 +147,11 @@ $("#mainNavBtnSendEti").click(function () {
 $("#mainNavBtnCreateDisease").click(function () {
   EticaMainGUI.changeAppState("createDisease");
   DiseaseCreate.renderSendState();
+});
+
+$("#mainNavBtnCreateChunk").click(function () {
+  EticaMainGUI.changeAppState("createChunk");
+  ChunkCreate.renderSendState();
 });
 
 $("#mainNavBtnWallets").click(function () {

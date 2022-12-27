@@ -410,6 +410,9 @@ class SmartContract {
       //  CREATE DISEASE //
 
       getTranasctionFee_createdisease(fromAddress, _diseasename, clbError, clbSuccess) {
+        console.log('in getTranasctionFee_createdisease()');
+        console.log('getTranasctionFee_createdisease() fromAddress is ', fromAddress);
+        console.log('getTranasctionFee_createdisease() _diseasename is ', _diseasename);
         web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
           if (error) {
             clbError(error);
@@ -462,7 +465,6 @@ class SmartContract {
                 clbError(error);
               } else {
     
-                var amountToSend = web3Local.utils.toWei(amount, "ether"); //convert to wei value
                 var txData = web3Local.eth.abi.encodeFunctionCall({
                   name: 'createdisease',
                   type: 'function',

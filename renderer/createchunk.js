@@ -1,38 +1,38 @@
 // In renderer process (web page).
 const {ipcRenderer} = require("electron");
 
-class CreateDisease {
+class CreateChunk {
   constructor() {}
 
   renderSendState() {
     EticaBlockchain.getAccountsData(function (error) {
       EticaMainGUI.showGeneralError(error);
     }, function (data) {
-      EticaMainGUI.renderTemplate("createdisease.html", data);
-      $(document).trigger("render_createDisease");
+      EticaMainGUI.renderTemplate("createchunk.html", data);
+      $(document).trigger("render_createChunk");
     });
   }
 
   validateSendForm() {
-    if (EticaMainGUI.getAppState() == "createDisease") {
-      if (!$("#createDiseaseFromAddress").val()) {
+    if (EticaMainGUI.getAppState() == "createChunk") {
+      if (!$("#createChunkFromAddress").val()) {
         EticaMainGUI.showGeneralError("Sender address must be specified!");
         return false;
       }
 
-      if (!EticaBlockchain.isAddress($("#createDiseaseFromAddress").val())) {
+      if (!EticaBlockchain.isAddress($("#createChunkFromAddress").val())) {
         EticaMainGUI.showGeneralError("Sender address must be a valid address!");
         return false;
       }
 
       // check disease name is right format:
-      if (!JSON.stringify($("#createDiseaseName").val())) {
+      if (!JSON.stringify($("#createChunkName").val())) {
         EticaMainGUI.showGeneralError("This disease name is invalid!");
         return false;
       }
 
       // check disease name is available:
-      if (!JSON.stringify($("#createDiseaseName").val())) {
+      if (!JSON.stringify($("#createChunkName").val())) {
         EticaMainGUI.showGeneralError("This disease name already exists!");
         return false;
       }
@@ -44,51 +44,51 @@ class CreateDisease {
   }
 
   resetSendForm() {
-    if (EticaMainGUI.getAppState() == "createDisease") {
-      $("#createDiseaseFromAddress").val("");
-      $("#createDiseaseName").val("");
+    if (EticaMainGUI.getAppState() == "createChunk") {
+      $("#createChunkFromAddress").val("");
+      $("#createChunkName").val("");
     }
   }
 }
 
-$(document).on("render_createDisease", function () {
+$(document).on("render_createChunk", function () {
   $("select").formSelect({classes: "fromAddressSelect"});
 
-  $("#createDiseaseFromAddress").on("change", async function () {
+  $("#createChunkFromAddress").on("change", async function () {
     var optionText = $(this).find("option:selected").text();
     var addrName = optionText.substr(0, optionText.indexOf("-"));
     var addrValue = optionText.substr(optionText.indexOf("-") + 1);
     $(".fromAddressSelect input").val(addrValue.trim());
-    $("#createDiseaseFromAddressName").html(addrName.trim());
+    $("#createChunkFromAddressName").html(addrName.trim());
 
     let balance = await EticaContract.balanceEti(this.value);
-    $("#createDiseaseMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
+    $("#createChunkMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
 
   });
 
-  $("#btnCreateDisease").off("click").on("click", function () {
-    if (DiseaseCreate.validateSendForm()) {
+  $("#btnCreateChunk").off("click").on("click", function () {
+    if (ChunkCreate.validateSendForm()) {
 
-      EticaContract.getTranasctionFee_createdisease($("#createDiseaseFromAddress").val(), $("#createDiseaseName").val(), function (error) {
+      EticaContract.getTranasctionFee_createchunk($("#createChunkFromAddress").val(), $("#createChunkName").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
-        $("#dlgCreateDiseaseWalletPassword").iziModal();
+        $("#dlgCreateChunkiWalletPassword").iziModal();
         $("#walletPasswordEti").val("");
-        $("#fromEtiAddressInfo").html($("#createDiseaseFromAddress").val());
-        $("#valueToCreateDiseaseInfo").html($("#createDiseaseName").val());
+        $("#fromEtiAddressInfo").html($("#createChunkFromAddress").val());
+        $("#valueToCreateChunkInfo").html($("#createChunkName").val());
         $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
-        $("#dlgCreateDiseaseWalletPassword").iziModal("open");
+        $("#dlgCreateChunkiWalletPassword").iziModal("open");
 
         function doSendTransaction() {
-          $("#dlgCreateDiseaseWalletPassword").iziModal("close");
+          $("#dlgCreateChunkiWalletPassword").iziModal("close");
 
-          EticaContract.prepareTransaction_createdisease($("#walletPasswordEti").val(), $("#createDiseaseFromAddress").val(), $("#createDiseaseName").val(), function (error) {
+          EticaContract.prepareTransaction_createchunk($("#walletPasswordEti").val(), $("#createChunkFromAddress").val(), $("#createChunkName").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {
               EticaMainGUI.showGeneralError(error);
             }, function (data) {
-              DiseaseCreate.resetSendForm();
+              ChunkCreate.resetSendForm();
 
               iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});
 
@@ -108,11 +108,11 @@ $(document).on("render_createDisease", function () {
           });
         }
 
-        $("#btnCreateDiseaseWalletPasswordConfirm").off("click").on("click", function () {
+        $("#btnCreateChunkWalletPasswordConfirm").off("click").on("click", function () {
           doSendTransaction();
         });
 
-        $("#dlgCreateDiseaseWalletPassword").off("keypress").on("keypress", function (e) {
+        $("#dlgCreateChunkiWalletPassword").off("keypress").on("keypress", function (e) {
           if (e.which == 13) {
             doSendTransaction();
           }
@@ -123,5 +123,5 @@ $(document).on("render_createDisease", function () {
 });
 
 // create new disease
-DiseaseCreate = new CreateDisease();
+ChunkCreate = new CreateChunk();
 
