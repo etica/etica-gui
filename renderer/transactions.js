@@ -84,89 +84,85 @@ class Transactions {
               toBlock: blocknb
             };
 
-            EticaBlockchain.getPastLogs(blocknb, options, function (error) {
+            EticaBlockchain.getPastEvents(options, function (error) {
               EticaMainGUI.showGeneralError(error);
             }, async function (logevents) {
 
-
+              console.log('in getPastEvents, logevents loaded');
             data.transactions.forEach(onetx => {
+              console.log('onetx step1 ok');
+              console.log('onetx step1', onetx);
               if (onetx.from && onetx.to) {
+                console.log('onetx step2, onetx.from && onetx.to: ', onetx);
                 if (EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to)) {
 
-
-                  let _eventype = null;
-                  let _logIndex = null; // index position in the block
-                  let _valueeti = 0;
-                  let _addressfrometi = null;
-                  let _addresstoeti = null;
-
-
+                  console.log('onetx step3, EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to) :', onetx);
 
                   if (logevents.filter(onevent => onevent.transactionHash === onetx.hash)){
-
+                    console.log('onevent => onevent.transactionHash === onetx.hash) is true:', onetx);
                     let txevents = logevents.filter(onevent => onevent.transactionHash === onetx.hash);
                     
-                    txevents.forEach(onetxevent => {
-
+                    txevents.forEach(onetxevent => { 
+                      console.log('onetxevent step4 :', onetxevent);
                   let _valueeti = 0;
-                  let _addressfrometi = null;
-                  let _addresstoeti = null;
+                  let _fromaddreti = null;
+                  let _toaddreti = null;
                   let _slashduration = null;
 
 
                   if(onetxevent.event == 'Transfer'){
 
-                    _valueeti = onetxevent.returnValues.amount;
-                    _addressfrometi = onetxevent.returnValues.from;
-                    _addresstoeti = onetxevent.returnValues.to;
+                    _valueeti = onetxevent.returnValues.tokens;
+                    _fromaddreti = onetxevent.returnValues.from;
+                    _toaddreti = onetxevent.returnValues.to;
 
                   }
 
                   if(onetxevent.event == 'NewCommit'){
 
                     _valueeti = onetxevent.returnValues.amount;
-                    _addressfrometi = onetxevent.returnValues.from;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetxevent.returnValues.from;
+                    _toaddreti = onetx.to;
 
                   }
 
                   if(onetxevent.event == 'NewProposal'){
 
                     _valueeti = onetxevent.returnValues.amount;
-                    _addressfrometi = onetxevent.proposer;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetxevent.proposer;
+                    _toaddreti = onetx.to;
 
                   }
 
                   if(onetxevent.event == 'NewChunk'){
 
                     _valueeti = web3Local.utils.toWei('5', 'ether');
-                    _addressfrometi = onetx.from;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetx.from;
+                    _toaddreti = onetx.to;
 
                   }
 
                   if(onetxevent.event == 'NewDisease'){
 
                     _valueeti = web3Local.utils.toWei('100', 'ether');
-                    _addressfrometi = onetx.from;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetx.from;
+                    _toaddreti = onetx.to;
 
                   }
 
                   if(onetxevent.event == 'NewFee'){
 
                     _valueeti = onetxevent.returnValues.fee;
-                    _addressfrometi = onetxevent.returnValues.voter;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetxevent.returnValues.voter;
+                    _toaddreti = onetx.to;
 
                   }
 
                   if(onetxevent.event == 'NewSlash'){
 
                     _valueeti = onetxevent.returnValues.amount;
-                    _addressfrometi = onetxevent.returnValues.voter;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetxevent.returnValues.voter;
+                    _toaddreti = onetx.to;
                     _slashduration = onetxevent.returnValues.duration;
 
                   }
@@ -174,8 +170,8 @@ class Transactions {
                   if(onetxevent.event == 'NewReveal'){
 
                     _valueeti = onetxevent.returnValues.amount;
-                    _addressfrometi = onetxevent.returnValues._voter;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetxevent.returnValues._voter;
+                    _toaddreti = onetx.to;
 
                   }
 
@@ -183,48 +179,48 @@ class Transactions {
                   if(onetxevent.event == 'NewStake'){
 
                     _valueeti = onetxevent.returnValues.amount;
-                    _addressfrometi = onetxevent.returnValues.staker;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetxevent.returnValues.staker;
+                    _toaddreti = onetx.to;
 
                   }
 
                   if(onetxevent.event == 'NewStakeClaim'){
 
                     _valueeti = onetxevent.returnValues.stakeamount;
-                    _addressfrometi = onetxevent.returnValues.staker;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetxevent.returnValues.staker;
+                    _toaddreti = onetx.to;
 
                   }
 
                   if(onetxevent.event == 'RewardClaimed'){
 
                     _valueeti = onetxevent.returnValues.stakeamount;
-                    _addressfrometi = onetxevent.returnValues.staker;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetxevent.returnValues.staker;
+                    _toaddreti = onetx.to;
 
                   }
 
                   if(onetxevent.event == 'TieClaimed'){
 
                     _valueeti = 0;
-                    _addressfrometi = onetxevent.returnValues.voter;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetxevent.returnValues.voter;
+                    _toaddreti = onetx.to;
 
                   }
 
                   if(onetxevent.event == 'NewStakescsldt'){
 
                     _valueeti = 0;
-                    _addressfrometi = onetxevent.returnValues.staker;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetxevent.returnValues.staker;
+                    _toaddreti = onetx.to;
 
                   }
 
                   if(onetxevent.event == 'NewStakesnap'){
 
                     _valueeti = onetxevent.returnValues.snapamount;
-                    _addressfrometi = onetxevent.returnValues.staker;
-                    _addresstoeti = onetx.to;
+                    _fromaddreti = onetxevent.returnValues.staker;
+                    _toaddreti = onetx.to;
 
                   }
 
@@ -237,15 +233,15 @@ class Transactions {
                     timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
                     toaddr: onetx.to.toLowerCase(),
                     value: Number(onetx.value).toExponential(5).toString().replace("+", ""),
-                    eventype: onetxevent.event,
+                    eventtype: onetxevent.event,
                     logIndex:onetxevent.logIndex, // index position in the block
                     valueeti: _valueeti,
-                    addressfrometi:  _addressfrometi,
-                    addresstoeti: _addresstoeti,
+                    fromaddreti:  _fromaddreti,
+                    toaddreti: _toaddreti,
                     slashduration: _slashduration
                   };
                   
-
+                  console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is: ', Transaction);
                   // store transaction and notify about new transactions
                   ipcRenderer.send("storeTransaction", Transaction);
                   console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is', Transaction);
@@ -254,26 +250,35 @@ class Transactions {
                     });
                   }
 
+                  // If no input in tx then it is an egaz transfer:
+                  if(onetx.input == '0x'){
+
+                    var Transaction = {
+                      block: onetx.blockNumber.toString(),
+                      txhash: onetx.hash.toLowerCase(),
+                      fromaddr: onetx.from.toLowerCase(),
+                      timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
+                      toaddr: onetx.to.toLowerCase(),
+                      value: Number(onetx.value).toExponential(5).toString().replace("+", ""),
+                      eventtype: 'EgazTransfer',
+                      logIndex:null, // index position in the block
+                      valueeti:0,
+                      fromaddreti: null,
+                      toaddreti: null,
+                      slashduration: null
+                    };
+    
+                    console.log('before stored Transaction from onetx.input== is: ', Transaction);
+                    // store transaction and notify about new transactions
+                    ipcRenderer.send("storeTransaction", Transaction);
+                    console.log('stored Transaction from onetx.input== is: ', Transaction);
 
 
-                  var Transaction = {
-                    block: onetx.blockNumber.toString(),
-                    txhash: onetx.hash.toLowerCase(),
-                    fromaddr: onetx.from.toLowerCase(),
-                    timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
-                    toaddr: onetx.to.toLowerCase(),
-                    value: Number(onetx.value).toExponential(5).toString().replace("+", ""),
-                    eventype: null,
-                    logIndex:null, // index position in the block
-                    valueeti:0,
-                    addressfrometi: null,
-                    addresstoeti: null,
-                    slashduration: null
-                  };
-  
-                  // store transaction and notify about new transactions
-                  ipcRenderer.send("storeTransaction", Transaction);
-                  console.log('stored Transaction is', Transaction);
+                  }
+
+
+
+                  
                 }
               }
             });

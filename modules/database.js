@@ -62,7 +62,12 @@ ipcMain.on("getTransactions", (event, arg) => {
         docs[i].txhash,
         docs[i].fromaddr,
         docs[i].toaddr,
-        docs[i].value
+        docs[i].value,
+        docs[i].valueeti,
+        docs[i].fromaddreti,
+        docs[i].toaddreti,
+        docs[i].slashduration,
+        docs[i].eventtype,
       ]);
     }
 

@@ -61,12 +61,49 @@ class tableTransactions {
         }, {
           targets: 3,
           visible: false
+        },
+        {
+          targets: 4,
+          render: function (data, type, row) {
+            if(data){
+              if (data.length > 14) {
+                  return data.substring(0, 7) + '...' + data.slice(-7);
+              } else {
+                  return text;
+              }
+              }
+          }
+
+        }, {
+          targets: 5,
+          render: function (data, type, row) {
+            if(data){
+              if (data.length > 14) {
+                  return data.substring(0, 7) + '...' + data.slice(-7);
+              } else {
+                  return text;
+              }
+              }
+          }
+
         }, {
           targets: 6,
           render: function (data, type, row) {
-            return parseFloat(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(data)).toString(), "ether")).toFixed(2);
+            return '<span style="color:rgb(48, 162, 140);display: inline-block;">'+parseFloat(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(data)).toString(), "ether")).toFixed(5)+'<img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 17px;top: 0.5vh;height: 17px;position: relative;margin-left:3px;" /></span>';
           }
         }, {
+          targets: 7,
+          render: function (data, type, row) {
+            if(data != null){
+              return '<span style="color:rgb(48, 162, 140);display: inline-block;">'+parseFloat(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(data)).toString(), "ether")).toFixed(5)+'<img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 17px;top: 0.5vh;height: 17px;position: relative;margin-left:3px;" /></span>';
+            }
+            else{
+              return 0;
+            }
+          }
+        }
+        
+        /*{
           targets: 7,
           defaultContent: "",
           render: function (data, type, row) {
@@ -76,7 +113,7 @@ class tableTransactions {
               return '<i class="fas fa-question"></i>';
             }
           }
-        }
+        } */
       ],
       drawCallback: function (settings) {
         $("#loadingTransactionsOverlay").css("display", "none");
@@ -97,9 +134,10 @@ class tableTransactions {
         $("#txFromAddress").attr("href", vsprintf("http://etica.dkc.services:4100/address/%s", [rowData[4]]));
         $("#txToAddress").html(rowData[5]);
         $("#txToAddress").attr("href", vsprintf("http://etica.dkc.services:4100/address/%s", [rowData[5]]));
-        $("#txValue").html(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(rowData[6])).toString(), "egaz"));
+        $("#txValue").html(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(rowData[6])).toString(), "ether"));
+        $("#txValueEti").html(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(rowData[7])).toString(), "ether"));
 
-        $("#dlgTransactionInfo a").off("click").on("click", function (even) {
+        $("#dlgTransactionInfo a").off("click").on("click", function (event) {
           event.preventDefault();
           ipcRenderer.send("openURL", $(this).attr("href"));
         });
@@ -112,6 +150,7 @@ class tableTransactions {
       }
     });
   }
+
 }
 
 // create new tables variable

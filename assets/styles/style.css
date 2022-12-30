@@ -13,6 +13,21 @@ body.pg-loaded>.inner {
   display: block;
 }
 
+/* transparent scroll bar */
+::-webkit-scrollbar {
+  width: 10px;
+  height: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: rgba(90, 90, 90);
+}
+
+::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.2);
+}
+/* transparent scrollbar */
+
 /* Fallen */
 /* Fallen */
 /* Style the sidebar - fixed full height */

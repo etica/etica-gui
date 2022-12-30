@@ -13,8 +13,8 @@ class Blockchain {
     this.bhSubscribe = null;
   }
 
-  getBlock(blockToGet, options, clbError, clbSuccess) {
-    web3Local.eth.getBlock(blockToGet, options, function (error, block) {
+  getBlock(blockToGet, includeData, clbError, clbSuccess) {
+    web3Local.eth.getBlock(blockToGet, includeData, function (error, block) {
       if (error) {
         clbError(error);
       } else {
@@ -23,8 +23,9 @@ class Blockchain {
     });
   }
 
-  getPastLogs(blockToGet, includeData, clbError, clbSuccess) {
-    web3Local.eth.getPastLogs(blockToGet, includeData, function (error, block) {
+  getPastEvents(options, clbError, clbSuccess) {
+    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    contract.getPastEvents('allEvents', options, function (error, block) {
       if (error) {
         clbError(error);
       } else {
