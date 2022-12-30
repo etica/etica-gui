@@ -369,30 +369,183 @@ class Transactions {
       }, function (data) {
         if (data.transactions) {
           let unique_txs = [];
-          data.transactions.forEach(element => {
-            if (element.from && element.to) {
-              if (EticaWallets.getAddressExists(element.from) || EticaWallets.getAddressExists(element.to)) {
-                var Transaction = {
-                  block: element.blockNumber.toString(),
-                  txhash: element.hash.toLowerCase(),
-                  fromaddr: element.from.toLowerCase(),
-                  timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
-                  toaddr: element.to.toLowerCase(),
-                  value: Number(element.value).toExponential(5).toString().replace("+", "")
-                };
 
+          let options = {
+            fromBlock: data.number,
+            toBlock: data.number
+          };
+
+          EticaBlockchain.getPastEvents(options, function (error) {
+            EticaMainGUI.showGeneralError(error);
+          }, async function (logevents) {
+
+          console.log('in enableKeepInSync() getPastEvents, logevents loaded');
+          data.transactions.forEach(onetx => {
+            console.log('enableKeepInSync() onetx step1 ok');
+            console.log('enableKeepInSync() onetx step1', onetx);
+            if (onetx.from && onetx.to) {
+              console.log('enableKeepInSync() onetx step2, onetx.from && onetx.to: ', onetx);
+              if (EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to)) {
+
+                console.log('enableKeepInSync() onetx step3, EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to) :', onetx);
+
+                if (logevents.filter(onevent => onevent.transactionHash === onetx.hash)){
+                  console.log('enableKeepInSync() onevent => onevent.transactionHash === onetx.hash) is true:', onetx);
+                  let txevents = logevents.filter(onevent => onevent.transactionHash === onetx.hash);
+                  
+                  txevents.forEach(onetxevent => { 
+                    console.log('enableKeepInSync() onetxevent step4 :', onetxevent);
+                let _valueeti = 0;
+                let _fromaddreti = null;
+                let _toaddreti = null;
+                let _slashduration = null;
+
+
+                if(onetxevent.event == 'Transfer'){
+
+                  _valueeti = onetxevent.returnValues.tokens;
+                  _fromaddreti = onetxevent.returnValues.from;
+                  _toaddreti = onetxevent.returnValues.to;
+
+                }
+
+                if(onetxevent.event == 'NewCommit'){
+
+                  _valueeti = onetxevent.returnValues.amount;
+                  _fromaddreti = onetxevent.returnValues.from;
+                  _toaddreti = onetx.to;
+
+                }
+
+                if(onetxevent.event == 'NewProposal'){
+
+                  _valueeti = onetxevent.returnValues.amount;
+                  _fromaddreti = onetxevent.proposer;
+                  _toaddreti = onetx.to;
+
+                }
+
+                if(onetxevent.event == 'NewChunk'){
+
+                  _valueeti = web3Local.utils.toWei('5', 'ether');
+                  _fromaddreti = onetx.from;
+                  _toaddreti = onetx.to;
+
+                }
+
+                if(onetxevent.event == 'NewDisease'){
+
+                  _valueeti = web3Local.utils.toWei('100', 'ether');
+                  _fromaddreti = onetx.from;
+                  _toaddreti = onetx.to;
+
+                }
+
+                if(onetxevent.event == 'NewFee'){
+
+                  _valueeti = onetxevent.returnValues.fee;
+                  _fromaddreti = onetxevent.returnValues.voter;
+                  _toaddreti = onetx.to;
+
+                }
+
+                if(onetxevent.event == 'NewSlash'){
+
+                  _valueeti = onetxevent.returnValues.amount;
+                  _fromaddreti = onetxevent.returnValues.voter;
+                  _toaddreti = onetx.to;
+                  _slashduration = onetxevent.returnValues.duration;
+
+                }
+
+                if(onetxevent.event == 'NewReveal'){
+
+                  _valueeti = onetxevent.returnValues.amount;
+                  _fromaddreti = onetxevent.returnValues._voter;
+                  _toaddreti = onetx.to;
+
+                }
+
+
+                if(onetxevent.event == 'NewStake'){
+
+                  _valueeti = onetxevent.returnValues.amount;
+                  _fromaddreti = onetxevent.returnValues.staker;
+                  _toaddreti = onetx.to;
+
+                }
+
+                if(onetxevent.event == 'NewStakeClaim'){
+
+                  _valueeti = onetxevent.returnValues.stakeamount;
+                  _fromaddreti = onetxevent.returnValues.staker;
+                  _toaddreti = onetx.to;
+
+                }
+
+                if(onetxevent.event == 'RewardClaimed'){
+
+                  _valueeti = onetxevent.returnValues.stakeamount;
+                  _fromaddreti = onetxevent.returnValues.staker;
+                  _toaddreti = onetx.to;
+
+                }
+
+                if(onetxevent.event == 'TieClaimed'){
+
+                  _valueeti = 0;
+                  _fromaddreti = onetxevent.returnValues.voter;
+                  _toaddreti = onetx.to;
+
+                }
+
+                if(onetxevent.event == 'NewStakescsldt'){
+
+                  _valueeti = 0;
+                  _fromaddreti = onetxevent.returnValues.staker;
+                  _toaddreti = onetx.to;
+
+                }
+
+                if(onetxevent.event == 'NewStakesnap'){
+
+                  _valueeti = onetxevent.returnValues.snapamount;
+                  _fromaddreti = onetxevent.returnValues.staker;
+                  _toaddreti = onetx.to;
+
+                }
+
+
+
+                var Transaction = {
+                  block: onetx.blockNumber.toString(),
+                  txhash: onetx.hash.toLowerCase(),
+                  fromaddr: onetx.from.toLowerCase(),
+                  timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
+                  toaddr: onetx.to.toLowerCase(),
+                  value: Number(onetx.value).toExponential(5).toString().replace("+", ""),
+                  eventtype: onetxevent.event,
+                  logIndex:onetxevent.logIndex, // index position in the block
+                  valueeti: _valueeti,
+                  fromaddreti:  _fromaddreti,
+                  toaddreti: _toaddreti,
+                  slashduration: _slashduration
+                };
+                
+                console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is: ', Transaction);
                 // store transaction and notify about new transactions
                 ipcRenderer.send("storeTransaction", Transaction);
+                console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is', Transaction);
                 $(document).trigger("onNewAccountTransaction");
                 console.log('new tx before iziToast.info is: ', Transaction);
-                if(!unique_txs.includes(element.hash.toLowerCase())){
+                if(!unique_txs.includes(onetx.hash.toLowerCase())){
                   iziToast.info({
                     title: "New Transaction",
                     message: vsprintf("Transaction from address %s to address %s was just processed", [Transaction.fromaddr, Transaction.toaddr]),
                     position: "topRight",
                     timeout: 10000
                   });
-                  unique_txs.push(element.hash.toLowerCase());
+                  unique_txs.push(onetx.hash.toLowerCase());
                 }
                 
 
@@ -401,9 +554,62 @@ class Transactions {
                     EticaTransactions.renderTransactions();
                   }, 500);
                 }
+
+
+
+                  
+                  });
+                }
+
+                // If no input in tx then it is an egaz transfer:
+                if(onetx.input == '0x'){
+                  var Transaction = {
+                    block: onetx.blockNumber.toString(),
+                    txhash: onetx.hash.toLowerCase(),
+                    fromaddr: onetx.from.toLowerCase(),
+                    timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
+                    toaddr: onetx.to.toLowerCase(),
+                    value: Number(onetx.value).toExponential(5).toString().replace("+", ""),
+                    eventtype: 'EgazTransfer',
+                    logIndex:null, // index position in the block
+                    valueeti:0,
+                    fromaddreti: null,
+                    toaddreti: null,
+                    slashduration: null
+                  };
+  
+                  console.log('before stored Transaction from onetx.input== is: ', Transaction);
+                  // store transaction and notify about new transactions
+                  ipcRenderer.send("storeTransaction", Transaction);
+                  console.log('stored Transaction from onetx.input== is: ', Transaction);
+                  
+                  
+                $(document).trigger("onNewAccountTransaction");
+                console.log('new tx before iziToast.info is: ', Transaction);
+                if(!unique_txs.includes(onetx.hash.toLowerCase())){
+                  iziToast.info({
+                    title: "New Transaction",
+                    message: vsprintf("Transaction from address %s to address %s was just processed", [Transaction.fromaddr, Transaction.toaddr]),
+                    position: "topRight",
+                    timeout: 10000
+                  });
+                  unique_txs.push(onetx.hash.toLowerCase());
+                }
+                
+
+                if (EticaMainGUI.getAppState() == "transactions") {
+                  setTimeout(function () {
+                    EticaTransactions.renderTransactions();
+                  }, 500);
+                }
+                }
+                
               }
             }
           });
+
+        });
+          
         }
       });
     });
