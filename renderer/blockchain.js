@@ -13,8 +13,18 @@ class Blockchain {
     this.bhSubscribe = null;
   }
 
-  getBlock(blockToGet, includeData, clbError, clbSuccess) {
-    web3Local.eth.getBlock(blockToGet, includeData, function (error, block) {
+  getBlock(blockToGet, options, clbError, clbSuccess) {
+    web3Local.eth.getBlock(blockToGet, options, function (error, block) {
+      if (error) {
+        clbError(error);
+      } else {
+        clbSuccess(block);
+      }
+    });
+  }
+
+  getPastLogs(blockToGet, includeData, clbError, clbSuccess) {
+    web3Local.eth.getPastLogs(blockToGet, includeData, function (error, block) {
       if (error) {
         clbError(error);
       } else {

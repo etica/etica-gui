@@ -22,14 +22,15 @@ db.ensureIndex({
 // index the txhash field
 db.ensureIndex({
   fieldName: "txhash",
-  unique: true
+  // unique: true // removes unique because we need to show eti smart contract events as transactions, a wallet could receive several smart contract evenets in same transaction
 }, function (err) {
   // If there was an error, err is not null
 });
 
 ipcMain.on("storeTransaction", (event, arg) => {
   db.update({
-    txhash: arg.txhash
+    txhash: arg.txhash,
+    logIndex: arg.logIndex
   }, arg, {
     upsert: true
   }, function (err, numReplaced, upsert) {
