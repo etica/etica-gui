@@ -100,8 +100,34 @@ class Transactions {
 
                   if (logevents.filter(onevent => onevent.transactionHash === onetx.hash)){
                     console.log('onevent => onevent.transactionHash === onetx.hash) is true:', onetx);
-                    let txevents = logevents.filter(onevent => onevent.transactionHash === onetx.hash);
+                    var txevents = logevents.filter(function(onelogevent) {
+                      return onelogevent.transactionHash == onetx.hash;
+                    });
+  
+                    console.log('I txevents before is: ', txevents);
+                   
+
+                    // if none transfer events in tx we remove transfers events as main event is not a transfer (unless tx made from another smart contract but we dont handle that case):
+                    let nonetransferevents = txevents.filter(function(onevent) {
+                      return onevent.event != 'Transfer' 
+                    });
+
+                    if(nonetransferevents && nonetransferevents.length > 0){
+                      console.log('II in nonetransferevents is: ', nonetransferevents);
+                      let transferevents = txevents.filter(function(onevent) {
+                        return onevent.event == 'Transfer' 
+                      });
+
+                      console.log('I transfereents is: ', transferevents);
+                      transferevents.forEach(f => {
+                        let _eventindex = txevents.findIndex(e => e.logIndex === f.logIndex);
+                        console.log('I _eventindex  is: ', _eventindex);
+                        txevents.splice(_eventindex,1);
+                      });
+                    }
                     
+                    console.log('txevents after is: ', txevents);
+
                     txevents.forEach(onetxevent => { 
                       console.log('onetxevent step4 :', onetxevent);
                   let _valueeti = 0;
@@ -391,7 +417,34 @@ class Transactions {
 
                 if (logevents.filter(onevent => onevent.transactionHash === onetx.hash)){
                   console.log('enableKeepInSync() onevent => onevent.transactionHash === onetx.hash) is true:', onetx);
-                  let txevents = logevents.filter(onevent => onevent.transactionHash === onetx.hash);
+                  console.log('enableKeepInSync() logevents) is :', logevents);
+
+                  console.log('II txevents before is: ', txevents);
+
+                  var txevents = logevents.filter(function(onelogevent) {
+                    return onelogevent.transactionHash == onetx.hash;
+                  });
+
+                  // if none transfer events in tx we remove transfers events as main event is not a transfer (unless tx made from another smart contract but we dont handle that case):
+                  let nonetransferevents = txevents.filter(function(onevent) {
+                    return onevent.event != 'Transfer' 
+                  });
+
+                  if(nonetransferevents && nonetransferevents.length > 0){
+                    console.log('II in nonetransferevents is: ', nonetransferevents);
+                    let transferevents = txevents.filter(function(onevent) {
+                      return onevent.event == 'Transfer' 
+                    });
+
+                    console.log('II transfereents is: ', transferevents);
+                    transferevents.forEach(f => {
+                      let _eventindex = txevents.findIndex(e => e.logIndex === f.logIndex);
+                      console.log('II _eventindex  is: ', _eventindex);
+                      txevents.splice(_eventindex,1);
+                    });
+                  }
+                    
+                    console.log('II txevents after is: ', txevents);
                   
                   txevents.forEach(onetxevent => { 
                     console.log('enableKeepInSync() onetxevent step4 :', onetxevent);

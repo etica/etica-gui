@@ -56,6 +56,7 @@ function StartSyncProcess() {
           web3Local.eth.getBlock("latest", function (error, localBlock) {
             if (!error) {
               if (localBlock.number > 0) {
+                console.log('local block number is', localBlock.number);
                 if (!EticaTransactions.getIsSyncing()) {
                   SyncProgress.animate(1);
                   SyncProgress.setText(vsprintf("%d/%d (100%%)", [localBlock.number, localBlock.number]));
@@ -117,7 +118,7 @@ function StartSyncProcess() {
     }
   });
 
-  // Updates balances every 60 seconds
+  // Updates balances every 30 seconds
   SyncBalancesInterval = setInterval(function () {
 
     EticaBlockchain.getAccountsData(function (error) {
