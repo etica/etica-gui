@@ -134,6 +134,12 @@ class Transactions {
                   let _fromaddreti = null;
                   let _toaddreti = null;
                   let _slashduration = null;
+                  let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'NewStakeClaim', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
+
+                // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
+                if(!includedevents.includes(onetxevent.event)){
+                   return;
+                }
 
 
                   if(onetxevent.event == 'Transfer'){
@@ -154,8 +160,8 @@ class Transactions {
 
                   if(onetxevent.event == 'NewProposal'){
 
-                    _valueeti = onetxevent.returnValues.amount;
-                    _fromaddreti = onetxevent.proposer;
+                    _valueeti = web3Local.utils.toWei('10', 'ether');
+                    _fromaddreti = onetxevent.returnValues._proposer;
                     _toaddreti = onetx.to;
 
                   }
@@ -452,7 +458,12 @@ class Transactions {
                 let _fromaddreti = null;
                 let _toaddreti = null;
                 let _slashduration = null;
+                let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'NewStakeClaim', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
 
+                // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
+                if(!includedevents.includes(onetxevent.event)){
+                   return;
+                }
 
                 if(onetxevent.event == 'Transfer'){
 
@@ -472,8 +483,8 @@ class Transactions {
 
                 if(onetxevent.event == 'NewProposal'){
 
-                  _valueeti = onetxevent.returnValues.amount;
-                  _fromaddreti = onetxevent.proposer;
+                  _valueeti = web3Local.utils.toWei('10', 'ether');
+                  _fromaddreti = onetxevent.returnValues._proposer;
                   _toaddreti = onetx.to;
 
                 }
