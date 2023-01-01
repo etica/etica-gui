@@ -1,0 +1,128 @@
+<div class="walletsHeader">
+  <div class="sumBalanceHeader">
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+      <img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+      {{sumBalance}} EGAZ
+    </span>
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+      <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+      {{sumBalanceEti}} ETI
+    </span>
+  </div>
+</div>
+
+<div class="sendWrapper">
+  <div class="card-panel" style="padding-bottom: 0px;">
+    <form class="col s12">
+      <div class="row">
+        <div class="input-field col s6">
+          <select id="commitVoteFromAddress">
+            <option value="" disabled="disabled" selected="selected">Choose your address</option>
+            {{#addressData}}
+              <option value="{{address}}">{{name}}
+                -
+                {{address}}</option>
+            {{/addressData}}
+          </select>
+          <label for="commitVoteFromAddress">From address:</label>
+          <small id="commitVoteFromAddressName" class="form-text text-muted"></small>
+        </div>
+        <div class="input-field col s6" style="top:2vh;position: relative; left:3%;">
+          <i id="commitVoteMaxAmmount" class="MarginRight5">0</i><i>ETI available on this address</i>
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 0;">
+        <div class="input-field col s6">
+          <input id="commitVoteProposalHash" class="" placeholder="Enter Proposal Hash" type="text" value="">
+          <label for="commitVoteProposalHash" class="active">Proposal Hash:</label>
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 0;">
+        <div class="input-field col s12" id="commitVoteChoice">
+          <div>
+            <input type="radio" id="approval" name="commitchoice" value="approval">
+            <label for="approval">Approval</label>
+          </div>
+      
+          <div>
+            <input type="radio" id="disapproval" name="commitchoice" value="disapproval">
+            <label for="disapproval">Disapproval</label>
+          </div>
+          <label for="commitVoteChoice" class="active">Commit Choice:</label>
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 0;">
+        <div class="input-field col s6">
+          <input id="commitVotePrivacy" class="" placeholder="Enter commit privacy phrase" type="text" value="">
+          <label for="commitVotePrivacy" class="active">Privacy Phrase (optional):</label>
+        </div>
+      </div>
+      <div class="row" style="margin-top: 0;margin-bottom: 0;">
+        <div class="input-field col s12">
+          <button type="button" class="button4 MarginRight5" id="btnCommitVote">Submit Proposal</button>
+        </div>
+        <div class="input-field col s12" style="margin-bottom: 1vh;margin-top: 0vh;">
+          <i>collateral cost: <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" class="MarginRight5" /> 10 ETI</i>    
+        </div>
+      </div>
+    </form>
+  </div>
+  <div id="cardTransactionsForAddress" class="card-panel" style="display: none;">
+    <table id="tableTransactionsForAddress" class="display" style="width:100%">
+      <thead>
+        <tr>
+          <th>Block</th>
+          <th>Timestamp</th>
+          <th>To</th>
+          <th>Value</th>
+        </tr>
+      </thead>
+      <tfoot>
+        <tr>
+          <th>Block</th>
+          <th>Timestamp</th>
+          <th>To</th>
+          <th>Value</th>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- send details dialog -->
+<div id="dlgCommitVoteWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To add a proposal to Etica from this wallet, please enter the wallet password" data-izimodal-icon="icon-home">
+  <div class="modalBody">
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-wallet"></i>
+      <label>From address:</label>
+      <label id="fromEtiAddressInfo"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Proposal Hash:</label>
+      <label id="valueToCommitVoteProposalHash"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Vote choice:</label>
+      <label id="valueToCommitVoteChoice"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Privacy Phrase:</label>
+      <label id="valueToCommitVotePrivacy"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Fee to pay:</label>
+      <label id="feeEtiToPayInfo"></label>
+      <label class="currencyTicker">ETI</label>
+    </div>
+    <hr class="sendTXdivider">
+    <div class="form-group sendTXPass">
+      <label for="usr">Enter your Password:</label>
+      <input type="password" class=" form-control" id="walletPasswordEti">
+    </div>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnCommitVoteWalletPasswordConfirm">Confirm</button>
+  </div>
+</div>
