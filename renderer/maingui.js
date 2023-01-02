@@ -15,7 +15,10 @@ class MainGUI {
         $("#mainNavBtnWalletsWrapper").addClass("iconSelected");
         break;
       case "addressBook":
-        $("#mainNavBtnAddressBoookWrapper").addClass("iconSelected");
+        $("#mainNavBtnAddressBookWrapper").addClass("iconSelected");
+        break;
+      case "commitHistory":
+        $("#mainNavBtnCommitHistoryWrapper").addClass("iconSelected");
         break;
       case "send":
         $("#mainNavBtnSendWrapper").addClass("iconSelected");
@@ -135,9 +138,14 @@ $("#mainNavBtnTransactions").click(function () {
   EticaTransactions.renderTransactions();
 });
 
-$("#mainNavBtnAddressBoook").click(function () {
+$("#mainNavBtnAddressBook").click(function () {
   EticaMainGUI.changeAppState("addressBook");
   EticaAddressBook.renderAddressBook();
+});
+
+$("#mainNavBtnCommitHistory").click(function () {
+  EticaMainGUI.changeAppState("commitHistory");
+  EticaCommitHistory.renderCommitHistory();
 });
 
 $("#mainNavBtnSend").click(function () {
