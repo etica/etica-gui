@@ -50,6 +50,11 @@ class CommitVote {
         return false;
       }
 
+      if (Number($("#commitVoteAmount").val()) <= 0) {
+        EticaMainGUI.showGeneralError("Commit ammount must be greater than zero!");
+        return false;
+      }
+
       return true;
     } else {
       return false;
@@ -60,8 +65,22 @@ class CommitVote {
     if (EticaMainGUI.getAppState() == "commitVote") {
       $("#commitVoteFromAddress").val("");
       $("#commitVotePrivacy").val("");
+      $("#commitVoteAmount").val(0);
     }
   }
+
+  calculateHash(_proposalhash, _choice, _voter, _vary) {
+    console.log(' calculating _votehash');
+    console.log(' calculating _votehash _proposalhash', _proposalhash);
+    console.log(' calculating _votehash _choice', _choice);
+    console.log(' calculating _votehash _voter', _voter);
+    console.log(' calculating _votehash _vary', _vary);
+
+      let _votehash = web3Local.utils.keccak256(web3Local.eth.abi.encodeParameters([ "bytes32", "bool", "address", "string" ], [_proposalhash, _choice, _voter, _vary]));
+      console.log('_votehash is', _votehash);
+      return _votehash;
+  }
+
 }
 
 $(document).on("render_commitVote", function () {
@@ -79,10 +98,37 @@ $(document).on("render_commitVote", function () {
 
   });
 
+  $("#btnCommitVoteAll").off("click").on("click", function () {
+    $("#commitVoteAmount").focus();
+    $("#commitVoteAmount").val($("#commitVoteMaxAmmount").html());
+  });
+
   $("#btnCommitVote").off("click").on("click", function () {
     if (VoteCommit.validateSendForm()) {
 
-      EticaContract.getTranasctionFee_commitvote($("#commitVoteFromAddress").val(), $("#commitVoteProposalHash").val(), $("#commitVotePrivacy").val(), $("#commitVoteChoice").val(), function (error) {
+      let vote_checked_choice = null;
+      let vote_checked_choice_text = null;
+      console.log("document.getElementById('commitVoteApprovalChoice').checked", document.getElementById('commitVoteApprovalChoice').checked);
+      console.log("document.getElementById('commitVoteDisapprovalChoice').checked", document.getElementById('commitVoteDisapprovalChoice').checked);
+      console.log("document.getElementById('commitVoteApprovalChoice').value", document.getElementById('commitVoteApprovalChoice').value);
+      console.log("document.getElementById('commitVoteDisapprovalChoice').value", document.getElementById('commitVoteDisapprovalChoice').value);
+      if (document.getElementById('commitVoteApprovalChoice').checked && !document.getElementById('commitVoteDisapprovalChoice').checked) {
+        vote_checked_choice = true;
+        vote_checked_choice_text = 'Approve';
+      }
+      if (!document.getElementById('commitVoteApprovalChoice').checked && document.getElementById('commitVoteDisapprovalChoice').checked) {
+        vote_checked_choice = false;
+        vote_checked_choice_text = 'Disapprove';
+      }
+
+      // if vote choice is not true or false it means there was an issue getting the vote choice from interface, we abort:
+      if(vote_checked_choice != true && vote_checked_choice != false){
+        EticaMainGUI.showGeneralError('Please select a Vote choice to Approve or Disapprove the proposal');
+        return;
+      }
+
+      let commitvotehash = VoteCommit.calculateHash($("#commitVoteProposalHash").val(), vote_checked_choice, $("#commitVoteFromAddress").val(), $("#commitVotePrivacy").val());
+      EticaContract.getTranasctionFee_commitvote($("#commitVoteFromAddress").val(), commitvotehash, $("#commitVoteAmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
         $("#dlgCommitVoteWalletPassword").iziModal();
@@ -90,14 +136,17 @@ $(document).on("render_commitVote", function () {
         $("#fromEtiAddressInfo").html($("#commitVoteFromAddress").val());
         $("#valueToCommitVoteProposalHash").html($("#commitVoteProposalHash").val());
         $("#valueToCommitVotePrivacy").html($("#commitVotePrivacy").val());
-        $("#valueToCommitVoteChoice").html($("#commitVoteChoice").val());
+        $("#valueToCommitVoteChoice").html(vote_checked_choice_text);
+        $("#valueToCommitVoteAmount").html($("#commitVoteAmount").val());
+        $("#valueToCommitVoteHash").html(commitvotehash);
         $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCommitVoteWalletPassword").iziModal("open");
 
         function doSendTransaction() {
           $("#dlgCommitVoteWalletPassword").iziModal("close");
-
-          EticaContract.prepareTransaction_commitvote($("#walletPasswordEti").val(), $("#commitVoteFromAddress").val(), $("#commitVoteProposalHash").val(), $("#commitVotePrivacy").val(), $("#commitVoteChoice").val(), function (error) {
+          console.log('in doSendTransaction');
+          console.log('in doSendTransaction  commitvotehash is', commitvotehash);
+          EticaContract.prepareTransaction_commitvote($("#walletPasswordEti").val(), $("#commitVoteFromAddress").val(), commitvotehash, $("#commitVoteAmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {

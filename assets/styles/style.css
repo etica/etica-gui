@@ -59,6 +59,22 @@ body.pg-loaded>.inner {
   color: #fff;
 }
 
+
+[type="radio"]:checked+label {
+  font-weight: bold;
+  background-color: #fffffff7;
+    color: #0a961c !important;
+}
+
+.approvalchoicelabel {
+  margin-left:3% !important;
+  background-color: #4a292963;
+  color: #b59c54c4;
+  padding: 1%;
+  cursor:pointer;
+}
+
+
 #peerCount {
   bottom: 0;
   height: 20px;

@@ -40,16 +40,14 @@
       <div class="row" style="margin-bottom: 0;">
         <div class="input-field col s12" id="commitVoteChoice">
           <div>
-            <input type="radio" id="approval" name="commitchoice" value="approval">
-            <label for="approval">Approval</label>
+            <label for="commitVoteChoice" class="active">Commit Choice:</label> <br><br>
+            <input class="approvalchoiceradio" type="radio" id="commitVoteApprovalChoice" name="commitchoice" value="true">
+            <label class="approvalchoicelabel" for="commitVoteApprovalChoice">Approval</label>
+
+            <input class="approvalchoiceradio" type="radio" id="commitVoteDisapprovalChoice" name="commitchoice" value="false">
+            <label class="approvalchoicelabel" for="commitVoteDisapprovalChoice">Disapproval</label>
           </div>
-      
-          <div>
-            <input type="radio" id="disapproval" name="commitchoice" value="disapproval">
-            <label for="disapproval">Disapproval</label>
-          </div>
-          <label for="commitVoteChoice" class="active">Commit Choice:</label>
-        </div>
+       </div>
       </div>
       <div class="row" style="margin-bottom: 0;">
         <div class="input-field col s6">
@@ -57,12 +55,21 @@
           <label for="commitVotePrivacy" class="active">Privacy Phrase (optional):</label>
         </div>
       </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <input id="commitVoteAmount" class="" placeholder="0" type="number" value="0">
+          <label for="commitVoteAmount" class="active">Amount:</label>
+        </div>
+        <div class="input-field col s6">
+          <div style="display:inline;position:relative;left:4%;"><label class="MarginRight5">available:</label><span id="StakeEtiMaxAmmount" class="MarginRight5">0</span><span>ETI</span></div>
+          <div class="input-field col s12">
+            <button type="button" class="button4" id="btnCommitVoteAll">Commit All</button>
+          </div>
+        </div>
+      </div>
       <div class="row" style="margin-top: 0;margin-bottom: 0;">
         <div class="input-field col s12">
-          <button type="button" class="button4 MarginRight5" id="btnCommitVote">Submit Proposal</button>
-        </div>
-        <div class="input-field col s12" style="margin-bottom: 1vh;margin-top: 0vh;">
-          <i>collateral cost: <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" class="MarginRight5" /> 10 ETI</i>    
+          <button type="button" class="button4 MarginRight5" id="btnCommitVote">Commit vote</button>
         </div>
       </div>
     </form>
@@ -90,8 +97,13 @@
 </div>
 
 <!-- send details dialog -->
-<div id="dlgCommitVoteWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To add a proposal to Etica from this wallet, please enter the wallet password" data-izimodal-icon="icon-home">
+<div id="dlgCommitVoteWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To commit your vote on this proposal, please enter the wallet password" data-izimodal-icon="icon-home">
   <div class="modalBody">
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Commit Vote Hash:</label>
+      <label id="valueToCommitVoteHash"></label>
+    </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-wallet"></i>
       <label>From address:</label>
@@ -111,6 +123,12 @@
       <i class="fas fa-dollar-sign"></i>
       <label>Privacy Phrase:</label>
       <label id="valueToCommitVotePrivacy"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Commit Amount:</label>
+      <label id="valueToCommitVoteAmount"></label>
+      <label class="currencyTicker">ETI</label>
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-dollar-sign"></i>
