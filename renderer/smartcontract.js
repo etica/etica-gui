@@ -3,7 +3,7 @@ const {ipcRenderer} = require("electron");
 
 let EticaContractJSON = require('../EticaRelease.json');
 //const ETICA_ADDRESS = '0x34c61EA91bAcdA647269d4e310A86b875c09946f'; // mainnet
-const ETICA_ADDRESS = '0xa61B0CE4A212abdea3bA72D4681DB00e54a004C8'; // local dev blockchain
+const ETICA_ADDRESS = '0x5a94Ae83038b9eB2b51A4F8E835e04ABCf4a1AF7'; // local dev blockchain
 
 class SmartContract {
   constructor() {
@@ -654,7 +654,7 @@ class SmartContract {
 
          //  COMMIT VOTE //
 
-        getTranasctionFee_commitvote(fromAddress, _votehash, amount, clbError, clbSuccess) {
+        getTranasctionFee_commitvote(fromAddress, votehash, amount, clbError, clbSuccess) {
           web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
             if (error) {
               clbError(error);
@@ -664,16 +664,17 @@ class SmartContract {
               var txData = web3Local.eth.abi.encodeFunctionCall({
                 name: 'commitvote',
                 type: 'function',
-                inputs: [{
+                inputs: [,
+                  {
+                    type: 'uint256',
+                    name: '_amount'
+                  },
+                  {
                     type: 'bytes32',
-                    name: 'votehash'
-                },
-                {
-                  type: 'uint256',
-                  name: 'amount'
+                    name: '_votehash'
                 }
           ]
-            }, [_votehash, amountToVote]);
+            }, [amountToVote, votehash]);
       
               var RawTransaction = {
                 from: fromAddress,
@@ -703,7 +704,7 @@ class SmartContract {
         }
       
       
-        prepareTransaction_commitvote(password, fromAddress, _votehash, amount, clbError, clbSuccess) {
+        prepareTransaction_commitvote(password, fromAddress, votehash, amount, clbError, clbSuccess) {
           web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
             if (error) {
               clbError("Wrong password for the selected address!");
@@ -718,15 +719,15 @@ class SmartContract {
                     name: 'commitvote',
                     type: 'function',
                     inputs: [{
+                        type: 'uint256',
+                        name: '_amount'
+                      },
+                      {
                         type: 'bytes32',
-                        name: 'votehash'
-                    },
-                    {
-                      type: 'uint256',
-                      name: 'amount'
+                        name: '_votehash'
                     }
               ]
-                }, [_votehash, amountToVote]);
+                }, [amountToVote, votehash]);
       
                   var RawTransaction = {
                     from: fromAddress,
@@ -1336,7 +1337,12 @@ class SmartContract {
     rendererData.addressData = [];
 
     var wallets = EticaDatatabse.getWallets();
-    var counter = 0;
+    var counter_balance = 0;
+    var counter_balance_eti = 0;
+    var counter_stakes = 0;
+    var counter_bosoms = 0;
+    var counter_blockedeticas = 0;
+    
 
     web3Local.eth.getAccounts(function (err, res) {
       if (err) {
@@ -1360,11 +1366,11 @@ class SmartContract {
         }
 
         if (rendererData.addressData.length > 0) {
-          updateBalance(counter);
-          updateBalanceETI(counter);
-          updateStakeAmount(counter);
-          updateBlockedEticas(counter);
-          updateBalanceBosoms(counter);
+          updateBalance(counter_balance);
+          updateBalanceETI(counter_balance_eti);
+          updateStakeAmount(counter_stakes);
+          updateBlockedEticas(counter_blockedeticas);
+          updateBalanceBosoms(counter_bosoms);
         } else {
           clbSuccess(rendererData);
         }
@@ -1376,9 +1382,9 @@ class SmartContract {
         rendererData.addressData[index].balance = parseFloat(web3Local.utils.fromWei(balance, "ether")).toFixed(4);
         rendererData.sumBalance = rendererData.sumBalance + parseFloat(web3Local.utils.fromWei(balance, "ether"));
 
-        if (counter < rendererData.addressData.length - 1) {
-          counter++;
-          updateBalance(counter);
+        if (index < rendererData.addressData.length - 1) {
+          index++;
+          updateBalance(index);
         } else {
           rendererData.sumBalance = parseFloat(rendererData.sumBalance).toFixed(4);
           clbSuccess(rendererData);
@@ -1393,9 +1399,9 @@ class SmartContract {
         rendererData.addressData[index].balance_eti = parseFloat(web3Local.utils.fromWei(balance, "ether")).toFixed(4);
         rendererData.sumBalanceEti = rendererData.sumBalanceEti + parseFloat(web3Local.utils.fromWei(balance, "ether"));
 
-        if (counter < rendererData.addressData.length - 1) {
-          counter++;
-          updateBalanceETI(counter);
+        if (index < rendererData.addressData.length - 1) {
+          index++;
+          updateBalanceETI(index);
         } else {
           rendererData.sumBalanceEti = parseFloat(rendererData.sumBalanceEti).toFixed(2);
           clbSuccess(rendererData);
@@ -1409,9 +1415,9 @@ class SmartContract {
         rendererData.addressData[index].stakesamount = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
         rendererData.sumStakedEti = rendererData.sumStakedEti + parseFloat(web3Local.utils.fromWei(amount, "ether"));
 
-        if (counter < rendererData.addressData.length - 1) {
-          counter++;
-          updateStakeAmount(counter);
+        if (index < rendererData.addressData.length - 1) {
+          index++;
+          updateStakeAmount(index);
         } else {
           rendererData.sumStakedEti = parseFloat(rendererData.sumStakedEti).toFixed(2);
           clbSuccess(rendererData);
@@ -1425,9 +1431,9 @@ class SmartContract {
         rendererData.addressData[index].blockedeticas = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
         rendererData.sumBlockedEti = rendererData.sumBlockedEti + parseFloat(web3Local.utils.fromWei(amount, "ether"));
 
-        if (counter < rendererData.addressData.length - 1) {
-          counter++;
-          updateBlockedEticas(counter);
+        if (index < rendererData.addressData.length - 1) {
+          index++;
+          updateBlockedEticas(index);
         } else {
           rendererData.sumBlockedEti = parseFloat(rendererData.sumBlockedEti).toFixed(4);
           clbSuccess(rendererData);
@@ -1441,9 +1447,9 @@ class SmartContract {
         rendererData.addressData[index].bosoms = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
         rendererData.sumBosoms = rendererData.sumBosoms + parseFloat(web3Local.utils.fromWei(amount, "ether"));
 
-        if (counter < rendererData.addressData.length - 1) {
-          counter++;
-          updateBalanceBosoms(counter);
+        if (index < rendererData.addressData.length - 1) {
+          index++;
+          updateBalanceBosoms(index);
         } else {
           rendererData.sumBosoms = parseFloat(rendererData.sumBosoms).toFixed(4);
           clbSuccess(rendererData);
@@ -1451,6 +1457,49 @@ class SmartContract {
     }
 
   }
+
+
+
+
+
+
+  async testgetProposal(clbError, clbSuccess) {
+
+    let datas ={};
+    let prophash = await getProposaltest();
+    let prophash2 = await getProposaltest2();
+    let diseasehash1 = await getDiseasetest1();
+    let diseasehash2 = await getDiseasetest2();
+    datas.diseasehash1 = diseasehash1;
+    datas.diseasehash2 = diseasehash2;
+    datas.prophash = prophash;
+    datas.prophash2 = prophash2;
+    datas.diseasehash2 = diseasehash2;
+    clbSuccess(datas);
+
+  async function getProposaltest() {
+    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let proposalhash = await contract.methods.diseaseproposals('0xf6d8716087544b8fe1a306611913078dd677450d90295497e433503483ffea6e',1).call();
+      return proposalhash;
+  }
+  async function getProposaltest2() {
+    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let proposalhash = await contract.methods.diseaseproposals('0x569e75fc77c1a856f6daaf9e69d8a9566ca34aa47f9133711ce065a571af0cfd',1).call();
+      return proposalhash;
+  }
+  async function getDiseasetest1() {
+    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let diseasehash = await contract.methods.getdiseasehashbyName('Malaria').call();
+      return diseasehash;
+  }
+  async function getDiseasetest2() {
+    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let diseasehash = await contract.methods.getdiseasehashbyName('').call();
+      return diseasehash;
+  }
+
+}
+
 
 
    // GETTER FUNCTIONS

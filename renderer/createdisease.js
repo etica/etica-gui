@@ -73,7 +73,7 @@ $(document).on("render_createDisease", function () {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
         $("#dlgCreateDiseaseWalletPassword").iziModal();
-        $("#walletPasswordEti").val("");
+        $("#CreateDiseasewalletPassword").val("");
         $("#fromEtiAddressInfo").html($("#createDiseaseFromAddress").val());
         $("#valueToCreateDiseaseInfo").html($("#createDiseaseName").val());
         $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
@@ -82,7 +82,7 @@ $(document).on("render_createDisease", function () {
         function doSendTransaction() {
           $("#dlgCreateDiseaseWalletPassword").iziModal("close");
 
-          EticaContract.prepareTransaction_createdisease($("#walletPasswordEti").val(), $("#createDiseaseFromAddress").val(), $("#createDiseaseName").val(), function (error) {
+          EticaContract.prepareTransaction_createdisease($("#CreateDiseasewalletPassword").val(), $("#createDiseaseFromAddress").val(), $("#createDiseaseName").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {

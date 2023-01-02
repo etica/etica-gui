@@ -44,19 +44,29 @@ function StartSyncProcess() {
   var alreadyCatchedUp = false;
   var nodeSyncInterval = null;
   var SyncBalancesInterval = null;
-
+  console.log('inside StartSyncProcess');
+  
+// enable the keep in sync feature
+  EticaTransactions.enableKeepInSync();
+  
   var subscription = web3Local.eth.subscribe("syncing", function (error, sync) {
+    console.log('inside StartSyncProcess syncing subscription');
     if (!error) {
+      console.log('inside StartSyncProcess syncing subscription no error');
       if (!sync) {
+        console.log('inside StartSyncProcess syncing subscription no error, not synced');
         if (nodeSyncInterval) {
+          console.log('inside clearInterval(nodeSyncInterval)');
           clearInterval(nodeSyncInterval);
         }
 
         nodeSyncInterval = setInterval(function () {
+          console.log('inside nodeSyncInterval');
           web3Local.eth.getBlock("latest", function (error, localBlock) {
+            console.log('local block number is', localBlock.number);
             if (!error) {
               if (localBlock.number > 0) {
-                console.log('local block number is', localBlock.number);
+                console.log('local block number > 0 is', localBlock.number);
                 if (!EticaTransactions.getIsSyncing()) {
                   SyncProgress.animate(1);
                   SyncProgress.setText(vsprintf("%d/%d (100%%)", [localBlock.number, localBlock.number]));
@@ -136,9 +146,10 @@ function StartSyncProcess() {
 var InitWeb3 = setInterval(function () {
   try {
     web3Local = new Web3(new Web3.providers.WebsocketProvider("ws://localhost:8551"));
-
+    console.log('inside InitWeb3');
     web3Local.eth.net.isListening(function (error, success) {
       if (!error) {
+        console.log('inside InitWeb3 no error passed');
         $(document).trigger("onGethReady");
         clearInterval(InitWeb3);
         StartSyncProcess();

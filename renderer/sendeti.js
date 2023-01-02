@@ -160,9 +160,9 @@ $(document).on("render_sendEti", function () {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
         $("#dlgSendEtiWalletPassword").iziModal();
-        $("#walletPasswordEti").val("");
+        $("#walletPasswordSendEti").val("");
         $("#fromEtiAddressInfo").html($("#sendEtiFromAddress").val());
-        $("#toEtiAddressInfo").html($("#sendEtiToAddress").val());
+        $("#toSendEtiAddressInfo").html($("#sendEtiToAddress").val());
         $("#valueToSendEtiInfo").html($("#sendEtiAmmount").val());
         $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgSendEtiWalletPassword").iziModal("open");
@@ -170,7 +170,7 @@ $(document).on("render_sendEti", function () {
         function doSendTransaction() {
           $("#dlgSendEtiWalletPassword").iziModal("close");
 
-          EticaContract.prepareTransaction_SendEti($("#walletPasswordEti").val(), $("#sendEtiFromAddress").val(), $("#sendEtiToAddress").val(), $("#sendEtiAmmount").val(), function (error) {
+          EticaContract.prepareTransaction_SendEti($("#walletPasswordSendEti").val(), $("#sendEtiFromAddress").val(), $("#sendEtiToAddress").val(), $("#sendEtiAmmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {

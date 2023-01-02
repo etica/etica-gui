@@ -11,6 +11,12 @@ class CommitVote {
       EticaMainGUI.renderTemplate("commitvote.html", data);
       $(document).trigger("render_commitVote");
     });
+
+    EticaContract.testgetProposal(function (error) {
+      EticaMainGUI.showGeneralError(error);
+    }, function (data) {
+      console.log('Test get proposal and disease is datas is', data);
+    });
   }
 
   validateSendForm() {
@@ -128,11 +134,14 @@ $(document).on("render_commitVote", function () {
       }
 
       let commitvotehash = VoteCommit.calculateHash($("#commitVoteProposalHash").val(), vote_checked_choice, $("#commitVoteFromAddress").val(), $("#commitVotePrivacy").val());
+      console.log('commitvotehash returned value is: ', commitvotehash);
+      console.log('$("#commitVoteAmount").val() is: ', $("#commitVoteAmount").val());
+      
       EticaContract.getTranasctionFee_commitvote($("#commitVoteFromAddress").val(), commitvotehash, $("#commitVoteAmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
         $("#dlgCommitVoteWalletPassword").iziModal();
-        $("#walletPasswordEti").val("");
+        $("#CommitVotewalletPassword").val("");
         $("#fromEtiAddressInfo").html($("#commitVoteFromAddress").val());
         $("#valueToCommitVoteProposalHash").html($("#commitVoteProposalHash").val());
         $("#valueToCommitVotePrivacy").html($("#commitVotePrivacy").val());
@@ -146,7 +155,7 @@ $(document).on("render_commitVote", function () {
           $("#dlgCommitVoteWalletPassword").iziModal("close");
           console.log('in doSendTransaction');
           console.log('in doSendTransaction  commitvotehash is', commitvotehash);
-          EticaContract.prepareTransaction_commitvote($("#walletPasswordEti").val(), $("#commitVoteFromAddress").val(), commitvotehash, $("#commitVoteAmount").val(), function (error) {
+          EticaContract.prepareTransaction_commitvote($("#CommitVotewalletPassword").val(), $("#commitVoteFromAddress").val(), commitvotehash, $("#commitVoteAmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {

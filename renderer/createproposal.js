@@ -86,7 +86,7 @@ $(document).on("render_createProposal", function () {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
         $("#dlgCreateProposalWalletPassword").iziModal();
-        $("#walletPasswordEti").val("");
+        $("#CreateProposalwalletPassword").val("");
         $("#fromEtiAddressInfo").html($("#createProposalFromAddress").val());
         $("#valueToCreateProposalDiseaseHash").html($("#createProposalDiseaseHash").val());
         $("#valueToCreateProposalTitle").html($("#createProposalTitle").val());
@@ -100,7 +100,7 @@ $(document).on("render_createProposal", function () {
         function doSendTransaction() {
           $("#dlgCreateProposalWalletPassword").iziModal("close");
 
-          EticaContract.prepareTransaction_createproposal($("#walletPasswordEti").val(), $("#createProposalFromAddress").val(), $("#createProposalDiseaseHash").val(), $("#createProposalTitle").val(), $("#createProposalDescription").val(), $("#createProposalRawReleaseHash").val(), $("#createProposalFreefield").val(), $("#createProposalChunkId").val(), function (error) {
+          EticaContract.prepareTransaction_createproposal($("#CreateProposalwalletPassword").val(), $("#createProposalFromAddress").val(), $("#createProposalDiseaseHash").val(), $("#createProposalTitle").val(), $("#createProposalDescription").val(), $("#createProposalRawReleaseHash").val(), $("#createProposalFreefield").val(), $("#createProposalChunkId").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {

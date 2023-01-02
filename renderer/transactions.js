@@ -135,13 +135,13 @@ class Transactions {
                   let _toaddreti = null;
                   let _slashduration = null;
                   let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'NewStakeClaim', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
-
+                  console.log('onetxevent.returnValues before includes is ', onetxevent);
                 // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
                 if(!includedevents.includes(onetxevent.event)){
                    return;
                 }
 
-
+                console.log('onetxevent.returnValues is ', onetxevent);
                   if(onetxevent.event == 'Transfer'){
 
                     _valueeti = onetxevent.returnValues.tokens;
@@ -153,7 +153,7 @@ class Transactions {
                   if(onetxevent.event == 'NewCommit'){
 
                     _valueeti = onetxevent.returnValues.amount;
-                    _fromaddreti = onetxevent.returnValues.from;
+                    _fromaddreti = onetxevent.returnValues._voter;
                     _toaddreti = onetx.to;
 
                   }

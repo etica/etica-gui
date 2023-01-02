@@ -86,7 +86,7 @@ $(document).on("render_createChunk", function () {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
         $("#dlgCreateChunkiWalletPassword").iziModal();
-        $("#walletPasswordEti").val("");
+        $("#CreateChunkwalletPassword").val("");
         $("#fromEtiAddressInfo").html($("#createChunkFromAddress").val());
         $("#valueToCreateChunkDiseaseHash").html($("#createChunkDiseaseHash").val());
         $("#valueToCreateChunkTitle").html($("#createChunkTitle").val());
@@ -97,7 +97,7 @@ $(document).on("render_createChunk", function () {
         function doSendTransaction() {
           $("#dlgCreateChunkiWalletPassword").iziModal("close");
 
-          EticaContract.prepareTransaction_createchunk($("#walletPasswordEti").val(), $("#createChunkFromAddress").val(), $("#createChunkDiseaseHash").val(), $("#createChunkTitle").val(), $("#createChunkDescription").val(), function (error) {
+          EticaContract.prepareTransaction_createchunk($("#CreateChunkwalletPassword").val(), $("#createChunkFromAddress").val(), $("#createChunkDiseaseHash").val(), $("#createChunkTitle").val(), $("#createChunkDescription").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {
