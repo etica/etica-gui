@@ -1336,7 +1336,7 @@ class SmartContract {
     rendererData.sumBosoms = 0;
     rendererData.addressData = [];
 
-    var wallets = EticaDatatabse.getWallets();
+    var wallets = EticaDatabase.getWallets();
     var counter_balance = 0;
     var counter_balance_eti = 0;
     var counter_stakes = 0;

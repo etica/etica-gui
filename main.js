@@ -88,3 +88,4 @@ locker.lock().then(function() {
 require("./modules/geth.js");
 require("./modules/accounts.js");
 require("./modules/database.js");
+require("./modules/commitsdatabase.js");

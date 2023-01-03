@@ -188,11 +188,11 @@ $(document).on("render_wallets", function () {
     $("#dlgChangeWalletName").iziModal("open");
 
     function doChangeWalletName() {
-      var wallets = EticaDatatabse.getWallets();
+      var wallets = EticaDatabase.getWallets();
 
       // set the wallet name from the dialog box
       wallets.names[walletAddress] = $("#inputWalletName").val();
-      EticaDatatabse.setWallets(wallets);
+      EticaDatabase.setWallets(wallets);
 
       $("#dlgChangeWalletName").iziModal("close");
       EticaWallets.renderWalletsState();

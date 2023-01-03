@@ -81,7 +81,7 @@ $(document).on("render_sendEti", function () {
     addressName = EticaAddressBook.getAddressName($("#sendEtiToAddress").val());
 
     if (!addressName) {
-      var wallets = EticaDatatabse.getWallets();
+      var wallets = EticaDatabase.getWallets();
       addressName = wallets.names[$("#sendEtiToAddress").val()];
     }
     $("#sendEtiToAddressName").html(addressName);

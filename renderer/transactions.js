@@ -278,6 +278,30 @@ class Transactions {
                   ipcRenderer.send("storeTransaction", Transaction);
                   console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is', Transaction);
 
+                  if(onetxevent.event == 'NewCommit'){
+
+                    console.log('line 283 inside NewCommit Condition');
+                    var _NewCommit = {
+                    votehash: onetxevent.returnValues.votehash,
+                    txhash: onetx.hash.toLowerCase(),
+                    voter: onetxevent.returnValues._voter,
+                    timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
+                    valueeti: _valueeti,
+                    choice:null,
+                    vary:null,
+                    proposalhash:null,
+                    proposaltitle:null,
+                    proposaldeadline:null,
+                    isDone: false,
+                    status: 1,
+                    };
+
+                    console.log('line 299 before storing _NewCommit', _NewCommit);
+                    ipcRenderer.send("storeCommit", _NewCommit);
+                    console.log('line 301 after storing _NewCommit', _NewCommit);
+
+                  }
+
                     
                     });
                   }
@@ -335,7 +359,7 @@ class Transactions {
     } else {
       // update the counter and store it back to file system
       counters.transactions = lastBlock;
-      EticaDatatabse.setCounters(counters);
+      EticaDatabase.setCounters(counters);
 
       SyncProgress.setText("Syncing transactions is complete.");
       EticaTransactions.setIsSyncing(false);
@@ -343,7 +367,7 @@ class Transactions {
   }
 
   syncTransactionsForAllAddresses(lastBlock) {
-    var counters = EticaDatatabse.getCounters();
+    var counters = EticaDatabase.getCounters();
     var counter = 0;
 
     EticaBlockchain.getAccounts(function (error) {
@@ -599,6 +623,32 @@ class Transactions {
                 console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is: ', Transaction);
                 // store transaction and notify about new transactions
                 ipcRenderer.send("storeTransaction", Transaction);
+
+                if(onetxevent.event == 'NewCommit'){
+
+                  console.log('line 629 inside NewCommit Condition');
+                  var _NewCommit = {
+                  votehash: onetxevent.returnValues.votehash,
+                  txhash: onetx.hash.toLowerCase(),
+                  voter: onetxevent.returnValues._voter,
+                  timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
+                  valueeti: _valueeti,
+                  choice:null,
+                  vary:null,
+                  proposalhash:null,
+                  proposaltitle:null,
+                  proposaldeadline:null,
+                  isDone: false,
+                  status: 1,
+                  };
+
+                  console.log('line 645 before storing _NewCommit', _NewCommit);
+                  ipcRenderer.send("storeCommit", _NewCommit);
+                  console.log('line 647 after storing _NewCommit', _NewCommit);
+
+                }
+
+
                 console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is', Transaction);
                 $(document).trigger("onNewAccountTransaction");
                 console.log('new tx before iziToast.info is: ', Transaction);

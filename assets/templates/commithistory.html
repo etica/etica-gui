@@ -20,28 +20,30 @@
     <table class="bordered" id="addressTable">
       <thead>
         <tr>
-          <th scope="col" class="noSortCollumn" data-sort-method='none'></th>
-          <th scope="col">Name</th>
-          <th scope="col">Address</th>
-          <th scope="col" class="noSortCollumn" data-sort-method='none'>Actions</th>
+          <th class="noSortCollumn">Proposal/Votehash</th>
+          <th>Creation Date</th>
+          <th>Amount</th>
+          <th class="noSortCollumn" data-sort-method='none'>Status</th>
         </tr>
       </thead>
       <tbody>
         {{#commitData}}
           <tr>
-            <th scope="row" class="colEdit">
-              <button type="button" class="btn btn-etica btnChangAddressName" data-address="{{address}}" data-name="{{name}}">Edit</button>
-            </th>
-            <td>{{name}}</td>
             <td>
-              <span class="textAddress">{{address}}</span></td>
+              <div>
+                <span>{{ proposaltitle }}</span><br>
+                <span style="font-size:0.75em;color: #399999;">{{ votehash }}</span>
+              </div>
+            </td>
+            <td>{{ timestamp }}</td>
             <td>
-              <button type="button" class="btn btn-etica btnDeleteAddress" data-address="{{address}}">
-                <i class="far fa-trash-alt"></i>
-              </button>
-              <button type="button" class="btn btn-etica btnShowQRCode" data-address="{{address}}">
-                <i class="fas fa-qrcode"></i>
-              </button>
+              <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+                <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+                {{ valueeti }} ETI
+              </span>
+            </td>
+            <td>
+              <span class="textAddress">Revealing time left 78% {{ proposaldeadline }}</span>
             </td>
           </tr>
         {{/commitData}}

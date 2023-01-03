@@ -4,28 +4,28 @@ class AddressBook {
   constructor() {}
 
   setAddressName(address, name) {
-    var addressBook = EticaDatatabse.getAddresses();
+    var addressBook = EticaDatabase.getAddresses();
 
     // set the wallet name from the dialog box
     addressBook.names[address.toUpperCase()] = name;
-    EticaDatatabse.setAddresses(addressBook);
+    EticaDatabase.setAddresses(addressBook);
   }
 
   getAddressName(address) {
-    var addressBook = EticaDatatabse.getAddresses();
+    var addressBook = EticaDatabase.getAddresses();
     // set the wallet name from the dialog box
     return addressBook.names[address.toUpperCase()] || "";
   }
 
   getAddressList() {
-    var addressBook = EticaDatatabse.getAddresses();
+    var addressBook = EticaDatabase.getAddresses();
     return addressBook.names;
   }
 
   deleteAddress(address) {
-    var addressBook = EticaDatatabse.getAddresses();
+    var addressBook = EticaDatabase.getAddresses();
     delete addressBook.names[address];
-    EticaDatatabse.setAddresses(addressBook);
+    EticaDatabase.setAddresses(addressBook);
   }
 
   enableButtonTooltips() {}

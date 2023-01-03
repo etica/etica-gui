@@ -26,9 +26,9 @@ $(document).on("render_settings", function () {
             // first disable keepInSync
             EticaTransactions.disableKeepInSync();
             // then delete the transactions data
-            var counters = EticaDatatabse.getCounters();
+            var counters = EticaDatabase.getCounters();
             counters.transactions = 0;
-            EticaDatatabse.setCounters(counters);
+            EticaDatabase.setCounters(counters);
             ipcResult = ipcRenderer.sendSync("deleteTransactions", null);
 
             if (ipcResult.success) {

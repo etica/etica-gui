@@ -4,54 +4,50 @@ class CommitHistory {
   constructor() {}
 
   setAddressName(address, name) {
-    var addressBook = EticaDatatabse.getAddresses();
+    var addressBook = EticaDatabase.getAddresses();
 
     // set the wallet name from the dialog box
     addressBook.names[address.toUpperCase()] = name;
-    EticaDatatabse.setAddresses(addressBook);
+    EticaDatabase.setAddresses(addressBook);
   }
 
   getAddressName(address) {
-    var addressBook = EticaDatatabse.getAddresses();
+    var addressBook = EticaDatabase.getAddresses();
     // set the wallet name from the dialog box
     return addressBook.names[address.toUpperCase()] || "";
   }
 
   getAddressList() {
-    var addressBook = EticaDatatabse.getAddresses();
+    var addressBook = EticaDatabase.getAddresses();
     return addressBook.names;
   }
 
   deleteAddress(address) {
-    var addressBook = EticaDatatabse.getAddresses();
+    var addressBook = EticaDatabase.getAddresses();
     delete addressBook.names[address];
-    EticaDatatabse.setAddresses(addressBook);
+    EticaDatabase.setAddresses(addressBook);
   }
 
   enableButtonTooltips() {}
 
   renderCommitHistory() {
-    var addressObject = EticaCommitHistory.getAddressList();
-    var renderData = {};
-    renderData.commitData = [];
-  
 
-    for (var key in addressObject) {
-      if (addressObject.hasOwnProperty(key)) {
-        var addressEntry = {};
-        addressEntry.name = addressObject[key];
-        addressEntry.address = key;
-        renderData.commitData.push(addressEntry);
+    var renderData = {};
+    renderData.commitData = ipcRenderer.sendSync("getCommits");
+
+    renderData.commitData.forEach(function (element) {
+      if(element['valueeti']){
+        element['valueeti'] = web3Local.utils.fromWei(element['valueeti'], "ether");
       }
-    }
+    });
 
     EticaBlockchain.getAccountsData(function (error) {
       EticaMainGUI.showGeneralError(error);
     }, function (data) {
-      console.log('data from renderCommitHistory is', data);
       renderData.sumBalanceEti = data.sumBalanceEti;
       renderData.sumBalance = data.sumBalance;
       data.commitData = renderData.commitData;
+      console.log('data from renderCommitHistory is', data);
       
       EticaMainGUI.renderTemplate("commithistory.html", data);
       $(document).trigger("render_commithistory");
@@ -59,6 +55,48 @@ class CommitHistory {
     
   });
   }
+
+
+
+  renderTransactions() {
+    if (!EticaTransactions.getIsLoading()) {
+
+      EticaBlockchain.getAccountsData(function (error) {
+        EticaMainGUI.showGeneralError(error);
+      }, function (data) {
+        EticaMainGUI.renderTemplate("transactions.html", data);
+        $(document).trigger("render_transactions");
+      });
+      
+      EticaTransactions.setIsLoading(true);
+
+      // show the loading overlay for transactions
+      $("#loadingTransactionsOverlay").css("display", "block");
+
+      setTimeout(() => {
+        var dataTransactions = ipcRenderer.sendSync("getTransactions");
+        var addressList = EticaWallets.getAddressList();
+
+        dataTransactions.forEach(function (element) {
+          var isFromValid = addressList.indexOf(element[2].toLowerCase()) > -1;
+          var isToValid = addressList.indexOf(element[3].toLowerCase()) > -1;
+
+          if (isToValid && !isFromValid) {
+            element.unshift(0);
+          } else if (!isToValid && isFromValid) {
+            element.unshift(1);
+          } else {
+            element.unshift(2);
+          }
+        });
+
+        EticaTableTransactions.initialize("#tableTransactionsForAll", dataTransactions);
+        EticaTransactions.setIsLoading(false);
+      }, 200);
+    }
+  }
+
+
 
 }
 

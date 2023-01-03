@@ -149,7 +149,7 @@ class Blockchain {
     rendererData.sumBalanceEti = 0;
     rendererData.addressData = [];
 
-    var wallets = EticaDatatabse.getWallets();
+    var wallets = EticaDatabase.getWallets();
     var counter = 0;
 
     web3Local.eth.getAccounts(function (err, res) {
@@ -216,7 +216,7 @@ class Blockchain {
     var rendererData = {};
     rendererData.addressData = [];
 
-    var wallets = EticaDatatabse.getWallets();
+    var wallets = EticaDatabase.getWallets();
     var counter = 0;
 
     web3Local.eth.getAccounts(function (err, res) {

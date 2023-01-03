@@ -61,4 +61,4 @@ class Datatabse {
 }
 
 // create new account variable
-EticaDatatabse = new Datatabse();
+EticaDatabase = new Datatabse();
