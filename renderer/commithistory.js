@@ -56,48 +56,6 @@ class CommitHistory {
   });
   }
 
-
-
-  renderTransactions() {
-    if (!EticaTransactions.getIsLoading()) {
-
-      EticaBlockchain.getAccountsData(function (error) {
-        EticaMainGUI.showGeneralError(error);
-      }, function (data) {
-        EticaMainGUI.renderTemplate("transactions.html", data);
-        $(document).trigger("render_transactions");
-      });
-      
-      EticaTransactions.setIsLoading(true);
-
-      // show the loading overlay for transactions
-      $("#loadingTransactionsOverlay").css("display", "block");
-
-      setTimeout(() => {
-        var dataTransactions = ipcRenderer.sendSync("getTransactions");
-        var addressList = EticaWallets.getAddressList();
-
-        dataTransactions.forEach(function (element) {
-          var isFromValid = addressList.indexOf(element[2].toLowerCase()) > -1;
-          var isToValid = addressList.indexOf(element[3].toLowerCase()) > -1;
-
-          if (isToValid && !isFromValid) {
-            element.unshift(0);
-          } else if (!isToValid && isFromValid) {
-            element.unshift(1);
-          } else {
-            element.unshift(2);
-          }
-        });
-
-        EticaTableTransactions.initialize("#tableTransactionsForAll", dataTransactions);
-        EticaTransactions.setIsLoading(false);
-      }, 200);
-    }
-  }
-
-
-
 }
 
 // the event to tell us that the wallets are rendered
