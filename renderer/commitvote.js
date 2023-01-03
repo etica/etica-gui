@@ -151,6 +151,15 @@ $(document).on("render_commitVote", function () {
         $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCommitVoteWalletPassword").iziModal("open");
 
+        // save votes parameters:
+        ipcRenderer.send("storeHashinput", {
+          commithash: commitvotehash,
+          voter: $("#commitVoteFromAddress").val(),
+          proposalhash: $("#commitVoteProposalHash").val(),
+          choice: vote_checked_choice,
+          vary: $("#commitVotePrivacy").val()
+        });
+
         function doSendTransaction() {
           $("#dlgCommitVoteWalletPassword").iziModal("close");
           console.log('in doSendTransaction');
@@ -176,7 +185,9 @@ $(document).on("render_commitVote", function () {
                   toaddr: transaction.to.toLowerCase(),
                   value: transaction.value
                 });
-              });
+
+              });              
+            
             });
           });
         }

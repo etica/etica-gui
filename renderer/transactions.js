@@ -128,7 +128,7 @@ class Transactions {
                     
                     console.log('txevents after is: ', txevents);
 
-                    txevents.forEach(onetxevent => { 
+                    txevents.forEach(async (onetxevent) => { 
                       console.log('onetxevent step4 :', onetxevent);
                   let _valueeti = 0;
                   let _fromaddreti = null;
@@ -281,15 +281,29 @@ class Transactions {
                   if(onetxevent.event == 'NewCommit'){
 
                     console.log('line 283 inside NewCommit Condition');
+                    console.log('line 284 geeting hashinput of commit: ', onetxevent.returnValues.votehash);
+                    let _hashinput = ipcRenderer.sendSync("getHashinput", {commithash: onetxevent.returnValues.votehash});
+                    console.log('line 285 _hashinput is: ', _hashinput);
+                    let _hashchoice = null;
+                    let _hashvary = null;
+                    let _hashproposalhash =null;
+
+                    if(_hashinput && _hashinput.commithash == onetxevent.returnValues.votehash){
+                      _hashchoice = _hashinput.choice;
+                      _hashvary = _hashinput.vary;
+                       _hashproposalhash = _hashinput.proposalhash;
+                    }
+
+
                     var _NewCommit = {
                     votehash: onetxevent.returnValues.votehash,
                     txhash: onetx.hash.toLowerCase(),
                     voter: onetxevent.returnValues._voter,
                     timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
                     valueeti: _valueeti,
-                    choice:null,
-                    vary:null,
-                    proposalhash:null,
+                    choice: _hashchoice,
+                    vary: _hashvary,
+                    proposalhash: _hashproposalhash,
                     proposaltitle:null,
                     proposaldeadline:null,
                     isDone: false,
@@ -476,7 +490,7 @@ class Transactions {
                     
                     console.log('II txevents after is: ', txevents);
                   
-                  txevents.forEach(onetxevent => { 
+                  txevents.forEach( async(onetxevent) => { 
                     console.log('enableKeepInSync() onetxevent step4 :', onetxevent);
                 let _valueeti = 0;
                 let _fromaddreti = null;
@@ -626,25 +640,39 @@ class Transactions {
 
                 if(onetxevent.event == 'NewCommit'){
 
-                  console.log('line 629 inside NewCommit Condition');
+                  console.log('line 643 inside NewCommit Condition');
+                  console.log('line 644 geeting hashinput of commit: ', onetxevent.returnValues.votehash);
+                  let _hashinput = ipcRenderer.sendSync("getHashinput", {commithash: onetxevent.returnValues.votehash});
+                  console.log('line 644 _hashinput is: ', _hashinput);
+                  let _hashchoice = null;
+                  let _hashvary = null;
+                  let _hashproposalhash =null;
+
+                  if(_hashinput && _hashinput.commithash == onetxevent.returnValues.votehash){
+                    _hashchoice = _hashinput.choice;
+                    _hashvary = _hashinput.vary;
+                     _hashproposalhash = _hashinput.proposalhash;
+                  }
+
+
                   var _NewCommit = {
                   votehash: onetxevent.returnValues.votehash,
                   txhash: onetx.hash.toLowerCase(),
                   voter: onetxevent.returnValues._voter,
                   timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
                   valueeti: _valueeti,
-                  choice:null,
-                  vary:null,
-                  proposalhash:null,
+                  choice: _hashchoice,
+                  vary: _hashvary,
+                  proposalhash: _hashproposalhash,
                   proposaltitle:null,
                   proposaldeadline:null,
                   isDone: false,
                   status: 1,
                   };
 
-                  console.log('line 645 before storing _NewCommit', _NewCommit);
+                  console.log('line 671 before storing _NewCommit', _NewCommit);
                   ipcRenderer.send("storeCommit", _NewCommit);
-                  console.log('line 647 after storing _NewCommit', _NewCommit);
+                  console.log('line 673 after storing _NewCommit', _NewCommit);
 
                 }
 
