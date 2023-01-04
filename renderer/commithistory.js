@@ -28,6 +28,20 @@ class CommitHistory {
     EticaDatabase.setAddresses(addressBook);
   }
 
+
+
+  calculateHash(_proposalhash, _choice, _voter, _vary) {
+    console.log(' calculating _votehash');
+    console.log(' calculating _votehash _proposalhash', _proposalhash);
+    console.log(' calculating _votehash _choice', _choice);
+    console.log(' calculating _votehash _voter', _voter);
+    console.log(' calculating _votehash _vary', _vary);
+
+      let _votehash = web3Local.utils.keccak256(web3Local.eth.abi.encodeParameters([ "bytes32", "bool", "address", "string" ], [_proposalhash, _choice, _voter, _vary]));
+      console.log('_votehash is', _votehash);
+      return _votehash;
+  }
+  
   enableButtonTooltips() {}
 
   renderCommitHistory() {
@@ -95,27 +109,54 @@ $(document).on("render_commithistory", function () {
     });
   });
 
-  $(".btnChangAddressName").off("click").on("click", function () {
-    var walletAddress = $(this).attr("data-address");
-    var walletName = $(this).attr("data-name");
+  $(".btnAddCommitInputs").off("click").on("click", function () {
+    var commitvotehash = $(this).attr("data-votehash");
+    var commitvoter = $(this).attr("data-voter");
 
-    $("#dlgChangeAddressName").iziModal();
-    $("#inputAddressName").val(walletName);
-    $("#dlgChangeAddressName").iziModal("open");
+    $("#dlgAddCommitInputs").iziModal();
+    $("#CommitVoter").val(commitvoter);
+    $("#CommitVoteHash").val(commitvotehash);
+    $("#dlgAddCommitInputs").iziModal("open");
 
-    function doChangeAddressName() {
-      EticaCommitHistory.setAddressName(walletAddress, $("#inputAddressName").val());
-      $("#dlgChangeAddressName").iziModal("close");
+    function doAddParameterstoCommit() {
+      //EticaCommitHistory.setAddressName(walletAddress, $("#inputAddressName").val());
+      
+      let vote_checked_choice = null;
+      let vote_checked_choice_text = null;
+      console.log("document.getElementById('inputVoteApprovalChoice').checked", document.getElementById('inputVoteApprovalChoice').checked);
+      console.log("document.getElementById('inputVoteDisapprovalChoice').checked", document.getElementById('inputVoteDisapprovalChoice').checked);
+      console.log("document.getElementById('inputVoteApprovalChoice').value", document.getElementById('inputVoteApprovalChoice').value);
+      console.log("document.getElementById('inputVoteDisapprovalChoice').value", document.getElementById('inputVoteDisapprovalChoice').value);
+      if (document.getElementById('inputVoteApprovalChoice').checked && !document.getElementById('inputVoteDisapprovalChoice').checked) {
+        vote_checked_choice = true;
+        vote_checked_choice_text = 'Approve';
+      }
+      if (!document.getElementById('inputVoteApprovalChoice').checked && document.getElementById('inputVoteDisapprovalChoice').checked) {
+        vote_checked_choice = false;
+        vote_checked_choice_text = 'Disapprove';
+      }
+
+      // if vote choice is not true or false it means there was an issue getting the vote choice from interface, we abort:
+      if(vote_checked_choice != true && vote_checked_choice != false){
+        EticaMainGUI.showGeneralError('Please select a Vote choice to Approve or Disapprove the proposal');
+        return;
+      }
+
+      let commitvotehash = EticaCommitHistory.calculateHash($("#inputProposalHash").val(), vote_checked_choice, commitvoter, $("#inputPrivacy").val());
+       console.log('commitvotehash is:', commitvotehash);
+       console.log('right commitvotehash is:', commitvotehash ==  $("#CommitVoteHash").val());
+      
+      $("#dlgAddCommitInputs").iziModal("close");
       EticaCommitHistory.renderCommitHistory();
     }
 
-    $("#btnChangeAddressNameConfirm").off("click").on("click", function () {
-      doChangeAddressName();
+    $("#btnAddCommitInputsConfirm").off("click").on("click", function () {
+      doAddParameterstoCommit();
     });
 
-    $("#dlgChangeAddressName").off("keypress").on("keypress", function (e) {
+    $("#dlgAddCommitInputs").off("keypress").on("keypress", function (e) {
       if (e.which == 13) {
-        doChangeAddressName();
+        doAddParameterstoCommit();
       }
     });
   });

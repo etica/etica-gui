@@ -46,7 +46,7 @@
               {{#if proposaldeadline}}
               <span class="textAddress">{{ proposaldeadline }}</span>
               {{else}}
-                <button type="button" class="btn btn-etica btnAddCommitInputs" data-address="{{votehash}}" data-name="{{addproposal}}">Add proposal</button>
+                <button type="button" class="btn btn-etica btnAddCommitInputs" data-votehash="{{votehash}}" data-voter="{{voter}}">Add proposal</button>
               {{/if}}
             </td>
           </tr>
@@ -72,14 +72,40 @@
   </div>
 </div>
 
-<!-- The modal to change address name -->
-<div id="dlgChangeAddressName" class="modalDialog" data-izimodal-title="Address Name" data-izimodal-subtitle="Enter a name for this address" data-izimodal-icon="icon-home">
+<!-- The modal to add Commits Inputs -->
+<div id="dlgAddCommitInputs" class="modalDialog" data-izimodal-title="Add Parameters of Commit" data-izimodal-subtitle="Enter vote parameters you used for this commit" data-izimodal-icon="icon-home">
   <div class="modalBody">
     <div class="form-group">
-      <label for="usr">Enter a name:</label>
-      <input type="text" class="form-control" id="inputAddressName">
+      <label>Commit Hash:</label>
+      <p id="CommitVoteHash" style="font-size: 1em;"></p>
     </div>
-    <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnChangeAddressNameConfirm">Confirm</button>
+    <div class="form-group">
+      <label>Voter (Address used to make the commit):</label>
+      <p id="CommitVoter"></p>
+    </div>
+    <div class="form-group">
+      <label for="usr">Enter the proposal hash:</label>
+      <input type="text" class="form-control" id="inputProposalHash">
+    </div>
+    <div class="form-group">
+      <div class="row" style="margin-bottom: 0;">
+        <div class="input-field col s12" id="inputVoteChoice">
+          <div>
+            <label for="commitVoteChoice" class="active">Enter choice of the commit:</label> <br><br>
+            <input class="approvalchoiceradio" type="radio" id="inputVoteApprovalChoice" name="commitchoice" value="true">
+            <label class="approvalchoicelabellight" for="inputVoteApprovalChoice">Approval</label>
+
+            <input class="approvalchoiceradio" type="radio" id="inputVoteDisapprovalChoice" name="commitchoice" value="false">
+            <label class="approvalchoicelabellight" for="inputVoteDisapprovalChoice">Disapproval</label>
+          </div>
+       </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="usr">If there is one, Enter privacy phrase of the commit:</label>
+      <input type="text" class="form-control" id="inputPrivacy">
+    </div>
+    <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnAddCommitInputsConfirm">Confirm</button>
   </div>
 </div>
 

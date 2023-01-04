@@ -74,6 +74,14 @@ body.pg-loaded>.inner {
   cursor:pointer;
 }
 
+.approvalchoicelabellight {
+  margin-left:3% !important;
+  background-color: #400d0d00;
+  color: #b59c54c4;
+  padding: 1%;
+  cursor:pointer;
+}
+
 
 #peerCount {
   bottom: 0;
@@ -273,7 +281,8 @@ body.pg-loaded>.inner {
 }
 
 .iziModal-header {
-  background: #399999 !important;
+  /*background: #399999 !important;*/
+  background: #233837 !important;
 }
 
 #walletsToolbar {
