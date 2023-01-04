@@ -287,11 +287,25 @@ class Transactions {
                     let _hashchoice = null;
                     let _hashvary = null;
                     let _hashproposalhash =null;
-
+                    let _hashproposaltitle =null;
+                    let _hashproposaldeadline =null;
+  
                     if(_hashinput && _hashinput.commithash == onetxevent.returnValues.votehash){
                       _hashchoice = _hashinput.choice;
                       _hashvary = _hashinput.vary;
                        _hashproposalhash = _hashinput.proposalhash;
+  
+                       let _proposal = await EticaContract.proposals(_hashinput.proposalhash);
+                       console.log('line 299 _proposal is', _proposal);
+                       let _proposaldata = await EticaContract.propsdatas(_hashinput.proposalhash);
+                       console.log('line 301 _proposaldata is', _proposaldata);
+                       _hashproposaltitle = _proposal[6];
+                       let _propend = _proposaldata[1]; // endtime
+                       console.log('_propend is', _propend);
+                       console.log('type of _propend is', typeof _propend);
+                       let _deadline = moment.unix(parseInt(_propend)).add(1,'weeks');
+                       _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
+                       console.log('_hashproposaldeadline is', _hashproposaldeadline);
                     }
 
 
@@ -304,8 +318,8 @@ class Transactions {
                     choice: _hashchoice,
                     vary: _hashvary,
                     proposalhash: _hashproposalhash,
-                    proposaltitle:null,
-                    proposaldeadline:null,
+                    proposaltitle: _hashproposaltitle,
+                    proposaldeadline: _hashproposaldeadline,
                     isDone: false,
                     status: 1,
                     };
@@ -647,12 +661,28 @@ class Transactions {
                   let _hashchoice = null;
                   let _hashvary = null;
                   let _hashproposalhash =null;
+                  let _hashproposaltitle =null;
+                  let _hashproposaldeadline =null;
 
                   if(_hashinput && _hashinput.commithash == onetxevent.returnValues.votehash){
                     _hashchoice = _hashinput.choice;
                     _hashvary = _hashinput.vary;
                      _hashproposalhash = _hashinput.proposalhash;
-                  }
+
+                     let _proposal = await EticaContract.proposals(_hashinput.proposalhash);
+                     console.log('line 659 _proposal is', _proposal);
+                     let _proposaldata = await EticaContract.propsdatas(_hashinput.proposalhash);
+                     console.log('line 659 _proposaldata is', _proposaldata);
+                     _hashproposaltitle = _proposal[6];
+                     let _propend = _proposaldata[1]; // endtime
+                     console.log('_propend is', _propend);
+                       console.log('type of _propend is', typeof _propend);
+                     let _deadline = moment.unix(parseInt(_propend)).add(1,'weeks');
+                       _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
+                     console.log('_hashproposaldeadline is', _hashproposaldeadline);
+                    }
+
+                  
 
 
                   var _NewCommit = {
@@ -664,8 +694,8 @@ class Transactions {
                   choice: _hashchoice,
                   vary: _hashvary,
                   proposalhash: _hashproposalhash,
-                  proposaltitle:null,
-                  proposaldeadline:null,
+                  proposaltitle: _hashproposaltitle,
+                  proposaldeadline: _hashproposaldeadline,
                   isDone: false,
                   status: 1,
                   };

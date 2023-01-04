@@ -1501,6 +1501,32 @@ class SmartContract {
 }
 
 
+async proposals(_hash) {
+
+  let proposal = await proposals(_hash);
+  return proposal;
+
+async function proposals(_proposalhash) {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _proposal = await contract.methods.proposals(_proposalhash).call();
+    return _proposal;
+}
+
+}
+
+async propsdatas(_hash) {
+
+  let propopsaldata = await propsdatas(_hash);
+  return propopsaldata;
+
+async function propsdatas(_proposalhash) {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let proposaldata = await contract.methods.propsdatas(_proposalhash).call();
+    return proposaldata;
+}
+
+}
+
 
    // GETTER FUNCTIONS
 

@@ -70,16 +70,16 @@ ipcMain.on("getCommits", (event, arg) => {
     });
 
     for (i = 0; i < Math.min(docs.length, 500); i++) {
-      let _proposal_title = "Unknown Proposal";
+      let _proposaltitle = "Unknown Proposal";
       if(docs[i].proposalhash != null && docs[i].proposalhash !=''){
-        _proposaltitle = docs[i].proposalhash;
+        _proposaltitle = docs[i].proposaltitle;
       }
       let _commit = {
         "votehash": docs[i].votehash,
         "txhash": docs[i].txhash,
         "voter": docs[i].voter,
         "proposalhash": docs[i].proposalhash,
-        "proposaltitle": _proposal_title,
+        "proposaltitle": _proposaltitle,
         "proposaldeadline": docs[i].proposaldeadline,
         "valueeti": docs[i].valueeti,
         "choice": docs[i].choice,

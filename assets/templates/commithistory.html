@@ -23,7 +23,7 @@
           <th class="noSortCollumn">Proposal/Votehash</th>
           <th>Creation Date</th>
           <th>Amount</th>
-          <th class="noSortCollumn" data-sort-method='none'>Status</th>
+          <th class="noSortCollumn" data-sort-method='none'>Revealing Deadline</th>
         </tr>
       </thead>
       <tbody>
@@ -43,7 +43,11 @@
               </span>
             </td>
             <td>
-              <span class="textAddress">Revealing time left 78% {{ proposaldeadline }}</span>
+              {{#if proposaldeadline}}
+              <span class="textAddress">{{ proposaldeadline }}</span>
+              {{else}}
+                <button type="button" class="btn btn-etica btnAddCommitInputs" data-address="{{votehash}}" data-name="{{addproposal}}">Add proposal</button>
+              {{/if}}
             </td>
           </tr>
         {{/commitData}}
