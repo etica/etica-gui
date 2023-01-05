@@ -50,7 +50,7 @@ ipcMain.on("storeCommit", (event, arg) => {
   console.log('--> storing Commit');
   console.log('--> storing Commit', arg);
   db.update({
-    votehash: arg.commithash,
+    votehash: arg.votehash,
     txhash: arg.txhash,
     voter: arg.voter
   }, arg, {
