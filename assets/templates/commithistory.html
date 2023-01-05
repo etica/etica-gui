@@ -44,6 +44,7 @@
             </td>
             <td>
               {{#if proposaldeadline}}
+              <span class="textAddress">{{ proposalend }}</span><br>
               <span class="textAddress">{{ proposaldeadline }}</span>
               {{else}}
                 <button type="button" class="btn btn-etica btnAddCommitInputs" data-votehash="{{votehash}}" data-voter="{{voter}}">Add proposal</button>

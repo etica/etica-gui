@@ -117,6 +117,7 @@ ipcMain.on("getCommits", (event, arg) => {
         "voter": docs[i].voter,
         "proposalhash": docs[i].proposalhash,
         "proposaltitle": _proposaltitle,
+        "proposalend": docs[i].proposalend,
         "proposaldeadline": docs[i].proposaldeadline,
         "valueeti": docs[i].valueeti,
         "choice": docs[i].choice,

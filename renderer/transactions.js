@@ -288,6 +288,7 @@ class Transactions {
                     let _hashvary = null;
                     let _hashproposalhash =null;
                     let _hashproposaltitle =null;
+                    let _hashproposalend=null;
                     let _hashproposaldeadline =null;
   
                     if(_hashinput && _hashinput.commithash == onetxevent.returnValues.votehash){
@@ -306,7 +307,8 @@ class Transactions {
 
                        let revealingduration= await EticaContract.DEFAULT_REVEALING_TIME();
                        console.log('line 308 revealing duration is', revealingduration);
-
+                       _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
+                       console.log('_hashproposalend is', _hashproposalend);
                        let _deadline = moment.unix(parseInt(_propend)).add(revealingduration,'seconds');
                        _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
                        console.log('_hashproposaldeadline is', _hashproposaldeadline);
@@ -323,6 +325,7 @@ class Transactions {
                     vary: _hashvary,
                     proposalhash: _hashproposalhash,
                     proposaltitle: _hashproposaltitle,
+                    proposalend: _hashproposalend,
                     proposaldeadline: _hashproposaldeadline,
                     isDone: false,
                     status: 1,
@@ -666,6 +669,7 @@ class Transactions {
                   let _hashvary = null;
                   let _hashproposalhash =null;
                   let _hashproposaltitle =null;
+                  let _hashproposalend =null;
                   let _hashproposaldeadline =null;
 
                   if(_hashinput && _hashinput.commithash == onetxevent.returnValues.votehash){
@@ -683,6 +687,8 @@ class Transactions {
                       console.log('type of _propend is', typeof _propend);
                       let revealingduration= await EticaContract.DEFAULT_REVEALING_TIME();
                       console.log('line 685 revealing duration is', revealingduration);
+                      _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
+                      console.log('_hashproposalend is', _hashproposalend);
                      let _deadline = moment.unix(parseInt(_propend)).add(revealingduration,'seconds');
                        _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
                      console.log('_hashproposaldeadline is', _hashproposaldeadline);
@@ -701,6 +707,7 @@ class Transactions {
                   vary: _hashvary,
                   proposalhash: _hashproposalhash,
                   proposaltitle: _hashproposaltitle,
+                  proposalend: _hashproposalend,
                   proposaldeadline: _hashproposaldeadline,
                   isDone: false,
                   status: 1,

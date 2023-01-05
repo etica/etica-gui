@@ -179,6 +179,7 @@ $(document).on("render_commithistory", function () {
         console.log('revealing duration is', revealingduration);
         _hashproposaltitle = _proposal[6];
         let _propend = _proposaldata[1]; // endtime
+        let _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
         let _deadline = moment.unix(parseInt(_propend)).add(revealingduration,'seconds');
         _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
 
@@ -189,6 +190,7 @@ $(document).on("render_commithistory", function () {
         vary: commitprivacyphrase,
         proposalhash: commitproposalhash,
         proposaltitle: _hashproposaltitle,
+        proposalend: _hashproposalend,
         proposaldeadline: _hashproposaldeadline
         };
 
