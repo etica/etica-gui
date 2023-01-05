@@ -11,6 +11,22 @@ db.loadDatabase(function (err) {
   // Now commands will be executed
 });
 
+
+/* Commit fields:
+                  votehash: onetxevent.returnValues.votehash,
+                  txhash: onetx.hash.toLowerCase(),
+                  voter: onetxevent.returnValues._voter,
+                  timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
+                  valueeti: _valueeti,
+                  choice: _hashchoice,
+                  vary: _hashvary,
+                  proposalhash: _hashproposalhash,
+                  proposaltitle: _hashproposaltitle,
+                  proposaldeadline: _hashproposaldeadline,
+                  isDone: false,
+                  status: 1, // 1: created, 2: revealed, 3: claimed, 4: missed
+*/
+
 // index the creationdate field
 db.ensureIndex({
   fieldName: "creationdate"
@@ -42,6 +58,13 @@ db.ensureIndex({
 // index the voter field
 db.ensureIndex({
   fieldName: "voter",
+}, function (err) {
+  // If there was an error, err is not null
+});
+
+// index the status field
+db.ensureIndex({
+  fieldName: "status",
 }, function (err) {
   // If there was an error, err is not null
 });
