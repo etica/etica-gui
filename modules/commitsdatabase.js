@@ -50,11 +50,25 @@ ipcMain.on("storeCommit", (event, arg) => {
   console.log('--> storing Commit');
   console.log('--> storing Commit', arg);
   db.update({
-    commithash: arg.commithash,
+    votehash: arg.commithash,
     txhash: arg.txhash,
     voter: arg.voter
   }, arg, {
     upsert: true
+  }, function (err, numReplaced, upsert) {
+    // do nothing for now
+  });
+});
+
+ipcMain.on("updateCommit", (event, arg) => {
+  console.log('--> updateing Commit');
+  console.log('--> updating Commit', arg);
+  db.update({
+    votehash: arg.votehash,
+    voter: arg.voter
+  }, {$set:{vary: arg.vary, choice: arg.choice, proposalhash: arg.proposalhash, proposaltitle: arg.proposaltitle, proposaldeadline:arg.proposaldeadline}}, {
+    upsert: false,
+    multi:true
   }, function (err, numReplaced, upsert) {
     // do nothing for now
   });

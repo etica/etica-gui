@@ -59,7 +59,7 @@
 
   <body>
     <script>
-      var loading_screen = pleaseWait({logo: "assets/images/myetherwallet-logo.png", backgroundColor: '#000000', loadingHtml: "<div class='spinner'><img src='assets/images/preload.svg'></img></div></div><div class='content'>Starting the node and loading app, please wait...</div>"});
+      var loading_screen = pleaseWait({logo: "assets/images/myetherwallet-logo.png", backgroundColor: '#000000', loadingHtml: "<div class='spinner'><img src='assets/images/preload.svg'></img></div></div><div class='content'>Starting the node and loading the wallet, please wait...</div>"});
 
       $(document).on("onGethReady", function () {
         loading_screen.finish();

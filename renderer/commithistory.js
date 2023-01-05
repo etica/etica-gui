@@ -116,10 +116,29 @@ $(document).on("render_commithistory", function () {
     $("#dlgAddCommitInputs").iziModal();
     $("#CommitVoter").val(commitvoter);
     $("#CommitVoteHash").val(commitvotehash);
+
+    // reset input fields:
+    $("#inputProposalHash").val("");
+    $("#inputPrivacy").val("");
+    document.getElementById('inputVoteApprovalChoice').checked = false;
+    document.getElementById('inputVoteDisapprovalChoice').checked = false;
+
     $("#dlgAddCommitInputs").iziModal("open");
 
-    function doAddParameterstoCommit() {
+    async function doAddParameterstoCommit() {
       //EticaCommitHistory.setAddressName(walletAddress, $("#inputAddressName").val());
+
+      let commitproposalhash = $("#inputProposalHash").val();
+      let commitprivacyphrase = $("#inputPrivacy").val();
+
+    // load proposal info:
+      let _proposal = await EticaContract.proposals(commitproposalhash);
+    // check existence of proposal:
+    if(_proposal == null || _proposal.length === 0 || (_proposal[1] != commitproposalhash)){
+      EticaMainGUI.showGeneralError('Wrong Proposal hash. There is no Proposal with this hash on the blockchain');
+      return;
+    }
+   // load proposal info done succesfully
       
       let vote_checked_choice = null;
       let vote_checked_choice_text = null;
@@ -142,9 +161,40 @@ $(document).on("render_commithistory", function () {
         return;
       }
 
-      let commitvotehash = EticaCommitHistory.calculateHash($("#inputProposalHash").val(), vote_checked_choice, commitvoter, $("#inputPrivacy").val());
-       console.log('commitvotehash is:', commitvotehash);
-       console.log('right commitvotehash is:', commitvotehash ==  $("#CommitVoteHash").val());
+      
+
+      let calculatedhash = EticaCommitHistory.calculateHash(commitproposalhash, vote_checked_choice, commitvoter, commitprivacyphrase);
+       console.log('calculatedhash is:', calculatedhash);
+       console.log('right calculatedhash is:', calculatedhash ==  commitvotehash);
+
+       if(calculatedhash !=  commitvotehash){
+        EticaMainGUI.showGeneralError('Wrong parameters. The hash of these parameters do not match with the commit hash.');
+        return;
+      }
+
+       if(calculatedhash == commitvotehash){
+
+        let _proposaldata = await EticaContract.propsdatas(commitproposalhash);
+        _hashproposaltitle = _proposal[6];
+        let _propend = _proposaldata[1]; // endtime
+        let _deadline = moment.unix(parseInt(_propend)).add(1,'weeks');
+        _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
+
+        var _UpdatedCommit = {
+        votehash: commitvotehash,
+        voter: commitvoter,
+        choice: vote_checked_choice,
+        vary: commitprivacyphrase,
+        proposalhash: commitproposalhash,
+        proposaltitle: _hashproposaltitle,
+        proposaldeadline: _hashproposaldeadline
+        };
+
+        console.log('line 299 before storing _NewCommit', _UpdatedCommit);
+        ipcRenderer.send("updateCommit", _UpdatedCommit);
+        console.log('line 301 after storing _NewCommit', _UpdatedCommit);
+
+       }
       
       $("#dlgAddCommitInputs").iziModal("close");
       EticaCommitHistory.renderCommitHistory();
