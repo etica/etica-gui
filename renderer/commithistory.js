@@ -175,9 +175,11 @@ $(document).on("render_commithistory", function () {
        if(calculatedhash == commitvotehash){
 
         let _proposaldata = await EticaContract.propsdatas(commitproposalhash);
+        let revealingduration = await EticaContract.DEFAULT_REVEALING_TIME();
+        console.log('revealing duration is', revealingduration);
         _hashproposaltitle = _proposal[6];
         let _propend = _proposaldata[1]; // endtime
-        let _deadline = moment.unix(parseInt(_propend)).add(1,'weeks');
+        let _deadline = moment.unix(parseInt(_propend)).add(revealingduration,'seconds');
         _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
 
         var _UpdatedCommit = {

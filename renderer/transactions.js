@@ -303,7 +303,11 @@ class Transactions {
                        let _propend = _proposaldata[1]; // endtime
                        console.log('_propend is', _propend);
                        console.log('type of _propend is', typeof _propend);
-                       let _deadline = moment.unix(parseInt(_propend)).add(1,'weeks');
+
+                       let revealingduration= await EticaContract.DEFAULT_REVEALING_TIME();
+                       console.log('line 308 revealing duration is', revealingduration);
+
+                       let _deadline = moment.unix(parseInt(_propend)).add(revealingduration,'seconds');
                        _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
                        console.log('_hashproposaldeadline is', _hashproposaldeadline);
                     }
@@ -676,8 +680,10 @@ class Transactions {
                      _hashproposaltitle = _proposal[6];
                      let _propend = _proposaldata[1]; // endtime
                      console.log('_propend is', _propend);
-                       console.log('type of _propend is', typeof _propend);
-                     let _deadline = moment.unix(parseInt(_propend)).add(1,'weeks');
+                      console.log('type of _propend is', typeof _propend);
+                      let revealingduration= await EticaContract.DEFAULT_REVEALING_TIME();
+                      console.log('line 685 revealing duration is', revealingduration);
+                     let _deadline = moment.unix(parseInt(_propend)).add(revealingduration,'seconds');
                        _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
                      console.log('_hashproposaldeadline is', _hashproposaldeadline);
                     }

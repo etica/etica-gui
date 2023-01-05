@@ -1528,6 +1528,20 @@ async function propsdatas(_proposalhash) {
 }
 
 
+async DEFAULT_REVEALING_TIME() {
+
+  let _revealingduration = await revealingduration();
+  return _revealingduration;
+
+async function revealingduration() {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _duration = await contract.methods.DEFAULT_REVEALING_TIME().call();
+    return _duration;
+}
+
+}
+
+
    // GETTER FUNCTIONS
 
 
