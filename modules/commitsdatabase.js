@@ -97,6 +97,15 @@ ipcMain.on("updateCommit", (event, arg) => {
   });
 });
 
+ipcMain.on("getCommit", (event, arg) => {
+  db.findOne({
+    votehash: arg.votehash,
+    voter: arg.voter
+  }).exec(function (err, _commit) {
+    event.returnValue = _commit;
+  });
+});
+
 ipcMain.on("getCommits", (event, arg) => {
   db.find({}).exec(function (err, docs) {
     ResultData = [];
@@ -108,6 +117,24 @@ ipcMain.on("getCommits", (event, arg) => {
 
     for (i = 0; i < Math.min(docs.length, 500); i++) {
       let _proposaltitle = "Unknown Proposal";
+      let created = false;
+      let revealed = false;
+      let claimed = false;
+      let missed = false;
+
+      if(docs[i].status == 1){
+        created = true;
+      }
+      if(docs[i].status == 2){
+        revealed = true;
+      }
+      if(docs[i].status == 3){
+        claimed = true;
+      }
+      if(docs[i].status == 4){
+        missed = true;
+      }
+
       if(docs[i].proposalhash != null && docs[i].proposalhash !=''){
         _proposaltitle = docs[i].proposaltitle;
       }
@@ -124,6 +151,10 @@ ipcMain.on("getCommits", (event, arg) => {
         "vary": docs[i].vary,
         "isDone": docs[i].isDone,
         "status": docs[i].status,
+        "created": created,
+        "revealed": revealed,
+        "claimed": claimed,
+        "missed": missed,
         "timestamp": docs[i].timestamp
       };
 

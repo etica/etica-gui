@@ -44,8 +44,22 @@
             </td>
             <td>
               {{#if proposaldeadline}}
-              <span class="textAddress">{{ proposalend }}</span><br>
-              <span class="textAddress">{{ proposaldeadline }}</span>
+                {{#if created}}
+                <span class="textAddress">{{ proposalend }}</span><br>
+                <span class="textAddress">{{ proposaldeadline }}</span>
+                {{/if}}
+                {{#if revealed}}
+                <span class="textAddress">Revealed</span><br>
+                <!-- if we ahve passed claimable date show button to claim, otherwise show date of claims opening -->
+                <!-- <button type="button" class="btn btn-etica btnAddCommitInputs" data-votehash="{{votehash}}" data-voter="{{voter}}">Claim</button> -->
+                {{/if}}
+                {{#if claimed}}
+                <span class="textAddress">Claimed</span>
+                {{/if}}
+                {{#if missed}}
+                <span class="textAddress">Missed</span>
+                {{/if}}
+
               {{else}}
                 <button type="button" class="btn btn-etica btnAddCommitInputs" data-votehash="{{votehash}}" data-voter="{{voter}}">Add proposal</button>
               {{/if}}
