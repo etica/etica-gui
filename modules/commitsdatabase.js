@@ -124,6 +124,11 @@ ipcMain.on("getCommit", (event, arg) => {
 ipcMain.on("getCommits", (event, arg) => {
   db.find({}).exec(function (err, docs) {
     ResultData = [];
+    console.log('in getCommmits');
+    let _now = Date.now();
+    console.log('in getCommmits _now is', _now);
+    let CurrentDate = moment(_now);
+    console.log('in getCommmits CurrentDate is', CurrentDate);
 
     // sort the data
     docs.sort((a, b) => {
@@ -136,6 +141,7 @@ ipcMain.on("getCommits", (event, arg) => {
       let revealed = false;
       let claimed = false;
       let missed = false;
+      let revealopen = false;
 
       if(docs[i].status == 1){
         created = true;
@@ -152,6 +158,21 @@ ipcMain.on("getCommits", (event, arg) => {
 
       if(docs[i].proposalhash != null && docs[i].proposalhash !=''){
         _proposaltitle = docs[i].proposaltitle;
+
+        if(docs[i].proposalend != null && docs[i].proposalend !='' && i != 30 && i != 31 && i != 32){
+          console.log('in docs[i].proposalend');
+          console.log('in docs[i].proposalend is is', i);
+          console.log('docs[i].proposalend is', docs[i].proposalend);
+          let _end = moment(docs[i].proposalend).format("YYYY-MM-DD HH:mm:ss");
+          let _deadline = moment(docs[i].proposaldeadline).format("YYYY-MM-DD HH:mm:ss");
+
+        // proposal is in revealing stage:
+        if( CurrentDate.isAfter(_end) && CurrentDate.isBefore(_deadline) ){
+           revealopen = true;
+          }
+      }
+
+
       }
       let _commit = {
         "votehash": docs[i].votehash,
@@ -170,6 +191,7 @@ ipcMain.on("getCommits", (event, arg) => {
         "revealed": revealed,
         "claimed": claimed,
         "missed": missed,
+        "revealopen": revealopen,
         "timestamp": docs[i].timestamp
       };
 

@@ -45,8 +45,12 @@
             <td>
               {{#if proposaldeadline}}
                 {{#if created}}
-                <span class="textAddress">{{ proposalend }}</span><br>
-                <span class="textAddress">{{ proposaldeadline }}</span>
+                  {{#if revealopen}}
+                  <button type="button" class="btn btn-etica btnRevealCommit" data-votehash="{{votehash}}" data-voter="{{voter}}">Reveal</button>
+                  {{else}}
+                  <span class="textAddress">{{ proposalend }}</span><br>
+                  <span class="textAddress">{{ proposaldeadline }}</span>
+                  {{/if}}  
                 {{/if}}
                 {{#if revealed}}
                 <span class="textAddress">Revealed</span><br>
@@ -124,13 +128,89 @@
   </div>
 </div>
 
-<!-- The modal for delete confirmation -->
-<div id="dlgDeleteAddressConfirm" class="modalDialog" data-izimodal-title="Delete Address" data-izimodal-icon="icon-home">
+<!-- The modal to reveal Commits Votes -->
+<div id="dlgRevealCommit" class="modalDialog" data-izimodal-title="Add Parameters of Commit" data-izimodal-subtitle="Enter vote parameters you used for this commit" data-izimodal-icon="icon-home">
   <div class="modalBody">
     <div class="form-group">
-      <span>Do you really want to delete the address?</span>
+      <label>Commit Hash:</label>
+      <input id="CommitVoteHash" style="font-size: 1em;" disabled>
     </div>
-    <button type="button" class="btn btn-etica btn-dialog-cancel" id="btnDeleteAddressCancel">No</button>
-    <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnDeleteAddressConfirm">Yes</button>
+    <div class="form-group">
+      <label>Voter (Address used to make the commit):</label>
+      <input id="CommitVoter" disabled>
+    </div>
+    <div class="form-group">
+      <label for="usr">Enter the proposal hash:</label>
+      <input type="text" class="form-control" id="inputProposalHash">
+    </div>
+    <div class="form-group">
+      <div class="row" style="margin-bottom: 0;">
+        <div class="input-field col s12" id="inputVoteChoice">
+          <div>
+            <label for="commitVoteChoice" class="active">Enter choice of the commit:</label> <br><br>
+            <input class="approvalchoiceradio" type="radio" id="inputVoteApprovalChoice" name="commitchoice" value="true">
+            <label class="approvalchoicelabellight" for="inputVoteApprovalChoice">Approval</label>
+
+            <input class="approvalchoiceradio" type="radio" id="inputVoteDisapprovalChoice" name="commitchoice" value="false">
+            <label class="approvalchoicelabellight" for="inputVoteDisapprovalChoice">Disapproval</label>
+          </div>
+       </div>
+      </div>
+    </div>
+    <div class="form-group">
+      <label for="usr">If there is one, Enter privacy phrase of the commit:</label>
+      <input type="text" class="form-control" id="inputPrivacy">
+    </div>
+    <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnAddCommitInputsConfirm">Confirm</button>
+  </div>
+</div>
+
+
+<!-- send details dialog -->
+<div id="dlgRevealCommitWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To reveal your vote on this proposal, please enter the wallet password" data-izimodal-icon="icon-home">
+  <div class="modalBody">
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Commit Vote Hash:</label>
+      <label id="valueToCommitVoteHash"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-wallet"></i>
+      <label>From address:</label>
+      <label id="fromRevealAddressInfo"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Proposal Hash:</label>
+      <label id="valueOfRevealCommitProposalHash"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Vote choice:</label>
+      <label id="valueOfRevealCommitChoice"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Privacy Phrase:</label>
+      <label id="valueOfRevealCommitPrivacy"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Commit Amount:</label>
+      <label id="valueOfRevealCommitAmount"></label>
+      <label class="currencyTicker">ETI</label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Fee to pay:</label>
+      <label id="feeRevealCommitToPayInfo"></label>
+      <label class="currencyTicker">ETI</label>
+    </div>
+    <hr class="sendTXdivider">
+    <div class="form-group sendTXPass">
+      <label for="usr">Enter your Password:</label>
+      <input type="password" class=" form-control" id="RevealCommitwalletPassword">
+    </div>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnRevealCommitWalletPasswordConfirm">Confirm</button>
   </div>
 </div>

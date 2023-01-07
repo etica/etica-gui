@@ -70,6 +70,21 @@ class CommitHistory {
   });
   }
 
+
+  resetRevealForm() {
+    if (EticaMainGUI.getAppState() == "commitHistory") {
+      $("#dlgRevealCommitWalletPassword").iziModal();
+      $("#RevealCommitwalletPassword").val("");
+      $("#fromRevealAddressInfo").val();
+      $("#valueOfRevealCommitProposalHash").val();
+      $("#valueOfRevealCommitPrivacy").val();
+      $("#valueOfRevealCommitChoice").val();
+      $("#valueOfRevealCommitAmount").val();
+      $("#valueOfRevealCommitHash").val();
+      $("#feeRevealCommitToPayInfo").val();
+    }
+  }
+
 }
 
 // the event to tell us that the wallets are rendered
@@ -215,33 +230,82 @@ $(document).on("render_commithistory", function () {
     });
   });
 
-  $(".btnDeleteAddress").off("click").on("click", function () {
-    var deleteAddress = $(this).attr("data-address");
 
-    $("#dlgDeleteAddressConfirm").iziModal();
-    $("#dlgDeleteAddressConfirm").iziModal("open");
 
-    $("#btnDeleteAddressCancel").off("click").on("click", function () {
-      $("#dlgDeleteAddressConfirm").iziModal("close");
-    });
 
-    $("#btnDeleteAddressConfirm").off("click").on("click", function () {
-      $("#dlgDeleteAddressConfirm").iziModal("close");
-      EticaCommitHistory.deleteAddress(deleteAddress);
-      EticaCommitHistory.renderCommitHistory();
-    });
-  });
+  $(".btnRevealCommit").off("click").on("click", function () {
+    var commitvotehash = $(this).attr("data-votehash");
+    var commitvoter = $(this).attr("data-voter");
 
-  $(".btnShowQRCode").off("click").on("click", function () {
-    var QRCodeAddress = $(this).attr("data-address");
-    $("#dlgShowAddressQRCode").iziModal();
-    $("#addrQRCode").html("");
-    $("#addrQRCode").qrcode(QRCodeAddress);
-    $("#dlgShowAddressQRCode").iziModal("open");
+    console.log('Reveal commitvotehash is', commitvotehash);
 
-    $("#btnScanQRCodeClose").off("click").on("click", function () {
-      $("#dlgShowAddressQRCode").iziModal("close");
-    });
+    let _commit = ipcRenderer.sendSync("getCommit", {votehash: commitvotehash, voter:commitvoter});
+
+    console.log('Reveal db _commit is', _commit);
+           
+                  if(!_commit || _commit.votehash != commitvotehash){
+                    EticaMainGUI.showGeneralError('No vote parameters saved for this vote.');
+                    return;
+                  }
+
+                  EticaContract.getTranasctionFee_revealvote(_commit.voter, _commit.proposalhash, _commit.choice, _commit.vary, function (error) {
+                    EticaMainGUI.showGeneralError(error);
+                  }, function (data) {
+                    $("#dlgRevealCommitWalletPassword").iziModal();
+                    $("#RevealCommitwalletPassword").val("");
+                    $("#fromRevealAddressInfo").html(_commit.voter);
+                    $("#valueOfRevealCommitProposalHash").html(_commit.proposalhash);
+                    $("#valueOfRevealCommitPrivacy").html(_commit.vary);
+                    $("#valueOfRevealCommitChoice").html(_commit.choice);
+                    $("#valueOfRevealCommitAmount").html(web3Local.utils.fromWei(_commit.valueeti, "ether"));
+                    $("#valueOfRevealCommitHash").html(commitvotehash);
+                    $("#feeRevealCommitToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+                    $("#dlgRevealCommitWalletPassword").iziModal("open");
+
+            
+                    function doSendTransaction() {
+                      $("#dlgRevealCommitWalletPassword").iziModal("close");
+                      EticaContract.prepareTransaction_revealvote($("#RevealCommitwalletPassword").val(), _commit.voter, _commit.proposalhash, _commit.choice, _commit.vary, function (error) {
+                        EticaMainGUI.showGeneralError(error);
+                      }, function (data) {
+                        EticaBlockchain.sendTransaction(data.raw, function (error) {
+                          EticaMainGUI.showGeneralError(error);
+                        }, function (data) {
+                          EticaCommitHistory.resetRevealForm();
+            
+                          iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});
+            
+                          EticaBlockchain.getTransaction(data, function (error) {
+                            EticaMainGUI.showGeneralError(error);
+                          }, function (transaction) {
+                            ipcRenderer.send("storeTransaction", {
+                              block: transaction.blockNumber,
+                              txhash: transaction.hash.toLowerCase(),
+                              fromaddr: transaction.from.toLowerCase(),
+                              timestamp: moment().format("YYYY-MM-DD HH:mm:ss"),
+                              toaddr: transaction.to.toLowerCase(),
+                              value: transaction.value
+                            });
+
+                            EticaCommitHistory.renderCommitHistory();
+            
+                          });              
+                        
+                        });
+                      });
+                    }
+            
+                    $("#btnRevealCommitWalletPasswordConfirm").off("click").on("click", function () {
+                      doSendTransaction();
+                    });
+            
+                    $("#dlgRevealCommitWalletPassword").off("keypress").on("keypress", function (e) {
+                      if (e.which == 13) {
+                        doSendTransaction();
+                      }
+                    });
+                  });
+
   });
 
   $(".textAddress").off("click").on("click", function () {
