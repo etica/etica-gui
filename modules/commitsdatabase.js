@@ -104,7 +104,7 @@ ipcMain.on("updateCommitwithStatus", (event, arg) => {
   db.update({
     votehash: arg.votehash,
     voter: arg.voter
-  }, {$set:{vary: arg.vary, choice: arg.choice, proposalhash: arg.proposalhash, proposaltitle: arg.proposaltitle, proposaldeadline:arg.proposaldeadline}}, {
+  }, {$set:{vary: arg.vary, choice: arg.choice, proposalhash: arg.proposalhash, proposaltitle: arg.proposaltitle, proposaldeadline:arg.proposaldeadline, status: arg.status}}, {
     upsert: false,
     multi:true
   }, function (err, numReplaced, upsert) {
@@ -159,7 +159,7 @@ ipcMain.on("getCommits", (event, arg) => {
       if(docs[i].proposalhash != null && docs[i].proposalhash !=''){
         _proposaltitle = docs[i].proposaltitle;
 
-        if(docs[i].proposalend != null && docs[i].proposalend !='' && i != 30 && i != 31 && i != 32){
+        if(docs[i].proposalend != null && docs[i].proposalend !='' && i != 34 && i != 35 && i != 36){
           console.log('in docs[i].proposalend');
           console.log('in docs[i].proposalend is is', i);
           console.log('docs[i].proposalend is', docs[i].proposalend);
@@ -194,6 +194,7 @@ ipcMain.on("getCommits", (event, arg) => {
         "revealopen": revealopen,
         "timestamp": docs[i].timestamp
       };
+      console.log('_commit ', i, ' is', _commit);
 
       ResultData.push(
         _commit

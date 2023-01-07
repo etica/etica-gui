@@ -748,20 +748,20 @@ class Transactions {
             );
 
 
-                  let calculatedhash = EticaCommitHistory.calculateHash(commitproposalhash, inputs._approved,  onetxevent.returnValues._voter, inputs._vary);
+                  let calculatedhash = EticaCommitHistory.calculateHash(inputs._proposed_release_hash, inputs._approved,  onetxevent.returnValues._voter, inputs._vary);
 
-                  let _commit = ipcRenderer.sendSync("getCommit", {votehash: calculatedhash});
+                  let _commit = ipcRenderer.sendSync("getCommit", {votehash: calculatedhash, voter: onetxevent.returnValues._voter});
            
                   if(_commit && _commit.votehash == calculatedhash){
 
                     let _proposal = await EticaContract.proposals(_commit.proposalhash);
                     let _proposaldata = await EticaContract.propsdatas(_commit.proposalhash);
                     let revealingduration = await EticaContract.DEFAULT_REVEALING_TIME();
-                    _hashproposaltitle = _proposal[6];
+                    let _hashproposaltitle = _proposal[6];
                     let _propend = _proposaldata[1]; // endtime
                     let _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
                     let _deadline = moment.unix(parseInt(_propend)).add(revealingduration,'seconds');
-                    _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
+                    let _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
 
                     var _UpdatedCommit = {
                         votehash: calculatedhash,
