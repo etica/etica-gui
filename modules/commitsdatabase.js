@@ -97,6 +97,21 @@ ipcMain.on("updateCommit", (event, arg) => {
   });
 });
 
+
+ipcMain.on("updateCommitwithStatus", (event, arg) => {
+  console.log('--> updateing Commit');
+  console.log('--> updating Commit', arg);
+  db.update({
+    votehash: arg.votehash,
+    voter: arg.voter
+  }, {$set:{vary: arg.vary, choice: arg.choice, proposalhash: arg.proposalhash, proposaltitle: arg.proposaltitle, proposaldeadline:arg.proposaldeadline}}, {
+    upsert: false,
+    multi:true
+  }, function (err, numReplaced, upsert) {
+    // do nothing for now
+  });
+});
+
 ipcMain.on("getCommit", (event, arg) => {
   db.findOne({
     votehash: arg.votehash,

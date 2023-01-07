@@ -775,9 +775,9 @@ class Transactions {
                         status: 2
                     };
 
-        console.log('line 777 before storing _UpdatedCommit', _UpdatedCommit);
+        console.log('line 777 before updating with status _UpdatedCommit', _UpdatedCommit);
         ipcRenderer.send("updateCommitwithStatus", _UpdatedCommit);
-        console.log('line 779 after storing _UpdatedCommit', _UpdatedCommit);
+        console.log('line 779 after updating with status _UpdatedCommit', _UpdatedCommit);
 
 
                  }

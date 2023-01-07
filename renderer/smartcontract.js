@@ -3,7 +3,7 @@ const {ipcRenderer} = require("electron");
 
 let EticaContractJSON = require('../EticaRelease.json');
 //const ETICA_ADDRESS = '0x34c61EA91bAcdA647269d4e310A86b875c09946f'; // mainnet
-const ETICA_ADDRESS = '0x5a94Ae83038b9eB2b51A4F8E835e04ABCf4a1AF7'; // local dev blockchain
+const ETICA_ADDRESS = '0xE5817921cc87FBd26e160AD1114bCb29cE248679'; // local dev blockchain
 
 class SmartContract {
   constructor() {
@@ -1489,7 +1489,7 @@ class SmartContract {
   }
   async function getDiseasetest1() {
     let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
-      let diseasehash = await contract.methods.getdiseasehashbyName('Malaria').call();
+      let diseasehash = await contract.methods.getdiseasehashbyName('Disease Test').call();
       return diseasehash;
   }
   async function getDiseasetest2() {
