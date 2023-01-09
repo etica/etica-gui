@@ -184,9 +184,9 @@ class Blockchain {
         rendererData.addressData[index].balance = parseFloat(web3Local.utils.fromWei(balance, "ether")).toFixed(2);
         rendererData.sumBalance = rendererData.sumBalance + parseFloat(web3Local.utils.fromWei(balance, "ether"));
 
-        if (counter < rendererData.addressData.length - 1) {
-          counter++;
-          updateBalance(counter);
+        if (index < rendererData.addressData.length - 1) {
+          index++;
+          updateBalance(index);
         } else {
           rendererData.sumBalance = parseFloat(rendererData.sumBalance).toFixed(2);
           clbSuccess(rendererData);
@@ -201,9 +201,9 @@ class Blockchain {
         rendererData.addressData[index].balance_eti = parseFloat(web3Local.utils.fromWei(balance, "ether")).toFixed(2);
         rendererData.sumBalanceEti = rendererData.sumBalanceEti + parseFloat(web3Local.utils.fromWei(balance, "ether"));
 
-        if (counter < rendererData.addressData.length - 1) {
-          counter++;
-          updateBalanceETI(counter);
+        if (index < rendererData.addressData.length - 1) {
+          index++;
+          updateBalanceETI(index);
         } else {
           rendererData.sumBalanceEti = parseFloat(rendererData.sumBalanceEti).toFixed(2);
           clbSuccess(rendererData);
