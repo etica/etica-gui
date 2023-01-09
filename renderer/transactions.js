@@ -305,11 +305,23 @@ class Transactions {
                        console.log('_propend is', _propend);
                        console.log('type of _propend is', typeof _propend);
 
-                       let revealingduration= await EticaContract.DEFAULT_REVEALING_TIME();
-                       console.log('line 308 revealing duration is', revealingduration);
+                       
+                       let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
+                       let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
+                       let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
+                       let MIN_CLAIM_INTERVAL = parseInt(((DEFAULT_VOTING_TIME + DEFAULT_REVEALING_TIME)/REWARD_INTERVAL) + 1);
+                       let _period = await EticaContract.periods(_proposal[3]);
+                       console.log('_period is', _period);
+                       let seconds_claimable = (_period[1] + MIN_CLAIM_INTERVAL) * REWARD_INTERVAL;
+                       console.log('seconds_claimable is', seconds_claimable);     
+                       let _timestamp_claimable = moment.unix(parseInt(seconds_claimable)).format("YYYY-MM-DD HH:mm:ss");
+                       console.log('_timestamp_claimable is', _timestamp_claimable);
+                       console.log('revealing duration is', DEFAULT_REVEALING_TIME);
+
+
                        _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
                        console.log('_hashproposalend is', _hashproposalend);
-                       let _deadline = moment.unix(parseInt(_propend)).add(revealingduration,'seconds');
+                       let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
                        _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
                        console.log('_hashproposaldeadline is', _hashproposaldeadline);
                     }
@@ -327,6 +339,7 @@ class Transactions {
                     proposaltitle: _hashproposaltitle,
                     proposalend: _hashproposalend,
                     proposaldeadline: _hashproposaldeadline,
+                    timestamp_claimable: _timestamp_claimable,
                     isDone: false,
                     status: 1,
                     };
@@ -474,18 +487,6 @@ class Transactions {
           data.transactions.forEach(onetx => {
             console.log('enableKeepInSync() onetx step1 ok');
             console.log('enableKeepInSync() onetx step1', onetx);
-
-            let inputs = web3Local.eth.abi.decodeParameters(
-              // ERC20 transfer method args
-              [
-                { type: 'uint256', name: '_amount' },
-                { type: 'bytes32', name: '_votehash' }
-              ],
-              `0x${onetx.input.substring(10)}`
-            );
-
-            console.log('enableKeepInSync() onetx inputs decoded is: ', inputs);
-            console.log('enableKeepInSync() onetx inputs._votehash decoded is: ', inputs._votehash);
 
 
             if (onetx.from && onetx.to) {
@@ -699,11 +700,25 @@ class Transactions {
                      let _propend = _proposaldata[1]; // endtime
                      console.log('_propend is', _propend);
                       console.log('type of _propend is', typeof _propend);
-                      let revealingduration= await EticaContract.DEFAULT_REVEALING_TIME();
-                      console.log('line 685 revealing duration is', revealingduration);
+
+                      
+                      let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
+                      let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
+                      let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
+                      let MIN_CLAIM_INTERVAL = parseInt(((DEFAULT_VOTING_TIME + DEFAULT_REVEALING_TIME)/REWARD_INTERVAL) + 1);
+                      let _period = await EticaContract.periods(_proposal[3]);
+                      console.log('_period is', _period);
+                      let seconds_claimable = (_period[1] + MIN_CLAIM_INTERVAL) * REWARD_INTERVAL;
+                      console.log('seconds_claimable is', seconds_claimable);
+                      
+                      let _timestamp_claimable = moment.unix(parseInt(seconds_claimable)).format("YYYY-MM-DD HH:mm:ss");
+                      console.log('_timestamp_claimable is', _timestamp_claimable);
+                      console.log('revealing duration is', DEFAULT_REVEALING_TIME);
+
+
                       _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
                       console.log('_hashproposalend is', _hashproposalend);
-                     let _deadline = moment.unix(parseInt(_propend)).add(revealingduration,'seconds');
+                     let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
                        _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
                      console.log('_hashproposaldeadline is', _hashproposaldeadline);
                     }
@@ -723,6 +738,7 @@ class Transactions {
                   proposaltitle: _hashproposaltitle,
                   proposalend: _hashproposalend,
                   proposaldeadline: _hashproposaldeadline,
+                  timestamp_claimable: _timestamp_claimable,
                   isDone: false,
                   status: 1,
                   };
@@ -756,7 +772,21 @@ class Transactions {
 
                     let _proposal = await EticaContract.proposals(_commit.proposalhash);
                     let _proposaldata = await EticaContract.propsdatas(_commit.proposalhash);
-                    let revealingduration = await EticaContract.DEFAULT_REVEALING_TIME();
+
+                    let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
+                    let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
+                    let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
+                    let MIN_CLAIM_INTERVAL = parseInt(((DEFAULT_VOTING_TIME + DEFAULT_REVEALING_TIME)/REWARD_INTERVAL) + 1);
+                    let _period = await EticaContract.periods(_proposal[3]);
+                       console.log('_period is', _period);
+                    let seconds_claimable = (_period[1] + MIN_CLAIM_INTERVAL) * REWARD_INTERVAL;
+                       console.log('seconds_claimable is', seconds_claimable);     
+                    let _timestamp_claimable = moment.unix(parseInt(seconds_claimable)).format("YYYY-MM-DD HH:mm:ss");
+                       console.log('_timestamp_claimable is', _timestamp_claimable);
+                       console.log('revealing duration is', DEFAULT_REVEALING_TIME);
+
+
+
                     let _hashproposaltitle = _proposal[6];
                     let _propend = _proposaldata[1]; // endtime
                     let _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
@@ -772,6 +802,7 @@ class Transactions {
                         proposaltitle: _hashproposaltitle,
                         proposalend: _hashproposalend,
                         proposaldeadline: _hashproposaldeadline,
+                        timestamp_claimable: _timestamp_claimable,
                         status: 2
                     };
 
