@@ -1528,6 +1528,20 @@ async function propsdatas(_proposalhash) {
 }
 
 
+async periods(_id) {
+
+  let period = await periods(_id);
+  return period;
+
+async function periods(periodid) {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _period = await contract.methods.propsdatas(periodid).call();
+    return _period;
+}
+
+}
+
+
 async DEFAULT_REVEALING_TIME() {
 
   let _revealingduration = await revealingduration();
@@ -1540,6 +1554,35 @@ async function revealingduration() {
 }
 
 }
+
+async DEFAULT_VOTING_TIME() {
+
+  let _votingduration = await votingduration();
+  return _votingduration;
+
+async function votingduration() {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _duration = await contract.methods.DEFAULT_VOTING_TIME().call();
+    return _duration;
+}
+
+}
+
+
+async REWARD_INTERVAL() {
+
+  let _intervalduration = await intervalduration();
+  return _intervalduration;
+
+async function intervalduration() {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _duration = await contract.methods.REWARD_INTERVAL().call();
+    return _duration;
+}
+
+}
+
+
 
 
    // GETTER FUNCTIONS
