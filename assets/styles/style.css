@@ -113,13 +113,41 @@ body.pg-loaded>.inner {
 #syncProgress {
   height: 20px;
   position: fixed;
-  z-index: 1;
+  z-index: 999999999;
   /*left: 120px;*/
   left: 160px;
   right: 0;
   bottom: 0;
   background-color: #18523c;
   border-top: 1px solid #000;
+}
+
+#ResyncTxsProgress {
+  display: none;
+    height: 100vh;
+    position: absolute;
+    z-index: 999999999;
+    /* left: 120px; */
+    left: 0px;
+    /* top: 42vh; */
+    right: 0;
+    top: 0;
+    bottom: 0;
+    background-color: #0e0e0e;
+    border-top: 1px solid #000;
+}
+
+.loaderspinner{
+  margin: 0px auto 0;
+  width: 70px;
+  text-align: center;
+}
+
+#ResyncTxsProgressP {
+  color: white;
+    position: absolute;
+    top: 63%;
+    left: 45%;
 }
 
 #mainContent {

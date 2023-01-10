@@ -24,13 +24,13 @@ $(document).on("render_settings", function () {
             EticaMainGUI.showGeneralError("Transactions sync is currently in progress");
           } else {
 
-            var loading_screen = pleaseWait({logo: "assets/images/logo.png", backgroundColor: "#000000", loadingHtml: "<div class='spinner'><div class='bounce bounce1'></div><div class='bounce bounce2'></div><div class='bounce bounce3'></div></div><div class='loadingText'>Transactions Rescync initiated, it may take few minutes please wait...</div>"});
+            //var loading_screen = pleaseWait({logo: "", backgroundColor: "#000000", loadingHtml: "<div class='spinner'><div class='bounce bounce1'></div><div class='bounce bounce2'></div><div class='bounce bounce3'></div></div><div class='loadingText'>Transactions Rescync initiated, it may take few minutes please wait...</div>"});
 
             // first disable keepInSync
             EticaTransactions.disableKeepInSync();
             // then delete the transactions data
             var counters = EticaDatabase.getCounters();
-            counters.transactions = 40000;
+            counters.transactions = 47000;
             EticaDatabase.setCounters(counters);
             ipcResult = ipcRenderer.sendSync("deleteTransactions", null);
 
@@ -41,9 +41,10 @@ $(document).on("render_settings", function () {
                   EticaMainGUI.showGeneralError(error);
                 } else {
                   //EticaTransactions.enableKeepInSync();
-                  EticaTransactions.syncTransactionsForAllAddresses(localBlock.number);
+                  EticaTransactions.syncTransactionsForAllAddresses(localBlock.number, true);
+                  //loading_screen.finish();
 
-                  iziToast.success({title: "Rescync initiated", message: "Transactions Rescync initiated, it may take few minutes please wait", position: "topRight", timeout: 5000});
+                  iziToast.success({title: "Rescync initiated", message: "Transactions Resync initiated, it may take a few minutes please wait", position: "topRight", timeout: 5000});
                 }
               });
             } else {

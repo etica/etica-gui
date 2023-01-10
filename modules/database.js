@@ -105,6 +105,39 @@ ipcMain.on("setJSONFile", (event, arg) => {
 });
 
 ipcMain.on("deleteTransactions", (event, arg) => {
+
+try {
+  // if file exists delete:
+  if (fs.existsSync(dbPath)) {
+    
+    fs.unlink(dbPath, err => {
+      if (err) {
+        event.returnValue = {
+          success: false,
+          error: err
+        };
+      } else {
+        event.returnValue = {
+          success: true,
+          error: null
+        };
+      }
+    });
+
+  } 
+} catch(err) {
+  console.error(err);
+  event.returnValue = {
+    success: false,
+    error: err
+  };
+}
+
+
+});
+
+/* former deleteTransactions() (didnt check if file exist) 
+ipcMain.on("deleteTransactions", (event, arg) => {
   fs.unlink(dbPath, err => {
     if (err) {
       event.returnValue = {
@@ -119,6 +152,7 @@ ipcMain.on("deleteTransactions", (event, arg) => {
     }
   });
 });
+   former deleteTransactions() (didnt check if file exist) */
 
 ipcMain.on("deleteWalletData", (event, arg) => {
   fs.unlink(path.join(app.getPath("userData"), "wallets.json"), err => {

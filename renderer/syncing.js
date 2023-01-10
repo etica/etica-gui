@@ -45,6 +45,7 @@ function StartSyncProcess() {
   var nodeSyncInterval = null;
   var SyncBalancesInterval = null;
   console.log('inside StartSyncProcess');
+  EticaTransactions.setIsSyncing(false);
   
 // enable the keep in sync feature
   EticaTransactions.enableKeepInSync();

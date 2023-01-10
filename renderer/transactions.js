@@ -35,15 +35,22 @@ class Transactions {
     this.filter = "";
   }
 
-  syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter) {
+  syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter, makeloadingbar=false) {
    console.log('in syncTransactionsForSingleAddress');
    console.log('in syncTransactionsForSingleAddress addressList is', addressList);
    console.log('in syncTransactionsForSingleAddress counters is', counters);
    console.log('in syncTransactionsForSingleAddress lastBlock is', lastBlock);
    console.log('in syncTransactionsForSingleAddress counter is', counter);
 
+if(makeloadingbar == true){
+
+  $("#ResyncTxsProgress").css("display", "block");
+  
+  
+}
+   
+
     if (counter < addressList.length) {
-      SyncProgress.setText(vsprintf("Syncing address transactions %d/%d, please wait...", [counter, addressList.length]));
 
       var startBlock = parseInt(counters.transactions) || 0;
 
@@ -74,6 +81,17 @@ class Transactions {
 
 
       for(let blocknb=startBlock; blocknb <= lastBlock; blocknb++){
+
+        if(makeloadingbar == true && (blocknb % 500 == 0) ){
+          $("#ResyncTxsProgress").css("display", "block");
+          //let blockscanned = ''+blocknb+'/'+lastBlock+' blocks scanned';
+          let blockscanned = ''+blocknb+'/'+lastBlock+' blocks scanned';
+          //$("ResyncTxsProgress").html(blockscanned);
+          $("#ResyncTxsProgressP").html("Test ugu u");
+          //ResyncTxsProgress.animate(blocknb / lastBlock);
+        }
+      
+
         EticaBlockchain.getBlock(blocknb, true, function (error) {
           EticaMainGUI.showGeneralError(error);
         }, async function (data) {
@@ -404,7 +422,7 @@ class Transactions {
 
 
         // call the transaction sync for the next address
-        EticaTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1);
+        EticaTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1, makeloadingbar);
       
     } else {
 
@@ -412,12 +430,14 @@ class Transactions {
        //counters.transactions = lastBlock;
        //EticaDatabase.setCounters(counters);
 
+      //$("#ResyncTxsProgress").css("display", "block");
       SyncProgress.setText("Syncing transactions is complete.");
       EticaTransactions.setIsSyncing(false);
+      
     }
   }
 
-  syncTransactionsForAllAddresses(lastBlock) {
+  syncTransactionsForAllAddresses(lastBlock, makeloadingbar=false) {
     var counters = EticaDatabase.getCounters();
     var counter = 0;
 
@@ -425,7 +445,7 @@ class Transactions {
       EticaMainGUI.showGeneralError(error);
     }, function (data) {
       EticaTransactions.setIsSyncing(true);
-      EticaTransactions.syncTransactionsForSingleAddress(data, counters, lastBlock, counter);
+      EticaTransactions.syncTransactionsForSingleAddress(data, counters, lastBlock, counter, makeloadingbar);
     });
   }
 
