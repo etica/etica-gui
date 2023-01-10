@@ -392,12 +392,14 @@ class Transactions {
 
           }
 
-
-
-
-
         });
 
+           if(counter+1 == addressList.length){
+                   // update the counter and store it back to file system
+                   counters.transactions = blocknb;
+                   EticaDatabase.setCounters(counters);
+          }
+      
       }
 
 
@@ -405,9 +407,10 @@ class Transactions {
         EticaTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1);
       
     } else {
-      // update the counter and store it back to file system
-      counters.transactions = lastBlock;
-      EticaDatabase.setCounters(counters);
+
+       // update the counter and store it back to file system
+       //counters.transactions = lastBlock;
+       //EticaDatabase.setCounters(counters);
 
       SyncProgress.setText("Syncing transactions is complete.");
       EticaTransactions.setIsSyncing(false);

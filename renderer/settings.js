@@ -23,11 +23,12 @@ $(document).on("render_settings", function () {
           if (EticaTransactions.getIsSyncing()) {
             EticaMainGUI.showGeneralError("Transactions sync is currently in progress");
           } else {
+
             // first disable keepInSync
             EticaTransactions.disableKeepInSync();
             // then delete the transactions data
             var counters = EticaDatabase.getCounters();
-            counters.transactions = 0;
+            counters.transactions = 40000;
             EticaDatabase.setCounters(counters);
             ipcResult = ipcRenderer.sendSync("deleteTransactions", null);
 
@@ -37,14 +38,15 @@ $(document).on("render_settings", function () {
                 if (error) {
                   EticaMainGUI.showGeneralError(error);
                 } else {
-                  EticaTransactions.enableKeepInSync();
+                  //EticaTransactions.enableKeepInSync();
                   EticaTransactions.syncTransactionsForAllAddresses(localBlock.number);
 
-                  iziToast.success({title: "Success", message: "Transactions are being resynced", position: "topRight", timeout: 5000});
+                  iziToast.success({title: "Rescync initiated", message: "Transactions Rescync initiated, it may take few minutes please wait", position: "topRight", timeout: 5000});
                 }
               });
             } else {
-              EticaMainGUI.showGeneralError("Error resyncing transactions: " + ipcResult.error);
+              EticaMainGUI.showGeneralError("Error deleting transactions: " + ipcResult.error);
+              console.log('ipcResult.error is:', ipcResult.error);
             }
           }
         }
