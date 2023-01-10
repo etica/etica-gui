@@ -83,6 +83,7 @@ if(makeloadingbar == true){
       for(let blocknb=startBlock; blocknb <= lastBlock; blocknb++){
 
         if(makeloadingbar == true && (blocknb % 500 == 0) ){
+          
           $("#ResyncTxsProgress").css("display", "block");
           //let blockscanned = ''+blocknb+'/'+lastBlock+' blocks scanned';
           let blockscanned = ''+blocknb+'/'+lastBlock+' blocks scanned';
