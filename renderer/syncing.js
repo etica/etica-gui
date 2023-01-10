@@ -89,6 +89,7 @@ function StartSyncProcess() {
               }
             } else {
               EticaMainGUI.showGeneralError(error);
+              InitializeWeb3();
             }
           });
         }, 10000);
@@ -143,6 +144,7 @@ function StartSyncProcess() {
   
 }
 
+function InitializeWeb3() {
 var InitWeb3 = setInterval(function () {
   try {
     web3Local = new Web3(new Web3.providers.WebsocketProvider("ws://localhost:8551"));
@@ -159,3 +161,6 @@ var InitWeb3 = setInterval(function () {
     EticaMainGUI.showGeneralError(err);
   }
 }, 2000);
+}
+
+InitializeWeb3();

@@ -24,6 +24,8 @@ $(document).on("render_settings", function () {
             EticaMainGUI.showGeneralError("Transactions sync is currently in progress");
           } else {
 
+            var loading_screen = pleaseWait({logo: "assets/images/logo.png", backgroundColor: "#000000", loadingHtml: "<div class='spinner'><div class='bounce bounce1'></div><div class='bounce bounce2'></div><div class='bounce bounce3'></div></div><div class='loadingText'>Transactions Rescync initiated, it may take few minutes please wait...</div>"});
+
             // first disable keepInSync
             EticaTransactions.disableKeepInSync();
             // then delete the transactions data
