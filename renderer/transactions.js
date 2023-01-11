@@ -310,12 +310,16 @@ class Transactions {
                        
                        let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
                        let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
-                       let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
-                       let MIN_CLAIM_INTERVAL = parseInt(((DEFAULT_VOTING_TIME + DEFAULT_REVEALING_TIME)/REWARD_INTERVAL) + 1);
+                       let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();                       
+                       let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
+                       console.log('MIN_CLAIM_INTERVAL is', MIN_CLAIM_INTERVAL);
+                       console.log('_proposal[3] is', _proposal[3]);
                        let _period = await EticaContract.periods(_proposal[3]);
                        console.log('_period is', _period);
-                       let seconds_claimable = (_period[1] + MIN_CLAIM_INTERVAL) * REWARD_INTERVAL;
-                       console.log('seconds_claimable is', seconds_claimable);     
+                       let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
+                       console.log('seconds_claimable is', seconds_claimable);  
+
+
                        _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
                        console.log('_timestamp_claimable is', _timestamp_claimable);
                        console.log('revealing duration is', DEFAULT_REVEALING_TIME);
@@ -736,13 +740,13 @@ class Transactions {
                       console.log('DEFAULT_VOTING_TIME is', DEFAULT_VOTING_TIME);
                       let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
                       console.log('REWARD_INTERVAL is', REWARD_INTERVAL);
-                      let MIN_CLAIM_INTERVAL = parseInt(((DEFAULT_VOTING_TIME + DEFAULT_REVEALING_TIME)/REWARD_INTERVAL) + 1);
+                      let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
                       console.log('MIN_CLAIM_INTERVAL is', MIN_CLAIM_INTERVAL);
                       console.log('_proposal[3] is', _proposal[3]);
                       
                       let _period = await EticaContract.periods(_proposal[3]);
                          console.log('_period is', _period);
-                      let seconds_claimable = (_period[1] + MIN_CLAIM_INTERVAL) * REWARD_INTERVAL;
+                      let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
                          console.log('seconds_claimable is', seconds_claimable);    
 
                       
