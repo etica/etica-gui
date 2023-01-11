@@ -1535,7 +1535,7 @@ async periods(_id) {
 
 async function periods(periodid) {
   let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
-    let _period = await contract.methods.propsdatas(periodid).call();
+    let _period = await contract.methods.periods(periodid).call();
     return _period;
 }
 
