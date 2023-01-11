@@ -15,10 +15,10 @@ class Settings {
   }
 }
 
-$(document).on("render_settings", function () {
-  $("#btnSettingsCleanTransactions").off("click").on("click", function () {
+$(document).on("render_settings", async function () {
+  $("#btnSettingsCleanTransactions").off("click").on("click", async function () {
     if (isFullySynced) {
-      EticaMainGUI.showGeneralConfirmation("Do you really want to resync transactions?", function (result) {
+      EticaMainGUI.showGeneralConfirmation("Do you really want to resync transactions?", async function (result) {
         if (result) {
           if (EticaTransactions.getIsSyncing()) {
             EticaMainGUI.showGeneralError("Transactions sync is currently in progress");
@@ -30,18 +30,35 @@ $(document).on("render_settings", function () {
             EticaTransactions.disableKeepInSync();
             // then delete the transactions data
             var counters = EticaDatabase.getCounters();
-            counters.transactions = 53000;
+            counters.transactions = 0;
             EticaDatabase.setCounters(counters);
             ipcResult = ipcRenderer.sendSync("deleteTransactions", null);
 
             if (ipcResult.success) {
               // sync all the transactions to the current block
-              web3Local.eth.getBlock("latest", function (error, localBlock) {
+              web3Local.eth.getBlock("latest", async function (error, localBlock) {
                 if (error) {
                   EticaMainGUI.showGeneralError(error);
                 } else {
                   //EticaTransactions.enableKeepInSync();
-                  EticaTransactions.syncTransactionsForAllAddresses(localBlock.number);
+                  let j = counters.transactions;
+                  let resp = '';
+                  console.log('j before loop is', j);
+                  while (j + 500 < localBlock.number){
+                    resp = await EticaTransactions.syncTransactionsForAllAddresses(j);
+                    console.log('syncTransactionsForAllAddresses from settings resp is ', resp);
+                    j = j + 500;
+                    if (resp != 'blockscannedsuccess') break;
+                  }
+                  counters = EticaDatabase.getCounters();
+                  console.log('counters.transactions after loop is ', counters.transactions);
+                  console.log('j after loop is', j);
+                  console.log('localBlock.number is ', localBlock.number);
+                  if(localBlock.number > counters.transactions && (localBlock.number - counters.transactions) <= 500){
+                    console.log('inside last call to syncTransactionsForAllAddresses()');
+                    await EticaTransactions.syncTransactionsForAllAddresses(localBlock.number);
+                  }
+
                   loading_screen.finish();
 
                   iziToast.success({title: "Rescync initiated", message: "Transactions Resync initiated, it may take a few minutes please wait", position: "topRight", timeout: 5000});

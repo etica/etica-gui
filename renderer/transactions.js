@@ -35,15 +35,14 @@ class Transactions {
     this.filter = "";
   }
 
-  syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter) {
+  async syncTransactionsForSingleAddress(addressList, counters, lastBlock) {
    console.log('in syncTransactionsForSingleAddress');
    console.log('in syncTransactionsForSingleAddress addressList is', addressList);
    console.log('in syncTransactionsForSingleAddress counters is', counters);
    console.log('in syncTransactionsForSingleAddress lastBlock is', lastBlock);
-   console.log('in syncTransactionsForSingleAddress counter is', counter);
 
 
-    if (counter < addressList.length) {
+   /* if (counter < addressList.length) {  */
 
       var startBlock = parseInt(counters.transactions) || 0;
 
@@ -76,7 +75,7 @@ class Transactions {
       for(let blocknb=startBlock; blocknb <= lastBlock; blocknb++){
       
 
-        EticaBlockchain.getBlock(blocknb, true, function (error) {
+        await EticaBlockchain.getBlock(blocknb, true, function (error) {
           EticaMainGUI.showGeneralError(error);
         }, async function (data) {
           if (data.transactions) {
@@ -86,12 +85,12 @@ class Transactions {
               toBlock: blocknb
             };
 
-            EticaBlockchain.getPastEvents(options, function (error) {
+            await EticaBlockchain.getPastEvents(options, function (error) {
               EticaMainGUI.showGeneralError(error);
             }, async function (logevents) {
 
               console.log('in getPastEvents, logevents loaded');
-            data.transactions.forEach(onetx => {
+            data.transactions.forEach(async (onetx) => {
               console.log('onetx step1 ok');
               console.log('onetx step1', onetx);
               if (onetx.from && onetx.to) {
@@ -292,7 +291,7 @@ class Transactions {
                     let _hashproposaltitle =null;
                     let _hashproposalend=null;
                     let _hashproposaldeadline =null;
-                    let _timestamp_claimable;
+                    let _timestamp_claimable=null;
   
                     if(_hashinput && _hashinput.commithash == onetxevent.returnValues.votehash){
                       _hashchoice = _hashinput.choice;
@@ -317,7 +316,7 @@ class Transactions {
                        console.log('_period is', _period);
                        let seconds_claimable = (_period[1] + MIN_CLAIM_INTERVAL) * REWARD_INTERVAL;
                        console.log('seconds_claimable is', seconds_claimable);     
-                       _timestamp_claimable = moment.unix(parseInt(seconds_claimable)).format("YYYY-MM-DD HH:mm:ss");
+                       _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
                        console.log('_timestamp_claimable is', _timestamp_claimable);
                        console.log('revealing duration is', DEFAULT_REVEALING_TIME);
 
@@ -397,19 +396,23 @@ class Transactions {
 
         });
 
-           if(counter+1 == addressList.length){
+          /* if(counter+1 == addressList.length){ */
                    // update the counter and store it back to file system
                    counters.transactions = blocknb;
                    EticaDatabase.setCounters(counters);
-          }
+                   console.log('reached update counters is', counters);
+         /* } */
       
       }
 
 
         // call the transaction sync for the next address
-        EticaTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1);
+        //EticaTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1);
+        SyncProgress.setText("Syncing transactions is complete.");
+        EticaTransactions.setIsSyncing(false);
+        return 'done';
       
-    } else {
+   /* } else {
 
        // update the counter and store it back to file system
        //counters.transactions = lastBlock;
@@ -418,20 +421,34 @@ class Transactions {
       //$("#ResyncTxsProgress").css("display", "block");
       SyncProgress.setText("Syncing transactions is complete.");
       EticaTransactions.setIsSyncing(false);
+      return 'done2';
       
-    }
+    } */
   }
 
-  syncTransactionsForAllAddresses(lastBlock) {
+  async syncTransactionsForAllAddresses(lastBlock) {
     var counters = EticaDatabase.getCounters();
+    console.log('counters is', counters);
     var counter = 0;
+    let results_array = [];
+    let res = 'test';
 
-    EticaBlockchain.getAccounts(function (error) {
-      EticaMainGUI.showGeneralError(error);
-    }, function (data) {
+    let data = await EticaBlockchain.getAccounts_nocallback();
       EticaTransactions.setIsSyncing(true);
-      EticaTransactions.syncTransactionsForSingleAddress(data, counters, lastBlock, counter);
-    });
+      let previousaddress = await EticaTransactions.syncTransactionsForSingleAddress(data, counters, lastBlock);
+      console.log('syncTransactionsForSingleAddress () result previousaddress is', previousaddress);
+      let newcounters = EticaDatabase.getCounters();
+      console.log('newcounters is', newcounters);
+      if(previousaddress == 'done'){
+      console.log('expected done result received from syncTransactionsForSingleAddress ()');
+      res = 'blockscannedsuccess';
+    }
+    else {
+      res = 'blockscannedfailure';
+    }
+
+  return res;
+
   }
 
   renderTransactions() {
@@ -694,7 +711,7 @@ class Transactions {
                   let _hashproposaltitle =null;
                   let _hashproposalend =null;
                   let _hashproposaldeadline =null;
-                  let _timestamp_claimable;
+                  let _timestamp_claimable =null;
 
                   if(_hashinput && _hashinput.commithash == onetxevent.returnValues.votehash){
                     _hashchoice = _hashinput.choice;
@@ -729,7 +746,7 @@ class Transactions {
                          console.log('seconds_claimable is', seconds_claimable);    
 
                       
-                      _timestamp_claimable = moment.unix(parseInt(seconds_claimable)).format("YYYY-MM-DD HH:mm:ss");
+                      _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
                       console.log('_timestamp_claimable is', _timestamp_claimable);
                       console.log('revealing duration is', DEFAULT_REVEALING_TIME);
 

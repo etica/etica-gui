@@ -44,6 +44,10 @@ class Blockchain {
     });
   }
 
+  getAccounts_nocallback() {
+    return web3Local.eth.getAccounts();
+  }
+
   isAddress(address) {
     return web3Local.utils.isAddress(address);
   }
