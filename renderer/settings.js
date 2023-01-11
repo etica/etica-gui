@@ -24,7 +24,7 @@ $(document).on("render_settings", function () {
             EticaMainGUI.showGeneralError("Transactions sync is currently in progress");
           } else {
 
-            //var loading_screen = pleaseWait({logo: "", backgroundColor: "#000000", loadingHtml: "<div class='spinner'><div class='bounce bounce1'></div><div class='bounce bounce2'></div><div class='bounce bounce3'></div></div><div class='loadingText'>Transactions Rescync initiated, it may take few minutes please wait...</div>"});
+            var loading_screen = pleaseWait({logo: "", backgroundColor: "#000000", loadingHtml: "<div class='spinner'><div class='bounce bounce1'></div><div class='bounce bounce2'></div><div class='bounce bounce3'></div></div><div class='loadingText'>Transactions Rescync initiated, it may take few minutes please wait...</div>"});
 
             // first disable keepInSync
             EticaTransactions.disableKeepInSync();
@@ -41,8 +41,8 @@ $(document).on("render_settings", function () {
                   EticaMainGUI.showGeneralError(error);
                 } else {
                   //EticaTransactions.enableKeepInSync();
-                  EticaTransactions.syncTransactionsForAllAddresses(localBlock.number, true);
-                  //loading_screen.finish();
+                  EticaTransactions.syncTransactionsForAllAddresses(localBlock.number);
+                  loading_screen.finish();
 
                   iziToast.success({title: "Rescync initiated", message: "Transactions Resync initiated, it may take a few minutes please wait", position: "topRight", timeout: 5000});
                 }
