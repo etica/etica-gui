@@ -120,6 +120,7 @@ function StartSyncProcess() {
             ]));
           } else if (error) {
             EticaMainGUI.showGeneralError(error);
+            InitializeWeb3();
           }
         });
       }, 2000);
