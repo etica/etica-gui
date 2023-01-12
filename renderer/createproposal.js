@@ -27,14 +27,20 @@ class CreateProposal {
 
       
       // check disease hash exists:
-      if (!JSON.stringify($("#createProposalDiseaseHash").val())) {
-        EticaMainGUI.showGeneralError("This disease hash is invalid!");
+      if (!$("#createProposalDiseaseHash").val()) {
+        EticaMainGUI.showGeneralError("Please enter a disease hash!");
         return false;
       }
 
       // check title name is in right format:
-      if (!JSON.stringify($("#createProposalTitle").val())) {
-        EticaMainGUI.showGeneralError("This disease name is invalid!");
+      if (!$("#createProposalTitle").val()) {
+        EticaMainGUI.showGeneralError("Please enter a proposal title!");
+        return false;
+      }
+
+      // check ipfs string is in right format:
+      if (!$("#createProposalRawReleaseHash").val()) {
+        EticaMainGUI.showGeneralError("Please enter the IPFS hash of your proposal files!");
         return false;
       }
 
@@ -79,22 +85,38 @@ $(document).on("render_createProposal", function () {
 
   });
 
-  $("#btnCreateProposal").off("click").on("click", function () {
+  $("#btnCreateProposal").off("click").on("click", async function () {
     if (ProposalCreate.validateSendForm()) {
+
+      let diseaseindex = await EticaContract.diseasesbyIds($("#createProposalDiseaseHash").val());
+      console.log('diseaseindex is', diseaseindex);
+      console.log('type of diseaseindex is', typeof diseaseindex);
+      let diseasename = '';
+
+      if( !(diseaseindex > 0) ){
+        EticaMainGUI.showGeneralError("Wrong disease hash. There is no disease with this hash on the blockchain!");
+        return false;
+      }
+      else {
+        let _disease = await EticaContract.diseases(diseaseindex);
+        console.log('_disease is', _disease);
+        diseasename = _disease[1];
+      }
 
       EticaContract.getTranasctionFee_createproposal($("#createProposalFromAddress").val(), $("#createProposalDiseaseHash").val(), $("#createProposalTitle").val(), $("#createProposalDescription").val(), $("#createProposalRawReleaseHash").val(), $("#createProposalFreefield").val(), $("#createProposalChunkId").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
-        $("#dlgCreateProposalWalletPassword").iziModal();
+        $("#dlgCreateProposalWalletPassword").iziModal({width: "70%"});
         $("#CreateProposalwalletPassword").val("");
-        $("#fromEtiAddressInfo").html($("#createProposalFromAddress").val());
+        $("#fromCreateProposalAddressInfo").html($("#createProposalFromAddress").val());
         $("#valueToCreateProposalDiseaseHash").html($("#createProposalDiseaseHash").val());
+        $("#valueToCreateProposalDiseaseName").html(diseasename);
         $("#valueToCreateProposalTitle").html($("#createProposalTitle").val());
         $("#valueToCreateProposalDescription").html($("#createProposalDescription").val());
         $("#valueToCreateProposalChunkId").html($("#createProposalChunkId").val());
         $("#valueToCreateProposalRawReleaseHash").html($("#createProposalRawReleaseHash").val());
         $("#valueToCreateProposalFreefield").html($("#createProposalFreefield").val());
-        $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#feeCreateProposalToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCreateProposalWalletPassword").iziModal("open");
 
         function doSendTransaction() {

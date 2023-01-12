@@ -26,8 +26,8 @@ class CreateDisease {
       }
 
       // check disease name is right format:
-      if (!JSON.stringify($("#createDiseaseName").val())) {
-        EticaMainGUI.showGeneralError("This disease name is invalid!");
+      if (!$("#createDiseaseName").val()) {
+        EticaMainGUI.showGeneralError("Please enter a disease name!");
         return false;
       }
 
@@ -66,8 +66,18 @@ $(document).on("render_createDisease", function () {
 
   });
 
-  $("#btnCreateDisease").off("click").on("click", function () {
+  $("#btnCreateDisease").off("click").on("click", async function () {
     if (DiseaseCreate.validateSendForm()) {
+
+
+      let disease_exists = await EticaContract.getdiseasehashbyName($("#createDiseaseName").val());
+      console.log('disease_exists is', disease_exists);
+
+      if(disease_exists != '0x0000000000000000000000000000000000000000000000000000000000000000'){
+        EticaMainGUI.showGeneralError("This disease name already exists!");
+        return false;
+      }
+
 
       EticaContract.getTranasctionFee_createdisease($("#createDiseaseFromAddress").val(), $("#createDiseaseName").val(), function (error) {
         EticaMainGUI.showGeneralError(error);

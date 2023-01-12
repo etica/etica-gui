@@ -310,7 +310,8 @@ body.pg-loaded>.inner {
 
 .iziModal-header {
   /*background: #399999 !important;*/
-  background: #233837 !important;
+  /*background: #233837 !important;*/
+  background: #0e0e0e !important;
 }
 
 #walletsToolbar {
@@ -444,7 +445,8 @@ div.sidebar svg {
 
 .sendTXInfo label {
   line-height: 30px;
-  font-size: 1.1em;
+  font-size: 1.05em;
+  font-family: monospace;
 }
 
 .txInfo label {
@@ -471,7 +473,7 @@ div.sidebar svg {
 #valueToSendEtiInfo,
 #feeToPayInfo,
 #feeEtiToPayInfo {
-  color: #399999;
+  color: #000000;
   margin-left: 5px;
   margin-right: 5px;
 }

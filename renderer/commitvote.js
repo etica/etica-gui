@@ -140,15 +140,15 @@ $(document).on("render_commitVote", function () {
       EticaContract.getTranasctionFee_commitvote($("#commitVoteFromAddress").val(), commitvotehash, $("#commitVoteAmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
-        $("#dlgCommitVoteWalletPassword").iziModal();
+        $("#dlgCommitVoteWalletPassword").iziModal({width: "70%"});
         $("#CommitVotewalletPassword").val("");
-        $("#fromEtiAddressInfo").html($("#commitVoteFromAddress").val());
+        $("#fromCommitVoteAddressInfo").html($("#commitVoteFromAddress").val());
         $("#valueToCommitVoteProposalHash").html($("#commitVoteProposalHash").val());
         $("#valueToCommitVotePrivacy").html($("#commitVotePrivacy").val());
         $("#valueToCommitVoteChoice").html(vote_checked_choice_text);
         $("#valueToCommitVoteAmount").html($("#commitVoteAmount").val());
         $("#valueToCommitVoteHash").html(commitvotehash);
-        $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#feeCommitVoteToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCommitVoteWalletPassword").iziModal("open");
 
         // save votes parameters:

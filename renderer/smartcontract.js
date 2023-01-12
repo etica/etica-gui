@@ -1501,6 +1501,47 @@ class SmartContract {
 }
 
 
+
+async diseasesbyIds(_hash) {
+
+
+  async function callwithlogerrors() {
+  try {
+  let diseaseindex = await diseasesbyIds(_hash);
+  return diseaseindex;
+  } catch (e) {
+    console.log('diseasesbyIds() error e is:', e)
+    console.error(e);
+    return e;
+  }
+}
+
+async function diseasesbyIds(_diseasehash) {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _diseaseindex = await contract.methods.diseasesbyIds(_diseasehash).call();
+    return _diseaseindex;
+}
+
+return callwithlogerrors();
+
+}
+
+//returns whole disease object from global index, returns 0 if disease doesnt exists:
+async diseases(_index) {
+
+  let disease = await diseases(_index);
+  return disease;
+
+async function diseases(_diseaseindex) {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _disease = await contract.methods.diseases(_diseaseindex).call();
+    return _disease;
+}
+
+}
+
+
+
 async proposals(_hash) {
 
   let proposal = await proposals(_hash);
@@ -1523,6 +1564,19 @@ async function propsdatas(_proposalhash) {
   let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
     let proposaldata = await contract.methods.propsdatas(_proposalhash).call();
     return proposaldata;
+}
+
+}
+
+async getdiseasehashbyName(_name) {
+
+  let diseasehash = await getdiseasehashbyName(_name);
+  return diseasehash;
+
+async function getdiseasehashbyName(_name) {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _diseasehash = await contract.methods.getdiseasehashbyName(_name).call();
+    return _diseasehash;
 }
 
 }

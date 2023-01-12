@@ -155,7 +155,7 @@ $(document).on("render_send", function () {
       EticaBlockchain.getTranasctionFee($("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
-        $("#dlgSendWalletPassword").iziModal();
+        $("#dlgSendWalletPassword").iziModal({width: "60%"});
         $("#walletPassword").val("");
         $("#fromAddressInfo").html($("#sendFromAddress").val());
         $("#toAddressInfo").html($("#sendToAddress").val());
