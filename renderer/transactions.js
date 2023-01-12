@@ -345,7 +345,7 @@ class Transactions {
                     proposaltitle: _hashproposaltitle,
                     proposalend: _hashproposalend,
                     proposaldeadline: _hashproposaldeadline,
-                    timestamp_claimable: _timestamp_claimable,
+                    timestampclaimable: _timestamp_claimable,
                     isDone: false,
                     status: 1,
                     };
@@ -777,7 +777,7 @@ class Transactions {
                   proposaltitle: _hashproposaltitle,
                   proposalend: _hashproposalend,
                   proposaldeadline: _hashproposaldeadline,
-                  timestamp_claimable: _timestamp_claimable,
+                  timestampclaimable: _timestamp_claimable,
                   isDone: false,
                   status: 1,
                   };
@@ -818,15 +818,15 @@ class Transactions {
                     console.log('DEFAULT_VOTING_TIME is', DEFAULT_VOTING_TIME);
                     let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
                     console.log('REWARD_INTERVAL is', REWARD_INTERVAL);
-                    let MIN_CLAIM_INTERVAL = parseInt(((DEFAULT_VOTING_TIME + DEFAULT_REVEALING_TIME)/REWARD_INTERVAL) + 1);
+                    let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
                     console.log('MIN_CLAIM_INTERVAL is', MIN_CLAIM_INTERVAL);
                     console.log('_proposal[3] is', _proposal[3]);
                     
                     let _period = await EticaContract.periods(_proposal[3]);
                        console.log('_period is', _period);
-                    let seconds_claimable = (_period[1] + MIN_CLAIM_INTERVAL) * REWARD_INTERVAL;
+                    let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
                        console.log('seconds_claimable is', seconds_claimable);     
-                    let _timestamp_claimable = moment.unix(parseInt(seconds_claimable)).format("YYYY-MM-DD HH:mm:ss");
+                    let _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
                        console.log('_timestamp_claimable is', _timestamp_claimable);
                        console.log('revealing duration is', DEFAULT_REVEALING_TIME);
 
@@ -835,7 +835,7 @@ class Transactions {
                     let _hashproposaltitle = _proposal[6];
                     let _propend = _proposaldata[1]; // endtime
                     let _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
-                    let _deadline = moment.unix(parseInt(_propend)).add(revealingduration,'seconds');
+                    let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
                     let _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
 
                     var _UpdatedCommit = {
@@ -847,7 +847,7 @@ class Transactions {
                         proposaltitle: _hashproposaltitle,
                         proposalend: _hashproposalend,
                         proposaldeadline: _hashproposaldeadline,
-                        timestamp_claimable: _timestamp_claimable,
+                        timestampclaimable: _timestamp_claimable,
                         status: 2
                     };
 

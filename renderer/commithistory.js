@@ -251,7 +251,7 @@ $(document).on("render_commithistory", function () {
                   EticaContract.getTranasctionFee_revealvote(_commit.voter, _commit.proposalhash, _commit.choice, _commit.vary, function (error) {
                     EticaMainGUI.showGeneralError(error);
                   }, function (data) {
-                    $("#dlgRevealCommitWalletPassword").iziModal();
+                    $("#dlgRevealCommitWalletPassword").iziModal({width: "70%"});
                     $("#RevealCommitwalletPassword").val("");
                     $("#fromRevealAddressInfo").html(_commit.voter);
                     $("#valueOfRevealCommitProposalHash").html(_commit.proposalhash);
