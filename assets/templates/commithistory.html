@@ -31,8 +31,8 @@
           <tr>
             <td>
               <div>
-                <span>{{ proposaltitle }}</span><br>
-                <span style="font-size:0.75em;color: #399999;">{{ votehash }}</span>
+                <span class="textAddress">{{ proposaltitle }}</span><br>
+                <span class="textAddress" style="font-size:0.75em;color: #399999;">{{ votehash }}</span>
               </div>
             </td>
             <td>{{ timestamp }}</td>
@@ -43,30 +43,39 @@
               </span>
             </td>
             <td>
-              {{#if proposaldeadline}}
+            {{#if proposaldeadline}}
+
                 {{#if created}}
                   {{#if revealopen}}
-                  <button type="button" class="btn btn-etica btnRevealCommit" data-votehash="{{votehash}}" data-voter="{{voter}}">Reveal</button>
+                      <button type="button" class="btn btn-etica btnRevealCommit" data-votehash="{{votehash}}" data-voter="{{voter}}">Reveal</button>
                   {{else}}
-                  <span class="textAddress">{{ proposalend }}</span><br>
-                  <span class="textAddress">{{ proposaldeadline }}</span>
+                      {{#if revealpassed}}
+                      <span>missed deadline:</span><br>
+                      <span>{{ proposaldeadline }}</span>
+                      {{else}}
+                      <span>{{ proposalend }}</span><br>
+                      <span>{{ proposaldeadline }}</span>
+                      {{/if}}
                   {{/if}}  
                 {{/if}}
                 {{#if revealed}}
-                <span class="textAddress">Revealed</span><br>
-                <!-- if we ahve passed claimable date show button to claim, otherwise show date of claims opening -->
-                <!-- <button type="button" class="btn btn-etica btnAddCommitInputs" data-votehash="{{votehash}}" data-voter="{{voter}}">Claim</button> -->
-                {{/if}}
+                  {{#if claimopen}}
+                  <button type="button" class="btn btn-etica btnAddCommitInputs" data-votehash="{{proposalhash}}" data-voter="{{voter}}">Claim</button>
+                  {{else}}
+                  <span>claims opening on:</span><br>
+                  <span>{{ timestampclaimable }}</span>
+                  {{/if}}
+                {{/if}}  
                 {{#if claimed}}
-                <span class="textAddress">Claimed</span>
+                <span>Claimed</span>
                 {{/if}}
                 {{#if missed}}
-                <span class="textAddress">Missed</span>
+                <span>Missed</span>
                 {{/if}}
 
-              {{else}}
+            {{else}}
                 <button type="button" class="btn btn-etica btnAddCommitInputs" data-votehash="{{votehash}}" data-voter="{{voter}}">Add proposal</button>
-              {{/if}}
+            {{/if}}
             </td>
           </tr>
         {{/commitData}}

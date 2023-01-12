@@ -142,7 +142,10 @@ ipcMain.on("getCommits", (event, arg) => {
       let claimed = false;
       let missed = false;
       let revealopen = false;
+      let revealpassed = false;
+      let claimopen = false;
 
+      // had to use this system because current front end framework cant do "(if status == x)"":
       if(docs[i].status == 1){
         created = true;
       }
@@ -165,11 +168,19 @@ ipcMain.on("getCommits", (event, arg) => {
           console.log('docs[i].proposalend is', docs[i].proposalend);
           let _end = moment(docs[i].proposalend).format("YYYY-MM-DD HH:mm:ss");
           let _deadline = moment(docs[i].proposaldeadline).format("YYYY-MM-DD HH:mm:ss");
+          let _timestamp_claimable = moment(docs[i].timestampclaimable).format("YYYY-MM-DD HH:mm:ss");
 
         // proposal is in revealing stage:
         if( CurrentDate.isAfter(_end) && CurrentDate.isBefore(_deadline) ){
            revealopen = true;
           }
+        else if (CurrentDate.isAfter(_deadline)){
+           revealpassed = true;
+          }
+
+        if( CurrentDate.isAfter(_timestamp_claimable)){
+            claimopen = true;
+           }  
       }
 
 
@@ -193,6 +204,8 @@ ipcMain.on("getCommits", (event, arg) => {
         "claimed": claimed,
         "missed": missed,
         "revealopen": revealopen,
+        "revealpassed": revealpassed,
+        "claimopen": claimopen,
         "timestamp": docs[i].timestamp
       };
       console.log('_commit ', i, ' is', _commit);
