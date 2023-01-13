@@ -227,8 +227,8 @@ class Transactions {
 
                   if(onetxevent.event == 'RewardClaimed'){
 
-                    _valueeti = onetxevent.returnValues.stakeamount;
-                    _fromaddreti = onetxevent.returnValues.staker;
+                    _valueeti = onetxevent.returnValues.amount;
+                    _fromaddreti = onetxevent.returnValues.voter;
                     _toaddreti = onetx.to;
 
                   }
@@ -727,8 +727,8 @@ class Transactions {
 
                 if(onetxevent.event == 'RewardClaimed'){
 
-                  _valueeti = onetxevent.returnValues.stakeamount;
-                  _fromaddreti = onetxevent.returnValues.staker;
+                  _valueeti = onetxevent.returnValues.amount;
+                  _fromaddreti = onetxevent.returnValues.voter;
                   _toaddreti = onetx.to;
 
                 }
