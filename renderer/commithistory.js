@@ -85,6 +85,16 @@ class CommitHistory {
     }
   }
 
+  resetClaimForm() {
+    if (EticaMainGUI.getAppState() == "commitHistory") {
+      $("#dlgClaimCommitWalletPassword").iziModal();
+      $("#ClaimCommitwalletPassword").val("");
+      $("#fromClaimAddressInfo").val();
+      $("#valueOfClaimCommitProposalHash").val();
+      $("#feeClaimCommitToPayInfo").val();
+    }
+  }
+
 }
 
 // the event to tell us that the wallets are rendered
@@ -307,6 +317,55 @@ $(document).on("render_commithistory", function () {
                   });
 
   });
+
+
+
+
+  $(".btnClaimCommit").off("click").on("click", function () {
+    var proposalhash = $(this).attr("data-proposalhash");
+    var commitvoter = $(this).attr("data-voter");
+
+                  EticaContract.getTranasctionFee_claimproposal(commitvoter, proposalhash, function (error) {
+                    EticaMainGUI.showGeneralError(error);
+                  }, function (data) {
+                    $("#dlgClaimCommitWalletPassword").iziModal({width: "70%"});
+                    $("#ClaimCommitwalletPassword").val("");
+                    $("#fromClaimAddressInfo").html(commitvoter);
+                    $("#valueOfClaimCommitProposalHash").html(proposalhash);
+                    $("#feeClaimCommitToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+                    $("#dlgClaimCommitWalletPassword").iziModal("open");
+
+            
+                    function doSendTransaction() {
+                      $("#dlgClaimCommitWalletPassword").iziModal("close");
+                      EticaContract.prepareTransaction_claimproposal($("#ClaimCommitwalletPassword").val(), commitvoter, proposalhash, function (error) {
+                        EticaMainGUI.showGeneralError(error);
+                      }, function (data) {
+                        EticaBlockchain.sendTransaction(data.raw, function (error) {
+                          EticaMainGUI.showGeneralError(error);
+                        }, function (data) {
+                          EticaCommitHistory.resetClaimForm();
+            
+                          iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});              
+                        
+                        });
+                      });
+                    }
+            
+                    $("#btnClaimCommitWalletPasswordConfirm").off("click").on("click", function () {
+                      doSendTransaction();
+                    });
+            
+                    $("#dlgClaimCommitWalletPassword").off("keypress").on("keypress", function (e) {
+                      if (e.which == 13) {
+                        doSendTransaction();
+                      }
+                    });
+                  });
+
+  });
+
+
 
   $(".textAddress").off("click").on("click", function () {
     EticaMainGUI.copyToClipboard($(this).html());

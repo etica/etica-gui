@@ -60,7 +60,7 @@
                 {{/if}}
                 {{#if revealed}}
                   {{#if claimopen}}
-                  <button type="button" class="btn btn-etica btnAddCommitInputs" data-votehash="{{proposalhash}}" data-voter="{{voter}}">Claim</button>
+                  <button type="button" class="btn btn-etica btnClaimCommit" data-proposalhash="{{proposalhash}}" data-voter="{{voter}}">Claim</button>
                   {{else}}
                   <span>claims opening on:</span><br>
                   <span>{{ timestampclaimable }}</span>
@@ -213,7 +213,7 @@
       <i class="fas fa-dollar-sign"></i>
       <label>Fee to pay:</label>
       <label id="feeRevealCommitToPayInfo"></label>
-      <label class="currencyTicker">ETI</label>
+      <label class="currencyTicker">EGAZ</label>
     </div>
     <hr class="sendTXdivider">
     <div class="form-group sendTXPass">
@@ -221,5 +221,33 @@
       <input type="password" class=" form-control" id="RevealCommitwalletPassword">
     </div>
     <button type="button" class="btn button3 btn-dialog-confirm" id="btnRevealCommitWalletPasswordConfirm">Confirm</button>
+  </div>
+</div>
+
+<!-- send details dialog -->
+<div id="dlgClaimCommitWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To claim this vote and release associated locked ETI, please enter the wallet password" data-izimodal-icon="icon-home">
+  <div class="modalBody">
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-wallet"></i>
+      <label>From address:</label>
+      <label id="fromClaimAddressInfo"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Proposal Hash:</label>
+      <label id="valueOfClaimCommitProposalHash"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Fee to pay:</label>
+      <label id="feeClaimCommitToPayInfo"></label>
+      <label class="currencyTicker">EGAZ</label>
+    </div>
+    <hr class="sendTXdivider">
+    <div class="form-group sendTXPass">
+      <label for="usr">Enter your Password:</label>
+      <input type="password" class=" form-control" id="ClaimCommitwalletPassword">
+    </div>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnClaimCommitWalletPasswordConfirm">Confirm</button>
   </div>
 </div>
