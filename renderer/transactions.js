@@ -430,6 +430,29 @@ class Transactions {
                       }
 
 
+                      if(onetxevent.event == 'RewardClaimed'){                 
+    
+                        let _commit = ipcRenderer.sendSync("getCommit", {proposalhash: onetxevent.returnValues.proposal_hash, voter: onetxevent.returnValues.voter});
+                 
+                        if(_commit && _commit.proposalhash == onetxevent.returnValues.proposal_hash){
+      
+                          var _UpdatedCommit = {
+                              votehash: _commit.votehash,
+                              voter: onetxevent.returnValues.voter,
+                              status: 3,
+                              rewardamount: onetxevent.returnValues.amount
+                          };
+      
+              console.log('line 777 before updating with status _UpdatedCommit', _UpdatedCommit);
+              ipcRenderer.send("updateCommitRewardAmount", _UpdatedCommit);
+              console.log('line 779 after updating with status _UpdatedCommit', _UpdatedCommit);
+      
+      
+                       }
+      
+                      }
+
+
 
                     
                     });
@@ -935,6 +958,28 @@ class Transactions {
 
                 }
 
+
+                if(onetxevent.event == 'RewardClaimed'){                 
+    
+                      let _commit = ipcRenderer.sendSync("getCommit", {proposalhash: onetxevent.returnValues.proposal_hash, voter: onetxevent.returnValues.voter});
+               
+                      if(_commit && _commit.proposalhash == onetxevent.returnValues.proposal_hash){
+    
+                        var _UpdatedCommit = {
+                            votehash: _commit.votehash,
+                            voter: onetxevent.returnValues.voter,
+                            status: 3,
+                            rewardamount: onetxevent.returnValues.amount
+                        };
+    
+            console.log('line 777 before updating with status _UpdatedCommit', _UpdatedCommit);
+            ipcRenderer.send("updateCommitRewardAmount", _UpdatedCommit);
+            console.log('line 779 after updating with status _UpdatedCommit', _UpdatedCommit);
+    
+    
+                     }
+    
+                    }
 
                 console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is', Transaction);
                 $(document).trigger("onNewAccountTransaction");

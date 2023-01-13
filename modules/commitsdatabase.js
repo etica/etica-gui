@@ -112,6 +112,20 @@ ipcMain.on("updateCommitwithStatus", (event, arg) => {
   });
 });
 
+ipcMain.on("updateCommitRewardAmount", (event, arg) => {
+  console.log('--> updateing Commit');
+  console.log('--> updating Commit', arg);
+  db.update({
+    votehash: arg.votehash,
+    voter: arg.voter
+  }, {$set:{rewardamount: arg.rewardamount, status: arg.status}}, {
+    upsert: false,
+    multi:false
+  }, function (err, numReplaced, upsert) {
+    // do nothing for now
+  });
+});
+
 ipcMain.on("getCommit", (event, arg) => {
   db.findOne({
     votehash: arg.votehash,
@@ -206,6 +220,7 @@ ipcMain.on("getCommits", (event, arg) => {
         "revealopen": revealopen,
         "revealpassed": revealpassed,
         "claimopen": claimopen,
+        "rewardamount": docs[i].rewardamount,
         "timestamp": docs[i].timestamp
       };
       console.log('_commit ', i, ' is', _commit);
