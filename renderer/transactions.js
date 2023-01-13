@@ -432,7 +432,7 @@ class Transactions {
 
                       if(onetxevent.event == 'RewardClaimed'){                 
     
-                        let _commit = ipcRenderer.sendSync("getCommit", {proposalhash: onetxevent.returnValues.proposal_hash, voter: onetxevent.returnValues.voter});
+                        let _commit = ipcRenderer.sendSync("getCommitbyProposalHash", {proposalhash: onetxevent.returnValues.proposal_hash, voter: onetxevent.returnValues.voter});
                  
                         if(_commit && _commit.proposalhash == onetxevent.returnValues.proposal_hash){
       
@@ -959,9 +959,9 @@ class Transactions {
                 }
 
 
-                if(onetxevent.event == 'RewardClaimed'){                 
+                if(onetxevent.event == 'RewardClaimed'){ 
     
-                      let _commit = ipcRenderer.sendSync("getCommit", {proposalhash: onetxevent.returnValues.proposal_hash, voter: onetxevent.returnValues.voter});
+                      let _commit = ipcRenderer.sendSync("getCommitbyProposalHash", {proposalhash: onetxevent.returnValues.proposal_hash, voter: onetxevent.returnValues.voter});
                
                       if(_commit && _commit.proposalhash == onetxevent.returnValues.proposal_hash){
     
@@ -972,7 +972,7 @@ class Transactions {
                             rewardamount: onetxevent.returnValues.amount
                         };
     
-            console.log('line 777 before updating with status _UpdatedCommit', _UpdatedCommit);
+            console.log('line 777 before updating reward amount with status _UpdatedCommit', _UpdatedCommit);
             ipcRenderer.send("updateCommitRewardAmount", _UpdatedCommit);
             console.log('line 779 after updating with status _UpdatedCommit', _UpdatedCommit);
     

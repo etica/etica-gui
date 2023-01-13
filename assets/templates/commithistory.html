@@ -67,7 +67,10 @@
                   {{/if}}
                 {{/if}}  
                 {{#if claimed}}
-                <span>Claimed</span>
+                <span>Claimed, reward:</span><br>
+                   {{#if rewardamount}}
+                   <span>{{ rewardamount }} ETI</span>
+                   {{/if}}
                 {{/if}}
                 {{#if missed}}
                 <span>Missed</span>

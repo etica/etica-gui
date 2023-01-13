@@ -135,6 +135,15 @@ ipcMain.on("getCommit", (event, arg) => {
   });
 });
 
+ipcMain.on("getCommitbyProposalHash", (event, arg) => {
+  db.findOne({
+    proposalhash: arg.proposalhash,
+    voter: arg.voter
+  }).exec(function (err, _commit) {
+    event.returnValue = _commit;
+  });
+});
+
 ipcMain.on("getCommits", (event, arg) => {
   db.find({}).exec(function (err, docs) {
     ResultData = [];

@@ -53,6 +53,9 @@ class CommitHistory {
       if(element['valueeti']){
         element['valueeti'] = web3Local.utils.fromWei(element['valueeti'], "ether");
       }
+      if(element['rewardamount']){
+        element['rewardamount'] = web3Local.utils.fromWei(element['rewardamount'], "ether");
+      }
     });
 
     EticaBlockchain.getAccountsData(function (error) {
