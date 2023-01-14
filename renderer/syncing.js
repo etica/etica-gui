@@ -131,11 +131,12 @@ function StartSyncProcess() {
     }
   });
 
-  // Updates balances every 30 seconds
+  // Updates balances every 30 seconds, if error means issue with node connection and reconnect with InitializeWeb3():
   SyncBalancesInterval = setInterval(function () {
 
     EticaBlockchain.getAccountsData(function (error) {
       EticaMainGUI.showGeneralError(error);
+      InitializeWeb3();
     }, function (data) {
       //console.log('updated Balances');
     });

@@ -76,7 +76,7 @@ ipcMain.on("storeCommit", (event, arg) => {
     votehash: arg.votehash,
     txhash: arg.txhash,
     voter: arg.voter
-  }, arg, {
+  }, {$set:{ votehash: arg.votehash, txhash: arg.txhash, voter:arg.voter, timestamp: arg.timestamp, valueeti: arg.valueeti, choice: arg.choice, vary: arg.vary, proposalhash: arg.proposalhash, proposaltitle: arg.proposaltitle, proposalend: arg.proposalend, proposaldeadline: arg.proposaldeadline, timestampclaimable:arg.timestampclaimable, isDone: arg.isDone, status: arg.status}}, {
     upsert: true
   }, function (err, numReplaced, upsert) {
     // do nothing for now

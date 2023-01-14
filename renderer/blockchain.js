@@ -184,6 +184,8 @@ class Blockchain {
     });
 
     function updateBalance(index) {
+      
+      try {
       web3Local.eth.getBalance(rendererData.addressData[index].address, function (error, balance) {
         rendererData.addressData[index].balance = parseFloat(web3Local.utils.fromWei(balance, "ether")).toFixed(2);
         rendererData.sumBalance = rendererData.sumBalance + parseFloat(web3Local.utils.fromWei(balance, "ether"));
@@ -196,9 +198,19 @@ class Blockchain {
           clbSuccess(rendererData);
         }
       });
+    } catch (e) {
+      console.log('updateBalance() error e is:', e)
+      console.error(e);
+      return e;
+    }
+
+
+
     }
 
     async function updateBalanceETI(index) {
+
+      try {
       let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
       let balance = await contract.methods.balanceOf(rendererData.addressData[index].address).call();
 
@@ -212,6 +224,12 @@ class Blockchain {
           rendererData.sumBalanceEti = parseFloat(rendererData.sumBalanceEti).toFixed(2);
           clbSuccess(rendererData);
         }
+      } catch (e) {
+        console.log('updateBalanceETI() error e is:', e)
+        console.error(e);
+        return e;
+      }
+
     }
 
   }

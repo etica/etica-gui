@@ -285,6 +285,7 @@ class Transactions {
                     console.log('line 284 geeting hashinput of commit: ', onetxevent.returnValues.votehash);
                     let _hashinput = ipcRenderer.sendSync("getHashinput", {commithash: onetxevent.returnValues.votehash});
                     console.log('line 285 _hashinput is: ', _hashinput);
+                    let _commit = ipcRenderer.sendSync("getCommit", {votehash: onetxevent.returnValues.votehash, voter: onetxevent.returnValues._voter});
                     let _hashchoice = null;
                     let _hashvary = null;
                     let _hashproposalhash =null;
@@ -292,6 +293,12 @@ class Transactions {
                     let _hashproposalend=null;
                     let _hashproposaldeadline =null;
                     let _timestamp_claimable=null;
+                    let _status = 1;
+
+                    // prevent reactualisation of status on resyncs:
+                    if(_commit && _commit.status){
+                      _status = _commit.status;
+                    }
   
                     if(_hashinput && _hashinput.commithash == onetxevent.returnValues.votehash){
                       _hashchoice = _hashinput.choice;
@@ -347,7 +354,7 @@ class Transactions {
                     proposaldeadline: _hashproposaldeadline,
                     timestampclaimable: _timestamp_claimable,
                     isDone: false,
-                    status: 1,
+                    status: _status,
                     };
 
                     console.log('line 299 before storing _NewCommit', _NewCommit);
@@ -377,6 +384,12 @@ class Transactions {
                         let _commit = ipcRenderer.sendSync("getCommit", {votehash: calculatedhash, voter: onetxevent.returnValues._voter});
                  
                         if(_commit && _commit.votehash == calculatedhash){
+
+                          let _status = 2;
+
+                          if(_commit.status >= 3){
+                            _status = _commit.status;
+                          }
       
                           let _proposal = await EticaContract.proposals(_commit.proposalhash);
                           let _proposaldata = await EticaContract.propsdatas(_commit.proposalhash);
@@ -417,7 +430,7 @@ class Transactions {
                               proposalend: _hashproposalend,
                               proposaldeadline: _hashproposaldeadline,
                               timestampclaimable: _timestamp_claimable,
-                              status: 2
+                              status: _status
                           };
       
               console.log('line 777 before updating with status _UpdatedCommit', _UpdatedCommit);
@@ -430,9 +443,12 @@ class Transactions {
                       }
 
 
-                      if(onetxevent.event == 'RewardClaimed'){                 
+                      if(onetxevent.event == 'RewardClaimed'){         
+                        console.log('in rewardclaimed linie 434');        
     
                         let _commit = ipcRenderer.sendSync("getCommitbyProposalHash", {proposalhash: onetxevent.returnValues.proposal_hash, voter: onetxevent.returnValues.voter});
+                        console.log('in rewardclaimed linie 434 _commit is: ', _commit);  
+                        console.log('in rewardclaimed linie 434 onetxevent.returnValues is: ', onetxevent.returnValues);  
                  
                         if(_commit && _commit.proposalhash == onetxevent.returnValues.proposal_hash){
       
@@ -807,6 +823,7 @@ class Transactions {
                   console.log('line 644 geeting hashinput of commit: ', onetxevent.returnValues.votehash);
                   let _hashinput = ipcRenderer.sendSync("getHashinput", {commithash: onetxevent.returnValues.votehash});
                   console.log('line 644 _hashinput is: ', _hashinput);
+                  let _commit = ipcRenderer.sendSync("getCommit", {votehash: onetxevent.returnValues.votehash, voter: onetxevent.returnValues._voter});
                   let _hashchoice = null;
                   let _hashvary = null;
                   let _hashproposalhash =null;
@@ -814,6 +831,12 @@ class Transactions {
                   let _hashproposalend =null;
                   let _hashproposaldeadline =null;
                   let _timestamp_claimable =null;
+                  let _status = 1;
+
+                  // prevent reactualisation of status on resyncs:
+                  if(_commit && _commit.status){
+                      _status = _commit.status;
+                  }
 
                   if(_hashinput && _hashinput.commithash == onetxevent.returnValues.votehash){
                     _hashchoice = _hashinput.choice;
@@ -877,7 +900,7 @@ class Transactions {
                   proposaldeadline: _hashproposaldeadline,
                   timestampclaimable: _timestamp_claimable,
                   isDone: false,
-                  status: 1,
+                  status: _status,
                   };
 
                   console.log('line 671 before storing _NewCommit', _NewCommit);
@@ -906,6 +929,12 @@ class Transactions {
                   let _commit = ipcRenderer.sendSync("getCommit", {votehash: calculatedhash, voter: onetxevent.returnValues._voter});
            
                   if(_commit && _commit.votehash == calculatedhash){
+
+                    let _status = 2;
+
+                    if(_commit.status >= 3){
+                            _status = _commit.status;
+                    }
 
                     let _proposal = await EticaContract.proposals(_commit.proposalhash);
                     let _proposaldata = await EticaContract.propsdatas(_commit.proposalhash);
@@ -946,7 +975,7 @@ class Transactions {
                         proposalend: _hashproposalend,
                         proposaldeadline: _hashproposaldeadline,
                         timestampclaimable: _timestamp_claimable,
-                        status: 2
+                        status: _status
                     };
 
         console.log('line 777 before updating with status _UpdatedCommit', _UpdatedCommit);

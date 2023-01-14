@@ -202,14 +202,22 @@ $(document).on("render_commithistory", function () {
 
        if(calculatedhash == commitvotehash){
 
+        let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
+        let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
+        let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
+        let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
+
         let _proposaldata = await EticaContract.propsdatas(commitproposalhash);
-        let revealingduration = await EticaContract.DEFAULT_REVEALING_TIME();
-        console.log('revealing duration is', revealingduration);
         _hashproposaltitle = _proposal[6];
         let _propend = _proposaldata[1]; // endtime
         let _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
-        let _deadline = moment.unix(parseInt(_propend)).add(revealingduration,'seconds');
+        let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
         _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
+        
+        let _period = await EticaContract.periods(_proposal[3]);
+        let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);   
+        let _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
+
 
         var _UpdatedCommit = {
         votehash: commitvotehash,
@@ -219,7 +227,9 @@ $(document).on("render_commithistory", function () {
         proposalhash: commitproposalhash,
         proposaltitle: _hashproposaltitle,
         proposalend: _hashproposalend,
-        proposaldeadline: _hashproposaldeadline
+        proposaldeadline: _hashproposaldeadline,
+        timestampclaimable: _timestamp_claimable,
+        status: 1
         };
 
         console.log('line 299 before storing _NewCommit', _UpdatedCommit);
