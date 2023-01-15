@@ -47,6 +47,9 @@ class MainGUI {
       case "etica":
         $("#mainNavBtnEticaWrapper").addClass("iconSelected");
         break;
+      case "searchEtica":
+        $("#mainNavBtnSearchEticaWrapper").addClass("iconSelected");
+        break;
       case "stakes":
         $("#mainNavBtnStakesWrapper").addClass("iconSelected");
         break;
@@ -191,6 +194,11 @@ $("#mainNavBtnMarkets").click(function () {
 $("#mainNavBtnEtica").click(function () {
   EticaMainGUI.changeAppState("etica");
   EticaMarkets.renderMarkets();
+});
+
+$("#mainNavBtnSearchEtica").click(function () {
+  EticaMainGUI.changeAppState("searchEtica");
+  EticaSearch.renderSearchState();
 });
 
 $("#mainNavBtnStakes").click(function () {

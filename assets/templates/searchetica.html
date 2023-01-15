@@ -1,0 +1,28 @@
+<div class="walletsHeader">
+  <div class="sumBalanceHeader">
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+      <img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+      {{sumBalance}} EGAZ
+    </span>
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+      <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+      {{sumBalanceEti}} ETI
+    </span>
+  </div>
+</div>
+
+<div class="sendWrapper">
+  <div class="card-panel" style="padding-bottom: 0px;">
+    <form class="col s12">
+      <div class="row" style="margin-bottom: 0;">
+        <div class="input-field col s6">
+          <input id="commitVoteProposalHash" class="" placeholder="Enter Proposal Hash, Disease hash or Chunk Id:" type="text" value="">
+          <label for="commitVoteProposalHash" class="active">Search Etica:</label>
+        </div>
+        <div class="input-field col s6" style="top:2vh;position: relative; left:3%;">
+          <button type="button" class="button4 MarginRight5" id="btnSearchEtica">Search</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</div>
