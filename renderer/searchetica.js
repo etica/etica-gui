@@ -94,7 +94,7 @@ class SearchEtica {
     let diseasehashbyname = await EticaContract.getdiseasehashbyName(_searchhash);
     console.log('diseasehashbyname is', diseasehashbyname);
 
-    if(diseasehashbyname){
+    if(diseasehashbyname != '0x0000000000000000000000000000000000000000000000000000000000000000' && diseasehashbyname != null){
       _searchhash = diseasehashbyname;
     }
     console.log('new _searchhash is', _searchhash);
@@ -150,6 +150,7 @@ class SearchEtica {
         // search for proposal: 
         let _proposal = await EticaContract.proposals(_searchhash);
         let _chunk = null;
+        console.log('_proposal is', _proposal);
 
         // proposal found:
         if(_proposal[0] > 0){
