@@ -34,6 +34,13 @@ class SearchEtica {
       EticaMainGUI.renderTemplate("searchetica.html", data);
       $(document).trigger("render_searchetica");
     });
+
+    $("#inputSearchEtica").val(EticaSearch.getFilter());
+
+    if( EticaSearch.getFilter() != ""){
+      this.SearchInput(EticaSearch.getFilter());
+    }
+
   }
 
   validateSendForm() {
@@ -76,44 +83,129 @@ class SearchEtica {
       $("#sendAmmount").val(0);
     }
   }
+
+
+  async SearchInput(_searchhash) {
+    
+    let _result = [];
+
+    console.log('_searchhash is', _searchhash);
+    // check if _searchhash is a disease name: 
+    let diseasehashbyname = await EticaContract.getdiseasehashbyName(_searchhash);
+    console.log('diseasehashbyname is', diseasehashbyname);
+
+    if(diseasehashbyname){
+      _searchhash = diseasehashbyname;
+    }
+    console.log('new _searchhash is', _searchhash);
+
+    // search for disease:  
+    let diseaseindex = await EticaContract.diseasesbyIds(_searchhash);
+      console.log('diseaseindex is', diseaseindex);
+      console.log('type of diseaseindex is', typeof diseaseindex);
+
+      // disease found:
+      if( (diseaseindex > 0) ){
+
+        let _disease = await EticaContract.diseases(diseaseindex);
+        console.log('_disease is', _disease);
+
+              // get disease proposals:
+              let nbproposals =  await EticaContract.diseaseProposalsCounter(_disease[0]);
+              console.log('disease nb proposals: ', nbproposals);
+              console.log('typeof disease nbproposals: ', typeof nbproposals);
+
+              let maxproposals = 3;
+              nbproposals = Math.max(maxproposals, nbproposals);
+              let diseaseproposals = [];
+              
+               for(let i =1;i<= nbproposals;i++){
+
+               let oneproposal = [];
+               let prophash = await EticaContract.diseaseproposals(_disease[0],i);
+               console.log('prop hash is', prophash); 
+               oneproposal = await EticaContract.proposals(prophash);
+               console.log('oneproposal is', oneproposal); 
+               // get chunk:
+               if(oneproposal[4] != 0){
+                oneproposal[4] = await EticaContract.chunks(oneproposal[4]);
+               }
+               
+               let oneproposaldata = await EticaContract.propsdatas(prophash);
+               console.log('oneproposaldata is', oneproposaldata); 
+               oneproposal[10] = oneproposaldata; // oneproposal[10] contains propsdatas struct
+               diseaseproposals.push(oneproposal); 
+
+               }
+        
+        _result['type'] = 'disease';
+        _result['disease'] = _disease;
+        _result['proposals'] = diseaseproposals;
+        console.log('_result is', _result);
+        return _result;
+      
+      }
+      else {
+
+        // search for proposal: 
+        let _proposal = await EticaContract.proposals(_searchhash);
+        let _chunk = null;
+
+        // proposal found:
+        if(_proposal[0] > 0){
+
+          let _proposaldata = await EticaContract.propsdatas(_proposal[1]);
+          _proposal[10] = _proposaldata;  // oneproposal[10] contains propsdatas struct          
+          
+          // if chunk get chunk:
+          if(_proposal[4] != 0){
+            _chunk = await contract.chunks(_proposal[4]); 
+          }
+          
+          // get disease:
+          let diseaseindex =  await EticaContract.diseasesbyIds(_proposal[2]);
+          let _disease =  await EticaContract.diseases(diseaseindex);
+
+          // get period:
+          let _period =  await EticaContract.periods(_proposal[3]);
+
+
+          _result['type'] = 'proposal';
+          _result['proposal'] = _proposal;
+          _result['disease'] = _disease;
+          _result['chunk'] = _chunk;
+          _result['period'] = _period;  
+          console.log('_result is', _result);     
+          return _result;
+
+        }
+
+        else {
+
+          // nothing found, return empty result:
+          console.log('_result is', _result);
+          return _result;
+
+        }
+
+      }
+
+  }
+
 }
 
 $(document).on("render_searchetica", function () {
 
   $("#btnSearchEtica").off("click").on("click", async function () {
   
-    let _search = EticaSearch.getFilter();
-
-    // search for disease:  
-    let diseaseindex = await EticaContract.diseasesbyIds(_search);
-      console.log('diseaseindex is', diseaseindex);
-      console.log('type of diseaseindex is', typeof diseaseindex);
-      let diseasename = '';
-
-      if( (diseaseindex > 0) ){
-        let _disease = await EticaContract.diseases(diseaseindex);
-        console.log('_disease is', _disease);
-        diseasename = _disease[1];
-        return _disease;
-      }
-      else {
-
-        // search for proposal: 
-        let _proposal = await EticaContract.proposals(_search);
-        
-        
-        let _proposaldata = await EticaContract.propsdatas(_search);
-        _proposal[10] = _proposaldata;
-        return _proposal;
-
-      }
-
-
+    console.log("$('#inputSearchEtica').val() is:", $('#inputSearchEtica').val());
+    EticaSearch.setFilter($('#inputSearchEtica').val());
+    return await EticaSearch.SearchInput($('#inputSearchEtica').val());
 
   });
 
   $(".btnShowSearchWithInput").off("click").on("click", function () {
-    EticaSearch.setFilter($(this).attr("data-wallet"));
+    EticaSearch.setFilter($('#inputSearchEtica').val());
     EticaMainGUI.changeAppState("searchEtica");
     EticaSearch.renderSearchState();
   });
