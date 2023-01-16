@@ -185,6 +185,9 @@ class Blockchain {
 
     function updateBalance(index) {
       web3Local.eth.getBalance(rendererData.addressData[index].address, function (error, balance) {
+        if (error) {
+          clbError(error);
+        } else {
         rendererData.addressData[index].balance = parseFloat(web3Local.utils.fromWei(balance, "ether")).toFixed(2);
         rendererData.sumBalance = rendererData.sumBalance + parseFloat(web3Local.utils.fromWei(balance, "ether"));
 
@@ -195,6 +198,7 @@ class Blockchain {
           rendererData.sumBalance = parseFloat(rendererData.sumBalance).toFixed(2);
           clbSuccess(rendererData);
         }
+      }
       });
     }
 

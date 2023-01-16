@@ -90,7 +90,7 @@ function StartSyncProcess() {
               }
             } else {
               EticaMainGUI.showGeneralError(error);
-              InitializeWeb3();
+              //InitializeWeb3();
             }
           });
         }, 10000);
@@ -120,7 +120,7 @@ function StartSyncProcess() {
             ]));
           } else if (error) {
             EticaMainGUI.showGeneralError(error);
-            InitializeWeb3();
+            //InitializeWeb3();
           }
         });
       }, 2000);
@@ -136,7 +136,7 @@ function StartSyncProcess() {
 
     EticaBlockchain.getAccountsData(function (error) {
       EticaMainGUI.showGeneralError(error);
-      InitializeWeb3();
+      //InitializeWeb3();
     }, function (data) {
       //console.log('updated Balances');
     });
@@ -150,7 +150,15 @@ function StartSyncProcess() {
 function InitializeWeb3() {
 var InitWeb3 = setInterval(function () {
   try {
-    web3Local = new Web3(new Web3.providers.WebsocketProvider("ws://localhost:8551"));
+    var options = {
+      reconnect: {
+          auto: true,
+          delay: 5000, // ms
+          maxAttempts: 120, // 120 -> 10 minutes (1 every 5 seconds)
+          onTimeout: false
+      }
+  };
+    web3Local = new Web3(new Web3.providers.WebsocketProvider("ws://localhost:8551", options));
     console.log('inside InitWeb3');
     web3Local.eth.net.isListening(function (error, success) {
       if (!error) {
