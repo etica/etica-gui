@@ -27,19 +27,37 @@ class SearchEtica {
     this.filter = "";
   }
 
-  renderSearchState() {
+  renderSearchState(SearchFor=null) {
+
+    EticaSearch.setFilter($('#inputSearchEtica').val());
+
     EticaBlockchain.getAccountsData(function (error) {
       EticaMainGUI.showGeneralError(error);
-    }, function (data) {
+    }, async function (data) {
+
+      if( SearchFor != null){
+        
+        let _blockchainresp = await EticaSearch.SearchInput(SearchFor);
+       
+        if(_blockchainresp && _blockchainresp.type == 'disease'){
+          data.DiseaseFound = true;
+        }
+        if(_blockchainresp && _blockchainresp.type == 'proposal'){
+          data.ProposalFound = true;
+        }
+        if(_blockchainresp && _blockchainresp.type == 'chunk'){
+          data.ChunkFound = true;
+        }
+        data.BlockchainResp = _blockchainresp;
+      }
+      
+
       EticaMainGUI.renderTemplate("searchetica.html", data);
       $(document).trigger("render_searchetica");
+      
     });
 
-    $("#inputSearchEtica").val(EticaSearch.getFilter());
-
-    if( EticaSearch.getFilter() != ""){
-      this.SearchInput(EticaSearch.getFilter());
-    }
+    
 
   }
 
@@ -197,18 +215,25 @@ class SearchEtica {
 
 $(document).on("render_searchetica", function () {
 
-  $("#btnSearchEtica").off("click").on("click", async function () {
+  $("#inputSearchEtica").val(EticaSearch.getFilter());
+
+ /* $("#btnSearchEtica").off("click").on("click", async function () {
   
     console.log("$('#inputSearchEtica').val() is:", $('#inputSearchEtica').val());
     EticaSearch.setFilter($('#inputSearchEtica').val());
     return await EticaSearch.SearchInput($('#inputSearchEtica').val());
 
+  }); */
+
+  $("#btnSearchEtica").off("click").on("click", function () {
+    EticaMainGUI.changeAppState("searchEtica");
+    EticaSearch.renderSearchState($('#inputSearchEtica').val());
   });
 
-  $(".btnShowSearchWithInput").off("click").on("click", function () {
-    EticaSearch.setFilter($('#inputSearchEtica').val());
-    EticaMainGUI.changeAppState("searchEtica");
-    EticaSearch.renderSearchState();
+  $(".copyClipboard").off("click").on("click", function () {
+    EticaMainGUI.copyToClipboard($(this).html());
+
+    iziToast.success({title: "Copied", message: "Address was copied to clipboard", position: "topRight", timeout: 2000});
   });
 
 });

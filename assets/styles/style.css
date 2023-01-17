@@ -560,6 +560,10 @@ div.noAddressWrapper {
   cursor: pointer;
 }
 
+.copyClipboard {
+    cursor: pointer;
+}
+
 .addressInputWrapper {
   display: flex;
 }
