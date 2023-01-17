@@ -31,7 +31,7 @@ SyncProgress = new ProgressBar.Line("#syncProgress", {
 });
 
 // set initial value for the progress text
-SyncProgress.setText("Syncing blockchain, please wait...");
+SyncProgress.setText("Connecting to peers, please wait...");
 isFullySynced = false;
 
 var peerCountInterval = setInterval(function () {
@@ -46,8 +46,7 @@ function StartSyncProcess() {
   var SyncBalancesInterval = null;
   console.log('inside StartSyncProcess');
   EticaTransactions.setIsSyncing(false);
-  
-// enable the keep in sync feature
+  // enable the keep in sync feature
   EticaTransactions.enableKeepInSync();
   
   var subscription = web3Local.eth.subscribe("syncing", function (error, sync) {
@@ -56,6 +55,7 @@ function StartSyncProcess() {
       console.log('inside StartSyncProcess syncing subscription no error');
       if (!sync) {
         console.log('inside StartSyncProcess syncing subscription no error, not synced');
+        SyncProgress.setText("Syncing blockchain, please wait...");
         if (nodeSyncInterval) {
           console.log('inside clearInterval(nodeSyncInterval)');
           clearInterval(nodeSyncInterval);

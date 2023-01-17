@@ -1,7 +1,7 @@
 {
-  "name": "EticaWallet",
+  "name": "eticawallet",
   "version": "1.2.0",
-  "description": "Desktop wallet for EGAZ currency",
+  "description": "Desktop wallet for ETI and EGAZ crypto currencies",
   "main": "main.js",
   "scripts": {
     "start": "electron .",
@@ -45,9 +45,10 @@
       ]
     }
   },
-  "repository": "https://github.com/def670/Xero-Wallet/tree/EticaProtocol-Desktop-Wallet",
+  "repository": "https://github.com/etica/etica-gui",
   "keywords": [
     "EGAZ",
+    "ETI",
     "Etica",
     "Desktop",
     "Wallet"

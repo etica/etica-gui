@@ -253,6 +253,7 @@ class Blockchain {
       if (error) {
         clbError(error);
       } else {
+        ipcRenderer.send("saveAccount", account);
         clbSuccess(account);
       }
     });

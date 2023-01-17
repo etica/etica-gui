@@ -8,13 +8,14 @@ class Accounts {
   constructor() {}
 
   getKeyStoreLocation() {
-    switch (os.type()) {
+    /*switch (os.type()) {
       case "Darwin":
         return path.join(os.homedir(), "Library", "Etica", "keystore");
         break;
       default:
         return path.join(process.env.APPDATA.replace('Roaming', 'Local'), "Etica", "keystore");
-    }
+    } */
+    return 'D:/TestWalletLocation';
   }
 
   exportAccounts() {
@@ -24,11 +25,13 @@ class Accounts {
 
     if (savePath) {
       const accPath = EticaAccounts.getKeyStoreLocation();
-
+       console.log('accPath is: ', accPath);
       fs.readdir(accPath, function (err, files) {
         var zip = new admZip();
+        console.log('files is: ', files);
 
         for (let filePath of files) {
+          console.log('filePath is: ', filePath);
           zip.addFile(filePath, fs.readFileSync(path.join(accPath, filePath)));
         }
 
@@ -57,8 +60,10 @@ class Accounts {
   }
 
   saveAccount(account) {
+    console.log("saving account", account);
     fs.writeFile(path.join(EticaAccounts.getKeyStoreLocation(), "0x" + account.address), JSON.stringify(account), "utf8", function () {
       // file was written
+      console.log('new account saved at: ', path.join(EticaAccounts.getKeyStoreLocation(), "0x" + account.address));
     });
   }
 }

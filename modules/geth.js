@@ -110,7 +110,7 @@ class Geth {
         "8551",
         "--port",
         "30317",
-        "--datadir=./.eticadev4",
+        "--datadir=./.eticadev7",
         "--ws.api",
         "admin,eth,net,miner,personal,web3",
         "--networkid",
@@ -118,7 +118,7 @@ class Geth {
         "--syncmode",
         "snap",
         "--bootnodes",
-        "enode://7914d79ad20bc3eaabe3e5a7c00aecfb20c5c89d151bb85bc8bb52daff830de9de7b36e32cc2c3675b495fa149bfe5019c20bb30b96afb493e9a8441695a735c@127.0.0.1:30303"
+        "enode://e67b73cd00f3fe030eb2d96be81c58a4ec646aeefa420a80836ac0ffd257fbea0499944c4d985d513199c926e5e2df418fc236c774ee46b98dd68bcba00ad3fc@127.0.0.1:30303"
       ]); // LOCAL DEV NODE FOR TESTING //
 
       if (!this.gethProcess) {
