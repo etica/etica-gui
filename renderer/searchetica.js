@@ -233,7 +233,7 @@ $(document).on("render_searchetica", function () {
   $(".copyClipboard").off("click").on("click", function () {
     EticaMainGUI.copyToClipboard($(this).html());
 
-    iziToast.success({title: "Copied", message: "Address was copied to clipboard", position: "topRight", timeout: 2000});
+    iziToast.success({title: "Copied", message: "Content was copied to clipboard", position: "topRight", timeout: 2000});
   });
 
 });
