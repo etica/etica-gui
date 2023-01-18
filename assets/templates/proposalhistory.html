@@ -1,0 +1,118 @@
+<div class="walletsToolbar">
+  <button type="button" class="btn btn-etica" id="btnNewAddress2">
+    <i class="fas fa-plus"></i>
+  </button>
+
+  <div class="sumBalanceHeader">
+      <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+        <img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+        {{sumBalance}} EGAZ
+      </span>
+      <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+        <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+        {{sumBalanceEti}} ETI
+      </span>
+  </div>
+
+</div>
+<div id="addressList" class="{{#if commitData.length}}addressWrapper{{else}}noAddressWrapper{{/if}}">
+  {{#if commitData.length}}
+    <table class="bordered" id="addressTable">
+      <thead>
+        <tr>
+          <th class="noSortCollumn">Proposal/Creator</th>
+          <th>Creation Date</th>
+          <th>Status</th>
+          <th class="noSortCollumn" data-sort-method='none'>Claim Opening:</th>
+        </tr>
+      </thead>
+      <tbody>
+        {{#commitData}}
+          <tr class="softBottomline">
+            <td>
+              <div>
+                <span title="Proposal title" class="textAddress">{{ proposaltitle }}</span><br>
+                <span title="Proposal hash (click to copy)" class="textAddress" style="font-size:0.75em;color: #e0e0e0;">{{ proposalhash }}</span>
+                <br>
+                <span title="Vote hash (click to copy)" class="textAddress" style="font-size:0.75em;color: #399999;">{{ creator }}</span>
+              </div>
+            </td>
+            <td>{{ timestamp }}</td>
+            <td>
+              <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+                {{ status }}
+              </span>
+            </td>
+            <td>
+            {{#if proposaldeadline}}
+
+                {{#if created}}
+                  {{#if revealopen}}
+                      <button type="button" class="btn btn-etica btnRevealCommit" data-votehash="{{votehash}}" data-voter="{{voter}}">Reveal</button>
+                  {{else}}
+                      {{#if revealpassed}}
+                      <span>missed deadline:</span><br>
+                      <span>{{ proposaldeadline }}</span>
+                      {{else}}
+                      <span>{{ proposalend }}</span><br>
+                      <span>{{ proposaldeadline }}</span>
+                      {{/if}}
+                  {{/if}}  
+                {{/if}}
+                {{#if revealed}}
+                  {{#if claimopen}}
+                  <button type="button" class="btn btn-etica btnClaimCommit" data-proposalhash="{{proposalhash}}" data-voter="{{voter}}">Claim</button>
+                  {{else}}
+                  <span>claims opening on:</span><br>
+                  <span>{{ timestampclaimable }}</span>
+                  {{/if}}
+                {{/if}}  
+                {{#if claimed}}
+                <span>Claimed, reward:</span><br>
+                   {{#if rewardamount}}
+                   <span>
+                    <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
+                    {{ rewardamount }} ETI</span>
+                   {{/if}}
+                {{/if}}
+
+            {{else}}
+                <button type="button" class="btn btn-etica btnAddCommitInputs" data-votehash="{{votehash}}" data-voter="{{voter}}">Add proposal</button>
+            {{/if}}
+            </td>
+          </tr>
+        {{/commitData}}
+      </tbody>
+    </table>
+  {{else}}
+    <div id="noAddressPresent">You don't have any proposals yet, make a first proposal</div>
+  {{/if}}
+</div>
+
+<!-- send details dialog -->
+<div id="dlgClaimCommitWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To claim this vote and release associated locked ETI, please enter the wallet password" data-izimodal-icon="icon-home">
+  <div class="modalBody">
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-wallet"></i>
+      <label>From address:</label>
+      <label id="fromClaimAddressInfo"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Proposal Hash:</label>
+      <label id="valueOfClaimCommitProposalHash"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Fee to pay:</label>
+      <label id="feeClaimCommitToPayInfo"></label>
+      <label class="currencyTicker">EGAZ</label>
+    </div>
+    <hr class="sendTXdivider">
+    <div class="form-group sendTXPass">
+      <label for="usr">Enter your Password:</label>
+      <input type="password" class=" form-control" id="ClaimCommitwalletPassword">
+    </div>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnClaimCommitWalletPasswordConfirm">Confirm</button>
+  </div>
+</div>

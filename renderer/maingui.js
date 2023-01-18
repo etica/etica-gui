@@ -41,11 +41,8 @@ class MainGUI {
       case "transactions":
         $("#mainNavBtnTransactionsWrapper").addClass("iconSelected");
         break;
-      case "markets":
-        $("#mainNavBtnMarketsWrapper").addClass("iconSelected");
-        break;
-      case "etica":
-        $("#mainNavBtnEticaWrapper").addClass("iconSelected");
+        case "commitHistory":
+        $("#mainNavBtnCommitHistoryWrapper").addClass("iconSelected");
         break;
       case "searchEtica":
         $("#mainNavBtnSearchEticaWrapper").addClass("iconSelected");
@@ -186,14 +183,10 @@ $("#mainNavBtnWallets").click(function () {
   EticaWallets.renderWalletsState();
 });
 
-$("#mainNavBtnMarkets").click(function () {
-  EticaMainGUI.changeAppState("markets");
-  EticaMarkets.renderMarkets();
-});
 
-$("#mainNavBtnEtica").click(function () {
-  EticaMainGUI.changeAppState("etica");
-  EticaMarkets.renderMarkets();
+$("#mainNavBtnProposalHistory").click(function () {
+  EticaMainGUI.changeAppState("proposalHistory");
+  EticaProposalHistory.renderProposalHistory();
 });
 
 $("#mainNavBtnSearchEtica").click(function () {

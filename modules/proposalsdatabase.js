@@ -5,40 +5,42 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
-const dbPath = path.join(app.getPath("userData"), "commits.db");
+const dbPath = path.join(app.getPath("userData"), "proposals.db");
 const db = new datastore({filename: dbPath});
 db.loadDatabase(function (err) {
   // Now commands will be executed
 });
 
 
-/* Commit fields:
-                  votehash: onetxevent.returnValues.votehash,
-                  txhash: onetx.hash.toLowerCase(),
-                  voter: onetxevent.returnValues._voter,
-                  timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
-                  valueeti: _valueeti,
-                  choice: _hashchoice,
-                  vary: _hashvary,
+/* Proposal fields (within the wallet, we dont store all proposal data. Only data to identify proposal is stored, rest is queried on blockchain each time):
                   proposalhash: _hashproposalhash,
+                  proposer: onetxevent.returnValues._proposer,
+                  proposalrawreleashash:  _raw_release_hash, // ipfs content
                   proposaltitle: _hashproposaltitle,
+                  diseasename: _diseasename,
+                  diseasehash: _diseasehash,
+                  chunktitle: _chunktitle,
+                  chunkid: _chunkid,
+                  diseasename: _diseasename,
+                  proposalstart: _hashproposalstart,
                   proposalend: _hashproposalend,
                   proposaldeadline: _hashproposaldeadline,
-                  timestampclaimable: _timestamp_claimable,
-                  isDone: false,
-                  status: _status, // status of the commit
+                  timestampclaimable: _timestampclaimable, // when proposal is claimable
+                  txhash: onetx.hash.toLowerCase(),
+                  status: 1, // 0: Rejected, 1: Accepted, 2: Pending
+                  claimed: false, // false if proposer didnt claim yet, true if proposer claimed 
+                  approvalthreshold: _hashproposalthreshold,
+                  finalforvotes: _forvotes, // forvotes value once proposal has reached final status (accepted or rejected)
+                  finalagainstvotes: _againstvotes, // againstvotes value once proposal has reached final status (accepted or rejected)
+                  timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss")
+                  reward: _rewardamount, // ETI reward
+                  fees: _feesamount, // ETI fees
+                  slashduration: _slashduration // Time slash duration
 */
 
 // index the creationdate field
 db.ensureIndex({
   fieldName: "creationdate"
-}, function (err) {
-  // If there was an error, err is not null
-});
-
-// index the commithash field
-db.ensureIndex({
-  fieldName: "commithash",
 }, function (err) {
   // If there was an error, err is not null
 });
@@ -50,6 +52,28 @@ db.ensureIndex({
   // If there was an error, err is not null
 });
 
+
+// index the proposalrawreleashash field
+db.ensureIndex({
+  fieldName: "proposalrawreleashash",
+}, function (err) {
+  // If there was an error, err is not null
+});
+
+// index the diseasehash field
+db.ensureIndex({
+  fieldName: "diseasehash",
+}, function (err) {
+  // If there was an error, err is not null
+});
+
+// index the chunkid field
+db.ensureIndex({
+  fieldName: "chunkid",
+}, function (err) {
+  // If there was an error, err is not null
+});
+
 // index the txhash field
 db.ensureIndex({
   fieldName: "txhash",
@@ -57,9 +81,9 @@ db.ensureIndex({
   // If there was an error, err is not null
 });
 
-// index the voter field
+// index the proposer field
 db.ensureIndex({
-  fieldName: "voter",
+  fieldName: "proposer",
 }, function (err) {
   // If there was an error, err is not null
 });
@@ -71,13 +95,11 @@ db.ensureIndex({
   // If there was an error, err is not null
 });
 
-ipcMain.on("storeCommit", (event, arg) => {
-  console.log('--> storing Commit');
-  console.log('--> storing Commit', arg);
+ipcMain.on("storeProposal", (event, arg) => {
+  console.log('--> storing Proposal');
+  console.log('--> storing Proposal', arg);
   db.update({
-    votehash: arg.votehash,
-    txhash: arg.txhash,
-    voter: arg.voter
+    proposalhash: arg.proposalhash
   }, {$set:{ votehash: arg.votehash, txhash: arg.txhash, voter:arg.voter, timestamp: arg.timestamp, valueeti: arg.valueeti, choice: arg.choice, vary: arg.vary, proposalhash: arg.proposalhash, proposaltitle: arg.proposaltitle, proposalend: arg.proposalend, proposaldeadline: arg.proposaldeadline, timestampclaimable:arg.timestampclaimable, isDone: arg.isDone, status: arg.status}}, {
     upsert: true
   }, function (err, numReplaced, upsert) {
@@ -85,9 +107,9 @@ ipcMain.on("storeCommit", (event, arg) => {
   });
 });
 
-ipcMain.on("updateCommit", (event, arg) => {
-  console.log('--> updateing Commit');
-  console.log('--> updating Commit', arg);
+ipcMain.on("updateProposal", (event, arg) => {
+  console.log('--> updating Proposal');
+  console.log('--> updating Proposal', arg);
   db.update({
     votehash: arg.votehash,
     voter: arg.voter
@@ -99,61 +121,30 @@ ipcMain.on("updateCommit", (event, arg) => {
   });
 });
 
-
-ipcMain.on("updateCommitwithStatus", (event, arg) => {
-  console.log('--> updateing Commit');
-  console.log('--> updating Commit', arg);
-  db.update({
-    votehash: arg.votehash,
-    voter: arg.voter
-  }, {$set:{vary: arg.vary, choice: arg.choice, proposalhash: arg.proposalhash, proposaltitle: arg.proposaltitle, proposaldeadline:arg.proposaldeadline, timestampclaimable:arg.timestampclaimable, status: arg.status}}, {
-    upsert: false,
-    multi:true
-  }, function (err, numReplaced, upsert) {
-    // do nothing for now
+ipcMain.on("getProposerProposals", (event, arg) => {
+  db.find({
+    proposer: arg.proposer
+  }).exec(function (err, _proposals) {
+    event.returnValue = _proposals;
   });
 });
 
-ipcMain.on("updateCommitRewardAmount", (event, arg) => {
-  console.log('--> updateing Commit');
-  console.log('--> updating Commit', arg);
-  db.update({
-    votehash: arg.votehash,
-    voter: arg.voter
-  }, {$set:{rewardamount: arg.rewardamount, status: arg.status}}, {
-    upsert: false,
-    multi:false
-  }, function (err, numReplaced, upsert) {
-    // do nothing for now
-  });
-});
-
-ipcMain.on("getCommit", (event, arg) => {
-  db.findOne({
-    votehash: arg.votehash,
-    voter: arg.voter
-  }).exec(function (err, _commit) {
-    event.returnValue = _commit;
-  });
-});
-
-ipcMain.on("getCommitbyProposalHash", (event, arg) => {
+ipcMain.on("getProposalbyProposalHash", (event, arg) => {
   db.findOne({
     proposalhash: arg.proposalhash,
-    voter: arg.voter
-  }).exec(function (err, _commit) {
-    event.returnValue = _commit;
+  }).exec(function (err, _proposal) {
+    event.returnValue = _proposal;
   });
 });
 
-ipcMain.on("getCommits", (event, arg) => {
+ipcMain.on("getProposals", (event, arg) => {
   db.find({}).exec(function (err, docs) {
     ResultData = [];
-    console.log('in getCommmits');
+    console.log('in getProposals');
     let _now = Date.now();
-    console.log('in getCommmits _now is', _now);
+    console.log('in getProposals _now is', _now);
     let CurrentDate = moment(_now);
-    console.log('in getCommmits CurrentDate is', CurrentDate);
+    console.log('in getProposals CurrentDate is', CurrentDate);
 
     // sort the data
     docs.sort((a, b) => {
@@ -161,7 +152,7 @@ ipcMain.on("getCommits", (event, arg) => {
     });
 
     for (i = 0; i < Math.min(docs.length, 500); i++) {
-      let _proposaltitle = "Unknown Proposal";
+      let _proposaltitle = "";
       let created = false;
       let revealed = false;
       let claimed = false;
@@ -172,16 +163,13 @@ ipcMain.on("getCommits", (event, arg) => {
 
       // had to use this system because current front end framework cant do "(if status == x)"":
       if(docs[i].status == 1){
-        created = true;
+        rejected = true;
       }
       if(docs[i].status == 2){
-        revealed = true;
+        approved = true;
       }
       if(docs[i].status == 3){
-        claimed = true;
-      }
-      if(docs[i].status == 4){
-        missed = true;
+        pending = true;
       }
 
       if(docs[i].proposalhash != null && docs[i].proposalhash !=''){
@@ -210,7 +198,7 @@ ipcMain.on("getCommits", (event, arg) => {
 
 
       }
-      let _commit = {
+      let _proposal = {
         "votehash": docs[i].votehash,
         "txhash": docs[i].txhash,
         "voter": docs[i].voter,
@@ -234,18 +222,18 @@ ipcMain.on("getCommits", (event, arg) => {
         "rewardamount": docs[i].rewardamount,
         "timestamp": docs[i].timestamp
       };
-      console.log('_commit ', i, ' is', _commit);
+      console.log('_proposal ', i, ' is', _proposal);
 
       ResultData.push(
-        _commit
+        _proposal
       );
     }
-    // return the commits data
+    // return the proposals data
     event.returnValue = ResultData;
   });
 });
 
-ipcMain.on("deleteCommits", (event, arg) => {
+ipcMain.on("deleteProposals", (event, arg) => {
 
   try {
     // if file exists delete:
