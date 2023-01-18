@@ -28,11 +28,13 @@
       </thead>
       <tbody>
         {{#commitData}}
-          <tr>
+          <tr class="softBottomline">
             <td>
               <div>
-                <span class="textAddress">{{ proposaltitle }}</span><br>
-                <span class="textAddress" style="font-size:0.75em;color: #399999;">{{ votehash }}</span>
+                <span title="Proposal title" class="textAddress">{{ proposaltitle }}</span><br>
+                <span title="Proposal hash (click to copy)" class="textAddress" style="font-size:0.75em;color: #e0e0e0;">{{ proposalhash }}</span>
+                <br>
+                <span title="Vote hash (click to copy)" class="textAddress" style="font-size:0.75em;color: #399999;">{{ votehash }}</span>
               </div>
             </td>
             <td>{{ timestamp }}</td>

@@ -556,6 +556,10 @@ div.noAddressWrapper {
   justify-content: center;
 }
 
+.softBottomline {
+  border-bottom: 0.1px solid #253a2e !important;
+}
+
 .textAddress {
   cursor: pointer;
 }

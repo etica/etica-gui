@@ -171,8 +171,8 @@
 
 
 {{#if ProposalFound}}
-<div class="sendWrapper" style="padding-top:0;overflow-y: auto;height: calc(100vh - 200px);">
-  <div class="card-panel" style="padding-top: 0px;padding-bottom: 0px;height: calc(100vh - 120px);">
+<div class="sendWrapper" style="padding-top:0;">
+  <div class="card-panel" style="padding-top: 0px;padding-bottom: 0px;">
       <div class="row" style="margin-bottom: 0;">
         <div class="input-field col s6" style="display: inline;margin-top: 1.5vh;">
           <span style="color:#9e9e9e; font-size:1rem;">Type:</span> &nbsp;<span>{{ BlockchainResp.type}}</span>
@@ -182,15 +182,16 @@
         </div>
         <div class="input-field col s6 searchresults">
           <label>Title:</label><br>
-          <p>Diabetes Type 2 Analysis</p>
+          <p>{{ BlockchainResp.proposal.title}}</p>
         </div>
         <div class="input-field col s6 searchresults">
           <label>Belongs to Period:</label><br>
-          <p>15</p>
+          <p>{{ BlockchainResp.period.id}}</p>
         </div>
         <div class="input-field col s6 searchresults">
           <label>Belongs to disease:</label><br>
-          <p>Malaria rtdrt rtd tr dtr dtr dtr dtr dt dtr dtr dt </p>
+          <p style="margin-bottom: 0;">{{ BlockchainResp.disease.name}}</p>
+          <span style="font-size: 0.75em;" class="copyClipboard">{{ BlockchainResp.disease.disease_hash}}</span>
         </div>
         <div class="input-field col s6 searchresults">
           <label>Belongs to chunk:</label><br>
@@ -198,15 +199,15 @@
         </div>
         <div class="input-field col s6 searchresults">
           <label>Hash:</label><br>
-          <p>0xiojojgytftyouhjoigtusrzazescgfioijijoioj</p>
+          <p style="font-size: 0.75em;" class="copyClipboard">{{BlockchainResp.proposal.proposed_release_hash}}</p>
         </div>
         <div class="input-field col s6 searchresults">
           <label>IPFS content:</label><br>
-          <p>Qmsfgdderersszeszeezwdwsyojiiijio</p>
+          <p style="font-size: 0.8em;" class="copyClipboard">{{BlockchainResp.proposal.raw_release_hash}}</p>
         </div>
         <div class="input-field col s6 searchresults">
           <label>Description:</label><br>
-          <p>Disease Riuh yuguyg uyg uy guy guy ggy uuygf yyhioijoi o jiojio</p>
+          <p>{{BlockchainResp.proposal.description}}</p>
         </div>
       </div>
       <div class="row">
