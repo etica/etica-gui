@@ -48,7 +48,7 @@ function StartSyncProcess() {
   EticaTransactions.setIsSyncing(false);
   // enable the keep in sync feature
   EticaTransactions.enableKeepInSync();
-  
+
   var subscription = web3Local.eth.subscribe("syncing", function (error, sync) {
     console.log('inside StartSyncProcess syncing subscription');
     if (!error) {
@@ -90,7 +90,7 @@ function StartSyncProcess() {
               }
             } else {
               EticaMainGUI.showGeneralError(error);
-              //InitializeWeb3();
+              InitializeWeb3();
             }
           });
         }, 10000);
@@ -120,7 +120,7 @@ function StartSyncProcess() {
             ]));
           } else if (error) {
             EticaMainGUI.showGeneralError(error);
-            //InitializeWeb3();
+            InitializeWeb3();
           }
         });
       }, 2000);
@@ -136,7 +136,7 @@ function StartSyncProcess() {
 
     EticaBlockchain.getAccountsData(function (error) {
       EticaMainGUI.showGeneralError(error);
-      //InitializeWeb3();
+      InitializeWeb3();
     }, function (data) {
       //console.log('updated Balances');
     });
@@ -148,7 +148,7 @@ function StartSyncProcess() {
 }
 
 function InitializeWeb3() {
-var InitWeb3 = setInterval(function () {
+var InitWeb3 = setInterval(async function () {
   try {
     var options = {
       reconnect: {
@@ -158,7 +158,22 @@ var InitWeb3 = setInterval(function () {
           onTimeout: false
       }
   };
-    web3Local = new Web3(new Web3.providers.WebsocketProvider("ws://localhost:8551", options));
+    let _provider = new Web3.providers.WebsocketProvider("ws://localhost:8551", options);
+    
+
+    web3Local = new Web3(_provider);
+    
+    _provider.on('error', () => {
+      console.log('providerr error');
+      _provider.disconnect();
+      //web3.currentProvider.connection.close();
+      //web3Local.setProvider(newProvider())
+    });
+    _provider.on('close', () => {
+      console.log('provider close');
+    });
+
+
     console.log('inside InitWeb3');
     web3Local.eth.net.isListening(function (error, success) {
       if (!error) {
