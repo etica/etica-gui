@@ -145,7 +145,8 @@ function StartSyncProcess() {
   EticaTransactions.setIsSyncing(false);
   // enable the keep in sync feature
   EticaTransactions.enableKeepInSync();
-  console.log('enabled EticaTransactions.enableKeepInSync()');
+  console.log('set EticaTransactions.setIsSyncing to false');
+  
   
 }
 

@@ -153,12 +153,14 @@ ipcMain.on("getProposals", (event, arg) => {
     for (i = 0; i < Math.min(docs.length, 500); i++) {
       let _proposaltitle = "";
       let created = false;
-      let revealed = false;
       let claimed = false;
       let missed = false;
       let revealopen = false;
       let revealpassed = false;
       let claimopen = false;
+      let rejected = false;
+      let approved = false;
+      let pending = false;
 
       // had to use this system because current front end framework cant do "(if status == x)"":
       if(docs[i].status == 1){
@@ -212,7 +214,9 @@ ipcMain.on("getProposals", (event, arg) => {
         "isDone": docs[i].isDone,
         "status": docs[i].status,
         "created": created,
-        "revealed": revealed,
+        "rejected": rejected,
+        "approved": approved,
+        "pending": pending,
         "claimed": claimed,
         "missed": missed,
         "revealopen": revealopen,

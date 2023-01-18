@@ -47,14 +47,19 @@ class ProposalHistory {
   renderProposalHistory() {
 
     var renderData = {};
-    renderData.commitData = ipcRenderer.sendSync("getCommits");
+    renderData.proposalData = ipcRenderer.sendSync("getProposals");
 
-    renderData.commitData.forEach(function (element) {
-      if(element['valueeti']){
-        element['valueeti'] = web3Local.utils.fromWei(element['valueeti'], "ether");
+    renderData.proposalData.forEach(function (element) {
+      if(element['fees']){
+        element['fees'] = web3Local.utils.fromWei(element['fees'], "ether");
       }
       if(element['rewardamount']){
         element['rewardamount'] = web3Local.utils.fromWei(element['rewardamount'], "ether");
+      }
+      if(element['approvalthreshold']){
+        console.log("element['approvalthreshold] before / 100 is", element['approvalthreshold']);
+        element['approvalthreshold'] = element['approvalthreshold'] / 100;
+        console.log("element['approvalthreshold] after / 100 is", element['approvalthreshold']);
       }
     });
 
@@ -63,7 +68,7 @@ class ProposalHistory {
     }, function (data) {
       renderData.sumBalanceEti = data.sumBalanceEti;
       renderData.sumBalance = data.sumBalance;
-      data.commitData = renderData.commitData;
+      data.proposalData = renderData.proposalData;
       console.log('data from renderProposalHistory is', data);
       
       EticaMainGUI.renderTemplate("proposalhistory.html", data);

@@ -15,36 +15,69 @@
   </div>
 
 </div>
-<div id="addressList" class="{{#if commitData.length}}addressWrapper{{else}}noAddressWrapper{{/if}}">
-  {{#if commitData.length}}
+<div id="addressList" class="{{#if proposalData.length}}addressWrapper{{else}}noAddressWrapper{{/if}}">
+  {{#if proposalData.length}}
     <table class="bordered" id="addressTable">
       <thead>
         <tr>
           <th class="noSortCollumn">Proposal/Creator</th>
-          <th>Creation Date</th>
+          <th>Creation Date/Close Date</th>
           <th>Status</th>
           <th class="noSortCollumn" data-sort-method='none'>Claim Opening:</th>
         </tr>
       </thead>
       <tbody>
-        {{#commitData}}
+        {{#proposalData}}
           <tr class="softBottomline">
             <td>
               <div>
-                <span title="Proposal title" class="textAddress">{{ proposaltitle }}</span><br>
+                <span title="Proposal title" class="textAddress">{{ title }}</span><br>
                 <span title="Proposal hash (click to copy)" class="textAddress" style="font-size:0.75em;color: #e0e0e0;">{{ proposalhash }}</span>
                 <br>
-                <span title="Vote hash (click to copy)" class="textAddress" style="font-size:0.75em;color: #399999;">{{ creator }}</span>
+                <span title="Vote hash (click to copy)" class="textAddress" style="font-size:0.75em;color: #399999;">by {{ proposer }}</span>
               </div>
             </td>
-            <td>{{ timestamp }}</td>
             <td>
-              <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
-                {{ status }}
-              </span>
+              <span>{{ timestamp }}</span><br>
+              <span>{{ proposaldeadline }}</span>
             </td>
             <td>
-            {{#if proposaldeadline}}
+              {{#if pending}}
+              <span style="color:rgb(255, 255, 255);display: inline-block;">
+                Pending
+              </span>
+              {{/if}}
+              {{#if rejected}}
+              <span style="color:rgb(255, 255, 255);display: inline-block;">
+                Rejected
+              </span>
+              {{/if}}
+              {{#if approved}}
+              <span style="color:rgb(255, 255, 255);display: inline-block;">
+                Approved
+              </span>
+              {{/if}}
+            </td>
+            <td>
+
+              {{#if claimed}}
+                <span>Claimed, reward:</span><br>
+                   {{#if rewardamount}}
+                   <span>
+                    <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
+                    {{ rewardamount }} ETI</span>
+                   {{/if}}
+                
+              {{else}}
+              
+                 {{#if claimopen}}
+                 <button type="button" class="btn btn-etica btnClaimCommit" data-proposalhash="{{proposalhash}}" data-voter="{{voter}}">Claim</button>
+                 {{else}}
+                 <span>claims opening on:</span><br>
+                 <span>{{ timestampclaimable }}</span>
+                 {{/if}}
+
+              {{/if}}
 
                 {{#if created}}
                   {{#if revealopen}}
@@ -67,21 +100,11 @@
                   <span>{{ timestampclaimable }}</span>
                   {{/if}}
                 {{/if}}  
-                {{#if claimed}}
-                <span>Claimed, reward:</span><br>
-                   {{#if rewardamount}}
-                   <span>
-                    <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
-                    {{ rewardamount }} ETI</span>
-                   {{/if}}
-                {{/if}}
+                
 
-            {{else}}
-                <button type="button" class="btn btn-etica btnAddCommitInputs" data-votehash="{{votehash}}" data-voter="{{voter}}">Add proposal</button>
-            {{/if}}
             </td>
           </tr>
-        {{/commitData}}
+        {{/proposalData}}
       </tbody>
     </table>
   {{else}}
