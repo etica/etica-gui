@@ -13,29 +13,28 @@ db.loadDatabase(function (err) {
 
 
 /* Proposal fields (within the wallet, we dont store all proposal data. Only data to identify proposal is stored, rest is queried on blockchain each time):
-                  proposalhash: _hashproposalhash,
-                  proposer: onetxevent.returnValues._proposer,
-                  proposalrawreleashash:  _raw_release_hash, // ipfs content
-                  proposaltitle: _hashproposaltitle,
-                  diseasename: _diseasename,
-                  diseasehash: _diseasehash,
-                  chunktitle: _chunktitle,
-                  chunkid: _chunkid,
-                  diseasename: _diseasename,
-                  proposalstart: _hashproposalstart,
-                  proposalend: _hashproposalend,
-                  proposaldeadline: _hashproposaldeadline,
-                  timestampclaimable: _timestampclaimable, // when proposal is claimable
-                  txhash: onetx.hash.toLowerCase(),
-                  status: 1, // 0: Rejected, 1: Accepted, 2: Pending
-                  claimed: false, // false if proposer didnt claim yet, true if proposer claimed 
-                  approvalthreshold: _hashproposalthreshold,
-                  finalforvotes: _forvotes, // forvotes value once proposal has reached final status (accepted or rejected)
-                  finalagainstvotes: _againstvotes, // againstvotes value once proposal has reached final status (accepted or rejected)
-                  timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss")
-                  reward: _rewardamount, // ETI reward
-                  fees: _feesamount, // ETI fees
-                  slashduration: _slashduration // Time slash duration
+                  proposalhash: _proposal.proposed_release_hash,
+                        proposer: onetxevent.returnValues._proposer,
+                        rawreleashash:  _proposal.raw_release_hash, // ipfs content
+                        title: _proposal.title,
+                        diseasename: _disease.name,
+                        diseasehash: _disease.disease_hash,
+                        chunktitle: _chunk.title,
+                        chunkid: _chunk.id,
+                        proposalend: _hashproposalend,
+                        proposaldeadline: _hashproposaldeadline,
+                        timestampclaimable: _timestampclaimable, // when proposal is claimable
+                        txhash: onetx.hash.toLowerCase(),
+                        status: 1, // 0: Rejected, 1: Accepted, 2: Pending
+                        claimed: false, // false if proposer didnt claim yet, true if proposer claimed 
+                        approvalthreshold: _hashproposalthreshold,
+                        finalforvotes: _forvotes, // forvotes value once proposal has reached final status (accepted or rejected)
+                        finalagainstvotes: _againstvotes, // againstvotes value once proposal has reached final status (accepted or rejected)
+                        timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"), // blocktimestamp
+                        blocknumber: data.number, // blocktimestamp
+                        reward: _rewardamount, // ETI reward
+                        fees: _feesamount, // ETI fees
+                        slashduration: _slashduration // Time slash duration
 */
 
 // index the creationdate field
@@ -100,7 +99,7 @@ ipcMain.on("storeProposal", (event, arg) => {
   console.log('--> storing Proposal', arg);
   db.update({
     proposalhash: arg.proposalhash
-  }, {$set:{ votehash: arg.votehash, txhash: arg.txhash, voter:arg.voter, timestamp: arg.timestamp, valueeti: arg.valueeti, choice: arg.choice, vary: arg.vary, proposalhash: arg.proposalhash, proposaltitle: arg.proposaltitle, proposalend: arg.proposalend, proposaldeadline: arg.proposaldeadline, timestampclaimable:arg.timestampclaimable, isDone: arg.isDone, status: arg.status}}, {
+  }, {$set:{ proposalhash: arg.proposalhash, proposer:arg.proposer, rawreleasehash: arg.rawreleasehash, title: arg.title, diseasename: arg.diseasename, diseasehash: arg.diseasehash, chunktitle: arg.chunktitle, chunkid: arg.chunkid, proposalend: arg.proposalend, proposaldeadline: arg.proposaldeadline, timestampclaimable:arg.timestampclaimable, txhash: arg.txhash, status: arg.status, claimed: arg.claimed, approvalthreshold: arg.approvalthreshold, timestamp: arg.timestamp}}, {
     upsert: true
   }, function (err, numReplaced, upsert) {
     // do nothing for now
@@ -111,8 +110,8 @@ ipcMain.on("updateProposal", (event, arg) => {
   console.log('--> updating Proposal');
   console.log('--> updating Proposal', arg);
   db.update({
-    votehash: arg.votehash,
-    voter: arg.voter
+    proposalhash: arg.proposalhash,
+    proposer: arg.proposer
   }, {$set:{vary: arg.vary, choice: arg.choice, proposalhash: arg.proposalhash, proposaltitle: arg.proposaltitle, proposaldeadline:arg.proposaldeadline, timestampclaimable:arg.timestampclaimable}}, {
     upsert: false,
     multi:true
@@ -129,7 +128,7 @@ ipcMain.on("getProposerProposals", (event, arg) => {
   });
 });
 
-ipcMain.on("getProposalbyProposalHash", (event, arg) => {
+ipcMain.on("getProposal", (event, arg) => {
   db.findOne({
     proposalhash: arg.proposalhash,
   }).exec(function (err, _proposal) {
@@ -199,9 +198,9 @@ ipcMain.on("getProposals", (event, arg) => {
 
       }
       let _proposal = {
-        "votehash": docs[i].votehash,
+        "proposalhash": docs[i].proposalhash,
         "txhash": docs[i].txhash,
-        "voter": docs[i].voter,
+        "proposer": docs[i].proposer,
         "proposalhash": docs[i].proposalhash,
         "proposaltitle": _proposaltitle,
         "proposalend": docs[i].proposalend,

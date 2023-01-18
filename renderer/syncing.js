@@ -45,9 +45,6 @@ function StartSyncProcess() {
   var nodeSyncInterval = null;
   var SyncBalancesInterval = null;
   console.log('inside StartSyncProcess');
-  EticaTransactions.setIsSyncing(false);
-  // enable the keep in sync feature
-  EticaTransactions.enableKeepInSync();
 
   var subscription = web3Local.eth.subscribe("syncing", function (error, sync) {
     console.log('inside StartSyncProcess syncing subscription');
@@ -144,26 +141,32 @@ function StartSyncProcess() {
   }, 30000);
 
 
+  console.log('set EticaTransactions.setIsSyncing to false');
+  EticaTransactions.setIsSyncing(false);
+  // enable the keep in sync feature
+  EticaTransactions.enableKeepInSync();
+  console.log('enabled EticaTransactions.enableKeepInSync()');
   
 }
 
 function InitializeWeb3() {
 var InitWeb3 = setInterval(async function () {
   try {
-    var options = {
+   /* var options = {
       reconnect: {
           auto: true,
-          delay: 5000, // ms
-          maxAttempts: 120, // 120 -> 10 minutes (1 every 5 seconds)
+          delay: 2000, // ms
+          maxAttempts: 5, // 120 -> 10 minutes (1 every 5 seconds)
           onTimeout: false
       }
-  };
-    let _provider = new Web3.providers.WebsocketProvider("ws://localhost:8551", options);
+  }; */
+    //let _provider = new Web3.providers.WebsocketProvider("ws://localhost:8551", options);
+    let _provider = new Web3.providers.WebsocketProvider("ws://localhost:8551");
     
 
     web3Local = new Web3(_provider);
     
-    _provider.on('error', () => {
+    /*_provider.on('error', () => {
       console.log('providerr error');
       _provider.disconnect();
       //web3.currentProvider.connection.close();
@@ -171,7 +174,7 @@ var InitWeb3 = setInterval(async function () {
     });
     _provider.on('close', () => {
       console.log('provider close');
-    });
+    }); */
 
 
     console.log('inside InitWeb3');

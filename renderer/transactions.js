@@ -1010,6 +1010,101 @@ class Transactions {
     
                     }
 
+
+
+                    if(onetxevent.event == 'NewProposal'){
+
+                      console.log('line 643 inside NewProposal Condition');
+                      let _savedproposal = ipcRenderer.sendSync("getProposal", {proposalhash: onetxevent.returnValues.proposed_release_hash});
+                      console.log('line 644 _savedproposal is: ', _savedproposal);
+
+                      let _hashproposalend =null;
+                      let _hashproposaldeadline =null;
+                      let _timestamp_claimable =null;
+                      let _status = 3; // pending
+                      let _claimed = false;
+    
+                      // prevent reactualisation of status on resyncs:
+                      if(_savedproposal && _savedproposal.status){
+                        if ( _savedproposal.status){
+                          _status = _proposalsaved.status;
+                        }
+
+                        if ( _savedproposal.claimed){
+                          _claimed = _proposalsaved.claimed;
+                        }
+                      }
+    
+                         let _proposal = await EticaContract.proposals(onetxevent.returnValues.proposed_release_hash);
+                         console.log('line 659 _proposal is', _proposal);
+                         let _proposaldata = await EticaContract.propsdatas(onetxevent.returnValues.proposed_release_hash);
+                         console.log('line 659 _proposaldata is', _proposaldata);
+                         let _propend = _proposaldata[1]; // endtime
+                         console.log('_propend is', _propend);
+                          console.log('type of _propend is', typeof _propend);
+    
+                          
+    
+    
+                          let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
+                          console.log('DEFAULT_REVEALING_TIME is', DEFAULT_REVEALING_TIME);
+                          let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
+                          console.log('DEFAULT_VOTING_TIME is', DEFAULT_VOTING_TIME);
+                          let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
+                          console.log('REWARD_INTERVAL is', REWARD_INTERVAL);
+                          let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
+                          console.log('MIN_CLAIM_INTERVAL is', MIN_CLAIM_INTERVAL);
+                          console.log('_proposal[3] is', _proposal[3]);
+                          
+                          let _period = await EticaContract.periods(_proposal[3]);
+                             console.log('_period is', _period);
+                          let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
+                             console.log('seconds_claimable is', seconds_claimable);    
+    
+                          
+                          _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
+                          console.log('_timestamp_claimable is', _timestamp_claimable);
+                          console.log('revealing duration is', DEFAULT_REVEALING_TIME);
+    
+    
+                          _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
+                          console.log('_hashproposalend is', _hashproposalend);
+                         let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
+                           _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
+                         console.log('_hashproposaldeadline is', _hashproposaldeadline);
+    
+                         let _diseaseindex = await EticaContract.diseasesbyIds(_proposal.disease_id);
+                         let _disease = await EticaContract.diseases(_diseaseindex);
+                         let _chunk = await EticaContract.chunks(_proposal.chunk_id);
+    
+    
+                      var _NewProposal = {
+                        proposalhash: _proposal.proposed_release_hash,
+                        proposer: onetxevent.returnValues._proposer,
+                        rawreleasehash:  _proposal.raw_release_hash, // ipfs content
+                        title: _proposal.title,
+                        diseasename: _disease.name,
+                        diseasehash: _disease.disease_hash,
+                        chunktitle: _chunk.title,
+                        chunkid: _chunk.id,
+                        proposalend: _hashproposalend,
+                        proposaldeadline: _hashproposaldeadline,
+                        timestampclaimable: _timestamp_claimable, // when proposal is claimable
+                        txhash: onetx.hash.toLowerCase(),
+                        status: _status, // 0: Rejected, 1: Accepted, 2: Pending
+                        claimed: _claimed, // false if proposer didnt claim yet, true if proposer claimed 
+                        approvalthreshold: _proposaldata.approvalthreshold,
+                        timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"), // blocktimestamp
+                        blocknumber: data.number // blocktimestamp
+                      };
+    
+                      console.log('line 1109 before storing _NewProposal', _NewProposal);
+                      ipcRenderer.send("storeProposal", _NewProposal);
+                      console.log('line 1109 after storing _NewProposal', _NewProposal);
+    
+                    }
+
+
                 console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is', Transaction);
                 $(document).trigger("onNewAccountTransaction");
                 console.log('new tx before iziToast.info is: ', Transaction);
