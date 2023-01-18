@@ -157,6 +157,21 @@ function StartSyncProcess() {
   
 }
 
+var RetrySuscribeSyncing = setInterval(async function () {
+  try {
+    console.log('Inside RetrySuscribeSyncing');
+    if( initWeb3Passed && alreadyCatchedUp == false){
+      console.log('Retry StartSyncProcess()');
+      StartSyncProcess();
+    }
+    else{
+      clearInterval(RetrySuscribeSyncing);
+    }
+  } catch (err) {
+    EticaMainGUI.showGeneralError(err);
+  }
+}, 2000);
+
 
 function InitializeWeb3() {
 var InitWeb3 = setInterval(async function () {
@@ -201,23 +216,7 @@ var InitWeb3 = setInterval(async function () {
     EticaMainGUI.showGeneralError(err);
   }
 }, 2000);
+
 }
 
 InitializeWeb3();
-
-var RetrySuscribeSyncing = setInterval(async function () {
-  try {
-    console.log('Inside RetrySuscribeSyncing');
-    if( initWeb3Passed && alreadyCatchedUp == false){
-      clearInterval(RetrySuscribeSyncing);
-    }
-    else{
-      console.log('Retry StartSyncProcess()');
-      StartSyncProcess();
-    }
-
-
-  } catch (err) {
-    EticaMainGUI.showGeneralError(err);
-  }
-}, 5000);

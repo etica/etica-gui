@@ -1,7 +1,4 @@
 <div class="walletsToolbar">
-  <button type="button" class="btn btn-etica" id="btnNewAddress2">
-    <i class="fas fa-plus"></i>
-  </button>
 
   <div class="sumBalanceHeader">
       <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
@@ -34,7 +31,7 @@
                 <span title="Proposal title" class="textAddress">{{ title }}</span><br>
                 <span title="Proposal hash (click to copy)" class="textAddress" style="font-size:0.75em;color: #e0e0e0;">{{ proposalhash }}</span>
                 <br>
-                <span title="Vote hash (click to copy)" class="textAddress" style="font-size:0.75em;color: #399999;">by {{ proposer }}</span>
+                <span style="font-size:0.75em;">by</span> <span title="Proposer Address (click to copy)" class="textAddress" style="font-size:0.75em;color: #399999;">{{ proposer }}</span>
               </div>
             </td>
             <td>
@@ -59,49 +56,24 @@
               {{/if}}
             </td>
             <td>
-
               {{#if claimed}}
-                <span>Claimed, reward:</span><br>
+                   <span>Claimed, reward:</span><br>
                    {{#if rewardamount}}
                    <span>
                     <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
-                    {{ rewardamount }} ETI</span>
+                    {{ rewardamount }} ETI
+                    </span>
                    {{/if}}
                 
               {{else}}
-              
-                 {{#if claimopen}}
-                 <button type="button" class="btn btn-etica btnClaimCommit" data-proposalhash="{{proposalhash}}" data-voter="{{voter}}">Claim</button>
+              {{#if claimopen}}
+                 <button type="button" class="btn btn-etica btnClaimProposal" data-proposalhash="{{proposalhash}}" data-proposer="{{proposer}}">Claim</button>
                  {{else}}
                  <span>claims opening on:</span><br>
                  <span>{{ timestampclaimable }}</span>
-                 {{/if}}
-
               {{/if}}
 
-                {{#if created}}
-                  {{#if revealopen}}
-                      <button type="button" class="btn btn-etica btnRevealCommit" data-votehash="{{votehash}}" data-voter="{{voter}}">Reveal</button>
-                  {{else}}
-                      {{#if revealpassed}}
-                      <span>missed deadline:</span><br>
-                      <span>{{ proposaldeadline }}</span>
-                      {{else}}
-                      <span>{{ proposalend }}</span><br>
-                      <span>{{ proposaldeadline }}</span>
-                      {{/if}}
-                  {{/if}}  
-                {{/if}}
-                {{#if revealed}}
-                  {{#if claimopen}}
-                  <button type="button" class="btn btn-etica btnClaimCommit" data-proposalhash="{{proposalhash}}" data-voter="{{voter}}">Claim</button>
-                  {{else}}
-                  <span>claims opening on:</span><br>
-                  <span>{{ timestampclaimable }}</span>
-                  {{/if}}
-                {{/if}}  
-                
-
+              {{/if}}      
             </td>
           </tr>
         {{/proposalData}}
@@ -113,29 +85,29 @@
 </div>
 
 <!-- send details dialog -->
-<div id="dlgClaimCommitWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To claim this vote and release associated locked ETI, please enter the wallet password" data-izimodal-icon="icon-home">
+<div id="dlgClaimProposalWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To claim this vote and release associated locked ETI, please enter the wallet password" data-izimodal-icon="icon-home">
   <div class="modalBody">
     <div class="form-group sendTXInfo">
       <i class="fas fa-wallet"></i>
       <label>From address:</label>
-      <label id="fromClaimAddressInfo"></label>
+      <label id="fromClaimProposalAddressInfo"></label>
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-dollar-sign"></i>
       <label>Proposal Hash:</label>
-      <label id="valueOfClaimCommitProposalHash"></label>
+      <label id="valueOfClaimProposalProposalHash"></label>
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-dollar-sign"></i>
       <label>Fee to pay:</label>
-      <label id="feeClaimCommitToPayInfo"></label>
+      <label id="feeClaimProposalToPayInfo"></label>
       <label class="currencyTicker">EGAZ</label>
     </div>
     <hr class="sendTXdivider">
     <div class="form-group sendTXPass">
       <label for="usr">Enter your Password:</label>
-      <input type="password" class=" form-control" id="ClaimCommitwalletPassword">
+      <input type="password" class=" form-control" id="ClaimProposalwalletPassword">
     </div>
-    <button type="button" class="btn button3 btn-dialog-confirm" id="btnClaimCommitWalletPasswordConfirm">Confirm</button>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnClaimProposalWalletPasswordConfirm">Confirm</button>
   </div>
 </div>

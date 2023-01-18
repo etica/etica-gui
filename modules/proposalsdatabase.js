@@ -151,7 +151,7 @@ ipcMain.on("getProposals", (event, arg) => {
     });
 
     for (i = 0; i < Math.min(docs.length, 500); i++) {
-      let _proposaltitle = "";
+      let _title = "";
       let created = false;
       let claimed = false;
       let missed = false;
@@ -174,7 +174,7 @@ ipcMain.on("getProposals", (event, arg) => {
       }
 
       if(docs[i].proposalhash != null && docs[i].proposalhash !=''){
-        _proposaltitle = docs[i].proposaltitle;
+        _title = docs[i].title;
 
         if(docs[i].proposalend != null && docs[i].proposalend !=''){
           console.log('in docs[i].proposalend');
@@ -196,15 +196,14 @@ ipcMain.on("getProposals", (event, arg) => {
             claimopen = true;
            }  
       }
-
-
       }
+      
       let _proposal = {
         "proposalhash": docs[i].proposalhash,
         "txhash": docs[i].txhash,
         "proposer": docs[i].proposer,
         "proposalhash": docs[i].proposalhash,
-        "proposaltitle": _proposaltitle,
+        "title": _title,
         "proposalend": docs[i].proposalend,
         "proposaldeadline": docs[i].proposaldeadline,
         "timestampclaimable": docs[i].timestampclaimable,
