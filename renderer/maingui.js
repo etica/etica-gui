@@ -198,7 +198,7 @@ $("#mainNavBtnEtica").click(function () {
 
 $("#mainNavBtnSearchEtica").click(function () {
   EticaMainGUI.changeAppState("searchEtica");
-  EticaSearch.renderSearchState();
+  EticaSearch.renderSearchState(EticaSearch.getFilter());
 });
 
 $("#mainNavBtnStakes").click(function () {
