@@ -35,6 +35,11 @@ $(document).on("render_settings", async function () {
             ipcResult = ipcRenderer.sendSync("deleteTransactions", null);
 
             if (ipcResult.success) {
+
+              ipcResultCommits = ipcRenderer.sendSync("deleteCommits", null);
+
+              if (ipcResultCommits.success) {
+
               // sync all the transactions to the current block
               web3Local.eth.getBlock("latest", async function (error, localBlock) {
                 if (error) {
@@ -64,8 +69,14 @@ $(document).on("render_settings", async function () {
                   iziToast.success({title: "Rescync initiated", message: "Transactions Resync initiated, it may take a few minutes please wait", position: "topRight", timeout: 5000});
                 }
               });
+
             } else {
-              EticaMainGUI.showGeneralError("Error deleting transactions: " + ipcResult.error);
+              EticaMainGUI.showGeneralError("Error deleting commits: ");
+              console.log('ipcResultCommits.error is:', ipcResultCommits.error);
+            }
+
+            } else {
+              EticaMainGUI.showGeneralError("Error deleting transactions: ");
               console.log('ipcResult.error is:', ipcResult.error);
             }
           }

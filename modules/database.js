@@ -124,7 +124,13 @@ try {
       }
     });
 
-  } 
+  }
+  else {
+    event.returnValue = {
+      success: true,
+      error: null
+    };
+  }  
 } catch(err) {
   console.error(err);
   event.returnValue = {

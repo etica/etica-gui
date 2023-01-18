@@ -244,6 +244,11 @@ ipcMain.on("getCommits", (event, arg) => {
 });
 
 ipcMain.on("deleteCommits", (event, arg) => {
+
+  try {
+    // if file exists delete:
+    if (fs.existsSync(dbPath)) {
+
   fs.unlink(dbPath, err => {
     if (err) {
       event.returnValue = {
@@ -257,4 +262,21 @@ ipcMain.on("deleteCommits", (event, arg) => {
       };
     }
   });
+
+  }
+  else {
+    event.returnValue = {
+      success: true,
+      error: null
+    };
+  } 
+} catch(err) {
+  console.error(err);
+  event.returnValue = {
+    success: false,
+    error: err
+  };
+}
+
+
 });
