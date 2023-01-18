@@ -34,6 +34,10 @@ SyncProgress = new ProgressBar.Line("#syncProgress", {
 SyncProgress.setText("Connecting to peers, please wait...");
 isFullySynced = false;
 
+initWeb3Passed =false;
+alreadyCatchedUp = false;
+
+
 var peerCountInterval = setInterval(function () {
   web3Local.eth.net.getPeerCount(function (error, count) {
     $("#peerCount").html(vsprintf("Peer Count: %d", [count]));
@@ -41,7 +45,7 @@ var peerCountInterval = setInterval(function () {
 }, 5000);
 
 function StartSyncProcess() {
-  var alreadyCatchedUp = false;
+  //var alreadyCatchedUp = false;
   var nodeSyncInterval = null;
   var SyncBalancesInterval = null;
   console.log('inside StartSyncProcess');
@@ -141,14 +145,18 @@ function StartSyncProcess() {
   }, 30000);
 
 
+  /*
+
   console.log('set EticaTransactions.setIsSyncing to false');
   EticaTransactions.setIsSyncing(false);
   // enable the keep in sync feature
   EticaTransactions.enableKeepInSync();
   console.log('set EticaTransactions.setIsSyncing to false');
-  
+
+  */
   
 }
+
 
 function InitializeWeb3() {
 var InitWeb3 = setInterval(async function () {
@@ -183,6 +191,8 @@ var InitWeb3 = setInterval(async function () {
       if (!error) {
         console.log('inside InitWeb3 no error passed');
         $(document).trigger("onGethReady");
+        initWeb3Passed = true; 
+        console.log('initWeb3Passed is now: ', initWeb3Passed);
         clearInterval(InitWeb3);
         StartSyncProcess();
       }
@@ -194,3 +204,20 @@ var InitWeb3 = setInterval(async function () {
 }
 
 InitializeWeb3();
+
+var RetrySuscribeSyncing = setInterval(async function () {
+  try {
+    console.log('Inside RetrySuscribeSyncing');
+    if( initWeb3Passed && alreadyCatchedUp == false){
+      clearInterval(RetrySuscribeSyncing);
+    }
+    else{
+      console.log('Retry StartSyncProcess()');
+      StartSyncProcess();
+    }
+
+
+  } catch (err) {
+    EticaMainGUI.showGeneralError(err);
+  }
+}, 5000);
