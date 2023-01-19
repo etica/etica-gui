@@ -112,7 +112,7 @@ ipcMain.on("updateProposal", (event, arg) => {
   db.update({
     proposalhash: arg.proposalhash,
     proposer: arg.proposer
-  }, {$set:{vary: arg.vary, choice: arg.choice, proposalhash: arg.proposalhash, proposaltitle: arg.proposaltitle, proposaldeadline:arg.proposaldeadline, timestampclaimable:arg.timestampclaimable}}, {
+  }, {$set:{status: arg.status, claimed: arg.claimed, rewardamount: arg.rewardamount, fees: arg.fees, slashduration: arg.slashduration}}, {
     upsert: false,
     multi:true
   }, function (err, numReplaced, upsert) {
@@ -131,6 +131,16 @@ ipcMain.on("getProposerProposals", (event, arg) => {
 ipcMain.on("getProposal", (event, arg) => {
   db.findOne({
     proposalhash: arg.proposalhash,
+  }).exec(function (err, _proposal) {
+    event.returnValue = _proposal;
+  });
+});
+
+// create this in case at some point Proposals contain also none owner proposals (like a watchlist):
+ipcMain.on("getProposalifOwner", (event, arg) => {
+  db.findOne({
+    proposalhash: arg.proposalhash,
+    proposer: arg.proposer
   }).exec(function (err, _proposal) {
     event.returnValue = _proposal;
   });

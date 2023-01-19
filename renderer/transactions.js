@@ -449,6 +449,11 @@ class Transactions {
                         let _commit = ipcRenderer.sendSync("getCommitbyProposalHash", {proposalhash: onetxevent.returnValues.proposal_hash, voter: onetxevent.returnValues.voter});
                         console.log('in rewardclaimed linie 434 _commit is: ', _commit);  
                         console.log('in rewardclaimed linie 434 onetxevent.returnValues is: ', onetxevent.returnValues);  
+
+                        let _proposal = ipcRenderer.sendSync("getProposalifOwner", {proposalhash: onetxevent.returnValues.proposal_hash, proposer: onetxevent.returnValues.voter});
+                        console.log('in rewardclaimed linie 463 _proposal is: ', _proposal);  
+                        console.log('in rewardclaimed linie 464 onetxevent.returnValues is: ', onetxevent.returnValues); 
+                        
                  
                         if(_commit && _commit.proposalhash == onetxevent.returnValues.proposal_hash){
       
@@ -459,12 +464,42 @@ class Transactions {
                               rewardamount: onetxevent.returnValues.amount
                           };
       
-              console.log('line 777 before updating with status _UpdatedCommit', _UpdatedCommit);
-              ipcRenderer.send("updateCommitRewardAmount", _UpdatedCommit);
-              console.log('line 779 after updating with status _UpdatedCommit', _UpdatedCommit);
-      
+                          console.log('line 777 before updating with status _UpdatedCommit', _UpdatedCommit);
+                          ipcRenderer.send("updateCommitRewardAmount", _UpdatedCommit);
+                          console.log('line 779 after updating with status _UpdatedCommit', _UpdatedCommit);
       
                        }
+
+
+
+                        if(_proposal && _proposal.proposalhash == onetxevent.returnValues.proposal_hash){
+
+                          let proposaldata = await EticaContract.propsdatas(onetxevent.returnValues.proposal_hash);
+                          let _status = _proposal.status;
+                          let _claimed = true;
+                       
+                        
+                        // make sure we retrieved proposal without issues, to avoid undefinied status:
+                        if(proposaldata && (proposaldata.status == 1 || proposaldata.status == 2)){
+                          _status = proposaldata.status;
+                        }
+      
+                          var _UpdatedProposal = {
+                              proposalhash: _proposal.proposalhash,
+                              proposer: onetxevent.returnValues.voter,
+                              status: _status,
+                              claimed: _claimed,
+                              rewardamount: onetxevent.returnValues.amount,
+                              fees:0,
+                              slashduration:0
+                          };
+      
+                          console.log('line 777 before updating with status _UpdatedProposal', _UpdatedProposal);
+                          ipcRenderer.send("updateProposal", _UpdatedProposal);
+                          console.log('line 779 after updating with status _UpdatedProposal', _UpdatedProposal);
+      
+      
+                        } 
       
                       }
 
@@ -1084,6 +1119,10 @@ class Transactions {
                 if(onetxevent.event == 'RewardClaimed'){ 
     
                       let _commit = ipcRenderer.sendSync("getCommitbyProposalHash", {proposalhash: onetxevent.returnValues.proposal_hash, voter: onetxevent.returnValues.voter});
+                      let _proposal = ipcRenderer.sendSync("getProposalifOwner", {proposalhash: onetxevent.returnValues.proposal_hash, proposer: onetxevent.returnValues.voter});
+                      console.log('RewardClaimed _proposal is: ', _proposal);
+                      console.log('RewardClaimed onetxevent.returnValues.proposal_hash is: ', onetxevent.returnValues.proposal_hash);
+                      console.log('RewardClaimed onetxevent.returnValues.voter is: ', onetxevent.returnValues.voter);
                
                       if(_commit && _commit.proposalhash == onetxevent.returnValues.proposal_hash){
     
@@ -1100,7 +1139,41 @@ class Transactions {
     
     
                      }
-    
+
+
+
+                     if(_proposal && _proposal.proposalhash == onetxevent.returnValues.proposal_hash){
+
+                      console.log('inside found _proposal is true: ');
+
+                      let proposaldata = await EticaContract.propsdatas(onetxevent.returnValues.proposal_hash);
+                      console.log('RewardClaimed proposaldata is: ', proposaldata);
+                      let _status = _proposal.status;
+
+                      // make sure we retrieved proposal without issues, to avoid undefinied status:
+                      if(proposaldata && (proposaldata.status == 1 || proposaldata.status == 2)){
+                         _status = proposaldata.status;
+                      }
+
+                      let _claimed = true;
+  
+                      var _UpdatedProposal = {
+                          proposalhash: _proposal.proposalhash,
+                          proposer: onetxevent.returnValues.voter,
+                          status: _status,
+                          claimed: _claimed,
+                          rewardamount: onetxevent.returnValues.amount,
+                          fees:0,
+                          slashduration:0
+                      };
+  
+                      console.log('line 777 before updating with status _UpdatedProposal', _UpdatedProposal);
+                      ipcRenderer.send("updateProposal", _UpdatedProposal);
+                      console.log('line 779 after updating with status _UpdatedProposal', _UpdatedProposal);
+  
+  
+                    } 
+
                     }
 
 
