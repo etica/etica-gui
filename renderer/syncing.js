@@ -157,16 +157,19 @@ function StartSyncProcess() {
   
 }
 
-var RetrySuscribeSyncing = setInterval(async function () {
+var RetrySuscribeSyncing = setInterval( function () {
   try {
     console.log('Inside RetrySuscribeSyncing');
-    if( initWeb3Passed && alreadyCatchedUp == false){
+    if(initWeb3Passed){
+    if(alreadyCatchedUp == false){
       console.log('Retry StartSyncProcess()');
       StartSyncProcess();
     }
     else{
+      console.log('clearInterval RetrySuscribeSyncing');
       clearInterval(RetrySuscribeSyncing);
     }
+  }
   } catch (err) {
     EticaMainGUI.showGeneralError(err);
   }
