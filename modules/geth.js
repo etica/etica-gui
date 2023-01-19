@@ -118,7 +118,7 @@ class Geth {
         "--syncmode",
         "snap",
         "--bootnodes",
-        "enode://e67b73cd00f3fe030eb2d96be81c58a4ec646aeefa420a80836ac0ffd257fbea0499944c4d985d513199c926e5e2df418fc236c774ee46b98dd68bcba00ad3fc@127.0.0.1:30303"
+        "enode://3b78659420dc8fc6aec36c22674af40854fbd82f048946c08a3b811b5e31cfc349500cf1b4f90522a288671c941628701c5c3ff432360fbefc28fc5bc43afe61@127.0.0.1:30303"
       ]); // LOCAL DEV NODE FOR TESTING //
 
       if (!this.gethProcess) {
