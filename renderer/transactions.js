@@ -480,7 +480,7 @@ class Transactions {
                        
                         
                         // make sure we retrieved proposal without issues, to avoid undefinied status:
-                        if(proposaldata && (proposaldata.status == 1 || proposaldata.status == 2)){
+                        if(proposaldata && (proposaldata.status == 0 || proposaldata.status == 1)){
                           _status = proposaldata.status;
                         }
       
@@ -513,7 +513,7 @@ class Transactions {
                         let _hashproposalend =null;
                         let _hashproposaldeadline =null;
                         let _timestamp_claimable =null;
-                        let _status = 3; // pending
+                        let _status = 2; // pending
                         let _claimed = false;
       
                         // prevent reactualisation of status on resyncs:
@@ -1151,7 +1151,7 @@ class Transactions {
                       let _status = _proposal.status;
 
                       // make sure we retrieved proposal without issues, to avoid undefinied status:
-                      if(proposaldata && (proposaldata.status == 1 || proposaldata.status == 2)){
+                      if(proposaldata && (proposaldata.status == 0 || proposaldata.status == 1)){
                          _status = proposaldata.status;
                       }
 
@@ -1187,7 +1187,7 @@ class Transactions {
                       let _hashproposalend =null;
                       let _hashproposaldeadline =null;
                       let _timestamp_claimable =null;
-                      let _status = 3; // pending
+                      let _status = 2; // pending
                       let _claimed = false;
     
                       // prevent reactualisation of status on resyncs:

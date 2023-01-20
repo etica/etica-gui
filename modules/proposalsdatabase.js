@@ -173,13 +173,13 @@ ipcMain.on("getProposals", (event, arg) => {
       let pending = false;
 
       // had to use this system because current front end framework cant do "(if status == x)"":
-      if(docs[i].status == 1){
+      if(docs[i].status == 0){
         rejected = true;
       }
-      if(docs[i].status == 2){
+      if(docs[i].status == 1){
         approved = true;
       }
-      if(docs[i].status == 3){
+      if(docs[i].status == 2){
         pending = true;
       }
 
