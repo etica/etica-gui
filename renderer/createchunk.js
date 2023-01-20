@@ -107,7 +107,7 @@ $(document).on("render_createChunk", function () {
 
               iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});
 
-              EticaBlockchain.getTransaction(data, function (error) {
+            /*  EticaBlockchain.getTransaction(data, function (error) {
                 EticaMainGUI.showGeneralError(error);
               }, function (transaction) {
                 ipcRenderer.send("storeTransaction", {
@@ -118,7 +118,8 @@ $(document).on("render_createChunk", function () {
                   toaddr: transaction.to.toLowerCase(),
                   value: transaction.value
                 });
-              });
+              }); */
+
             });
           });
         }
