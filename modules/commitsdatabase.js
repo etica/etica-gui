@@ -128,6 +128,32 @@ ipcMain.on("updateCommitRewardAmount", (event, arg) => {
   });
 });
 
+
+ipcMain.on("updateCommitSlash", (event, arg) => {
+  db.update({
+    votehash: arg.votehash,
+    voter: arg.voter
+  }, {$set:{slashamount: arg.slashamount, slashduration: arg.slashduration, status: arg.status}}, {
+    upsert: false,
+    multi:false
+  }, function (err, numReplaced, upsert) {
+    // do nothing for now
+  });
+});
+
+ipcMain.on("updateCommitFee", (event, arg) => {
+  db.update({
+    votehash: arg.votehash,
+    voter: arg.voter
+  }, {$set:{fee: arg.fee, status: arg.status}}, {
+    upsert: false,
+    multi:false
+  }, function (err, numReplaced, upsert) {
+    // do nothing for now
+  });
+});
+
+
 ipcMain.on("getCommit", (event, arg) => {
   db.findOne({
     votehash: arg.votehash,
@@ -232,6 +258,9 @@ ipcMain.on("getCommits", (event, arg) => {
         "revealpassed": revealpassed,
         "claimopen": claimopen,
         "rewardamount": docs[i].rewardamount,
+        "slashamount": docs[i].slashamount,
+        "slashduration": docs[i].slashduration,
+        "fee": docs[i].fee,
         "timestamp": docs[i].timestamp
       };
       console.log('_commit ', i, ' is', _commit);

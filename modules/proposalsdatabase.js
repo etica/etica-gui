@@ -34,7 +34,8 @@ db.loadDatabase(function (err) {
                         blocknumber: data.number, // blocktimestamp
                         reward: _rewardamount, // ETI reward
                         fees: _feesamount, // ETI fees
-                        slashduration: _slashduration // Time slash duration
+                        slashduration: _slashduration, // Time slash duration
+                        slashamount: _slashamount
 */
 
 // index the creationdate field
@@ -106,13 +107,41 @@ ipcMain.on("storeProposal", (event, arg) => {
   });
 });
 
-ipcMain.on("updateProposal", (event, arg) => {
+ipcMain.on("updateProposalReward", (event, arg) => {
   console.log('--> updating Proposal');
   console.log('--> updating Proposal', arg);
   db.update({
     proposalhash: arg.proposalhash,
     proposer: arg.proposer
   }, {$set:{status: arg.status, claimed: arg.claimed, rewardamount: arg.rewardamount, fees: arg.fees, slashduration: arg.slashduration}}, {
+    upsert: false,
+    multi:true
+  }, function (err, numReplaced, upsert) {
+    // do nothing for now
+  });
+});
+
+ipcMain.on("updateProposalSlash", (event, arg) => {
+  console.log('--> updating Proposal');
+  console.log('--> updating Proposal', arg);
+  db.update({
+    proposalhash: arg.proposalhash,
+    proposer: arg.proposer
+  }, {$set:{status: arg.status, claimed: arg.claimed, slashamount: arg.slashamount, slashduration: arg.slashduration}}, {
+    upsert: false,
+    multi:true
+  }, function (err, numReplaced, upsert) {
+    // do nothing for now
+  });
+});
+
+ipcMain.on("updateProposalFee", (event, arg) => {
+  console.log('--> updating Proposal');
+  console.log('--> updating Proposal', arg);
+  db.update({
+    proposalhash: arg.proposalhash,
+    proposer: arg.proposer
+  }, {$set:{status: arg.status, claimed: arg.claimed, fee: arg.fee}}, {
     upsert: false,
     multi:true
   }, function (err, numReplaced, upsert) {
@@ -229,6 +258,9 @@ ipcMain.on("getProposals", (event, arg) => {
         "revealpassed": revealpassed,
         "claimopen": claimopen,
         "rewardamount": docs[i].rewardamount,
+        "slashamount": docs[i].slashamount,
+        "slashduration": docs[i].slashduration,
+        "fee": docs[i].fee,
         "timestamp": docs[i].timestamp
       };
       console.log('_proposal ', i, ' is', _proposal);

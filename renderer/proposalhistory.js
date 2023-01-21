@@ -17,6 +17,12 @@ class ProposalHistory {
       if(element['rewardamount']){
         element['rewardamount'] = web3Local.utils.fromWei(element['rewardamount'], "ether");
       }
+      if(element['slashamount']){
+        element['slashamount'] = web3Local.utils.fromWei(element['slashamount'], "ether");
+      }
+      if(element['fee']){
+        element['fee'] = web3Local.utils.fromWei(element['fee'], "ether");
+      }
       if(element['approvalthreshold']){
         console.log("element['approvalthreshold] before / 100 is", element['approvalthreshold']);
         element['approvalthreshold'] = element['approvalthreshold'] / 100;

@@ -69,9 +69,29 @@
                   {{/if}}
                 {{/if}}  
                 {{#if claimed}}
-                <span>Claimed, reward:</span><br>
                    {{#if rewardamount}}
+                   <span>Claimed, reward:</span><br>
                    <span>{{ rewardamount }} ETI</span>
+                  
+                   {{else}}
+                   {{#if fee}}
+                   <span>Fee:</span><br>
+                   <span style="color:rgb(208, 52, 52);">
+                   <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
+                    -{{ fee }} ETI
+                   </span>
+                   {{/if}}
+                   {{#if slashamount}}
+                   <br><span>Slash:</span><br>
+                   <span>
+                   <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
+                     {{ slashamount }} ETI
+                   </span><br>
+                   <span style="color:rgb(162, 112, 48);">
+                       + {{ slashduration }}
+                   </span>
+                   {{/if}}
+
                    {{/if}}
                 {{/if}}
                 {{#if missed}}

@@ -56,6 +56,15 @@ class CommitHistory {
       if(element['rewardamount']){
         element['rewardamount'] = web3Local.utils.fromWei(element['rewardamount'], "ether");
       }
+      if(element['slashamount']){
+        element['slashamount'] = web3Local.utils.fromWei(element['slashamount'], "ether");
+      }
+      if(element['slashduration']){
+        element['slashduration'] = moment.duration(element['slashduration'], 'seconds').humanize();
+      }
+      if(element['fee']){
+        element['fee'] = web3Local.utils.fromWei(element['fee'], "ether");
+      }
     });
 
     EticaBlockchain.getAccountsData(function (error) {

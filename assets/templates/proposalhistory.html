@@ -57,13 +57,32 @@
             </td>
             <td>
               {{#if claimed}}
-                   {{#if rewardamount}}
+                  {{#if rewardamount}}
                    <span>Reward claimed:</span><br>
                    <span>
                     <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
                     {{ rewardamount }} ETI
                     </span>
-                   {{/if}}
+                  {{else}}
+                      {{#if fee}}
+                      <span>Fee:</span><br>
+                      <span style="color:rgb(208, 52, 52);">
+                      <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
+                       -{{ fee }} ETI
+                      </span>
+                      {{/if}}
+                      {{#if slashamount}}
+                      <span>Slash:</span><br>
+                      <span>
+                      <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
+                        {{ slashamount }} ETI
+                      </span>
+                      <span style="color:orange;">
+                          {{ slashdurattion }}
+                      </span>
+                      {{/if}}
+
+                  {{/if}}
                 
               {{else}}
                  {{#if claimopen}}
