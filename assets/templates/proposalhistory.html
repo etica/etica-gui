@@ -57,8 +57,8 @@
             </td>
             <td>
               {{#if claimed}}
-                   <span>Claimed, reward:</span><br>
                    {{#if rewardamount}}
+                   <span>Reward claimed:</span><br>
                    <span>
                     <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
                     {{ rewardamount }} ETI
@@ -66,7 +66,7 @@
                    {{/if}}
                 
               {{else}}
-              {{#if claimopen}}
+                 {{#if claimopen}}
                  <button type="button" class="btn btn-etica btnClaimProposal" data-proposalhash="{{proposalhash}}" data-proposer="{{proposer}}">Claim</button>
                  {{else}}
                  <span>claims opening on:</span><br>

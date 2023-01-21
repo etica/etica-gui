@@ -163,7 +163,6 @@ ipcMain.on("getProposals", (event, arg) => {
     for (i = 0; i < Math.min(docs.length, 500); i++) {
       let _title = "";
       let created = false;
-      let claimed = false;
       let missed = false;
       let revealopen = false;
       let revealpassed = false;
@@ -219,14 +218,12 @@ ipcMain.on("getProposals", (event, arg) => {
         "timestampclaimable": docs[i].timestampclaimable,
         "valueeti": docs[i].valueeti,
         "choice": docs[i].choice,
-        "vary": docs[i].vary,
-        "isDone": docs[i].isDone,
         "status": docs[i].status,
         "created": created,
         "rejected": rejected,
         "approved": approved,
         "pending": pending,
-        "claimed": claimed,
+        "claimed": docs[i].claimed,
         "missed": missed,
         "revealopen": revealopen,
         "revealpassed": revealpassed,
