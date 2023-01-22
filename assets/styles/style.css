@@ -444,6 +444,21 @@ div.sidebar svg {
   font-weight: normal;
 }
 
+.addressList {
+  overflow-y: auto;
+  height: calc(100vh - 80px);
+}
+
+.addressList .colEdit {
+  padding-left: 20px;
+}
+
+.addressList th {
+  color: #ccc;
+  font-size: 1.1em;
+  font-weight: normal;
+}
+
 .sendTXInfo {
   height: 30px;
 }

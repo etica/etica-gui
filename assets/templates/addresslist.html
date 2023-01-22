@@ -2,7 +2,7 @@
     <input id="addressListFilter" placeholder="Enter address name" type="text">
     <button type="button" class="btn btn-etica" id="btnClearSearchField"><i class="far fa-trash-alt"></i></button>
 </div>
-<div id="addressList" class="{{#if addressData.length}}walletsWrapper{{else}}noWalletsWrapper{{/if}}">
+<div class="addressList {{#if addressData.length}}walletsWrapper{{else}}noWalletsWrapper{{/if}}">
     {{#if addressData.length}}
         <table class="bordered" id="addressTable">
             <thead>
