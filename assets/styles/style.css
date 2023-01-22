@@ -515,7 +515,7 @@ div.sidebar svg {
 }
 
 .loadingOverlay {
-  background-color: #212529;
+  /*background-color: #212529;*/
   display: none;
   position: fixed;
   /*left: 120px;*/

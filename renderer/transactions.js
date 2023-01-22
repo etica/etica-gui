@@ -816,17 +816,17 @@ class Transactions {
   renderTransactions() {
     if (!EticaTransactions.getIsLoading()) {
 
+      EticaTransactions.setIsLoading(true);
+
       EticaBlockchain.getAccountsData(function (error) {
         EticaMainGUI.showGeneralError(error);
       }, function (data) {
         EticaMainGUI.renderTemplate("transactions.html", data);
+        // show the loading overlay for transactions
+        $("#loadingTransactionsOverlay").css("display", "block");
         $(document).trigger("render_transactions");
       });
       
-      EticaTransactions.setIsLoading(true);
-
-      // show the loading overlay for transactions
-      $("#loadingTransactionsOverlay").css("display", "block");
 
       
       async function loadtransactions(){
