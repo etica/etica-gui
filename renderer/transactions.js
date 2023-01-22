@@ -136,6 +136,7 @@ class Transactions {
                   let _toaddreti = null;
                   let _slashduration = null;
                   let _slashamount = null;
+                  let _inorout = 'neutral'; // if tx is received: received, if tx is sent: sent
                   let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'NewStakeClaim', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
                   console.log('onetxevent.returnValues before includes is ', onetxevent);
                 // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
@@ -149,6 +150,13 @@ class Transactions {
                     _valueeti = onetxevent.returnValues.tokens;
                     _fromaddreti = onetxevent.returnValues.from;
                     _toaddreti = onetxevent.returnValues.to;
+
+                    if(EticaWallets.getAddressExists(onetxevent.returnValues.from)){
+                     _inorout = 'sent';
+                    }
+                    else if(EticaWallets.getAddressExists(onetxevent.returnValues.to)){
+                      _inorout = 'received';
+                    }
 
                   }
 
@@ -270,9 +278,10 @@ class Transactions {
                     eventtype: onetxevent.event,
                     logIndex:onetxevent.logIndex, // index position in the block
                     valueeti: _valueeti,
-                    fromaddreti:  _fromaddreti,
+                    fromaddreti: _fromaddreti,
                     toaddreti: _toaddreti,
-                    slashduration: _slashduration
+                    slashduration: _slashduration,
+                    inorout: _inorout
                   };
                   
                   console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is: ', Transaction);
@@ -635,11 +644,11 @@ class Transactions {
                         // prevent reactualisation of status on resyncs:
                         if(_savedproposal && _savedproposal.status){
                           if ( _savedproposal.status){
-                            _status = _proposalsaved.status;
+                            _status = _savedproposal.status;
                           }
   
                           if ( _savedproposal.claimed){
-                            _claimed = _proposalsaved.claimed;
+                            _claimed = _savedproposal.claimed;
                           }
                         }
       
@@ -721,6 +730,14 @@ class Transactions {
                   // If no input in tx then it is an egaz transfer:
                   if(onetx.input == '0x'){
 
+                    let _inoroutegaz = 'neutral';
+                    if(EticaWallets.getAddressExists(onetx.from)){
+                      _inoroutegaz = 'sent';
+                     }
+                     else if(EticaWallets.getAddressExists(onetx.to)){
+                       _inoroutegaz = 'received';
+                     }
+
                     var Transaction = {
                       block: onetx.blockNumber.toString(),
                       txhash: onetx.hash.toLowerCase(),
@@ -733,7 +750,8 @@ class Transactions {
                       valueeti:0,
                       fromaddreti: null,
                       toaddreti: null,
-                      slashduration: null
+                      slashduration: null,
+                      inorout: _inoroutegaz
                     };
     
                     console.log('before stored Transaction from onetx.input== is: ', Transaction);
@@ -951,6 +969,7 @@ class Transactions {
                 let _fromaddreti = null;
                 let _toaddreti = null;
                 let _slashduration = null;
+                let _inorout = 'neutral'; // if tx is received: received, if tx is sent: sent
                 let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'NewStakeClaim', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
 
                 // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
@@ -963,6 +982,13 @@ class Transactions {
                   _valueeti = onetxevent.returnValues.tokens;
                   _fromaddreti = onetxevent.returnValues.from;
                   _toaddreti = onetxevent.returnValues.to;
+
+                  if(EticaWallets.getAddressExists(onetxevent.returnValues.from)){
+                    _inorout = 'sent';
+                   }
+                   else if(EticaWallets.getAddressExists(onetxevent.returnValues.to)){
+                     _inorout = 'received';
+                   }
 
                 }
 
@@ -1086,7 +1112,8 @@ class Transactions {
                   valueeti: _valueeti,
                   fromaddreti:  _fromaddreti,
                   toaddreti: _toaddreti,
-                  slashduration: _slashduration
+                  slashduration: _slashduration,
+                  inorout: _inorout
                 };
                 
                 console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is: ', Transaction);
@@ -1456,11 +1483,11 @@ class Transactions {
                       // prevent reactualisation of status on resyncs:
                       if(_savedproposal && _savedproposal.status){
                         if ( _savedproposal.status){
-                          _status = _proposalsaved.status;
+                          _status = _savedproposal.status;
                         }
 
                         if ( _savedproposal.claimed){
-                          _claimed = _proposalsaved.claimed;
+                          _claimed = _savedproposal.claimed;
                         }
                       }
     
@@ -1562,6 +1589,17 @@ class Transactions {
 
                 // If no input in tx then it is an egaz transfer:
                 if(onetx.input == '0x'){
+
+                  let _inoroutegaz = 'neutral';
+
+                  if(EticaWallets.getAddressExists(onetx.from)){
+                    _inoroutegaz = 'sent';
+                   }
+                   else if(EticaWallets.getAddressExists(onetx.to)){
+                     _inoroutegaz = 'received';
+                   }
+
+
                   var Transaction = {
                     block: onetx.blockNumber.toString(),
                     txhash: onetx.hash.toLowerCase(),
@@ -1574,7 +1612,8 @@ class Transactions {
                     valueeti:0,
                     fromaddreti: null,
                     toaddreti: null,
-                    slashduration: null
+                    slashduration: null,
+                    inorout: _inoroutegaz
                   };
   
                   console.log('before stored Transaction from onetx.input== is: ', Transaction);

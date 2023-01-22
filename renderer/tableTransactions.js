@@ -42,12 +42,13 @@ class tableTransactions {
         {
           targets: 0,
           render: function (data, type, row) {
-            if (data == 0) {
-              return '<i class="fas fa-arrow-left"></i>';
-            } else if (data == 1) {
-              return '<i class="fas fa-arrow-right"></i>';
+            if (row[12] == 'received') {
+              //return '<i class="fas fa-arrow-left"></i>';
+              return '<img src="assets/images/receivetx.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" title="In: funds received in wallet" />';
+            } else if (row[12] == 'sent') {
+              return '<img src="assets/images/sendtx.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" title="Out: funds sent out of wallet" />';
             } else {
-              return '<i class="fas fa-arrows-alt-h"></i>';
+              return '<img src="assets/images/neutraltx.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" title="Internal: no fund transfer" />';
             }
           }
         }, {

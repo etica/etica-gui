@@ -69,7 +69,8 @@ ipcMain.on("getTransactions", (event, arg) => {
         docs[i].fromaddreti,
         docs[i].toaddreti,
         docs[i].eventtype,
-        docs[i].slashduration
+        docs[i].slashduration,
+        docs[i].inorout
       ]);
     }
 

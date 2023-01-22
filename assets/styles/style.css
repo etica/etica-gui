@@ -391,7 +391,8 @@ div.sidebar svg {
 }
 
 .dataTables_scrollBody .transactionsBlockNum {
-  color: #f92472;
+  /*color: #f92472;*/
+  color: #628c54;
   cursor: pointer;
 }
 
