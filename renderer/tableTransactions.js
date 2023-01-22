@@ -18,6 +18,7 @@ class tableTransactions {
     // render the transactions
     $(id).DataTable({
       dom: "Bfrtip",
+      retrieve: true,
       paging: false,
       scrollY: "calc(100vh - 115px)",
       responsive: true,
