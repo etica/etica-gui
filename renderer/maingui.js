@@ -50,6 +50,9 @@ class MainGUI {
       case "stakes":
         $("#mainNavBtnStakesWrapper").addClass("iconSelected");
         break;
+      case "stakesBoard":
+        $("#mainNavBtnStakesBoardWrapper").addClass("iconSelected");
+        break;
       case "settings":
         $("#mainNavBtnSettingsWrapper").addClass("iconSelected");
         break;
@@ -197,6 +200,11 @@ $("#mainNavBtnSearchEtica").click(function () {
 $("#mainNavBtnStakes").click(function () {
   EticaMainGUI.changeAppState("stakes");
   StakesEtica.renderStakesState();
+});
+
+$("#mainNavBtnStakesBoard").click(function () {
+  EticaMainGUI.changeAppState("stakesBoard");
+  StakesBoardEtica.renderStakesBoardState();
 });
 
 $("#mainNavBtnSettings").click(function () {

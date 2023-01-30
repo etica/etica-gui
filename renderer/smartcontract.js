@@ -1460,6 +1460,110 @@ class SmartContract {
 
 
 
+  async getStakesBoardBalancesofAddress(address) {
+    
+         var wallets = EticaDatabase.getWallets();
+         var walletName = "";
+          if (wallets) {
+            walletName = wallets.names[address] || walletName;
+          }
+
+          var addressInfo = {};
+          addressInfo.addressbalance = await updateBalance(address);
+          addressInfo.addressbalance_eti = await updateBalanceETI(address);
+          addressInfo.addressstakesamount = await updateStakeAmount(address);
+          addressInfo.addressblockedeticas = await updateBlockedEticas(address);
+          addressInfo.addressbosoms = await updateBalanceBosoms(address);
+          addressInfo.address = address;
+          addressInfo.name = walletName;
+
+          return addressInfo;
+    
+    async function updateBalance(address) {
+
+              let amount = await web3Local.eth.getBalance(address);
+      
+              addressInfo.balance = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
+              return addressInfo;
+    }
+    
+    
+    async function updateBalanceETI(address) {
+      let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let amount = await contract.methods.balanceOf(address).call();
+
+        addressInfo.balance_eti = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
+        return addressInfo;
+    }
+    
+    
+    async function updateStakeAmount(address) {
+      let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let amount = await contract.methods.stakesAmount(address).call();
+
+        addressInfo.stakesamount = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
+        return addressInfo;
+    }
+
+    async function updateBlockedEticas(address) {
+      let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let amount = await contract.methods.blockedeticas(address).call();
+
+        addressInfo.blockedeticas = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
+        return addressInfo;
+    }
+
+    async function updateBalanceBosoms(address) {
+      let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+      let amount = await contract.methods.bosoms(address).call();
+
+        addressInfo.bosoms = parseFloat(web3Local.utils.fromWei(amount, "ether")).toFixed(4);
+        return addressInfo;
+    }
+
+  }
+
+
+
+  async getStakesofAddress(address) {
+    
+    var wallets = EticaDatabase.getWallets();
+    var walletName = "";
+     if (wallets) {
+       walletName = wallets.names[address] || walletName;
+     }
+
+
+     var addressStakes = {};
+     let stakescounter = await getStakesCounters(address);
+     addressStakes.stakes = await getStakes(address, stakescounter);
+     addressStakes.stakescounter = stakescounter;
+     return addressStakes;   
+
+     async function getStakesCounters(address) {
+
+         let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+         let _stakescounter =  await contract.methods.stakesCounters(address).call();
+
+         return _stakescounter;
+    }
+
+
+    async function getStakes(_address, _stakescounter) {
+
+         let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+         let address_stakes = [];
+         let onestake;
+
+         for(let i =1;i<= _stakescounter;i++){
+             onestake = await contract.methods.stakes(_address, i).call();
+             address_stakes.push(onestake);
+        }
+
+         return address_stakes;
+    }
+
+}
 
 
 
