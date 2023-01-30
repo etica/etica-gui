@@ -39,11 +39,13 @@ class StakesBoard {
       EticaMainGUI.showGeneralError(error);
     }, async function (walletdata) {
 
+      console.log('walletdata is', walletdata);
+
       let data = await EticaContract.getStakesBoardBalancesofAddress(SearchedAddress);
 
       console.log('data before is', data);
-      data.balance = walletdata.balance; // wallet egaz balance
-      data.balance_eti = walletdata.balance_eti; // wallet eti balance
+      data.sumBalance = walletdata.sumBalance; // wallet egaz balance
+      data.sumBalanceEti = walletdata.sumBalanceEti; // wallet eti balance
       console.log('data after is', data);
 
       if( SearchedAddress != null){
@@ -117,9 +119,13 @@ class StakesBoard {
         // if stakes:
         if( address_stakes && address_stakes.stakescounter > 0){
 
-               for(let i =1;i<= stakes.length;i++){
+               let stakes = address_stakes.stakes;
 
-               stakes[i].amount = parseFloat(web3Local.utils.fromWei(stakes[i].amount, "ether"));
+               for(let i=0;i < address_stakes.stakes.length;i++){
+
+                stakes[i].amount = parseFloat(web3Local.utils.fromWei(address_stakes.stakes[i].amount, "ether"));
+               stakes[i].endtime = moment.unix(parseInt(stakes[i].endTime)).format("YYYY-MM-DD HH:mm:ss");
+               stakes[i].available = BoardStakes.getavailability(stakes[i].endTime);
 
                }
 
@@ -128,10 +134,20 @@ class StakesBoard {
 
           }
 
-
         return _result;
 
   }
+
+  // get stakeavailability:
+  getavailability(_stakeend){
+    let _now = new moment();
+    if(_now.isAfter(moment.unix(_stakeend))){
+      return true;
+    }
+    else{
+      return false;
+    }
+   }
 
 }
 
