@@ -19,242 +19,66 @@
     <form class="col s12">
       <div class="row" style="margin-bottom: 0;">
         <div class="input-field col s6">
-          <input id="inputStakesBoard" class="" placeholder="Enter either Proposal Hash, Disease hash (or name), Chunk Id:" type="text">
-          <label for="inputStakesBoard" class="active">Search Etica:</label>
+          <input id="inputStakesBoard" disabled class="" style="color:rgb(209, 209, 209);border-bottom: solid 0.5px rgb(209, 209, 209);;" placeholder="Enter either Proposal Hash, Disease hash (or name), Chunk Id:" type="text">
+          <label for="inputStakesBoard" class="active" style="color:white;">Etica address:</label>
+          <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+           none staked ETI: {{addressbalance_eti}} <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
+          </span>
+          <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+            | EGAZ: {{addressbalance}} <img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
+          </span>
         </div>
         <div class="input-field col s6" style="top:2vh;position: relative; left:3%;">
-          <button type="button" class="button4 MarginRight5" id="btnStakesBoard">Search</button>
+          &nbsp {{ stakescounter }} stakes
+          <button type="button" class="button4 MarginRight5" id="btnStakesBoard">Consolidate</button>
         </div>
       </div>
     </form>
   </div>
 </div>
 
-{{#if DiseaseFound}}
-<div class="sendWrapper" style="padding-top:0;padding-bottom: 0;">
-  <div class="card-panel" style="padding-top: 0px;padding-bottom: 0px;">
-      <div class="row">
-        <div class="input-field col s12" style="display: inline;">
-          <span style="color:#9e9e9e; font-size:1rem;">Type:</span> &nbsp;<span>{{ BlockchainResp.type }}</span>
-        </div>
-        <div class="input-field col s12 searchresults">
-          <label>Name:</label><br>
-          <p>{{ BlockchainResp.disease.name }}</p>
-        </div>
-        <div class="input-field col s12 searchresults">
-          <label>Hash:</label><br>
-          <p class="copyClipboard">{{ BlockchainResp.disease.disease_hash }}</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s6 searchresults">
-        <label>Proposals:</label><br>
-        <p>16</p>
-        </div>
-        <div class="input-field col s6 searchresults">
-          <label>Chunks:</label><br>
-          <p>3</p>
-        </div>
-      </div>
-    
-  </div>
-</div>
-<h6 style="margin-left: 3%;">Latest 20 Proposals:</h6>
-{{#BlockchainResp.proposals}}
-<div class="sendWrapper" style="padding-top:0;">
-  <div class="card-panel" style="padding-top: 0px;padding-bottom: 0px;background-color:#0c1315;">
-      <div class="row">
-        <div class="input-field col s8" style="display: inline;">
-          <span style="color:#9e9e9e; font-size:1rem;">Title:</span> &nbsp;<span>{{ title }}</span>
-        </div>
-        <div class="input-field col s4" style="display: inline;">
-          <span style="color:#9e9e9e; font-size:1rem;" class="copyClipboard">Chunk Id:</span> &nbsp;<span>{{ chunk_id }} | Status: Pending</span>
-        </div>
-        <div class="input-field col s12 searchresults">
-          <label style="font-size:1rem;">Proposal Hash (ID):</label><br>
-          <p class="copyClipboard">{{proposed_release_hash}}</p>
-        </div>
-        <div class="input-field col s12 searchresults">
-          <label style="font-size:1rem;">IPFS content:</label><br>
-          <p class="copyClipboard">{{raw_release_hash}}</p>
-        </div>
+<div class="sendWrapper" style="height: 5vh;">
+  <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+    &nbsp Staked ETI: {{addressstakesamount}} <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
+  </span>
+  <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+    &nbsp&nbsp | &nbsp Bosoms: {{addressbosoms}} <img src="assets/images/bosoms-tinylogo-dark.png" alt height="22" style="width: 23px;top: 0.5vh;height: 23px;position: relative;" />
+  </span>
+  <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+   &nbsp&nbsp | &nbsp Locked ETI: {{addressblockedeticas}} <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
+  </span>
 
-        <div class="input-field col s4 searchresults">
-          <label>Created:</label><br>
-          <p>2022/12/04 16:00</p>
-          </div>
-          <div class="input-field col s4 searchresults">
-            <label>Votes close:</label><br>
-            <p>2022/12/04 16:00</p>
-          </div>
-          <div class="input-field col s4 searchresults">
-            <label>Claims open on:</label><br>
-            <p>2023/01/07 16:00</p>
-          </div>
-          <div class="input-field col s3 searchresults">
-            <label>Threshold:</label><br>
-            <p>80.21%</p>
-          </div>
-          <div class="input-field col s3 searchresults">
-            <label>Votes ratio:</label><br>
-            <p>84.4%</p>
-          </div>
-          <div class="input-field col s3 searchresults">
-            <label>Approval Votes:</label><br>
-            <p>
-              <span style="display: inline-block;">
-              <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-              1500.321 ETI
-              </span>
-            </p>
-          </div>
-          <div class="input-field col s3 searchresults">
-            <label>Disaproval votes:</label><br>
-            <p>
-              <span style="display: inline-block;">
-              <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-              150.321 ETI
-              </span>
-            </p>
-          </div>
-      </div>
-  </div>
-</div>
-{{/BlockchainResp.proposals}}
+  {{#if stakes.length}}
 
-{{/if}}
+<div class="row">
 
-<!--
-<div class="sendWrapper" style="padding-top:0;">
-  <div class="card-panel" style="padding-top: 0px;padding-bottom: 0px;">
-      <div class="row">
-        <div class="input-field col s6" style="display: inline;">
-          <span style="color:#9e9e9e; font-size:1rem;">Type:</span> &nbsp;<span>Chunk</span>
-        </div>
-        <div class="input-field col s6" style="display: inline;">
-          <span style="color:#9e9e9e; font-size:1rem;">Belongs to disease:</span> &nbsp;<span>Malaria</span>
-        </div>
-        <div class="input-field col s6">
-          <label>Name:</label><br>
-          <p>Diabetes Type 2</p>
-        </div>
-        <div class="input-field col s6">
-          <label>Index:</label><br>
-          <p>88</p>
-        </div>
+  {{#stakes}}
+
+      <div class="input-field col s5 stakesbox">
+        <div style="display:inline;position:relative;left:4%;"><label class="MarginRight5" style="color:#868686;">Amount:</label><span>{{amount}} <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /></span></div>
+        <br><div style="display:inline;position:relative;left:4%;"><label class="MarginRight5" style="color:#868686;">Ends:</label><span>{{endTime}}</span></div>
         <div class="input-field col s12">
-          <label>Description:</label><br>
-          <p>Disease Riuh yuguyg uyg uy guy guy ggy uuygf yyhioijoi o jiojio/p>
+          <button type="button" class="button4" style="width: 100px;margin-right: 5%;">Snap</button>
+          {{#if available}}
+          <button type="button" class="button4" style="width: 100px;">Claim</button>
+          {{else}}
+          <i>not available for claim yet</i>
+          {{/if}}
         </div>
       </div>
-      <div class="row">
-        <div class="input-field col s6">
-        <label>Proposals:</label><br>
-        <p>16</p>
-        </div>
-      </div>
-    
-  </div>
-</div>  -->
 
-{{#if BlockchainResp}}
-<p>Case 1</p>
-{{/if}}
+  {{/stakes}}
 
-{{#BlockchainResp}}
-<p>Case 2</p>
-{{/BlockchainResp}}
-
-
-
-
-
-
-{{#if ProposalFound}}
-<div class="sendWrapper" style="padding-top:0;">
-  <div class="card-panel" style="padding-top: 0px;padding-bottom: 0px;">
-      <div class="row" style="margin-bottom: 0;">
-        <div class="input-field col s6" style="display: inline;margin-top: 1.5vh;">
-          <span style="color:#9e9e9e; font-size:1rem;">Type:</span> &nbsp;<span>{{ BlockchainResp.type}}</span>
-        </div>
-        <div class="input-field col s6" style="margin-top: 1.5vh;">
-          <span style="color:#9e9e9e; font-size:1rem;">Status:</span> &nbsp;<span>Pending</span>
-        </div>
-        <div class="input-field col s6 searchresults">
-          <label>Title:</label><br>
-          <p>{{ BlockchainResp.proposal.title}}</p>
-        </div>
-        <div class="input-field col s6 searchresults">
-          <label>Belongs to Period:</label><br>
-          <p>{{ BlockchainResp.period.id}}</p>
-        </div>
-        <div class="input-field col s6 searchresults">
-          <label>Belongs to disease:</label><br>
-          <p style="margin-bottom: 0;">{{ BlockchainResp.disease.name}}</p>
-          <span style="font-size: 0.75em;" class="copyClipboard">{{ BlockchainResp.disease.disease_hash}}</span>
-        </div>
-        <div class="input-field col s6 searchresults">
-          <label>Belongs to chunk:</label><br>
-          <p>No chunk </p>
-        </div>
-        <div class="input-field col s6 searchresults">
-          <label>Hash:</label><br>
-          <p style="font-size: 0.75em;" class="copyClipboard">{{BlockchainResp.proposal.proposed_release_hash}}</p>
-        </div>
-        <div class="input-field col s6 searchresults">
-          <label>IPFS content:</label><br>
-          <p style="font-size: 0.8em;" class="copyClipboard">{{BlockchainResp.proposal.raw_release_hash}}</p>
-        </div>
-        <div class="input-field col s6 searchresults">
-          <label>Description:</label><br>
-          <p>{{BlockchainResp.proposal.description}}</p>
-        </div>
-      </div>
-      <div class="row">
-        <div class="input-field col s4 searchresults">
-        <label>Created:</label><br>
-        <p>2022/12/04 16:00</p>
-        </div>
-        <div class="input-field col s4 searchresults">
-          <label>Votes close:</label><br>
-          <p>2022/12/04 16:00</p>
-        </div>
-        <div class="input-field col s4 searchresults">
-          <label>Claims open on:</label><br>
-          <p>2023/01/07 16:00</p>
-        </div>
-        <div class="input-field col s3 searchresults">
-          <label>Threshold:</label><br>
-          <p>80.21%</p>
-        </div>
-        <div class="input-field col s3 searchresults">
-          <label>Votes ratio:</label><br>
-          <p>84.4%</p>
-        </div>
-        <div class="input-field col s3 searchresults">
-          <label>Approval Votes:</label><br>
-          <p>
-            <span style="display: inline-block;">
-            <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-            1500.321 ETI
-            </span>
-          </p>
-        </div>
-        <div class="input-field col s3 searchresults">
-          <label>Disaproval votes:</label><br>
-          <p>
-            <span style="display: inline-block;">
-            <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-            150.321 ETI
-            </span>
-          </p>
-        </div>
-
-      </div>
-    
-  </div>
 </div>
-{{/if}}
+
+  {{/if}}
+
+
+
+
+</div>
+
+
 
 
 </div>

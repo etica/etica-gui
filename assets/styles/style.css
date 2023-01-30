@@ -396,6 +396,15 @@ div.sidebar svg {
   cursor: pointer;
 }
 
+.stakesbox {
+  border-top: solid 1px white;
+    border-bottom: solid 1px white;
+    border-right: solid 0.1px grey;
+    border-left: solid 0.1px grey;
+    margin-right: 2%;
+    padding-top: 1% !important;
+}
+
 .searchresults {
   margin-top: 0 !important;
   margin-bottom: 0 !important;

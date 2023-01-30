@@ -49,9 +49,9 @@ class StakesBoard {
       console.log('data after is', data);
 
       if( SearchedAddress != null){
-        
-        data.stakes = await BoardStakes.SearchInput(SearchedAddress);
-
+        let _stakesresult = await BoardStakes.SearchInput(SearchedAddress);
+        data.stakes = _stakesresult.stakes;
+        data.stakescounter = _stakesresult.stakescounter;
       }
       else {
         // please provide an address, with select options
@@ -124,13 +124,13 @@ class StakesBoard {
                for(let i=0;i < address_stakes.stakes.length;i++){
 
                 stakes[i].amount = parseFloat(web3Local.utils.fromWei(address_stakes.stakes[i].amount, "ether"));
-               stakes[i].endtime = moment.unix(parseInt(stakes[i].endTime)).format("YYYY-MM-DD HH:mm:ss");
-               stakes[i].available = BoardStakes.getavailability(stakes[i].endTime);
+               stakes[i].endTime = moment.unix(parseInt(address_stakes.stakes[i].endTime)).format("YYYY-MM-DD HH:mm:ss");
+               stakes[i].available = BoardStakes.getavailability(address_stakes.stakes[i].endTime);
 
                }
 
         _result['stakes'] = stakes;
-        console.log('_result is', _result);
+        _result['stakescounter'] = address_stakes.stakescounter;
 
           }
 
