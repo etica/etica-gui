@@ -141,7 +141,7 @@ class StakesBoard {
   // get stakeavailability:
   getavailability(_stakeend){
     let _now = new moment();
-    if(_now.isAfter(moment.unix(_stakeend))){
+    if(_now.isAfter(moment(_stakeend).format("YYYY-MM-DD HH:mm:ss"))){
       return true;
     }
     else{
