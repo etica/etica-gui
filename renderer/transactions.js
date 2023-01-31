@@ -137,7 +137,7 @@ class Transactions {
                   let _slashduration = null;
                   let _slashamount = null;
                   let _inorout = 'neutral'; // if tx is received: received, if tx is sent: sent
-                  let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'NewStakeClaim', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
+                  let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'StakeClaimed', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
                   console.log('onetxevent.returnValues before includes is ', onetxevent);
                 // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
                 if(!includedevents.includes(onetxevent.event)){
@@ -226,7 +226,7 @@ class Transactions {
 
                   }
 
-                  if(onetxevent.event == 'NewStakeClaim'){
+                  if(onetxevent.event == 'StakeClaimed'){
 
                     _valueeti = onetxevent.returnValues.stakeamount;
                     _fromaddreti = onetxevent.returnValues.staker;
@@ -970,7 +970,7 @@ class Transactions {
                 let _toaddreti = null;
                 let _slashduration = null;
                 let _inorout = 'neutral'; // if tx is received: received, if tx is sent: sent
-                let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'NewStakeClaim', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
+                let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'StakeClaimed', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
 
                 // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
                 if(!includedevents.includes(onetxevent.event)){
@@ -1057,8 +1057,8 @@ class Transactions {
                   _toaddreti = onetx.to;
 
                 }
-
-                if(onetxevent.event == 'NewStakeClaim'){
+                
+                if(onetxevent.event == 'StakeClaimed'){
 
                   _valueeti = onetxevent.returnValues.stakeamount;
                   _fromaddreti = onetxevent.returnValues.staker;

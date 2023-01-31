@@ -127,7 +127,7 @@ class StakesBoard {
                stakes[i].endTime = moment.unix(parseInt(address_stakes.stakes[i].endTime)).format("YYYY-MM-DD HH:mm:ss");
                stakes[i].available = BoardStakes.getavailability(address_stakes.stakes[i].endTime);
                stakes[i].stakeaddress = _searchedaddress;
-               stakes[i].stakeindex = i;
+               stakes[i].stakeindex = i+1;
 
                }
 
@@ -181,6 +181,9 @@ $(document).on("render_stakesboard", function () {
     var stakeaddress = $(this).attr("data-stakeaddress");
     var stakeamount = $(this).attr("data-stakeamount");
 
+    console.log('stakeindex is', stakeindex);
+    console.log('stakeaddress is', stakeaddress);
+    console.log('stakeamount is', stakeamount);
                   EticaContract.getTranasctionFee_stakeclmidx(stakeaddress, stakeindex, function (error) {
                     EticaMainGUI.showGeneralError(error);
                   }, function (data) {
@@ -226,23 +229,37 @@ $(document).on("render_stakesboard", function () {
   $(".btnSnapStake").off("click").on("click", function () {
     var stakeindex = $(this).attr("data-stakeindex");
     var stakeaddress = $(this).attr("data-stakeaddress");
-    var stakeamount = $(this).attr("data-stakeamount");
+    var maxstakeamount = $(this).attr("data-stakeamount");
 
-                  EticaContract.getTranasctionFee_stakesnap(stakeaddress, stakeindex, stakeamount, function (error) {
+    $("#dlgAddSnapAmount").iziModal();
+    $("#MaxSnapAmount").val(maxstakeamount);
+
+    // reset input fields:
+    $("#inputSnapAmount").val("");
+    $("#dlgAddSnapAmount").iziModal("open");
+
+
+    $("#btnAddSnapAmountConfirm").off("click").on("click", function () {
+
+      $("#dlgAddSnapAmount").iziModal("close");
+
+      let input_snapamount = $("#inputSnapAmount").val();
+
+                  EticaContract.getTranasctionFee_stakesnap(stakeaddress, stakeindex, input_snapamount, function (error) {
                     EticaMainGUI.showGeneralError(error);
                   }, function (data) {
                     $("#dlgSnapStakeWalletPassword").iziModal({width: "70%"});
                     $("#SnapStakewalletPassword").val("");
                     $("#fromSnapStakeAddressInfo").html(stakeaddress);
                     $("#valueOfSnapStakeIndex").html(stakeindex);
-                    $("#valueOfSnapStakeAmount").html(stakeamount);
+                    $("#valueOfSnapStakeAmount").html(input_snapamount);
                     $("#feeSnapStakeToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
                     $("#dlgSnapStakeWalletPassword").iziModal("open");
 
             
                     function doSendTransaction() {
                       $("#dlgSnapStakeWalletPassword").iziModal("close");
-                      EticaContract.prepareTransaction_stakesnap($("#SnapStakewalletPassword").val(), stakeaddress, stakeindex, stakeamount, function (error) {
+                      EticaContract.prepareTransaction_stakesnap($("#SnapStakewalletPassword").val(), stakeaddress, stakeindex, input_snapamount, function (error) {
                         EticaMainGUI.showGeneralError(error);
                       }, function (data) {
                         EticaBlockchain.sendTransaction(data.raw, function (error) {
@@ -266,6 +283,8 @@ $(document).on("render_stakesboard", function () {
                       }
                     });
                   });
+
+    });
 
   });
 
