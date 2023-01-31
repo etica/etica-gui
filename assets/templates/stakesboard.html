@@ -30,7 +30,7 @@
         </div>
         <div class="input-field col s6" style="top:2vh;position: relative; left:3%;">
           &nbsp {{ stakescounter }} stakes
-          <button type="button" class="button4 MarginRight5" id="btnStakesBoard">Consolidate</button>
+          <button type="button" class="btn btn-etica btnConsolidateStakes MarginRight5" data-stakeaddress="{{address}}">Consolidate</button>
         </div>
       </div>
     </form>
@@ -58,9 +58,9 @@
         <div style="display:inline;position:relative;left:4%;"><label class="MarginRight5" style="color:#868686;">Amount:</label><span>{{amount}} <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /></span></div>
         <br><div style="display:inline;position:relative;left:4%;"><label class="MarginRight5" style="color:#868686;">End:</label><span>{{endTime}}</span></div>
         <div class="input-field col s12">
-          <button type="button" class="button4" style="width: 100px;margin-right: 5%;">Snap</button>
+          <button type="button" class="btn btn-etica btnSnapStake" style="width: 100px;margin-right: 5%;" data-stakeindex="{{stakeindex}}" data-stakeaddress="{{stakeaddress}}" data-stakeamount="{{amount}}">Snap</button>
           {{#if available}}
-          <button type="button" class="button4" style="width: 100px;">Claim</button>
+          <button type="button" class="btn btn-etica btnClaimStake" style="width: 100px;" data-stakeindex="{{stakeindex}}" data-stakeaddress="{{stakeaddress}}" data-stakeamount="{{amount}}">Claim</button>
           {{else}}
           <i>not available for claim yet</i>
           {{/if}}
@@ -73,12 +73,97 @@
 
   {{/if}}
 
+</div>
+</div>
 
-
-
+<div id="dlgClaimStakeWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To claim this stake and release associated locked ETI, please enter the wallet password" data-izimodal-icon="icon-home">
+  <div class="modalBody">
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-wallet"></i>
+      <label>From address:</label>
+      <label id="fromClaimStakeAddressInfo"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Stake Index:</label>
+      <label id="valueOfClaimStakeIndex"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Stake Amount:</label>
+      <label id="valueOfClaimStakeAmount"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Fee to pay:</label>
+      <label id="feeClaimStakeToPayInfo"></label>
+      <label class="currencyTicker">EGAZ</label>
+    </div>
+    <hr class="sendTXdivider">
+    <div class="form-group sendTXPass">
+      <label for="usr">Enter your Password:</label>
+      <input type="password" class=" form-control" id="ClaimStakewalletPassword">
+    </div>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnClaimStakeWalletPasswordConfirm">Confirm</button>
+  </div>
 </div>
 
 
+<div id="dlgSnapStakeWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To claim this vote and release associated locked ETI, please enter the wallet password" data-izimodal-icon="icon-home">
+  <div class="modalBody">
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-wallet"></i>
+      <label>From address:</label>
+      <label id="fromClaimAddressInfo"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Stake Index:</label>
+      <label id="valueOfSnapStakeIndex"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Stake Amount:</label>
+      <label id="valueOfSnapStakeAmount"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Fee to pay:</label>
+      <label id="feeSnapStakeToPayInfo"></label>
+      <label class="currencyTicker">EGAZ</label>
+    </div>
+    <hr class="sendTXdivider">
+    <div class="form-group sendTXPass">
+      <label for="usr">Enter your Password:</label>
+      <input type="password" class=" form-control" id="SnapStakewalletPassword">
+    </div>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnSnapStakeWalletPasswordConfirm">Confirm</button>
+  </div>
+</div>
 
-
+<div id="dlgConsolidateStakesWalletPassword" class="modalDialog" data-izimodal-title="Unlock your wallet" data-izimodal-subtitle="To claim this vote and release associated locked ETI, please enter the wallet password" data-izimodal-icon="icon-home">
+  <div class="modalBody">
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-wallet"></i>
+      <label>From address:</label>
+      <label id="fromClaimAddressInfo"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Proposal Hash:</label>
+      <label id="valueOfConsolidateStakesProposalHash"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label>Fee to pay:</label>
+      <label id="feeConsolidateStakesToPayInfo"></label>
+      <label class="currencyTicker">EGAZ</label>
+    </div>
+    <hr class="sendTXdivider">
+    <div class="form-group sendTXPass">
+      <label for="usr">Enter your Password:</label>
+      <input type="password" class=" form-control" id="ConsolidateStakeswalletPassword">
+    </div>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnConsolidateStakesWalletPasswordConfirm">Confirm</button>
+  </div>
 </div>

@@ -126,6 +126,8 @@ class StakesBoard {
                 stakes[i].amount = parseFloat(web3Local.utils.fromWei(address_stakes.stakes[i].amount, "ether"));
                stakes[i].endTime = moment.unix(parseInt(address_stakes.stakes[i].endTime)).format("YYYY-MM-DD HH:mm:ss");
                stakes[i].available = BoardStakes.getavailability(address_stakes.stakes[i].endTime);
+               stakes[i].stakeaddress = _searchedaddress;
+               stakes[i].stakeindex = i;
 
                }
 
@@ -172,6 +174,142 @@ $(document).on("render_stakesboard", function () {
     EticaMainGUI.copyToClipboard($(this).html());
 
     iziToast.success({title: "Copied", message: "Content was copied to clipboard", position: "topRight", timeout: 2000});
+  });
+
+  $(".btnClaimStake").off("click").on("click", function () {
+    var stakeindex = $(this).attr("data-stakeindex");
+    var stakeaddress = $(this).attr("data-stakeaddress");
+    var stakeamount = $(this).attr("data-stakeamount");
+
+                  EticaContract.getTranasctionFee_stakeclmidx(stakeaddress, stakeindex, function (error) {
+                    EticaMainGUI.showGeneralError(error);
+                  }, function (data) {
+                    $("#dlgClaimStakeWalletPassword").iziModal({width: "70%"});
+                    $("#ClaimStakewalletPassword").val("");
+                    $("#fromClaimStakeAddressInfo").html(stakeaddress);
+                    $("#valueOfClaimStakeIndex").html(stakeindex);
+                    $("#valueOfClaimStakeAmount").html(stakeamount);
+                    $("#feeClaimStakeToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+                    $("#dlgClaimStakeWalletPassword").iziModal("open");
+
+            
+                    function doSendTransaction() {
+                      $("#dlgClaimStakeWalletPassword").iziModal("close");
+                      EticaContract.prepareTransaction_stakeclmidx($("#ClaimStakewalletPassword").val(), stakeaddress, stakeindex, function (error) {
+                        EticaMainGUI.showGeneralError(error);
+                      }, function (data) {
+                        EticaBlockchain.sendTransaction(data.raw, function (error) {
+                          EticaMainGUI.showGeneralError(error);
+                        }, function (data) {
+                          EticaCommitHistory.resetClaimForm();
+            
+                          iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});              
+                        
+                        });
+                      });
+                    }
+            
+                    $("#btnClaimStakeWalletPasswordConfirm").off("click").on("click", function () {
+                      doSendTransaction();
+                    });
+            
+                    $("#dlgClaimStakeWalletPassword").off("keypress").on("keypress", function (e) {
+                      if (e.which == 13) {
+                        doSendTransaction();
+                      }
+                    });
+                  });
+
+  });
+
+
+  $(".btnSnapStake").off("click").on("click", function () {
+    var stakeindex = $(this).attr("data-stakeindex");
+    var stakeaddress = $(this).attr("data-stakeaddress");
+    var stakeamount = $(this).attr("data-stakeamount");
+
+                  EticaContract.getTranasctionFee_stakesnap(stakeaddress, stakeindex, stakeamount, function (error) {
+                    EticaMainGUI.showGeneralError(error);
+                  }, function (data) {
+                    $("#dlgSnapStakeWalletPassword").iziModal({width: "70%"});
+                    $("#SnapStakewalletPassword").val("");
+                    $("#fromSnapStakeAddressInfo").html(stakeaddress);
+                    $("#valueOfSnapStakeIndex").html(stakeindex);
+                    $("#valueOfSnapStakeAmount").html(stakeamount);
+                    $("#feeSnapStakeToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+                    $("#dlgSnapStakeWalletPassword").iziModal("open");
+
+            
+                    function doSendTransaction() {
+                      $("#dlgSnapStakeWalletPassword").iziModal("close");
+                      EticaContract.prepareTransaction_stakesnap($("#SnapStakewalletPassword").val(), stakeaddress, stakeindex, stakeamount, function (error) {
+                        EticaMainGUI.showGeneralError(error);
+                      }, function (data) {
+                        EticaBlockchain.sendTransaction(data.raw, function (error) {
+                          EticaMainGUI.showGeneralError(error);
+                        }, function (data) {
+                          EticaCommitHistory.resetClaimForm();
+            
+                          iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});              
+                        
+                        });
+                      });
+                    }
+            
+                    $("#btnSnapStakeWalletPasswordConfirm").off("click").on("click", function () {
+                      doSendTransaction();
+                    });
+            
+                    $("#dlgSnapStakeWalletPassword").off("keypress").on("keypress", function (e) {
+                      if (e.which == 13) {
+                        doSendTransaction();
+                      }
+                    });
+                  });
+
+  });
+
+
+  $(".btnConsolidateStakes").off("click").on("click", function () {
+    var stakeaddress = $(this).attr("data-stakeaddress");
+
+                  EticaContract.getTranasctionFee_stakescsldt(stakeaddress, stakeindex, stakeamount, function (error) {
+                    EticaMainGUI.showGeneralError(error);
+                  }, function (data) {
+                    $("#dlgConsolidateStakesWalletPassword").iziModal({width: "70%"});
+                    $("#ConsolidateStakeswalletPassword").val("");
+                    $("#fromConsolidateStakesAddressInfo").html(stakeaddress);
+                    $("#feeConsolidateStakesToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+                    $("#dlgConsolidateStakesWalletPassword").iziModal("open");
+
+            
+                    function doSendTransaction() {
+                      $("#dlgConsolidateStakesWalletPassword").iziModal("close");
+                      EticaContract.prepareTransaction_stakescsldt($("#ConsolidateStakeswalletPassword").val(), stakeaddress, function (error) {
+                        EticaMainGUI.showGeneralError(error);
+                      }, function (data) {
+                        EticaBlockchain.sendTransaction(data.raw, function (error) {
+                          EticaMainGUI.showGeneralError(error);
+                        }, function (data) {
+                          EticaCommitHistory.resetClaimForm();
+            
+                          iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});              
+                        
+                        });
+                      });
+                    }
+            
+                    $("#btnConsolidateStakesWalletPasswordConfirm").off("click").on("click", function () {
+                      doSendTransaction();
+                    });
+            
+                    $("#dlgConsolidateStakesWalletPassword").off("keypress").on("keypress", function (e) {
+                      if (e.which == 13) {
+                        doSendTransaction();
+                      }
+                    });
+                  });
+
   });
 
 });
