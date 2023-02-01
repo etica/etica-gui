@@ -297,8 +297,12 @@ $(document).on("render_stakesboard", function () {
     //$("#MaxStakeIndex").val(maxstakeindex);
 
     // reset input fields:
-    $("#inputNewEndTime").val("");
-    $("#inputMinLimit").val("");
+    $("#inputNewEndTimeDay").val("");
+    $("#inputMinLimitDay").val("");
+    $("#inputNewEndTimeMonth").val("");
+    $("#inputMinLimitMonth").val("");
+    $("#inputNewEndTimeYear").val("");
+    $("#inputMinLimitYear").val("");
     $("#inputMaxConsolidateIndex").val("");
     $("#dlgAddConsolidateParameters").iziModal("open");
 
@@ -307,11 +311,28 @@ $(document).on("render_stakesboard", function () {
 
       $("#dlgAddConsolidateParameters").iziModal("close");
 
-      let input_endtime = $("#inputNewEndTime").val();
-      let input_minlimit = $("#inputMinLimit").val();
+      let input_endtime_day = $("#inputNewEndTimeDay").val();
+      let input_minlimit_day = $("#inputMinLimitDay").val();
+      let input_endtime_month = $("#inputNewEndTimeMonth").val();
+      let input_minlimit_month = $("#inputMinLimitMonth").val();
+      let input_endtime_year = $("#inputNewEndTimeYear").val();
+      let input_minlimit_year = $("#inputMinLimitYear").val();
+
       let input_maxindex = $("#inputMaxConsolidateIndex").val();
 
-                  EticaContract.getTranasctionFee_stakescsldt(stakeaddress, input_endtime, input_minlimit, input_maxindex, function (error) {
+      let _endtimestring = ''+input_endtime_month+'/'+input_endtime_day+'/'+input_endtime_year+' 00:00';
+      let _minlimitstring = ''+input_minlimit_month+'/'+input_minlimit_day+'/'+input_minlimit_year+' 00:00';
+      console.log('_endtimestring is :', _endtimestring);
+      console.log('_minlimitstring is :', _minlimitstring);
+
+      let _endtime = moment(_endtimestring, "M/D/YYYY H:mm").unix();
+      console.log('_endtime is :', _endtime);
+
+      let _minlimit = moment(_minlimitstring, "M/D/YYYY H:mm").unix();
+      console.log('_minlimit is :', _minlimit);
+
+
+                  EticaContract.getTranasctionFee_stakescsldt(stakeaddress, _endtime, _minlimit, input_maxindex, function (error) {
                     EticaMainGUI.showGeneralError(error);
                   }, function (data) {
                     $("#dlgConsolidateStakesWalletPassword").iziModal({width: "85%"});
