@@ -289,13 +289,32 @@ $(document).on("render_stakesboard", function () {
   });
 
 
+
   $(".btnConsolidateStakes").off("click").on("click", function () {
     var stakeaddress = $(this).attr("data-stakeaddress");
 
-                  EticaContract.getTranasctionFee_stakescsldt(stakeaddress, stakeindex, stakeamount, function (error) {
+    $("#dlgAddConsolidateParameters").iziModal();
+    //$("#MaxStakeIndex").val(maxstakeindex);
+
+    // reset input fields:
+    $("#inputNewEndTime").val("");
+    $("#inputMinLimit").val("");
+    $("#inputMaxConsolidateIndex").val("");
+    $("#dlgAddConsolidateParameters").iziModal("open");
+
+
+    $("#btnAddConsolidateParametersConfirm").off("click").on("click", function () {
+
+      $("#dlgAddConsolidateParameters").iziModal("close");
+
+      let input_endtime = $("#inputNewEndTime").val();
+      let input_minlimit = $("#inputMinLimit").val();
+      let input_maxindex = $("#inputMaxConsolidateIndex").val();
+
+                  EticaContract.getTranasctionFee_stakescsldt(stakeaddress, input_endtime, input_minlimit, input_maxindex, function (error) {
                     EticaMainGUI.showGeneralError(error);
                   }, function (data) {
-                    $("#dlgConsolidateStakesWalletPassword").iziModal({width: "70%"});
+                    $("#dlgConsolidateStakesWalletPassword").iziModal({width: "85%"});
                     $("#ConsolidateStakeswalletPassword").val("");
                     $("#fromConsolidateStakesAddressInfo").html(stakeaddress);
                     $("#feeConsolidateStakesToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
@@ -304,7 +323,7 @@ $(document).on("render_stakesboard", function () {
             
                     function doSendTransaction() {
                       $("#dlgConsolidateStakesWalletPassword").iziModal("close");
-                      EticaContract.prepareTransaction_stakescsldt($("#ConsolidateStakeswalletPassword").val(), stakeaddress, function (error) {
+                      EticaContract.prepareTransaction_stakescsldt($("#ConsolidateStakeswalletPassword").val(), stakeaddress, input_endtime, input_minlimit, input_maxindex, function (error) {
                         EticaMainGUI.showGeneralError(error);
                       }, function (data) {
                         EticaBlockchain.sendTransaction(data.raw, function (error) {
@@ -318,16 +337,18 @@ $(document).on("render_stakesboard", function () {
                       });
                     }
             
-                    $("#btnConsolidateStakesWalletPasswordConfirm").off("click").on("click", function () {
+                    $("#btnSnapStakeWalletPasswordConfirm").off("click").on("click", function () {
                       doSendTransaction();
                     });
             
-                    $("#dlgConsolidateStakesWalletPassword").off("keypress").on("keypress", function (e) {
+                    $("#dlgSnapStakeWalletPassword").off("keypress").on("keypress", function (e) {
                       if (e.which == 13) {
                         doSendTransaction();
                       }
                     });
                   });
+
+    });
 
   });
 

@@ -142,7 +142,7 @@
 </div>
 
 <!-- The modal to set amount of snap -->
-<div id="dlgAddSnapAmount" class="modalDialog" data-izimodal-title="Add Parameters of Commit" data-izimodal-subtitle="Enter vote parameters you used for this commit" data-izimodal-icon="icon-home">
+<div id="dlgAddSnapAmount" class="modalDialog" data-izimodal-title="Snap Stake" data-izimodal-subtitle="Enter an amount to snap this stake" data-izimodal-icon="icon-home">
   <div class="modalBody">
     <div class="form-group">
       <label>Maximum snap amount:</label>
@@ -180,5 +180,206 @@
       <input type="password" class=" form-control" id="ConsolidateStakeswalletPassword">
     </div>
     <button type="button" class="btn button3 btn-dialog-confirm" id="btnConsolidateStakesWalletPasswordConfirm">Confirm</button>
+  </div>
+</div>
+
+
+<!-- The modal to set parameters of consolidation -->
+<div id="dlgAddConsolidateParameters" class="modalDialog" data-izimodal-title="Stakes Consolidation" data-izimodal-subtitle="Enter consolidation parameters" data-izimodal-icon="icon-home">
+  <div class="modalBody">
+   <div class="row" style="margin-bottom: 0;">
+    <h6>Enter New End date of consolidated stakes:</h6>
+    <div class="input-field col s3">
+     <!-- <label for="inputNewEndTimeDay">Enter day:</label> -->
+      <select id="inputNewEndTimeDay" style="display:block;">
+        <option value="" selected="selected">Day</option>
+          <option value="1">1
+            -
+            1st
+          </option>
+          <option value="2">2
+            -
+            2nd
+          </option>
+          <option value="3">3
+            -
+            3rd
+          </option>
+          <option value="4">4
+            -
+            4th
+          </option>
+          <option value="5">5
+            -
+            5th
+          </option>
+          <option value="6">6
+            -
+            6th
+          </option>
+
+          <option value="31">31
+            -
+            31th
+          </option>
+      </select>
+    </div>
+    <div class="input-field col s3">
+     <!-- <label for="inputNewEndTimeMonth">Enter month:</label> -->
+      <select id="inputNewEndTimeMonth" style="display:block;">
+        <option value="" selected="selected">Month</option>
+          <option value="1">1
+            -
+            January
+          </option>
+          <option value="2">2
+            -
+            February
+          </option>
+          <option value="3">3
+            -
+            March
+          </option>
+          <option value="4">4
+            -
+            April
+          </option>
+          <option value="5">5
+            -
+            May
+          </option>
+          <option value="6">6
+            -
+            June
+          </option>
+
+          <option value="31">12
+            -
+            December
+          </option>
+      </select>
+    </div>
+    <div class="input-field col s3">
+     <!-- <label for="inputNewEndTimeYear">Enter year:</label> -->
+      <select id="inputNewEndTimeYear" style="display:block;">
+        <option value="" selected="selected">Year</option>
+          <option value="2023">2023
+          </option>
+          <option value="2024">2024
+          </option>
+          <option value="2025">2025
+          </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row" style="margin-bottom: 0;">
+    <h6>Enter Minimum date for a stake to be consolidated:</h6>
+    <div class="input-field col s3">
+      <select id="inputMinLimitDay" style="display:block;">
+        <option value="" selected="selected">Day</option>
+          <option value="1">1
+            -
+            1st
+          </option>
+          <option value="2">2
+            -
+            2nd
+          </option>
+          <option value="3">3
+            -
+            3rd
+          </option>
+          <option value="4">4
+            -
+            4th
+          </option>
+          <option value="5">5
+            -
+            5th
+          </option>
+          <option value="6">6
+            -
+            6th
+          </option>
+
+          <option value="31">31
+            -
+            31th
+          </option>
+      </select>
+    <!--  <label for="inputMinLimitDay">Enter day:</label> -->
+    </div>
+    <div class="input-field col s3">
+     <!-- <label for="inputMinLimitMonth">Enter month:</label> -->
+      <select id="inputMinLimitMonth" style="display:block;">
+        <option value="" selected="selected">Month</option>
+          <option value="1">1
+            -
+            January
+          </option>
+          <option value="2">2
+            -
+            February
+          </option>
+          <option value="3">3
+            -
+            March
+          </option>
+          <option value="4">4
+            -
+            April
+          </option>
+          <option value="5">5
+            -
+            May
+          </option>
+          <option value="6">6
+            -
+            June
+          </option>
+
+          <option value="31">12
+            -
+            December
+          </option>
+      </select>
+    </div>
+    <div class="input-field col s3">
+      <!-- <label for="inputMinLimitYear">Enter year:</label> -->
+      <select id="inputMinLimitYear" style="display:block;">
+        <option value="" selected="selected">Year</option>
+          <option value="2023">2023
+          </option>
+          <option value="2024">2024
+          </option>
+          <option value="2025">2025
+          </option>
+      </select>
+    </div>
+  </div>
+
+  <div class="row" style="margin-bottom: 0;">
+    <h6>Enter Maximum index for a stake to be consolidated:</h6>
+    <div class="input-field col s3">
+     <!-- <label for="inputMaxConsolidateIndex">Enter max index:</label>-->
+      <select id="inputMaxConsolidateIndex" style="display:block;">
+        <option value="" selected="selected">5</option>
+          <option value="1">1
+          </option>
+          <option value="2">2
+          </option>
+          <option value="3">3
+          </option>
+          <option value="4">4
+          </option>
+          <option value="5">5
+          </option>
+      </select>
+    </div>
+  </div>
+
+    <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnAddConsolidateParametersConfirm">Confirm</button>
+
   </div>
 </div>
