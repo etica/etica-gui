@@ -65,45 +65,42 @@ class StakesBoard {
 
   }
 
-  validateSendForm() {
-    if (EticaMainGUI.getAppState() == "send") {
-      if (!$("#sendFromAddress").val()) {
-        EticaMainGUI.showGeneralError("Sender address must be specified!");
+  validateConsolidationParams(_endtime, _min_limit, _maxidx, _stakescounter) {
+
+      if (!(_endtime != '')) {
+        EticaMainGUI.showGeneralError("New Stakes End time must be specified!");
         return false;
       }
 
-      if (!EticaBlockchain.isAddress($("#sendFromAddress").val())) {
-        EticaMainGUI.showGeneralError("Sender address must be a valid address!");
+      if (!(_min_limit != '')) {
+        EticaMainGUI.showGeneralError("Minimum end time limit for stakes to be impacted must be specified!");
         return false;
       }
 
-      if (!$("#sendToAddress").val()) {
-        EticaMainGUI.showGeneralError("Recipient address must be specified!");
+      if (!(_min_limit != '')) {
+        EticaMainGUI.showGeneralError("Minimum end time limit for stakes to be impacted must be specified!");
         return false;
       }
 
-      if (!EticaBlockchain.isAddress($("#sendToAddress").val())) {
-        EticaMainGUI.showGeneralError("Recipient address must be a valid address!");
+      let _now = new moment();
+      let _intwoyears = _now.add(2, 'years');
+      if(_intwoyears.isBefore(moment.unix(_endtime).format("YYYY-MM-DD HH:mm:ss"))){
+        EticaMainGUI.showGeneralError("The new End time date can't be more than two years from now!");
         return false;
       }
 
-      if (Number($("#sendAmmount").val()) <= 0) {
-        EticaMainGUI.showGeneralError("Send ammount must be greater then zero!");
+      if (_maxidx > _stakescounter) {
+        EticaMainGUI.showGeneralError("Max index must be lower or equal to the number of stakes o this address!");
+        return false;
+      }
+
+      if (_maxidx > 50) {
+        EticaMainGUI.showGeneralError("Max index must be lower than 50!");
         return false;
       }
 
       return true;
-    } else {
-      return false;
-    }
-  }
 
-  resetSendForm() {
-    if (EticaMainGUI.getAppState() == "send") {
-      $("#sendToAddressName").html("");
-      $("#sendToAddress").val("");
-      $("#sendAmmount").val(0);
-    }
   }
 
 
@@ -143,7 +140,7 @@ class StakesBoard {
   // get stakeavailability:
   getavailability(_stakeend){
     let _now = new moment();
-    if(_now.isAfter(moment(_stakeend).format("YYYY-MM-DD HH:mm:ss"))){
+    if(_now.isAfter(moment.unix(_stakeend).format("YYYY-MM-DD HH:mm:ss"))){
       return true;
     }
     else{
@@ -304,6 +301,7 @@ $(document).on("render_stakesboard", function () {
     $("#inputNewEndTimeYear").val("");
     $("#inputMinLimitYear").val("");
     $("#inputMaxConsolidateIndex").val("");
+    $("#CsldtStakesCounter").val("");
     $("#dlgAddConsolidateParameters").iziModal("open");
 
 
@@ -317,8 +315,9 @@ $(document).on("render_stakesboard", function () {
       let input_minlimit_month = $("#inputMinLimitMonth").val();
       let input_endtime_year = $("#inputNewEndTimeYear").val();
       let input_minlimit_year = $("#inputMinLimitYear").val();
-
       let input_maxindex = $("#inputMaxConsolidateIndex").val();
+      let _stakescounter = $("#CsldtStakesCounter").val();
+      console.log('_stakescounter iss', _stakescounter);
 
       let _endtimestring = ''+input_endtime_month+'/'+input_endtime_day+'/'+input_endtime_year+' 00:00';
       let _minlimitstring = ''+input_minlimit_month+'/'+input_minlimit_day+'/'+input_minlimit_year+' 00:00';
@@ -331,6 +330,8 @@ $(document).on("render_stakesboard", function () {
       let _minlimit = moment(_minlimitstring, "M/D/YYYY H:mm").unix();
       console.log('_minlimit is :', _minlimit);
 
+
+      if(BoardStakes.validateConsolidationParams(_endtime, _minlimit, input_maxindex, _stakescounter)){
 
                   EticaContract.getTranasctionFee_stakescsldt(stakeaddress, _endtime, _minlimit, input_maxindex, function (error) {
                     EticaMainGUI.showGeneralError(error);
@@ -368,6 +369,8 @@ $(document).on("render_stakesboard", function () {
                       }
                     });
                   });
+
+                }
 
     });
 

@@ -253,7 +253,7 @@
             June
           </option>
 
-          <option value="31">12
+          <option value="12">12
             -
             December
           </option>
@@ -275,6 +275,8 @@
 
   <div class="row" style="margin-bottom: 0;">
     <h6>Enter Minimum date for a stake to be consolidated:</h6>
+    <i>(stakes whose end time are less than this date won't be impacted by changes)</i>
+    <i>By default you can set the date of today</i>
     <div class="input-field col s3">
       <select id="inputMinLimitDay" style="display:block;">
         <option value="" selected="selected">Day</option>
@@ -339,7 +341,7 @@
             June
           </option>
 
-          <option value="31">12
+          <option value="12">12
             -
             December
           </option>
@@ -376,6 +378,7 @@
           <option value="5">5
           </option>
       </select>
+      <input id="CsldtStakesCounter" type="hidden" value="{{stakescounter}}"></input>
     </div>
   </div>
 
