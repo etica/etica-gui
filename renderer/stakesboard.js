@@ -89,7 +89,7 @@ class StakesBoard {
         return false;
       }
 
-      if (_maxidx > _stakescounter) {
+      if (Number(_maxidx) > _stakescounter) {
         EticaMainGUI.showGeneralError("Max index must be lower or equal to the number of stakes o this address!");
         return false;
       }
@@ -301,7 +301,6 @@ $(document).on("render_stakesboard", function () {
     $("#inputNewEndTimeYear").val("");
     $("#inputMinLimitYear").val("");
     $("#inputMaxConsolidateIndex").val("");
-    $("#CsldtStakesCounter").val("");
     $("#dlgAddConsolidateParameters").iziModal("open");
 
 
