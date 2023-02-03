@@ -301,7 +301,7 @@ $(document).on("render_stakesboard", function () {
   $(".btnConsolidateStakes").off("click").on("click", function () {
     var stakeaddress = $(this).attr("data-stakeaddress");
 
-    $("#dlgAddConsolidateParameters").iziModal();
+    $("#dlgAddConsolidateParameters").iziModal({width: "85%"});
     //$("#MaxStakeIndex").val(maxstakeindex);
 
     // reset input fields:
@@ -346,7 +346,7 @@ $(document).on("render_stakesboard", function () {
                   EticaContract.getTranasctionFee_stakescsldt(stakeaddress, _endtime, _minlimit, input_maxindex, function (error) {
                     EticaMainGUI.showGeneralError(error);
                   }, function (data) {
-                    $("#dlgConsolidateStakesWalletPassword").iziModal({width: "85%"});
+                    $("#dlgConsolidateStakesWalletPassword").iziModal({width: "70%"});
                     $("#ConsolidateStakeswalletPassword").val("");
                     $("#fromConsolidateStakesAddressInfo").html(stakeaddress);
                     $("#feeConsolidateStakesToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
