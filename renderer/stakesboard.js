@@ -51,7 +51,18 @@ class StakesBoard {
       if( SearchedAddress != null){
         let _stakesresult = await BoardStakes.SearchInput(SearchedAddress);
         data.stakes = _stakesresult.stakes;
+        data.stakescounterarray = []; // use this for displaying right number maxconsolidation options on front page stakesboard.html
+        let maxstakeidx = null;
+        for (let k=1; k <= _stakesresult.stakescounter; k++){
+          if(k<=50){
+            var _tempobj = {};
+            _tempobj.stakeidx = k;
+            data.stakescounterarray.push(_tempobj);
+            maxstakeidx = k;
+          }
+        }
         data.stakescounter = _stakesresult.stakescounter;
+        data.maxstakeidx = maxstakeidx;
       }
       else {
         // please provide an address, with select options
@@ -300,7 +311,7 @@ $(document).on("render_stakesboard", function () {
     $("#inputMinLimitMonth").val("");
     $("#inputNewEndTimeYear").val("");
     $("#inputMinLimitYear").val("");
-    $("#inputMaxConsolidateIndex").val("");
+    //$("#inputMaxConsolidateIndex").val("");
     $("#dlgAddConsolidateParameters").iziModal("open");
 
 

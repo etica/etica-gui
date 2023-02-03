@@ -189,9 +189,10 @@
   <div class="modalBody">
    <div class="row" style="margin-bottom: 0;">
     <h6>Enter New End date of consolidated stakes:</h6>
+    <br><i>(Can't be more than 2 years from now)</i>
     <div class="input-field col s3">
      <!-- <label for="inputNewEndTimeDay">Enter day:</label> -->
-      <select id="inputNewEndTimeDay" style="display:block;">
+      <select id="inputNewEndTimeDay" class="browser-default" style="display:block;"> <!-- Add Class class="browser-default" to avoid issue of materialize.js adding other select elements -->
         <option value="" selected="selected">Day</option>
           <option value="1">1
             -
@@ -216,6 +217,105 @@
           <option value="6">6
             -
             6th
+          </option>
+          <option value="7">7
+            -
+            7th
+          </option>
+          <option value="8">8
+            -
+            8th
+          </option>
+          <option value="9">9
+            -
+            9th
+          </option>
+          <option value="10">10
+            -
+            10th
+          </option>
+
+          <option value="11">11
+            -
+            11th
+          </option>
+          <option value="12">12
+            -
+            12th
+          </option>
+          <option value="13">13
+            -
+            13th
+          </option>
+          <option value="14">14
+            -
+            14th
+          </option>
+          <option value="15">15
+            -
+            15th
+          </option>
+          <option value="16">16
+            -
+            16th
+          </option>
+          <option value="17">17
+            -
+            17th
+          </option>
+          <option value="18">18
+            -
+            18th
+          </option>
+
+          <option value="19">19
+            -
+            19th
+          </option>
+          <option value="20">20
+            -
+            20th
+          </option>
+          <option value="21">21
+            -
+            21th
+          </option>
+          <option value="22">22
+            -
+            22th
+          </option>
+          <option value="23">23
+            -
+            23th
+          </option>
+          <option value="24">24
+            -
+            24th
+          </option>
+          <option value="25">25
+            -
+            25th
+          </option>
+          <option value="26">26
+            -
+            26th
+          </option>
+
+          <option value="27">27
+            -
+            27th
+          </option>
+          <option value="28">28
+            -
+            28th
+          </option>
+          <option value="29">29
+            -
+            29th
+          </option>
+          <option value="30">30
+            -
+            30th
           </option>
 
           <option value="31">31
@@ -226,7 +326,7 @@
     </div>
     <div class="input-field col s3">
      <!-- <label for="inputNewEndTimeMonth">Enter month:</label> -->
-      <select id="inputNewEndTimeMonth" style="display:block;">
+      <select id="inputNewEndTimeMonth" class="browser-default" style="display:block;">
         <option value="" selected="selected">Month</option>
           <option value="1">1
             -
@@ -252,7 +352,26 @@
             -
             June
           </option>
-
+          <option value="7">7
+            -
+            July
+          </option>
+          <option value="8">8
+            -
+            August
+          </option>
+          <option value="9">9
+            -
+            September
+          </option>
+          <option value="10">10
+            -
+            October
+          </option>
+          <option value="11">11
+            -
+            November
+          </option>
           <option value="12">12
             -
             December
@@ -261,13 +380,23 @@
     </div>
     <div class="input-field col s3">
      <!-- <label for="inputNewEndTimeYear">Enter year:</label> -->
-      <select id="inputNewEndTimeYear" style="display:block;">
+      <select id="inputNewEndTimeYear" class="browser-default" style="display:block;">
         <option value="" selected="selected">Year</option>
           <option value="2023">2023
           </option>
           <option value="2024">2024
           </option>
           <option value="2025">2025
+          </option>
+          <option value="2026">2026
+          </option>
+          <option value="2027">2027
+          </option>
+          <option value="2028">2028
+          </option>
+          <option value="2029">2029
+          </option>
+          <option value="2030">2030
           </option>
       </select>
     </div>
@@ -276,45 +405,144 @@
   <div class="row" style="margin-bottom: 0;">
     <h6>Enter Minimum date for a stake to be consolidated:</h6>
     <i>(stakes whose end time are less than this date won't be impacted by changes)</i>
-    <i>By default you can set the date of today</i>
+    <br><i>By default you can set the date of today</i>
     <div class="input-field col s3">
-      <select id="inputMinLimitDay" style="display:block;">
+      <select id="inputMinLimitDay" class="browser-default" style="display:block;">
         <option value="" selected="selected">Day</option>
-          <option value="1">1
-            -
-            1st
-          </option>
-          <option value="2">2
-            -
-            2nd
-          </option>
-          <option value="3">3
-            -
-            3rd
-          </option>
-          <option value="4">4
-            -
-            4th
-          </option>
-          <option value="5">5
-            -
-            5th
-          </option>
-          <option value="6">6
-            -
-            6th
-          </option>
+        <option value="1">1
+          -
+          1st
+        </option>
+        <option value="2">2
+          -
+          2nd
+        </option>
+        <option value="3">3
+          -
+          3rd
+        </option>
+        <option value="4">4
+          -
+          4th
+        </option>
+        <option value="5">5
+          -
+          5th
+        </option>
+        <option value="6">6
+          -
+          6th
+        </option>
+        <option value="7">7
+          -
+          7th
+        </option>
+        <option value="8">8
+          -
+          8th
+        </option>
+        <option value="9">9
+          -
+          9th
+        </option>
+        <option value="10">10
+          -
+          10th
+        </option>
 
-          <option value="31">31
-            -
-            31th
-          </option>
+        <option value="11">11
+          -
+          11th
+        </option>
+        <option value="12">12
+          -
+          12th
+        </option>
+        <option value="13">13
+          -
+          13th
+        </option>
+        <option value="14">14
+          -
+          14th
+        </option>
+        <option value="15">15
+          -
+          15th
+        </option>
+        <option value="16">16
+          -
+          16th
+        </option>
+        <option value="17">17
+          -
+          17th
+        </option>
+        <option value="18">18
+          -
+          18th
+        </option>
+
+        <option value="19">19
+          -
+          19th
+        </option>
+        <option value="20">20
+          -
+          20th
+        </option>
+        <option value="21">21
+          -
+          21th
+        </option>
+        <option value="22">22
+          -
+          22th
+        </option>
+        <option value="23">23
+          -
+          23th
+        </option>
+        <option value="24">24
+          -
+          24th
+        </option>
+        <option value="25">25
+          -
+          25th
+        </option>
+        <option value="26">26
+          -
+          26th
+        </option>
+
+        <option value="27">27
+          -
+          27th
+        </option>
+        <option value="28">28
+          -
+          28th
+        </option>
+        <option value="29">29
+          -
+          29th
+        </option>
+        <option value="30">30
+          -
+          30th
+        </option>
+
+        <option value="31">31
+          -
+          31th
+        </option>
       </select>
     <!--  <label for="inputMinLimitDay">Enter day:</label> -->
     </div>
     <div class="input-field col s3">
      <!-- <label for="inputMinLimitMonth">Enter month:</label> -->
-      <select id="inputMinLimitMonth" style="display:block;">
+      <select id="inputMinLimitMonth" class="browser-default" style="display:block;">
         <option value="" selected="selected">Month</option>
           <option value="1">1
             -
@@ -340,7 +568,26 @@
             -
             June
           </option>
-
+          <option value="7">7
+            -
+            July
+          </option>
+          <option value="8">8
+            -
+            August
+          </option>
+          <option value="9">9
+            -
+            September
+          </option>
+          <option value="10">10
+            -
+            October
+          </option>
+          <option value="11">11
+            -
+            November
+          </option>
           <option value="12">12
             -
             December
@@ -349,7 +596,7 @@
     </div>
     <div class="input-field col s3">
       <!-- <label for="inputMinLimitYear">Enter year:</label> -->
-      <select id="inputMinLimitYear" style="display:block;">
+      <select id="inputMinLimitYear" class="browser-default" style="display:block;">
         <option value="" selected="selected">Year</option>
           <option value="2023">2023
           </option>
@@ -357,26 +604,33 @@
           </option>
           <option value="2025">2025
           </option>
+          <option value="2026">2026
+          </option>
+          <option value="2027">2027
+          </option>
+          <option value="2028">2028
+          </option>
+          <option value="2029">2029
+          </option>
+          <option value="2030">2030
+          </option>
       </select>
     </div>
   </div>
 
   <div class="row" style="margin-bottom: 0;">
     <h6>Enter Maximum index for a stake to be consolidated:</h6>
-    <div class="input-field col s3">
-     <!-- <label for="inputMaxConsolidateIndex">Enter max index:</label>-->
-      <select id="inputMaxConsolidateIndex" style="display:block;">
-        <option value="" selected="selected">5</option>
-          <option value="1">1
+    <div class="col s3">
+      <select id="inputMaxConsolidateIndex" class="browser-default" style="display:block;">
+        <option value="{{maxstakeidx}}" selected>{{maxstakeidx}}</option>
+         
+        {{#if stakescounterarray.length}}
+        {{#stakescounterarray}}
+          <option value="{{stakeidx}}">{{stakeidx}}
           </option>
-          <option value="2">2
-          </option>
-          <option value="3">3
-          </option>
-          <option value="4">4
-          </option>
-          <option value="5">5
-          </option>
+        {{/stakescounterarray}}
+        {{/if}}
+        
       </select>
       <input id="CsldtStakesCounter" type="hidden" value="{{stakescounter}}"></input>
     </div>
