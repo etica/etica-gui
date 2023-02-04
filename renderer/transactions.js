@@ -41,6 +41,9 @@ class Transactions {
    console.log('in syncTransactionsForSingleAddress counters is', counters);
    console.log('in syncTransactionsForSingleAddress lastBlock is', lastBlock);
 
+   let addressListlowercase = addressList.map(element => element.toLowerCase());
+   console.log('addressListlowercase is', addressListlowercase);
+
 
    /* if (counter < addressList.length) {  */
 
@@ -95,9 +98,13 @@ class Transactions {
               console.log('onetx step1', onetx);
               if (onetx.from && onetx.to) {
                 console.log('onetx step2, onetx.from && onetx.to: ', onetx);
-                if (EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to)) {
+                console.log('addressListlowercase is', addressListlowercase);
+                console.log('EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to) :', EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to));
+                  console.log('addressListlowercase.includes((onetx.from).toLowerCase()) || addressListlowercase.includes((onetx.to).toLowerCase()):', addressListlowercase.includes((onetx.from).toLowerCase()) || addressListlowercase.includes((onetx.to).toLowerCase()));
+                if (addressListlowercase.includes((onetx.from).toLowerCase()) || addressListlowercase.includes((onetx.to).toLowerCase())) {
 
-                  console.log('onetx step3, EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to) :', onetx);
+                  console.log('onetx step3, EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to) :', EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to));
+                  console.log('onetx step3, onetx is:', onetx);
 
                   if (logevents.filter(onevent => onevent.transactionHash === onetx.hash)){
                     console.log('onevent => onevent.transactionHash === onetx.hash) is true:', onetx);
@@ -151,10 +158,10 @@ class Transactions {
                     _fromaddreti = onetxevent.returnValues.from;
                     _toaddreti = onetxevent.returnValues.to;
 
-                    if(EticaWallets.getAddressExists(onetxevent.returnValues.from)){
+                    if(addressListlowercase.includes((onetxevent.returnValues.from).toLowerCase())){
                      _inorout = 'sent';
                     }
-                    else if(EticaWallets.getAddressExists(onetxevent.returnValues.to)){
+                    else if(addressListlowercase.includes((onetxevent.returnValues.to).toLowerCase())){
                       _inorout = 'received';
                     }
 
@@ -731,10 +738,10 @@ class Transactions {
                   if(onetx.input == '0x'){
 
                     let _inoroutegaz = 'neutral';
-                    if(EticaWallets.getAddressExists(onetx.from)){
+                    if(addressListlowercase.includes((onetx.from).toLowerCase())){
                       _inoroutegaz = 'sent';
                      }
-                     else if(EticaWallets.getAddressExists(onetx.to)){
+                     else if(addressListlowercase.includes((onetx.to).toLowerCase())){
                        _inoroutegaz = 'received';
                      }
 
