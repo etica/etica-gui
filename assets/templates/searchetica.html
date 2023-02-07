@@ -68,7 +68,16 @@
           <span style="color:#9e9e9e; font-size:1rem;">Title:</span> &nbsp;<span>{{ title }}</span>
         </div>
         <div class="input-field col s4" style="display: inline;">
-          <span style="color:#9e9e9e; font-size:1rem;" class="copyClipboard">Chunk Id:</span> &nbsp;<span>{{ chunk_id }} | Status: Pending</span>
+          <span style="color:#9e9e9e; font-size:1rem;" class="copyClipboard">Chunk Id:</span> &nbsp;
+          {{#if pending}}
+          <span>{{ chunk_id }} | Status: Pending</span>
+          {{/if}}
+          {{#if approved}}
+          <span>{{ chunk_id }} | Status: Approved</span>
+          {{/if}}
+          {{#if rejected}}
+          <span>{{ chunk_id }} | Status: Rejected</span>
+          {{/if}}
         </div>
         <div class="input-field col s12 searchresults">
           <label style="font-size:1rem;">Proposal Hash (ID):</label><br>
@@ -81,30 +90,41 @@
 
         <div class="input-field col s4 searchresults">
           <label>Created:</label><br>
-          <p>2022/12/04 16:00</p>
+          <p>{{ proposalstart }}</p>
           </div>
           <div class="input-field col s4 searchresults">
             <label>Votes close:</label><br>
-            <p>2022/12/04 16:00</p>
+            <p>{{ proposalend }}</p>
           </div>
           <div class="input-field col s4 searchresults">
             <label>Claims open on:</label><br>
-            <p>2023/01/07 16:00</p>
+            <p>{{ timestampclaimable }}</p>
           </div>
+
           <div class="input-field col s3 searchresults">
             <label>Threshold:</label><br>
-            <p>80.21%</p>
+            <p>{{ approvalthreshold }}%</p>
           </div>
+
+          {{#if revealpassed}}
           <div class="input-field col s3 searchresults">
-            <label>Votes ratio:</label><br>
-            <p>84.4%</p>
+            <label>Result ratio:</label><br>
+            <p>{{ votesratio }}</p>
           </div>
+          {{else}}
+          <div class="input-field col s3 searchresults">
+            <label>Current ratio:</label><br>
+            <p>{{ votesratio }}</p>
+          </div>
+          {{/if}}
+
+
           <div class="input-field col s3 searchresults">
             <label>Approval Votes:</label><br>
             <p>
               <span style="display: inline-block;">
               <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-              1500.321 ETI
+              {{ forvotes }} ETI
               </span>
             </p>
           </div>
@@ -113,7 +133,7 @@
             <p>
               <span style="display: inline-block;">
               <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-              150.321 ETI
+              {{ againstvotes }} ETI
               </span>
             </p>
           </div>

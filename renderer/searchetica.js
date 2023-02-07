@@ -117,6 +117,9 @@ class SearchEtica {
     }
     console.log('new _searchhash is', _searchhash);
 
+    let _now = Date.now();
+    let CurrentDate = moment(_now);
+
     // search for disease:  
     let diseaseindex = await EticaContract.diseasesbyIds(_searchhash);
       console.log('diseaseindex is', diseaseindex);
@@ -130,14 +133,24 @@ class SearchEtica {
 
               // get disease proposals:
               let nbproposals =  await EticaContract.diseaseProposalsCounter(_disease[0]);
-              console.log('disease nb proposals: ', nbproposals);
-              console.log('typeof disease nbproposals: ', typeof nbproposals);
+
+              let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
+               let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
+               let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
+               let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
 
               let maxproposals = 3;
               nbproposals = Math.max(maxproposals, nbproposals);
               let diseaseproposals = [];
               
                for(let i =1;i<= nbproposals;i++){
+
+                let _revealopen = false;
+                let _revealpassed = false;
+                let _claimopen = false;
+                let _rejected = false;
+                let _approved = false;
+                let _pending = false;
 
                let oneproposal = [];
                let prophash = await EticaContract.diseaseproposals(_disease[0],i);
@@ -152,6 +165,81 @@ class SearchEtica {
                let oneproposaldata = await EticaContract.propsdatas(prophash);
                console.log('oneproposaldata is', oneproposaldata); 
                oneproposal[10] = oneproposaldata; // oneproposal[10] contains propsdatas struct
+
+               if(oneproposal[10].status == 0){
+                _rejected = true;
+              }
+              if(oneproposal[10].status == 1){
+                _approved = true;
+              }
+              if(oneproposal[10].status == 2){
+                _pending = true;
+              }
+
+              oneproposal.rejected = _rejected;
+              oneproposal.pending = _pending;
+              oneproposal.approved = _approved;
+
+               let _propstart = oneproposal[10][0];
+               let _propend = oneproposal[10][1]; // endtime
+               
+               let _period = await EticaContract.periods(oneproposal[3]);
+               let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
+    
+               let _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
+
+              //let _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
+              let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
+                
+              oneproposal.proposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
+              //oneproposal.proposalend = moment(_hashproposalend).format("YYYY-MM-DD HH:mm:ss");
+              oneproposal.proposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
+              oneproposal.proposalstart = moment.unix(parseInt(_propstart)).format("YYYY-MM-DD HH:mm:ss");
+              oneproposal.timestampclaimable = moment(_timestamp_claimable).format("YYYY-MM-DD HH:mm:ss");
+
+              oneproposal.forvotes = web3Local.utils.fromWei(oneproposal[10].forvotes, "ether");
+              oneproposal.againstvotes = web3Local.utils.fromWei(oneproposal[10].againstvotes, "ether");
+
+              if(oneproposal[10].forvotes > 0 || oneproposal[10].againstvotes > 0){
+              let _forvotesbn = web3Local.utils.toBN(oneproposal[10].forvotes);
+              let _againstvotesbn = web3Local.utils.toBN(oneproposal[10].againstvotes);
+              let _ratio_numerator = web3Local.utils.toBN("10000").mul(_forvotesbn); // multiply by 1000 then div by 10 to get in %
+              let _ratio_denumerator = _forvotesbn.add(_againstvotesbn);
+              let _ratiobn = _ratio_numerator.div(_ratio_denumerator);
+              let _ratio = parseInt(_ratiobn)/100;
+        
+              console.log('afyer num and denum _ratio is', _ratio);
+              console.log('type of untouchd ratio is', typeof _ratio);
+              console.log('_ratio.toString()is', _ratio.toString());
+              console.log('oneproposal[10].forvotes is', oneproposal[10].forvotes);
+              console.log('oneproposal[10].againstvotes is', oneproposal[10].againstvotes);
+              _ratio = parseFloat(_ratio.toString());
+              console.log('parseFloat(_ratio.toString()) is', _ratio);
+              _ratio = _ratio.toFixed(2);
+              console.log('_ratio.toFixed(2) is', _ratio);
+              oneproposal.votesratio = _ratio+ '%';
+              }
+              else {
+                oneproposal.votesratio = "novotes";
+              }
+
+              oneproposal.approvalthreshold = oneproposal[10].approvalthreshold/100;
+              
+              if( CurrentDate.isAfter(oneproposal.proposalend) && CurrentDate.isBefore(oneproposal.proposaldeadline) ){
+                _revealopen = true;
+               }
+             else if (CurrentDate.isAfter(oneproposal.proposaldeadline)){
+                _revealpassed = true;
+               }
+     
+             if( CurrentDate.isAfter(_timestamp_claimable)){
+                 _claimopen = true;
+                } 
+
+                oneproposal.revealopen = _revealopen;
+                oneproposal.revealpassed = _revealpassed;
+                oneproposal._claimopen = _claimopen;
+               
                diseaseproposals.push(oneproposal); 
 
                }
@@ -159,6 +247,7 @@ class SearchEtica {
         _result['type'] = 'disease';
         _result['disease'] = _disease;
         _result['proposals'] = diseaseproposals;
+        _result['diseasenbproposals'] = nbproposals;
         console.log('_result is', _result);
         return _result;
       
