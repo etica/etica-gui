@@ -1681,6 +1681,19 @@ async diseaseProposalsCounter(_hash) {
 
 }
 
+async diseaseChunksCounter(_hash) {
+
+  let _diseasenbchunks = await diseaseChunksCounter(_hash);
+  return _diseasenbchunks;
+
+  async function diseaseChunksCounter(_diseasehash) {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _nbchunk = await contract.methods.diseaseChunksCounter(_diseasehash).call();
+    return _nbchunk;
+}
+
+}
+
 async getdiseasehashbyName(_name) {
 
   let diseasehash = await getdiseasehashbyName(_name);

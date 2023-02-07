@@ -133,17 +133,17 @@ class SearchEtica {
 
               // get disease proposals:
               let nbproposals =  await EticaContract.diseaseProposalsCounter(_disease[0]);
+              let nbchunks =  await EticaContract.diseaseChunksCounter(_disease[0]);
 
               let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
                let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
                let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
                let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
 
-              let maxproposals = 3;
-              nbproposals = Math.max(maxproposals, nbproposals);
+              let maxproposals = Math.min(20, nbproposals);
               let diseaseproposals = [];
               
-               for(let i =1;i<= nbproposals;i++){
+               for(let i =1;i<= maxproposals;i++){
 
                 let _revealopen = false;
                 let _revealpassed = false;
@@ -248,6 +248,7 @@ class SearchEtica {
         _result['disease'] = _disease;
         _result['proposals'] = diseaseproposals;
         _result['diseasenbproposals'] = nbproposals;
+        _result['diseasenbchunks'] = nbchunks;
         console.log('_result is', _result);
         return _result;
       
