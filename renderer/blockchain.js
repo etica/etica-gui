@@ -93,6 +93,81 @@ class Blockchain {
     });
   }
 
+  // returns locked if account is currently locked or unlocked if it is unlocked
+  async isUnlocked(fromAddress) {
+
+    async function isunlocked() {
+    try {
+      let _result;
+      await web3Local.eth.signTransaction({
+        from: fromAddress,
+        nonce: "0x1",
+        gasPrice: "20000000000",
+        gas: "21000",
+        to: '0x3535353535353535353535353535353535353535',
+        value: "1000000000000000000",
+        data: ""
+    }, fromAddress, function (error, result) {
+        if (error) {
+          _result = 'locked';
+        } else {
+          _result = 'unlocked';
+        }
+      });
+
+      return _result;
+
+      } catch (e) {
+        console.log('isUnlocked() catched error e is:', e)
+        console.error(e);
+        return 'locked';
+      }
+
+    }
+    return isunlocked();
+
+  }
+
+
+// returns locked if account unlocked with success or locked if failure to unlock
+  async unlockAccount(password, fromAddress, duration) {
+
+  async function unlock() {
+    try {
+      let _result = await web3Local.eth.personal.unlockAccount(fromAddress, password, duration, function (error, result) {
+
+        if (error) {
+          return false;
+        } else {
+          return result;
+        }
+
+      });
+
+      // _result equals true if unlock success
+      if(_result == true){
+        return 'unlocked';
+      }
+      else {
+        return 'locked';
+      }
+
+      } catch (e) {
+        //console.log('unlockAccount() catched error e is:', e)
+        //console.error(e);
+        return 'locked';
+      }
+
+    }
+    return unlock();
+
+}
+
+
+
+
+
+
   prepareTransaction(password, fromAddress, toAddress, value, clbError, clbSuccess) {
     web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
       if (error) {

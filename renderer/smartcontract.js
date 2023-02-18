@@ -99,11 +99,24 @@ class SmartContract {
   }
 
 
-  prepareTransaction_SendEti(password, fromAddress, toAddress, amount, clbError, clbSuccess) {
-    web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
-      if (error) {
-        clbError("Wrong password for the selected address!");
-      } else {
+  async prepareTransaction_SendEti(password, fromAddress, toAddress, amount, clbError, clbSuccess) {
+
+        let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+        console.log('prepareTransaction_SendEti() isunlocked is ', isunlocked);
+
+        if(isunlocked == 'locked'){
+          console.log('inside unlock from ');
+          await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+            if (error) {
+              clbError("Wrong password for the selected address!");
+            }
+          });
+        }
+
+        isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+        console.log('prepareTransaction_SendEti() 2 isunlocked is', isunlocked);
+
         web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
           if (error) {
             clbError(error);
@@ -155,8 +168,7 @@ class SmartContract {
             });
           }
         });
-      }
-    });
+
   }
 
    // SEND ETI //

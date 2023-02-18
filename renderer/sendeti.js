@@ -158,17 +158,45 @@ $(document).on("render_sendEti", function () {
       console.log('$("#sendEtiAmmount").val()', $("#sendEtiAmmount").val());
       EticaContract.getTranasctionFee_sendEti($("#sendEtiFromAddress").val(), $("#sendEtiToAddress").val(), $("#sendEtiAmmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
-      }, function (data) {
-        $("#dlgSendEtiWalletPassword").iziModal();
-        $("#walletPasswordSendEti").val("");
-        $("#fromEtiAddressInfo").html($("#sendEtiFromAddress").val());
-        $("#toSendEtiAddressInfo").html($("#sendEtiToAddress").val());
-        $("#valueToSendEtiInfo").html($("#sendEtiAmmount").val());
-        $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
-        $("#dlgSendEtiWalletPassword").iziModal("open");
+      }, async function (data) {
 
-        function doSendTransaction() {
+        let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+
+        $("#walletPasswordSendEti").show();
+        $(".SendTXPass").show();
+        $(".SendTXdivider").show();
+
+        if(isunlocked == 'unlocked'){
+          $("#dlgSendEtiWalletPassword").iziModal();
+          $("#walletPasswordSendEti").val("");
+          $("#walletPasswordSendEti").hide();
+          $(".sendTXPass").css("display", "none");
+          $(".sendTXdivider").css("display", "none");
+          $("#fromEtiAddressInfo").html($("#sendEtiFromAddress").val());
+          $("#toSendEtiAddressInfo").html($("#sendEtiToAddress").val());
+          $("#valueToSendEtiInfo").html($("#sendEtiAmmount").val());
+          $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+          $("#dlgSendEtiWalletPassword").iziModal("open");
+        }
+        else{
+          // Ask password
+          $("#dlgSendEtiWalletPassword").iziModal();
+          $("#walletPasswordSendEti").val("");
+          $("#fromEtiAddressInfo").html($("#sendEtiFromAddress").val());
+          $("#toSendEtiAddressInfo").html($("#sendEtiToAddress").val());
+          $("#valueToSendEtiInfo").html($("#sendEtiAmmount").val());
+          $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+          $("#dlgSendEtiWalletPassword").iziModal("open");
+        }
+
+        async function doSendTransaction() {
           $("#dlgSendEtiWalletPassword").iziModal("close");
+
+          
+          let password = null;
+          if(isunlocked != 'unlocked') {
+            password = $("#walletPasswordSendEti").val();
+          }
 
           EticaContract.prepareTransaction_SendEti($("#walletPasswordSendEti").val(), $("#sendEtiFromAddress").val(), $("#sendEtiToAddress").val(), $("#sendEtiAmmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
