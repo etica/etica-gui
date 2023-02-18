@@ -71,17 +71,47 @@ $(document).on("render_commithistory", function () {
 
                   EticaContract.getTranasctionFee_claimproposal(proposer, proposalhash, function (error) {
                     EticaMainGUI.showGeneralError(error);
-                  }, function (data) {
-                    $("#dlgClaimProposalWalletPassword").iziModal({width: "70%"});
+                  }, async function (data) {
+
+
+                    let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+
+                    $("#ClaimProposalwalletPassword").show();
+                    $(".sendTXPass").show();
+                    $(".sendTXdivider").show();
+            
+                    if(isunlocked == 'unlocked'){
+                      $("#dlgClaimProposalWalletPassword").iziModal({width: "70%"});
+                    $("#ClaimProposalwalletPassword").val("");
+                    $("#ClaimProposalwalletPassword").hide();
+                    $(".sendTXPass").hide();
+                    $(".sendTXdivider").hide();
+                    $("#fromClaimProposalAddressInfo").html(proposer);
+                    $("#valueOfClaimProposalProposalHash").html(proposalhash);
+                    $("#feeClaimProposalToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+                    $("#dlgClaimProposalWalletPassword").iziModal("open");
+                    }
+                    else{
+                      // Ask password
+                      $("#dlgClaimProposalWalletPassword").iziModal({width: "70%"});
                     $("#ClaimProposalwalletPassword").val("");
                     $("#fromClaimProposalAddressInfo").html(proposer);
                     $("#valueOfClaimProposalProposalHash").html(proposalhash);
                     $("#feeClaimProposalToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
                     $("#dlgClaimProposalWalletPassword").iziModal("open");
+                    }
+
+                    
 
                     function doSendTransaction() {
                       $("#dlgClaimProposalWalletPassword").iziModal("close");
-                      EticaContract.prepareTransaction_claimproposal($("#ClaimProposalwalletPassword").val(), proposer, proposalhash, function (error) {
+
+                      let _password = null;
+                      if(isunlocked != 'unlocked') {
+                        _password = $("#ClaimProposalwalletPassword").val();
+                      }
+
+                      EticaContract.prepareTransaction_claimproposal(_password, proposer, proposalhash, function (error) {
                         EticaMainGUI.showGeneralError(error);
                       }, function (data) {
                         EticaBlockchain.sendTransaction(data.raw, function (error) {

@@ -154,19 +154,46 @@ $(document).on("render_send", function () {
     if (EgazSend.validateSendForm()) {
       EticaBlockchain.getTranasctionFee($("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
-      }, function (data) {
-        $("#dlgSendWalletPassword").iziModal({width: "60%"});
+      }, async function (data) {
+
+        let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+
+        $("#walletPassword").show();
+        $(".sendTXPass").show();
+        $(".sendTXdivider").show();
+
+        if(isunlocked == 'unlocked'){
+          $("#dlgSendWalletPassword").iziModal({width: "60%"});
+        $("#walletPassword").val("");
+        $("#walletPassword").hide();
+        $(".sendTXPass").hide();
+        $(".sendTXdivider").hide();
+        $("#fromAddressInfo").html($("#sendFromAddress").val());
+        $("#toAddressInfo").html($("#sendToAddress").val());
+        $("#valueToSendInfo").html($("#sendAmmount").val());
+        $("#feeToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#dlgSendWalletPassword").iziModal("open");
+        }
+        else{
+          // Ask password
+          $("#dlgSendWalletPassword").iziModal({width: "60%"});
         $("#walletPassword").val("");
         $("#fromAddressInfo").html($("#sendFromAddress").val());
         $("#toAddressInfo").html($("#sendToAddress").val());
         $("#valueToSendInfo").html($("#sendAmmount").val());
         $("#feeToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgSendWalletPassword").iziModal("open");
+        }
 
         function doSendTransaction() {
           $("#dlgSendWalletPassword").iziModal("close");
 
-          EticaBlockchain.prepareTransaction($("#walletPassword").val(), $("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
+          let _password = null;
+          if(isunlocked != 'unlocked') {
+            _password = $("#walletPassword").val();
+          }
+
+          EticaBlockchain.prepareTransaction(_password, $("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {

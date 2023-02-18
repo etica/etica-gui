@@ -163,8 +163,8 @@ $(document).on("render_sendEti", function () {
         let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
 
         $("#walletPasswordSendEti").show();
-        $(".SendTXPass").show();
-        $(".SendTXdivider").show();
+        $(".sendTXPass").show();
+        $(".sendTXdivider").show();
 
         if(isunlocked == 'unlocked'){
           $("#dlgSendEtiWalletPassword").iziModal();
@@ -193,12 +193,12 @@ $(document).on("render_sendEti", function () {
           $("#dlgSendEtiWalletPassword").iziModal("close");
 
           
-          let password = null;
+          let _password = null;
           if(isunlocked != 'unlocked') {
-            password = $("#walletPasswordSendEti").val();
+            _password = $("#walletPasswordSendEti").val();
           }
 
-          EticaContract.prepareTransaction_SendEti($("#walletPasswordSendEti").val(), $("#sendEtiFromAddress").val(), $("#sendEtiToAddress").val(), $("#sendEtiAmmount").val(), function (error) {
+          EticaContract.prepareTransaction_SendEti(_password, $("#sendEtiFromAddress").val(), $("#sendEtiToAddress").val(), $("#sendEtiAmmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {

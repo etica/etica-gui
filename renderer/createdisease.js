@@ -81,18 +81,45 @@ $(document).on("render_createDisease", function () {
 
       EticaContract.getTranasctionFee_createdisease($("#createDiseaseFromAddress").val(), $("#createDiseaseName").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
-      }, function (data) {
-        $("#dlgCreateDiseaseWalletPassword").iziModal();
+      }, async function (data) {
+
+        let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+
+        $("#CreateDiseasewalletPassword").show();
+        $(".sendTXPass").show();
+        $(".sendTXdivider").show();
+
+        if(isunlocked == 'unlocked'){
+          $("#dlgCreateDiseaseWalletPassword").iziModal();
+        $("#CreateDiseasewalletPassword").val("");
+        $("#CreateDiseasewalletPassword").hide();
+        $(".sendTXPass").hide();
+        $(".sendTXdivider").hide();
+        $("#fromEtiAddressInfo").html($("#createDiseaseFromAddress").val());
+        $("#valueToCreateDiseaseInfo").html($("#createDiseaseName").val());
+        $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#dlgCreateDiseaseWalletPassword").iziModal("open");
+        }
+        else{
+          // Ask password
+          $("#dlgCreateDiseaseWalletPassword").iziModal();
         $("#CreateDiseasewalletPassword").val("");
         $("#fromEtiAddressInfo").html($("#createDiseaseFromAddress").val());
         $("#valueToCreateDiseaseInfo").html($("#createDiseaseName").val());
         $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCreateDiseaseWalletPassword").iziModal("open");
+        }
+
 
         function doSendTransaction() {
           $("#dlgCreateDiseaseWalletPassword").iziModal("close");
 
-          EticaContract.prepareTransaction_createdisease($("#CreateDiseasewalletPassword").val(), $("#createDiseaseFromAddress").val(), $("#createDiseaseName").val(), function (error) {
+          let _password = null;
+          if(isunlocked != 'unlocked') {
+            _password = $("#CreateDiseasewalletPassword").val();
+          }
+
+          EticaContract.prepareTransaction_createdisease(_password, $("#createDiseaseFromAddress").val(), $("#createDiseaseName").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {

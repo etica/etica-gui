@@ -84,8 +84,30 @@ $(document).on("render_createChunk", function () {
 
       EticaContract.getTranasctionFee_createchunk($("#createChunkFromAddress").val(), $("#createChunkDiseaseHash").val(), $("#createChunkTitle").val(), $("#createChunkDescription").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
-      }, function (data) {
-        $("#dlgCreateChunkiWalletPassword").iziModal();
+      }, async function (data) {
+
+        let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+
+        $("#CreateChunkwalletPassword").show();
+        $(".sendTXPass").show();
+        $(".sendTXdivider").show();
+
+        if(isunlocked == 'unlocked'){
+          $("#dlgCreateChunkiWalletPassword").iziModal();
+        $("#CreateChunkwalletPassword").val("");
+        $("#CreateChunkwalletPassword").hide();
+        $(".sendTXPass").hide();
+        $(".sendTXdivider").hide();
+        $("#fromEtiAddressInfo").html($("#createChunkFromAddress").val());
+        $("#valueToCreateChunkDiseaseHash").html($("#createChunkDiseaseHash").val());
+        $("#valueToCreateChunkTitle").html($("#createChunkTitle").val());
+        $("#valueToCreateChunkDescription").html($("#createChunkDescription").val());
+        $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#dlgCreateChunkiWalletPassword").iziModal("open");
+        }
+        else{
+          // Ask password
+          $("#dlgCreateChunkiWalletPassword").iziModal();
         $("#CreateChunkwalletPassword").val("");
         $("#fromEtiAddressInfo").html($("#createChunkFromAddress").val());
         $("#valueToCreateChunkDiseaseHash").html($("#createChunkDiseaseHash").val());
@@ -93,11 +115,17 @@ $(document).on("render_createChunk", function () {
         $("#valueToCreateChunkDescription").html($("#createChunkDescription").val());
         $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCreateChunkiWalletPassword").iziModal("open");
+        }
 
         function doSendTransaction() {
           $("#dlgCreateChunkiWalletPassword").iziModal("close");
 
-          EticaContract.prepareTransaction_createchunk($("#CreateChunkwalletPassword").val(), $("#createChunkFromAddress").val(), $("#createChunkDiseaseHash").val(), $("#createChunkTitle").val(), $("#createChunkDescription").val(), function (error) {
+          let _password = null;
+          if(isunlocked != 'unlocked') {
+            _password = $("#CreateChunkwalletPassword").val();
+          }
+
+          EticaContract.prepareTransaction_createchunk(_password, $("#createChunkFromAddress").val(), $("#createChunkDiseaseHash").val(), $("#createChunkTitle").val(), $("#createChunkDescription").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {

@@ -139,8 +139,33 @@ $(document).on("render_commitVote", function () {
       
       EticaContract.getTranasctionFee_commitvote($("#commitVoteFromAddress").val(), commitvotehash, $("#commitVoteAmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
-      }, function (data) {
-        $("#dlgCommitVoteWalletPassword").iziModal({width: "70%"});
+      }, async function (data) {
+
+
+        let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+
+        $("#CommitVotewalletPassword").show();
+        $(".sendTXPass").show();
+        $(".sendTXdivider").show();
+
+        if(isunlocked == 'unlocked'){
+          $("#dlgCommitVoteWalletPassword").iziModal({width: "70%"});
+        $("#CommitVotewalletPassword").val("");
+        $("#CommitVotewalletPassword").hide();
+        $(".sendTXPass").hide();
+        $(".sendTXdivider").hide();
+        $("#fromCommitVoteAddressInfo").html($("#commitVoteFromAddress").val());
+        $("#valueToCommitVoteProposalHash").html($("#commitVoteProposalHash").val());
+        $("#valueToCommitVotePrivacy").html($("#commitVotePrivacy").val());
+        $("#valueToCommitVoteChoice").html(vote_checked_choice_text);
+        $("#valueToCommitVoteAmount").html($("#commitVoteAmount").val());
+        $("#valueToCommitVoteHash").html(commitvotehash);
+        $("#feeCommitVoteToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#dlgCommitVoteWalletPassword").iziModal("open");
+        }
+        else{
+          // Ask password
+          $("#dlgCommitVoteWalletPassword").iziModal({width: "70%"});
         $("#CommitVotewalletPassword").val("");
         $("#fromCommitVoteAddressInfo").html($("#commitVoteFromAddress").val());
         $("#valueToCommitVoteProposalHash").html($("#commitVoteProposalHash").val());
@@ -150,6 +175,8 @@ $(document).on("render_commitVote", function () {
         $("#valueToCommitVoteHash").html(commitvotehash);
         $("#feeCommitVoteToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCommitVoteWalletPassword").iziModal("open");
+        }
+
 
         // save votes parameters:
         ipcRenderer.send("storeHashinput", {
@@ -162,9 +189,13 @@ $(document).on("render_commitVote", function () {
 
         function doSendTransaction() {
           $("#dlgCommitVoteWalletPassword").iziModal("close");
-          console.log('in doSendTransaction');
-          console.log('in doSendTransaction  commitvotehash is', commitvotehash);
-          EticaContract.prepareTransaction_commitvote($("#CommitVotewalletPassword").val(), $("#commitVoteFromAddress").val(), commitvotehash, $("#commitVoteAmount").val(), function (error) {
+
+          let _password = null;
+          if(isunlocked != 'unlocked') {
+            _password = $("#CommitVotewalletPassword").val();
+          }
+
+          EticaContract.prepareTransaction_commitvote(_password, $("#commitVoteFromAddress").val(), commitvotehash, $("#commitVoteAmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {

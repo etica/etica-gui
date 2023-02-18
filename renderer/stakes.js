@@ -96,18 +96,44 @@ $(document).on("render_stakes", function () {
       console.log('$("#stakeEtiAmount").val()', $("#stakeEtiAmount").val());
       EticaContract.getTranasctionFee_stakeEti($("#stakeEtiFromAddress").val(), $("#stakeEtiAmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
-      }, function (data) {
-        $("#dlgStakeEtiWalletPassword").iziModal();
+      }, async function (data) {
+
+        let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+
+        $("#walletPasswordStakeEti").show();
+        $(".sendTXPass").show();
+        $(".sendTXdivider").show();
+
+        if(isunlocked == 'unlocked'){
+          $("#dlgStakeEtiWalletPassword").iziModal();
+        $("#walletPasswordStakeEti").val("");
+        $("#walletPasswordStakeEti").hide();
+        $(".sendTXPass").hide();
+        $(".sendTXdivider").hide();
+        $("#fromStakeEtiAddressInfo").html($("#stakeEtiFromAddress").val());
+        $("#valueToStakeEtiInfo").html($("#stakeEtiAmount").val());
+        $("#feeStakeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#dlgStakeEtiWalletPassword").iziModal("open");
+        }
+        else{
+          // Ask password
+          $("#dlgStakeEtiWalletPassword").iziModal();
         $("#walletPasswordStakeEti").val("");
         $("#fromStakeEtiAddressInfo").html($("#stakeEtiFromAddress").val());
         $("#valueToStakeEtiInfo").html($("#stakeEtiAmount").val());
         $("#feeStakeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgStakeEtiWalletPassword").iziModal("open");
+        }
 
         function doSendTransaction() {
           $("#dlgStakeEtiWalletPassword").iziModal("close");
 
-          EticaContract.prepareTransaction_StakeEti($("#walletPasswordStakeEti").val(), $("#stakeEtiFromAddress").val(), $("#stakeEtiAmount").val(), function (error) {
+          let _password = null;
+          if(isunlocked != 'unlocked') {
+            _password = $("#walletPasswordStakeEti").val();
+          }
+
+          EticaContract.prepareTransaction_StakeEti(_password.val(), $("#stakeEtiFromAddress").val(), $("#stakeEtiAmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {
