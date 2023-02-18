@@ -8,14 +8,14 @@ class Accounts {
   constructor() {}
 
   getKeyStoreLocation() {
-    /*switch (os.type()) {
+   /* switch (os.type()) {
       case "Darwin":
         return path.join(os.homedir(), "Library", "Etica", "keystore");
         break;
       default:
         return path.join(process.env.APPDATA.replace('Roaming', 'Local'), "Etica", "keystore");
     } */
-    return 'D:/TestWalletLocation';
+    return 'D:/EticaWalletDataDir/keystore';
   }
 
   exportAccounts() {
