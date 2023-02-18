@@ -103,19 +103,13 @@ class SmartContract {
 
         let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
-        console.log('prepareTransaction_SendEti() isunlocked is ', isunlocked);
-
         if(isunlocked == 'locked'){
-          console.log('inside unlock from ');
           await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
             if (error) {
               clbError("Wrong password for the selected address!");
             }
           });
         }
-
-        isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
-        console.log('prepareTransaction_SendEti() 2 isunlocked is', isunlocked);
 
         web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
           if (error) {
@@ -225,11 +219,18 @@ class SmartContract {
   }
 
 
-  prepareTransaction_StakeEti(password, fromAddress, amount, clbError, clbSuccess) {
-    web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
-      if (error) {
-        clbError("Wrong password for the selected address!");
-      } else {
+  async prepareTransaction_StakeEti(password, fromAddress, amount, clbError, clbSuccess) {
+
+    let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+        if(isunlocked == 'locked'){
+          await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+            if (error) {
+              clbError("Wrong password for the selected address!");
+            }
+          });
+        }
+
         web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
           if (error) {
             clbError(error);
@@ -281,8 +282,7 @@ class SmartContract {
             });
           }
         });
-      }
-    });
+
   }
 
 
@@ -339,11 +339,18 @@ class SmartContract {
       }
     
     
-      prepareTransaction_createdisease(password, fromAddress, _diseasename, clbError, clbSuccess) {
-        web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
-          if (error) {
-            clbError("Wrong password for the selected address!");
-          } else {
+      async prepareTransaction_createdisease(password, fromAddress, _diseasename, clbError, clbSuccess) {
+
+        let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+        if(isunlocked == 'locked'){
+          await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+            if (error) {
+              clbError("Wrong password for the selected address!");
+            }
+          });
+        }
+
             web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
               if (error) {
                 clbError(error);
@@ -389,8 +396,7 @@ class SmartContract {
                 });
               }
             });
-          }
-        });
+
       }
     
     
@@ -451,11 +457,18 @@ class SmartContract {
         }
       
       
-        prepareTransaction_createchunk(password, fromAddress, _diseasehash, _title, _description, clbError, clbSuccess) {
-          web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
-            if (error) {
-              clbError("Wrong password for the selected address!");
-            } else {
+        async prepareTransaction_createchunk(password, fromAddress, _diseasehash, _title, _description, clbError, clbSuccess) {
+          
+          let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+             if(isunlocked == 'locked'){
+                await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+                if (error) {
+                   clbError("Wrong password for the selected address!");
+              }
+              });
+        }
+
               web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
                 if (error) {
                   clbError(error);
@@ -509,8 +522,7 @@ class SmartContract {
                   });
                 }
               });
-            }
-          });
+
         }
       
       
@@ -585,11 +597,18 @@ class SmartContract {
         }
       
       
-        prepareTransaction_createproposal(password, fromAddress, _diseasehash, _title, _description, raw_release_hash, _freefield, _chunkid, clbError, clbSuccess) {
-          web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
-            if (error) {
-              clbError("Wrong password for the selected address!");
-            } else {
+        async prepareTransaction_createproposal(password, fromAddress, _diseasehash, _title, _description, raw_release_hash, _freefield, _chunkid, clbError, clbSuccess) {
+          
+          let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+             if(isunlocked == 'locked'){
+                 await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+                 if (error) {
+                    clbError("Wrong password for the selected address!");
+                 }
+              });
+             }
+
               web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
                 if (error) {
                   clbError(error);
@@ -655,8 +674,7 @@ class SmartContract {
                   });
                 }
               });
-            }
-          });
+
         }
       
       
@@ -716,11 +734,18 @@ class SmartContract {
         }
       
       
-        prepareTransaction_commitvote(password, fromAddress, votehash, amount, clbError, clbSuccess) {
-          web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
-            if (error) {
-              clbError("Wrong password for the selected address!");
-            } else {
+        async prepareTransaction_commitvote(password, fromAddress, votehash, amount, clbError, clbSuccess) {
+          
+          let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+            if(isunlocked == 'locked'){
+              await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+              if (error) {
+                clbError("Wrong password for the selected address!");
+              }
+            });
+          }
+
               web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
                 if (error) {
                   clbError(error);
@@ -772,8 +797,7 @@ class SmartContract {
                   });
                 }
               });
-            }
-          });
+
         }
       
          // COMMIT VOTE //
@@ -832,11 +856,18 @@ class SmartContract {
         }
       
       
-        prepareTransaction_revealvote(password, fromAddress, _proposed_release_hash, _approved, _vary, clbError, clbSuccess) {
-          web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
-            if (error) {
-              clbError("Wrong password for the selected address!");
-            } else {
+        async prepareTransaction_revealvote(password, fromAddress, _proposed_release_hash, _approved, _vary, clbError, clbSuccess) {
+          
+          let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+          if(isunlocked == 'locked'){
+              await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+              if (error) {
+                clbError("Wrong password for the selected address!");
+              }
+            });
+          }
+
               web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
                 if (error) {
                   clbError(error);
@@ -891,8 +922,7 @@ class SmartContract {
                   });
                 }
               });
-            }
-          });
+
         }
       
          // REVEAL VOTE //
@@ -944,11 +974,18 @@ class SmartContract {
         }
       
       
-        prepareTransaction_claimproposal(password, fromAddress, _proposed_release_hash, clbError, clbSuccess) {
-          web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
-            if (error) {
-              clbError("Wrong password for the selected address!");
-            } else {
+        async prepareTransaction_claimproposal(password, fromAddress, _proposed_release_hash, clbError, clbSuccess) {
+          
+          let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+          if(isunlocked == 'locked'){
+              await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+              if (error) {
+                clbError("Wrong password for the selected address!");
+              }
+            });
+          }
+
               web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
                 if (error) {
                   clbError(error);
@@ -995,8 +1032,7 @@ class SmartContract {
                   });
                 }
               });
-            }
-          });
+
         }
       
          // CLAIM PROPOSAL //
@@ -1055,11 +1091,18 @@ class SmartContract {
   }
 
 
-  prepareTransaction_stakescsldt(password, fromAddress, _endTime, _min_limit, _maxidx, clbError, clbSuccess) {
-    web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
-      if (error) {
-        clbError("Wrong password for the selected address!");
-      } else {
+  async prepareTransaction_stakescsldt(password, fromAddress, _endTime, _min_limit, _maxidx, clbError, clbSuccess) {
+    
+              let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+              if(isunlocked == 'locked'){
+                  await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+                  if (error) {
+                    clbError("Wrong password for the selected address!");
+                  }
+                });
+              }
+
         web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
           if (error) {
             clbError(error);
@@ -1113,8 +1156,7 @@ class SmartContract {
             });
           }
         });
-      }
-    });
+
   }
 
 
@@ -1171,11 +1213,18 @@ class SmartContract {
   }
 
 
-  prepareTransaction_stakesnap(password, fromAddress, stakeidx, amount, clbError, clbSuccess) {
-    web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
-      if (error) {
-        clbError("Wrong password for the selected address!");
-      } else {
+  async prepareTransaction_stakesnap(password, fromAddress, stakeidx, amount, clbError, clbSuccess) {
+    
+    let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+      if(isunlocked == 'locked'){
+        await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+        if (error) {
+          clbError("Wrong password for the selected address!");
+        }
+      });
+    }
+
         web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
           if (error) {
             clbError(error);
@@ -1226,8 +1275,7 @@ class SmartContract {
             });
           }
         });
-      }
-    });
+
   }
 
    // SNAP STAKE // 
@@ -1278,11 +1326,18 @@ class SmartContract {
   }
 
 
-  prepareTransaction_stakeclmidx(password, fromAddress, stakeidx, clbError, clbSuccess) {
-    web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) {
-      if (error) {
-        clbError("Wrong password for the selected address!");
-      } else {
+  async prepareTransaction_stakeclmidx(password, fromAddress, stakeidx, clbError, clbSuccess) {
+    
+    let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+       if(isunlocked == 'locked'){
+          await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+          if (error) {
+             clbError("Wrong password for the selected address!");
+          }
+        });
+      }
+
         web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
           if (error) {
             clbError(error);
@@ -1328,8 +1383,7 @@ class SmartContract {
             });
           }
         });
-      }
-    });
+
   }
 
    // CLAIM STAKE // 
