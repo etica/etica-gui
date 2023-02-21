@@ -15,7 +15,6 @@ db.loadDatabase(function (err) {
 /* Wallets fields:
                   name: wallet name given by user,
                   masteraddress: wallet address of seed,
-                  namehash: hash of name, (cant change wallet names for now)
                   infos: wallet additional info given by user,
                   blockchaindirectory: core-geth --blockchain datadir directory
                   keystoredirectory: core-geth --keystore directory

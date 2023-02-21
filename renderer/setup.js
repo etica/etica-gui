@@ -10,7 +10,6 @@ const {ipcRenderer} = require("electron");
 
     wallet.name = "Wallet D",
     wallet.masteraddress = "0x76925DBe657C695A32a804a22106CFFb0057Fd96",
-    wallet.namehash = "",
     wallet.infos = "",
     wallet.blockchaindirectory = 'D:/EticaWalletDataDir/blockchaindata';
     wallet.keystoredirectory = 'D:/EticaWalletDataDir/keystore';
