@@ -59,6 +59,7 @@
     "@unibeautify/beautifier-js-beautify": "^0.4.0",
     "adm-zip": "^0.4.13",
     "app-root-path": "^2.1.0",
+    "bip39": "^3.0.4",
     "electron-reload": "^1.4.1",
     "electron-storage": "^1.0.7",
     "fs-extra": "^7.0.1",
