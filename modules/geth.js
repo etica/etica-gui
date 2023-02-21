@@ -46,8 +46,22 @@ class Geth {
     }
   }
 
-  startGeth() {
+  startGeth(_wallet) {
     console.log('startGeth called');
+    console.log('startGeth _wallet.blockchaindirectory,', _wallet.blockchaindirectory);
+    console.log('startGeth _wallet.keystoredirector,', _wallet.keystoredirectory);
+    console.log('startGeth _wallet.enode,', _wallet.enode);
+
+    let _networkid = '';
+    if(_wallet.type == 'mainnet'){
+      _networkid = '61803';
+    }
+    else {
+      _networkid = _wallet.networkid;
+    }
+
+    // let _blockchaindirectory = 'D:/EticaWalletDataDir/blockchaindata';
+    //let _keystoredirectory = 'D:/EticaWalletDataDir/keystore';
     // get the path of get and execute the child process
     try {
       this.isRunning = true;
@@ -106,21 +120,21 @@ class Geth {
         "--ws.origins",
         "*",
         "--ws.addr",
-        "127.0.0.1",
+        ""+_wallet.wsaddress+"",
         "--ws.port",
-        "8551",
+        ""+_wallet.wsport+"",
         "--port",
-        "30317",
-        "--datadir=D:/EticaWalletDataDir/blockchaindata",
-        "--keystore=D:/EticaWalletDataDir/keystore",
+        ""+_wallet.port+"",
+        "--datadir="+_wallet.blockchaindirectory+"",
+        "--keystore="+_wallet.keystoredirectory+"",
         "--ws.api",
         "admin,eth,net,miner,personal,web3",
         "--networkid",
-        "686970",
+        ""+_networkid+"",
         "--syncmode",
         "snap",
         "--bootnodes",
-        "enode://56427938056c62a4a3f3bd1d7411e590ed8667e69712d3eb7474293f0bbf94aa4c1d11cb3a8b6ce0a86c31c4a6b1048796eaa8afb984b66be4990a10cf1dc9e7@127.0.0.1:30303"
+        ""+_wallet.enode+""
       ]); // LOCAL DEV NODE FOR TESTING //
 
       if (!this.gethProcess) {
@@ -167,7 +181,7 @@ ipcMain.on("stopGeth", (event, arg) => {
 });
 
 ipcMain.on("startGeth", (event, arg) => {
-  EticaGeth.startGeth();
+  EticaGeth.startGeth(arg);
 });
 
 EticaGeth = new Geth();

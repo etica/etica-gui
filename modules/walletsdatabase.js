@@ -20,6 +20,12 @@ db.loadDatabase(function (err) {
                   blockchaindirectory: core-geth --blockchain datadir directory
                   keystoredirectory: core-geth --keystore directory
                   datadirectory: // transactions, commits databases...
+                  enode: enode url to connect to
+                  type: mainnet or testnet
+                  networkid: for testnet only
+                  wsport:
+                  wsaddress:
+                  port:
 */
 
 ipcMain.on("storeWallet", (event, arg) => {
@@ -50,10 +56,13 @@ ipcMain.on("getWallets", (event, arg) => {
       
       let _wallet = {
         "name": docs[i].name,
+        "masteraddress": docs[i].masteraddress,
         "infos": docs[i].infos,
         "blockchaindirectory": docs[i].blockchaindirectory,
         "keystoredirectory": docs[i].keystoredirectory,
-        "datadirectory": docs[i].datadirectory
+        "datadirectory": docs[i].datadirectory,
+        "enode": docs[i].enode,
+        "type": docs[i].type
       };
 
       ResultData.push(
