@@ -20,20 +20,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-  <link rel="apple-touch-icon" sizes="76x76" href="./assets/blk/img/apple-icon.png">
-  <link rel="icon" type="image/png" href="./assets/blk/img/favicon.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="../../blk/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="../../blk/img/favicon.png">
   <title>
     Etica GUI Wallet
   </title>
   <!--     Fonts and icons     -->
-  <link href="./assets/blk/googlefontpoppins.css" rel="stylesheet" />
-  <link href="./assets/blk/fontawesome.css" rel="stylesheet">
+  <link href="../../blk/googlefontpoppins.css" rel="stylesheet" />
+  <link href="../../blk/fontawesome.css" rel="stylesheet">
   <!-- Nucleo Icons -->
-  <link href="./assets/blk/css/nucleo-icons.css" rel="stylesheet" />
+  <link href="../../blk/css/nucleo-icons.css" rel="stylesheet" />
   <!-- CSS Files -->
-  <link href="./assets/blk/css/blk-design-system.css?v=1.0.0" rel="stylesheet" />
+  <link href="../../blk/css/blk-design-system.css?v=1.0.0" rel="stylesheet" />
   <!-- CSS Just for demo purpose, don't include it in your project -->
-  <link href="./assets/blk/demo/demo.css" rel="stylesheet" />
+  <link href="../../blk/demo/demo.css" rel="stylesheet" />
 
   <script>
     if (typeof module === 'object') {
@@ -42,23 +42,23 @@
     }
   </script>
 <!--   Core JS Files   -->
-<script src="./assets/blk/js/core/jquery.min.js" type="text/javascript"></script>
-<script src="./assets/blk/js/core/popper.min.js" type="text/javascript"></script>
-<script src="./assets/blk/js/core/bootstrap.min.js" type="text/javascript"></script>
-<script src="./assets/blk/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+<script src="../../blk/js/core/jquery.min.js" type="text/javascript"></script>
+<script src="../../blk/js/core/popper.min.js" type="text/javascript"></script>
+<script src="../../blk/js/core/bootstrap.min.js" type="text/javascript"></script>
+<script src="../../blk/js/plugins/perfect-scrollbar.jquery.min.js"></script>
 <!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
-<script src="./assets/blk/js/plugins/bootstrap-switch.js"></script>
+<script src="../../blk/js/plugins/bootstrap-switch.js"></script>
 <!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
-<script src="./assets/blk/js/plugins/nouislider.min.js" type="text/javascript"></script>
+<script src="../../blk/js/plugins/nouislider.min.js" type="text/javascript"></script>
 <!-- Chart JS -->
-<script src="./assets/blk/js/plugins/chartjs.min.js"></script>
+<script src="../../blk/js/plugins/chartjs.min.js"></script>
 <!--  Plugin for the DatePicker, full documentation here: https://github.com/uxsolutions/bootstrap-datepicker -->
-<script src="./assets/blk/js/plugins/moment.min.js"></script>
-<script src="./assets/blk/js/plugins/bootstrap-datetimepicker.js" type="text/javascript"></script>
+<script src="../../blk/js/plugins/moment.min.js"></script>
+<script src="../../blk/js/plugins/bootstrap-datetimepicker.js" type="text/javascript"></script>
 <!-- Black Dashboard DEMO methods, don't include it in your project! -->
-<script src="./assets/blk/demo/demo.js"></script>
+<script src="../../blk/demo/demo.js"></script>
 <!-- Control Center for Black UI Kit: parallax effects, scripts for the example pages etc -->
-<script src="./assets/blk/js/blk-design-system.min.js?v=1.0.0" type="text/javascript"></script>
+<script src="../../blk/js/blk-design-system.min.js?v=1.0.0" type="text/javascript"></script>
 
 </head>
 
@@ -90,14 +90,11 @@
         <div class="content-center brand">
           <h1 class="h1-seo">ETICA•</h1>
           <h3>Open Source Wallet</h3>
+          <p>Etica GUI will generate a seed. Make sure nobody is watching and be ready to note the seed as there is no back up in the wallet. Your seed will allow you to restore your wallet from any other computer.</p>
         </div>
-        <div class="row" style="position: absolute;top: 64%;left: 35%;">
+        <div class="row" style="position: absolute;top: 80vh;left: 38%;">
           <div class="col-md-12">
-            <button class="btn btn-primary">Import from seed</button>
-            <a class="btn btn-primary" href="./assets/templates/setup/newwallet.html">New Wallet</a>
-          </div>
-          <div class="col-md-12">
-            <a class="btn btn-success" id="launchWallet" href="./index.html">Select Wallet from directory</a>
+            <button class="btn btn-primary" id="GenerateSeed">Generate Seed</button>
           </div>
         </div>
       </div>
@@ -109,7 +106,7 @@
 
 <script>
   // You can also require other files to run in this process
-  require('./renderer/setup.js');
+  require('./renderer/seed.js');
 </script>
 
 </html>
