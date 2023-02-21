@@ -60,6 +60,22 @@
 <!-- Control Center for Black UI Kit: parallax effects, scripts for the example pages etc -->
 <script src="../../blk/js/blk-design-system.min.js?v=1.0.0" type="text/javascript"></script>
 
+<style>
+
+
+#NewMnemonic {
+  display: none;
+  border: solid 1px #247365;
+  margin-top: 1vh;
+  padding: 2%;
+}
+
+#GoCheckMnemonicDiv {
+  display: none;
+}
+
+</style>
+
 </head>
 
 <body class="index-page">
@@ -90,11 +106,17 @@
         <div class="content-center brand">
           <h1 class="h1-seo">ETICA•</h1>
           <h3>Open Source Wallet</h3>
-          <p>Etica GUI will generate a seed. Make sure nobody is watching and be ready to note the seed as there is no back up in the wallet. Your seed will allow you to restore your wallet from any other computer.</p>
+          <p id="HelperMnemonic">Etica GUI will generate a seed. Make sure nobody is watching and be ready to note the seed as there is no back up in the wallet. Your seed will allow you to restore your wallet from any other computer.</p>
+          <p id="NewMnemonic" style="color:#ffffff;"></p>
         </div>
-        <div class="row" style="position: absolute;top: 80vh;left: 38%;">
+        <div id="GenerateMnemonicDiv" class="row" style="position: absolute;top: 75vh;left: 38%;">
           <div class="col-md-12">
-            <button class="btn btn-primary" id="GenerateSeed">Generate Seed</button>
+            <button class="btn btn-primary" id="GenerateMnemonic">Generate Seed</button>
+          </div>
+        </div>
+        <div id="GoCheckMnemonicDiv" class="row" style="position: absolute;top: 75vh;left: 43%;">
+          <div class="col-md-12">
+            <button class="btn btn-primary" id="GoCheckMnemonic">Next</button>
           </div>
         </div>
       </div>
@@ -106,7 +128,7 @@
 
 <script>
   // You can also require other files to run in this process
-  require('./renderer/seed.js');
+  require('../../../renderer/seed.js');
 </script>
 
 </html>
