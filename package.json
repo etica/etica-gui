@@ -62,6 +62,8 @@
     "bip39": "^3.0.4",
     "electron-reload": "^1.4.1",
     "electron-storage": "^1.0.7",
+    "ethereumjs-util": "^7.1.5",
+    "ethereumjs-wallet": "^1.0.2",
     "fs-extra": "^7.0.1",
     "handlebars": "^4.1.0",
     "moment": "^2.23.0",
