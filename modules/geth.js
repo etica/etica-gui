@@ -47,6 +47,7 @@ class Geth {
   }
 
   startGeth() {
+    console.log('startGeth called');
     // get the path of get and execute the child process
     try {
       this.isRunning = true;
@@ -163,6 +164,10 @@ class Geth {
 
 ipcMain.on("stopGeth", (event, arg) => {
   EticaGeth.stopGeth();
+});
+
+ipcMain.on("startGeth", (event, arg) => {
+  EticaGeth.startGeth();
 });
 
 EticaGeth = new Geth();

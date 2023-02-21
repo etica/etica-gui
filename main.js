@@ -28,8 +28,10 @@ locker.lock().then(function() {
     });
 
     // and load the index.html of the app.
-    mainWindow.loadFile("index.html");
-    EticaGeth.startGeth();
+    // // mainWindow.loadFile("index.html");
+    mainWindow.loadFile("setup.html");
+    // // EticaGeth.startGeth();
+    
 
     // Open the DevTools.
     // mainWindow.webContents.openDevTools()
@@ -42,7 +44,7 @@ locker.lock().then(function() {
       mainWindow = null;
     });
 
-    require("./modules/menu.js");
+    // //require("./modules/menu.js");
   }
 
   // This method will be called when Electron has finished
