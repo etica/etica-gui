@@ -93,3 +93,8 @@ require("./modules/database.js");
 require("./modules/commitsdatabase.js");
 require("./modules/proposalsdatabase.js");
 require("./modules/hashinputsdatabase.js");
+
+require("./modules/menu.js");
+
+require("./modules/walletsdatabase.js");
+require("./modules/setupdb.js");
