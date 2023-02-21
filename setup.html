@@ -1,85 +1,110 @@
+<!--
+=========================================================
+* BLK Design System- v1.0.0
+=========================================================
+
+* Product Page: https://www.creative-tim.com/product/blk-design-system
+* Copyright 2019 Creative Tim (https://www.creative-tim.com)
+* Licensed under MIT
+
+* Coded by Creative Tim
+
+=========================================================
+
+* The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ -->
+
 <!DOCTYPE html>
-<html>
+<html lang="en">
 
-  <head>
-    <meta charset="UTF-8">
-    <title>Etica GUI Wallet</title>
-    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
-    <link rel="stylesheet" href="./assets/styles/materialize.min.css">
-    <link rel="stylesheet" href="./assets/styles/datatables.min.css">
-    <link rel="stylesheet" href="./assets/styles/iziModal.min.css">
-    <link rel="stylesheet" href="./assets/styles/iziToast.min.css">
-    <link rel="stylesheet" href="./assets/styles/transactions.css">
-    <link rel="stylesheet" href="./assets/styles/please-wait.css">
-    <link rel="stylesheet" href="./assets/styles/indicators.css">
-    <link rel="stylesheet" href="./assets/styles/tablesort.css">
-    <link rel="stylesheet" href="./assets/styles/all.min.css">
-    <link rel="stylesheet" href="./assets/styles/spinner.css">
-    <link rel="stylesheet" href="./assets/styles/buttons.css">
-    <link rel="stylesheet" href="./assets/styles/style.css">
-    <link rel="stylesheet" href="./assets/styles/forms.css">
-    <link rel="stylesheet" href="./assets/styles/loading-bar.css">
-    <!-- Insert this line above script imports -->
-    <script>
-      if (typeof module === 'object') {
-        window.module = module;
-        module = undefined;
-      }
-    </script>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+  <link rel="apple-touch-icon" sizes="76x76" href="./assets/blk/img/apple-icon.png">
+  <link rel="icon" type="image/png" href="./assets/blk/img/favicon.png">
+  <title>
+    Etica GUI Wallet
+  </title>
+  <!--     Fonts and icons     -->
+  <link href="./assets/blk/googlefontpoppins.css" rel="stylesheet" />
+  <link href="./assets/blk/fontawesome.css" rel="stylesheet">
+  <!-- Nucleo Icons -->
+  <link href="./assets/blk/css/nucleo-icons.css" rel="stylesheet" />
+  <!-- CSS Files -->
+  <link href="./assets/blk/css/blk-design-system.css?v=1.0.0" rel="stylesheet" />
+  <!-- CSS Just for demo purpose, don't include it in your project -->
+  <link href="./assets/blk/demo/demo.css" rel="stylesheet" />
 
-    <!-- normal script imports etc -->
-    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
-    <script src="./assets/scripts/jquery.min.js"></script>
-    <script src="./assets/scripts/handlebars.js"></script>
-    <script src="./assets/scripts/materialize.min.js"></script>
-    <script src="./assets/scripts/datatables.min.js"></script>
-    <script src="./assets/scripts/iziModal.min.js"></script>
-    <script src="./assets/scripts/iziToast.min.js"></script>
-    <script src="./assets/scripts/tippy.min.js"></script>
-    <script src="./assets/scripts/progressbar.min.js"></script>
-    <script src="./assets/scripts/sprintf.min.js"></script>
-    <script src="./assets/scripts/please-wait.js "></script>
-    <script src="./assets/scripts/moment.min.js"></script>
-    <script src="./assets/scripts/datetime-moment.js"></script>
-    <script src="./assets/scripts/datatables-absolute.js"></script>
-    <script src="./assets/scripts/jquery.floatThead.min.js"></script>
-    <script src="./assets/scripts/tablesort.min.js"></script>
-    <script src="./assets/scripts/tablesort.number.min.js"></script>
-    <script src="./assets/scripts/jquery.qrcode.min.js"></script>
-    <script src="./assets/scripts/all.min.js"></script>
-    <script src="./assets/scripts/Chart.js"></script>
-    <script src="./assets/scripts/loading-bar.js"></script>
+  <script>
+    if (typeof module === 'object') {
+      window.module = module;
+      module = undefined;
+    }
+  </script>
+<!--   Core JS Files   -->
+<script src="./assets/blk/js/core/jquery.min.js" type="text/javascript"></script>
+<script src="./assets/blk/js/core/popper.min.js" type="text/javascript"></script>
+<script src="./assets/blk/js/core/bootstrap.min.js" type="text/javascript"></script>
+<script src="./assets/blk/js/plugins/perfect-scrollbar.jquery.min.js"></script>
+<!--  Plugin for Switches, full documentation here: http://www.jque.re/plugins/version3/bootstrap.switch/ -->
+<script src="./assets/blk/js/plugins/bootstrap-switch.js"></script>
+<!--  Plugin for the Sliders, full documentation here: http://refreshless.com/nouislider/ -->
+<script src="./assets/blk/js/plugins/nouislider.min.js" type="text/javascript"></script>
+<!-- Chart JS -->
+<script src="./assets/blk/js/plugins/chartjs.min.js"></script>
+<!--  Plugin for the DatePicker, full documentation here: https://github.com/uxsolutions/bootstrap-datepicker -->
+<script src="./assets/blk/js/plugins/moment.min.js"></script>
+<script src="./assets/blk/js/plugins/bootstrap-datetimepicker.js" type="text/javascript"></script>
+<!-- Black Dashboard DEMO methods, don't include it in your project! -->
+<script src="./assets/blk/demo/demo.js"></script>
+<!-- Control Center for Black UI Kit: parallax effects, scripts for the example pages etc -->
+<script src="./assets/blk/js/blk-design-system.min.js?v=1.0.0" type="text/javascript"></script>
 
-    <!-- Insert this line after script imports -->
-    <script>
-      if (window.module)
-        module = window.module;
-    </script>
-  </head>
+</head>
 
-  <body>
-    <script>
-     /* var loading_screen = pleaseWait({logo: "assets/images/myetherwallet-logo.png", backgroundColor: '#000000', loadingHtml: "<div class='spinner'><img src='assets/images/preload.svg'></img></div></div><div class='content'>Starting the node and loading the wallet, please wait...</div>"});
-
-      $(document).on("onGethReady", function () {
-        loading_screen.finish();
-      });
-
-      $(window).on("beforeunload", function () {
-        EticaBlockchain.closeConnection();
-      }) */
-    </script>
-     <div>
-      <div>
-
-<h1>Wallet setup:</h1>
-<a id="launchWallet" href="./index.html">Launch Wallet</a>
-
+<body class="index-page">
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg fixed-top navbar-transparent " color-on-scroll="100">
+    <div class="container">
+      <div class="navbar-translate">
+        <a class="navbar-brand" href="https://demos.creative-tim.com/blk-design-system/index.html" rel="tooltip" title="Designed and Coded by Creative Tim" data-placement="bottom" target="_blank">
+          <span>Etica GUI•</span> V1
+        </a>
       </div>
-      <script>
-        // You can also require other files to run in this process
-        require('./renderer/setup.js');
-      </script>
     </div>
+  </nav>
+  <!-- End Navbar -->
+  <div class="wrapper">
+    <div class="page-header header-filter">
+      <div class="squares square1"></div>
+      <div class="squares square2"></div>
+      <div class="squares square3"></div>
+      <div class="squares square4"></div>
+      <div class="squares square5"></div>
+      <div class="squares square6"></div>
+      <div class="squares square7"></div>
+      <div class="container">
+        <div class="content-center brand">
+          <h1 class="h1-seo">ETICA•</h1>
+          <h3>Open Source Wallet</h3>
+        </div>
+        <div class="row" style="position: absolute;top: 64%;left: 35%;">
+          <div class="col-md-12">
+            <button class="btn btn-primary">New Wallet</button>
+            <button class="btn btn-primary">Load Wallet</button>
+            <a class="btn btn-primary" id="launchWallet" href="./index.html">Launch Wallet</a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</body>
+
+<script>
+  // You can also require other files to run in this process
+  require('./renderer/setup.js');
+</script>
 
 </html>
