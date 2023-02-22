@@ -6,55 +6,72 @@ const util = require('ethereumjs-util');
 let mnemonic;
 let user_mnemonic_order_array = [];
 
+
+function normalizeString(str) {
+  return str.trim().replace(/\s+/g, ' ');
+}
+
+function GenerateNewSeed(){
+   // reinitialize mnemonic
+   mnemonic = '';
+   user_mnemonic_order_array = [];
+
+   $("#InitializeWalletDiv").css('display', 'none');
+   $("#ResetMnemonicDiv").css('display', 'none');
+   $("#GoCheckMnemonicDiv").css('display', 'none');
+   $("#NewEticaAddress").css('display', 'none');
+   $("#CheckMnemonic").css('display', 'none');
+ 
+ 
+   const strength = 256; // strength in bits, must be a multiple of 32
+   mnemonic = bip39.generateMnemonic(strength);
+ 
+   console.log('Generated mnemonic:', mnemonic);
+ 
+   const passphrase = ''; // insert your optional passphrase here
+   const seed = bip39.mnemonicToSeedSync(mnemonic, passphrase);
+ 
+   console.log('type of seed is', typeof seed);
+   console.log('Generated seed:', seed.toString('hex'));
+ 
+ 
+ // Generate a key pair from the seed
+ const hdWallet = hdkey.fromMasterSeed(seed);
+ const wallet = hdWallet.derivePath("m/44'/60'/0'/0/0").getWallet();
+ const privateKey = wallet.getPrivateKey();
+ const publicKey = wallet.getPublicKey();
+ 
+ console.log('Private key:', privateKey.toString('hex'));
+ console.log('Public key:', publicKey.toString('hex'));
+ 
+ // Calculate the Ethereum address from the public key
+ let address_without0x = util.pubToAddress(publicKey, true).toString('hex');
+ const address = '0x' + address_without0x;
+ 
+ console.log('Ethereum address:', '0x' + address);
+ 
+ 
+   $("#GenerateMnemonicDiv").hide();
+   $("#HelperMnemonic").html("This is your mnemonic (seed)");
+   $("#NewMnemonic").css('display', 'block');
+   $("#NewMnemonic").html(mnemonic);
+   $("#GoCheckMnemonicDiv").css('display', 'block');
+ 
+   $("#NewEticaAddress").css('display', 'block');
+   $("#NewEticaAddress").html('Etica address: '+address+'');
+}
+
+
  $("#GenerateMnemonic").off("click").on("click", function () {
 
-  // reinitialize mnemonic
-  mnemonic = '';
-  user_mnemonic_order_array = [];
-
-
-  const strength = 256; // strength in bits, must be a multiple of 32
-  mnemonic = bip39.generateMnemonic(strength);
-
-  console.log('Generated mnemonic:', mnemonic);
-
-  const passphrase = ''; // insert your optional passphrase here
-  const seed = bip39.mnemonicToSeedSync(mnemonic, passphrase);
-
-  console.log('type of seed is', typeof seed);
-  console.log('Generated seed:', seed.toString('hex'));
-
-
-// Generate a key pair from the seed
-const hdWallet = hdkey.fromMasterSeed(seed);
-const wallet = hdWallet.derivePath("m/44'/60'/0'/0/0").getWallet();
-const privateKey = wallet.getPrivateKey();
-const publicKey = wallet.getPublicKey();
-
-console.log('Private key:', privateKey.toString('hex'));
-console.log('Public key:', publicKey.toString('hex'));
-
-// Calculate the Ethereum address from the public key
-let address_without0x = util.pubToAddress(publicKey, true).toString('hex');
-const address = '0x' + address_without0x;
-
-console.log('Ethereum address:', '0x' + address);
-
-
-  $("#GenerateMnemonicDiv").hide();
-  $("#HelperMnemonic").html("This is your seed");
-  $("#NewMnemonic").css('display', 'block');
-  $("#NewMnemonic").html(mnemonic);
-  $("#GoCheckMnemonicDiv").css('display', 'block');
-
-  $("#NewEticaAddress").css('display', 'block');
-  $("#NewEticaAddress").html('Etica address: '+address+'');
-
+  GenerateNewSeed();
 
   });
 
 
   $("#GoCheckMnemonic").off("click").on("click", function () {
+
+    $(".mnemonicwords").show();
 
     $("#NewMnemonic").css('display', 'none');
     $("#GoCheckMnemonicDiv").css('display', 'none');
@@ -119,10 +136,15 @@ $("#word24").html(reorderedWords[23]);
       console.log('usermnemonic is: ', usermnemonic);
 
       if(normalizeString(mnemonic) === normalizeString(usermnemonic)){
-console.log('validmnemonic');
+       console.log('validmnemonic');
+       $("#CheckMnemonic").css('display', 'none');
+       $("#HelperMnemonic").html("Your mnemonic is verified. Click on <br> You can now initialize a new wallet with this seed. <br> (If you already have other wallets it will not suppress them)");
+       $("#InitializeWalletDiv").css('display', 'block');
       }
       else {
         console.log('invalidmnemonic');
+        $("#HelperMnemonic").html("You provided a wrong order for this mnemonic. Please try again");
+        $("#ResetMnemonicDiv").css('display', 'block');
       }
 
 
@@ -130,6 +152,16 @@ console.log('validmnemonic');
 
   });
 
-  function normalizeString(str) {
-    return str.trim().replace(/\s+/g, ' ');
-  }
+
+  $("#InitializeWallet").off("click").on("click", function () {
+
+
+
+
+  });
+
+  $("#ResetMnemonic").off("click").on("click", function () {
+
+   GenerateNewSeed();
+
+  });
