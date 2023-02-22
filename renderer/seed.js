@@ -143,7 +143,7 @@ $("#word24").html(reorderedWords[23]);
       }
       else {
         console.log('invalidmnemonic');
-        $("#HelperMnemonic").html("You provided a wrong order for this mnemonic. Please try again");
+        $("#HelperMnemonic").html("You provided a wrong word order for this mnemonic. Please try again");
         $("#ResetMnemonicDiv").css('display', 'block');
       }
 
@@ -155,6 +155,7 @@ $("#word24").html(reorderedWords[23]);
 
   $("#InitializeWallet").off("click").on("click", function () {
 
+    // creates wallet from seed
 
 
 
