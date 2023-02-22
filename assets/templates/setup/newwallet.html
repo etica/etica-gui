@@ -78,6 +78,24 @@
   display: none;
 }
 
+#CheckMnemonic {
+  display: none;
+}
+
+.mnemonicwords {
+  background-color: #1b4a4a;
+    padding-right: 2%;
+    padding-left: 2%;
+    margin-right: 2%;
+    margin-left: 2%;
+    cursor: pointer;
+}
+
+.mnemonicsparts {
+  display: inline-flex;
+  width: 100%;
+}
+
 </style>
 
 </head>
@@ -110,6 +128,49 @@
           <p id="HelperMnemonic">Etica GUI will generate a seed. Make sure nobody is watching and be ready to note the seed as there is no back up in the wallet. Your seed will allow you to restore your wallet from any other computer.</p>
           <p id="NewMnemonic" style="color:#ffffff;"></p>
           <p id="NewEticaAddress" style="color:#ffffff;"></p>
+          
+          
+          <div id="CheckMnemonic">
+
+            <div id="Mnemonicpart1" class="mnemonicsparts">
+              <p id="word1" class="mnemonicwords"></p>
+              <p id="word2" class="mnemonicwords"></p>
+              <p id="word3" class="mnemonicwords"></p>
+              <p id="word4" class="mnemonicwords"></p>
+              <p id="word5" class="mnemonicwords"></p>
+              <p id="word6" class="mnemonicwords"></p>
+            </div>
+
+            <div id="Mnemonicpart2" class="mnemonicsparts">
+              <p id="word7" class="mnemonicwords"></p>
+              <p id="word8" class="mnemonicwords"></p>
+              <p id="word9" class="mnemonicwords"></p>
+              <p id="word10" class="mnemonicwords"></p>
+              <p id="word11" class="mnemonicwords"></p>
+              <p id="word12" class="mnemonicwords"></p>
+            </div>
+
+            <div id="Mnemonicpart3" class="mnemonicsparts">
+              <p id="word13" class="mnemonicwords"></p>
+              <p id="word14" class="mnemonicwords"></p>
+              <p id="word15" class="mnemonicwords"></p>
+              <p id="word16" class="mnemonicwords"></p>
+              <p id="word17" class="mnemonicwords"></p>
+              <p id="word18" class="mnemonicwords"></p>
+            </div>
+
+            <div id="Mnemonicpart4" class="mnemonicsparts">
+              <p id="word19" class="mnemonicwords"></p>
+              <p id="word20" class="mnemonicwords"></p>
+              <p id="word21" class="mnemonicwords"></p>
+              <p id="word22" class="mnemonicwords"></p>
+              <p id="word23" class="mnemonicwords"></p>
+              <p id="word24" class="mnemonicwords"></p>
+            </div>
+
+          </div>
+
+
         </div>
         <div id="GenerateMnemonicDiv" class="row" style="position: absolute;top: 75vh;left: 38%;">
           <div class="col-md-12">
