@@ -178,9 +178,34 @@ $("#word24").html(reorderedWords[23]);
     NewWallet.keystoredirectory = $("#keystoredirectory").val();
     NewWallet.datadirectory = $("#datadirectory").val();
 
+    if(NewWallet.type == 'mainnet'){
+      // set mainnet values
+      NewWallet.enode = '';
+      NewWallet.networkid = "";
+      NewWallet.wsport = "8551";
+      NewWallet.wsaddress =  "127.0.0.1";
+      NewWallet.port = "30317";
+    }
+    else {
+     // Testnet values entered by user
+     NewWallet.enode = 'enode://56427938056c62a4a3f3bd1d7411e590ed8667e69712d3eb7474293f0bbf94aa4c1d11cb3a8b6ce0a86c31c4a6b1048796eaa8afb984b66be4990a10cf1dc9e7@127.0.0.1:30303';
+    NewWallet.networkid = "686970";
+    NewWallet.wsport = "8551";
+    NewWallet.wsaddress =  "127.0.0.1";
+    NewWallet.port = "30317";
+
+    }
+
     console.log('NewWallet is: ', NewWallet);
 
-    ipcRenderer.send("storeWallet", _NewWallet);    
+    ipcRenderer.send("storeWallet", NewWallet);    
+
+    let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: NewWallet.masteraddress});
+    console.log('retrieved _wallet is: ', _wallet);
+
+    window.location.replace('./../../../index.html');
+
+    ipcResult = ipcRenderer.send("startGeth", _wallet);
 
 
   });
