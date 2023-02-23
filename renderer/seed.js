@@ -173,10 +173,18 @@ $("#word24").html(reorderedWords[23]);
     NewWallet.name = $("#walletname").val();
     NewWallet.type = $("input[name='wallettype']:checked").val();
     //NewWallet.masteraddress = address; Warning, dont forget to replace by address aftr tests
-    NewWallet.masteraddress = '0x6a608185Aa89966d3Fc7cF396A907CB239E3e8C3';
+    NewWallet.masteraddress = '0x6700221A184408BC7654b670f3B6790e0A7eF78a';
+    
+    NewWallet.blockchaindirectory = $("#blockchaindirectory").val();
+    NewWallet.keystoredirectory = ''+$("#walletdirectory").val()+'/keystores/'+NewWallet.masteraddress+'';
+    NewWallet.datadirectory = ''+$("#walletdirectory").val()+'/walletdata/'+NewWallet.masteraddress+'';
+
+    /* Used if advanced settings:
     NewWallet.blockchaindirectory = $("#blockchaindirectory").val();
     NewWallet.keystoredirectory = $("#keystoredirectory").val();
     NewWallet.datadirectory = $("#datadirectory").val();
+
+    */
 
     if(NewWallet.type == 'mainnet'){
       // set mainnet values
