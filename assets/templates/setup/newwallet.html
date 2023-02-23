@@ -35,6 +35,9 @@
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="../../blk/demo/demo.css" rel="stylesheet" />
 
+  <link rel="stylesheet" href="../../styles/iziModal.min.css">
+  <link rel="stylesheet" href="../../styles/iziToast.min.css">
+
   <script>
     if (typeof module === 'object') {
       window.module = module;
@@ -59,6 +62,11 @@
 <script src="../../blk/demo/demo.js"></script>
 <!-- Control Center for Black UI Kit: parallax effects, scripts for the example pages etc -->
 <script src="../../blk/js/blk-design-system.min.js?v=1.0.0" type="text/javascript"></script>
+
+<script src="../../scripts/iziModal.min.js"></script>
+<script src="../../scripts/iziToast.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
 
 <style>
 
@@ -104,15 +112,20 @@
   width: 100%;
 }
 
-/*
+.modalDialog {
+  display: none;
+}
+
+
 #SetWalletInfoContainer {
   display: none;
-} */
+} 
 
-/* for testing only, replace with one above once test done */
+/* for testing only, replace with one above once test done * /
 #CreateSeedContainer {
   display: none;
 }
+*/
 
 </style>
 
@@ -273,7 +286,7 @@
           </div>
 
             <div class="col-md-12">
-              <button class="btn btn-primary" id="CreateWallet">Next</button>
+              <button class="btn btn-primary" id="CreateWallet">Start</button>
             </div>
 
           
@@ -314,11 +327,23 @@
 
   </div>
 
+
+  <div id="dlgGeneralError" class="modalDialog" data-izimodal-title="Application Error" data-izimodal-subtitle="Something went wrong, don't kill the fish..." data-izimodal-icon="icon-home">
+    <div class="modalBody">
+      <div class="form-group">
+        <span id="txtGeneralError"></span>
+      </div>
+      <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnGeneralErrorOK">OK</button>
+    </div>
+  </div>
+
 </body>
 
 <script>
   // You can also require other files to run in this process
   require('../../../renderer/seed.js');
+  require('../../../renderer/blockchain.js');
+  require('../../../renderer/maingui.js');
 </script>
 
 </html>

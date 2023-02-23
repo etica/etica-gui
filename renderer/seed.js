@@ -6,6 +6,8 @@ const util = require('ethereumjs-util');
 let mnemonic;
 let user_mnemonic_order_array = [];
 let address;
+let pk;
+let pw;
 
 
 function normalizeString(str) {
@@ -27,13 +29,8 @@ function GenerateNewSeed(){
    const strength = 256; // strength in bits, must be a multiple of 32
    mnemonic = bip39.generateMnemonic(strength);
  
-   console.log('Generated mnemonic:', mnemonic);
- 
    const passphrase = ''; // insert your optional passphrase here
    const seed = bip39.mnemonicToSeedSync(mnemonic, passphrase);
- 
-   console.log('type of seed is', typeof seed);
-   console.log('Generated seed:', seed.toString('hex'));
  
  
  // Generate a key pair from the seed
@@ -41,15 +38,27 @@ function GenerateNewSeed(){
  const wallet = hdWallet.derivePath("m/44'/60'/0'/0/0").getWallet();
  const privateKey = wallet.getPrivateKey();
  const publicKey = wallet.getPublicKey();
+ const privateKeyString = wallet.getPrivateKeyString()
  
+ /*
+ console.log('Generated seed:', seed.toString('hex'));
  console.log('Private key:', privateKey.toString('hex'));
  console.log('Public key:', publicKey.toString('hex'));
+ console.log('Private key String:', privateKeyString); 
+ */
+
+ pk = privateKey.toString('hex');
+
+ const privateKeyBuffer = Buffer.from(privateKey, 'hex');
+
+ if (!util.isValidPrivate(privateKeyBuffer)) {
+  EticaMainGUI.showGeneralError("Erroor, Invalid private key!");
+  return false;
+ }
  
  // Calculate the Ethereum address from the public key
  let address_without0x = util.pubToAddress(publicKey, true).toString('hex');
  address = '0x' + address_without0x;
- 
- console.log('Ethereum address:', '0x' + address);
  
  
    $("#GenerateMnemonicDiv").hide();
@@ -92,7 +101,6 @@ $("#InitializeWallet").off("click").on("click", function () {
     // extract words:
 
     const initialWords = mnemonic.split(' ');
-    console.log('initialWords is', initialWords);
 
 
 // Shuffle the indices using the Fisher-Yates shuffle algorithm
@@ -136,19 +144,15 @@ $("#word24").html(reorderedWords[23]);
   $(".mnemonicwords").off("click").on("click", function () {
     user_mnemonic_order_array.push($(this).html());
     $(this).hide();
-    console.log('user_mnemonic_order_array is', user_mnemonic_order_array);
 
     if(user_mnemonic_order_array.length == 24){
       // check mnemonic:
       let usermnemonic = user_mnemonic_order_array.join(' ');
 
-      console.log('usermnemonic is: ', usermnemonic);
-
       if(normalizeString(mnemonic) === normalizeString(usermnemonic)){
-       console.log('validmnemonic');
        $("#CheckMnemonic").css('display', 'none');
-       $("#HelperMnemonic").html("Your mnemonic is verified. Click on <br> You can now initialize a new wallet with this seed. <br> (If you already have other wallets it will not suppress them)");
-    
+       $("#HelperMnemonic").html("Your mnemonic is verified. ");
+       $("#InitializeWalletDiv").css('display', 'block');
 
       }
       else {
@@ -165,15 +169,46 @@ $("#word24").html(reorderedWords[23]);
 
   $("#CreateWallet").off("click").on("click", function () {
 
-    console.log('Vlicked on CeateWallet');
-
     // creates wallet from seed
     let NewWallet = {};
+
+    pw = $("#walletpassword").val();
+    
+    if(!$("#walletname").val()){
+      EticaMainGUI.showGeneralError("Wallet name cannot be empty!");
+      return false;
+    }
+
+    if(!$("#blockchaindirectory").val()){
+      EticaMainGUI.showGeneralError("Blockchain directory name cannot be empty!");
+      return false;
+    }
+
+    if(!$("#walletdirectory").val()){
+      EticaMainGUI.showGeneralError("Wallet directory name cannot be empty!");
+      return false;
+    }
+
+    
+    if(!$("#walletpassword").val()){
+      EticaMainGUI.showGeneralError("Password cannot be empty!");
+      return false;
+    }
+
+    if($("#walletpassword").val() != $("#walletpasswordconf").val()){
+      EticaMainGUI.showGeneralError("Passwords do not match!");
+      return false;
+    }
+
+    if (pw != $("#walletpassword").val()){
+      EticaMainGUI.showGeneralError("Error, try again!"); // should never happen but extra security measure in case $("#walletpassword").val() changes value unexpectedly
+      return false;
+    }
 
     NewWallet.name = $("#walletname").val();
     NewWallet.type = $("input[name='wallettype']:checked").val();
     //NewWallet.masteraddress = address; Warning, dont forget to replace by address aftr tests
-    NewWallet.masteraddress = '0x6700221A184408BC7654b670f3B6790e0A7eF78a';
+    NewWallet.masteraddress = address;
     
     NewWallet.blockchaindirectory = $("#blockchaindirectory").val();
     NewWallet.keystoredirectory = ''+$("#walletdirectory").val()+'/keystores/'+NewWallet.masteraddress+'';
@@ -204,16 +239,14 @@ $("#word24").html(reorderedWords[23]);
 
     }
 
-    console.log('NewWallet is: ', NewWallet);
-
     ipcRenderer.send("storeWallet", NewWallet);    
 
     let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: NewWallet.masteraddress});
-    console.log('retrieved _wallet is: ', _wallet);
-
-    window.location.replace('./../../../index.html');
 
     ipcResult = ipcRenderer.send("startGeth", _wallet);
+
+    InitializeWeb3toImportAccount();
+
 
 
   });
@@ -223,3 +256,48 @@ $("#word24").html(reorderedWords[23]);
    GenerateNewSeed();
 
   });
+
+
+  function InitializeWeb3toImportAccount() {
+    let stoploop = false;
+    var InitWeb3 = setInterval(async function () {
+      try {
+
+        let _provider = new Web3.providers.WebsocketProvider("ws://localhost:8551");
+        web3Local = new Web3(_provider);
+
+        web3Local.eth.net.isListening(function (error, success) {
+          //Geth is ready
+          if (!error) {
+            clearInterval(InitWeb3);
+
+            if(!stoploop){
+              stoploop == true;
+              var newaccount = EticaBlockchain.importFromPrivateKey(pk, pw, function (error) {
+                EticaMainGUI.showGeneralError(error);
+              }, function (account) {
+                if (account) {
+
+                  pk = '';
+                  pw = '';
+  
+                  // close web3Local connection then
+                  web3Local.currentProvider.connection.close();
+                  // move to index:
+                  window.location.replace('./../../../index.html');
+          
+                } else {
+                  EticaMainGUI.showGeneralError("Error importing account from private key!");
+                }
+              });
+
+            }
+
+          }
+        });
+      } catch (err) {
+        EticaMainGUI.showGeneralError(err);
+      }
+    }, 2000);
+    
+    }
