@@ -104,6 +104,16 @@
   width: 100%;
 }
 
+/*
+#SetWalletInfoContainer {
+  display: none;
+} */
+
+/* for testing only, replace with one above once test done */
+#CreateSeedContainer {
+  display: none;
+}
+
 </style>
 
 </head>
@@ -129,7 +139,9 @@
       <div class="squares square5"></div>
       <div class="squares square6"></div>
       <div class="squares square7"></div>
-      <div class="container">
+      
+      
+      <div class="container" id="CreateSeedContainer">
         <div class="content-center brand">
           <h1 class="h1-seo">ETICA•</h1>
           <h3>Open Source Wallet</h3>
@@ -190,17 +202,120 @@
             <button class="btn btn-primary" id="GoCheckMnemonic">Next</button>
           </div>
         </div>
-        <div id="InitializeWalletDiv" class="row" style="position: absolute;top: 75vh;left: 43%;">
-          <div class="col-md-12">
-            <button class="btn btn-primary" id="InitializeWallet">Initialize Wallet</button>
-          </div>
-        </div>
         <div id="ResetMnemonicDiv" class="row" style="position: absolute;top: 65vh;left: 40%;">
           <div class="col-md-12">
             <button class="btn btn-primary" id="ResetMnemonic">Reset and Retry</button>
           </div>
         </div>
+        <div id="InitializeWalletDiv" class="row" style="position: absolute;top: 75vh;left: 43%;">
+          <div class="col-md-12">
+            <button class="btn btn-primary" id="InitializeWallet">Initialize Wallet</button>
+          </div>
+        </div>
       </div>
+
+
+      <div class="container" id="SetWalletInfoContainer">
+
+        <div class="content-center brand" style="position: absolute;top: 35%;left: 50%;">
+          <h1 class="h1-seo">ETICA•</h1>
+          <h3>Open Source Wallet</h3>
+          <p id="HelperMnemonic">Wallet Settings</p>
+
+        </div>
+
+        <div id="SetWalletInfo" class="row" style="position: absolute;top: 45%;left:11%;width:70%;">
+
+          <div class="col-sm-12 col-lg-12" style="display: inline-flex;margin-bottom: 1vh;">
+          <div class="form-check form-check-radio" style="margin-right: 4%;">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="wallettype" id="walletmainnet" value="mainnet" checked>
+              <span class="form-check-sign"></span>
+              Mainnet
+            </label>
+          </div>
+          <div class="form-check form-check-radio">
+            <label class="form-check-label">
+              <input class="form-check-input" type="radio" name="wallettype" id="wallettestnet" value="testnet">
+              <span class="form-check-sign"></span>
+              Testnet
+            </label>
+          </div>
+          </div>
+
+          <div class="col-sm-12 col-lg-12">
+            <div class="form-group">
+              <input style="background-color: #141414;" id="walletname" type="text" value="" placeholder="Wallet name" class="form-control" />
+            </div>
+          </div>
+
+          <div class="col-sm-12 col-lg-12">
+            <div class="form-group">
+              <input style="background-color: #141414;" id="blockchaindirectory" type="text" value="" placeholder="Blockchain directory" class="form-control" />
+            </div>
+          </div>
+  
+          <div class="col-sm-12 col-lg-12">
+            <div class="form-group">
+              <input style="background-color: #141414;" id="keystoredirectory" type="text" value="" placeholder="Keystore directory" class="form-control" />
+            </div>
+          </div>
+  
+          <div class="col-sm-12 col-lg-12">
+            <div class="form-group">
+              <input style="background-color: #141414;" id="datadirectory" type="text" value="" placeholder="Wallet Data directory" class="form-control" />
+            </div>
+          </div>
+
+          <div class="col-sm-6 col-lg-6">
+            <div class="input-group">
+              <input style="background-color: #141414;" id="walletpassword" type="password" class="form-control" placeholder="Password">
+            </div>
+          </div>
+          <div class="col-sm-6 col-lg-6">
+            <div class="input-group">
+              <input style="background-color: #141414;" id="walletpasswordconf" type="password" class="form-control" placeholder="Confirm Password">
+            </div>
+          </div>
+
+            <div class="col-md-12">
+              <button class="btn btn-primary" id="CreateWallet">Next</button>
+            </div>
+
+          
+        </div>
+
+       <!-- <div id="SetWalletInfoAdvanced" class="row" style="position: absolute;top: 55%;left:11%;width:70%;">
+
+        <div class="col-sm-12 col-lg-12">
+          <div class="form-group">
+            <input style="background-color: #141414;" id="blockchaindirectory" type="text" value="" placeholder="Blockchain directory" class="form-control" />
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-lg-12">
+          <div class="form-group">
+            <input style="background-color: #141414;" id="keystoredirectory" type="text" value="" placeholder="Keystore directory" class="form-control" />
+          </div>
+        </div>
+
+        <div class="col-sm-12 col-lg-12">
+          <div class="form-group">
+            <input style="background-color: #141414;" id="datadirectory" type="text" value="" placeholder="Wallet Data directory" class="form-control" />
+          </div>
+        </div>
+
+        </div>   -->
+
+
+
+      </div>
+
+
+
+
+
+
     </div>
 
   </div>

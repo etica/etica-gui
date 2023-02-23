@@ -5,6 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
+// replace app.getPath("userData"), get walletslist folder path from app.getPath("userData")/setupfile
 const dbPath = path.join(app.getPath("userData"), "walletsdatabase.db");
 const db = new datastore({filename: dbPath});
 db.loadDatabase(function (err) {
@@ -22,6 +23,7 @@ db.loadDatabase(function (err) {
                   enode: enode url to connect to
                   type: mainnet or testnet
                   networkid: for testnet only
+                  contractaddress: for testnet only
                   wsport:
                   wsaddress:
                   port:

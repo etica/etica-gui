@@ -1854,7 +1854,7 @@ pre code {
   color: rgba(255, 255, 255, 0.8);
   background-color: transparent;
   background-clip: padding-box;
-  border: 1px solid #cad1d7;
+  border: 1px solid #3c3c3ca6;
   border-radius: 0.25rem;
   box-shadow: none;
   transition: all 0.2s cubic-bezier(0.68, -0.55, 0.265, 1.55);
@@ -3848,7 +3848,7 @@ input[type="button"].btn-block {
   text-align: center;
   white-space: nowrap;
   background-color: transparent;
-  border: 1px solid #cad1d7;
+  border: 1px solid #3c3c3ca6;
   border-radius: 0.25rem;
 }
 
@@ -4030,7 +4030,7 @@ input[type="button"].btn-block {
   vertical-align: middle;
   background: transparent url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 4 5'%3E%3Cpath fill='%2332325d' d='M2 0L0 2h4zm0 5L0 3h4z'/%3E%3C/svg%3E") no-repeat right 0.75rem center;
   background-size: 8px 10px;
-  border: 1px solid #cad1d7;
+  border: 1px solid #3c3c3ca6;
   border-radius: 0.25rem;
   box-shadow: inset 0 1px 2px rgba(34, 42, 66, 0.075);
   appearance: none;
@@ -4122,7 +4122,7 @@ input[type="button"].btn-block {
   line-height: 1.428571;
   color: rgba(255, 255, 255, 0.8);
   background-color: transparent;
-  border: 1px solid #cad1d7;
+  border: 1px solid #3c3c3ca6;
   border-radius: 0.25rem;
   box-shadow: none;
 }
@@ -4140,7 +4140,7 @@ input[type="button"].btn-block {
   color: rgba(255, 255, 255, 0.8);
   content: "Browse";
   background-color: transparent;
-  border-left: 1px solid #cad1d7;
+  border-left: 1px solid #3c3c3ca6;
   border-radius: 0 0.25rem 0.25rem 0;
 }
 
@@ -12523,7 +12523,7 @@ fieldset[disabled] .btn-link.active {
 }
 
 .form-control {
-  border-color: #2b3553;
+  border-color: #3c3c3ca6
   border-radius: 0.4285rem;
   font-size: 0.75rem;
   -webkit-transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
@@ -12534,7 +12534,7 @@ fieldset[disabled] .btn-link.active {
 }
 
 .form-control:focus {
-  border-color: #399999;
+  border-color: #7b7c7da8;
   background-color: transparent;
   box-shadow: none;
 }
@@ -12579,7 +12579,7 @@ fieldset[disabled] .btn-link.active {
 .has-success .input-group-append .input-group-text,
 .has-success .input-group-prepend .input-group-text,
 .has-success .form-control {
-  border-color: #2b3553;
+  border-color: #3c3c3ca6
 }
 
 .has-success .form-control:focus,
@@ -16079,7 +16079,7 @@ code {
 .input-group-append .input-group-text,
 .input-group-prepend .input-group-text {
   background-color: transparent;
-  border: 1px solid #2b3553;
+  border: 1px solid #3c3c3ca6
   border-radius: 0.4285rem;
   color: #ffffff;
   -webkit-transition: color 0.3s ease-in-out, border-color 0.3s ease-in-out, background-color 0.3s ease-in-out;
@@ -16130,7 +16130,7 @@ code {
 .input-group-prepend .input-group-text,
 .input-group-prepend .input-group-text {
   background-color: transparent;
-  border: 1px solid #2b3553;
+  border: 1px solid #3c3c3ca6
   border-radius: 0.4285rem;
   color: #ffffff;
   margin: 0;
@@ -16220,7 +16220,7 @@ textarea.form-control {
   padding: 10px 10px 0 0;
   resize: none;
   border: none;
-  border-bottom: 1px solid #2b3553;
+  border-bottom: 1px solid #3c3c3ca6
   border-radius: 0;
   line-height: 2;
 }
@@ -20534,7 +20534,7 @@ input.datetimepicker[data-color="yellow"]+.bootstrap-datetimepicker-widget.dropd
 .card-user .avatar {
   width: 124px;
   height: 124px;
-  border: 5px solid #2b3553;
+  border: 5px solid #3c3c3ca6
   border-bottom-color: transparent;
   background-color: transparent;
   position: relative;

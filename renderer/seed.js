@@ -5,6 +5,7 @@ const util = require('ethereumjs-util');
 
 let mnemonic;
 let user_mnemonic_order_array = [];
+let address;
 
 
 function normalizeString(str) {
@@ -16,7 +17,7 @@ function GenerateNewSeed(){
    mnemonic = '';
    user_mnemonic_order_array = [];
 
-   $("#InitializeWalletDiv").css('display', 'none');
+   $("#SetWalletInfoContainer").css('display', 'none');
    $("#ResetMnemonicDiv").css('display', 'none');
    $("#GoCheckMnemonicDiv").css('display', 'none');
    $("#NewEticaAddress").css('display', 'none');
@@ -46,7 +47,7 @@ function GenerateNewSeed(){
  
  // Calculate the Ethereum address from the public key
  let address_without0x = util.pubToAddress(publicKey, true).toString('hex');
- const address = '0x' + address_without0x;
+ address = '0x' + address_without0x;
  
  console.log('Ethereum address:', '0x' + address);
  
@@ -60,6 +61,14 @@ function GenerateNewSeed(){
    $("#NewEticaAddress").css('display', 'block');
    $("#NewEticaAddress").html('Etica address: '+address+'');
 }
+
+
+$("#InitializeWallet").off("click").on("click", function () {
+
+  $("#CreateSeedContainer").css('display', 'none');
+  $("#SetWalletInfoContainer").css('display', 'block');
+
+});
 
 
  $("#GenerateMnemonic").off("click").on("click", function () {
@@ -139,7 +148,8 @@ $("#word24").html(reorderedWords[23]);
        console.log('validmnemonic');
        $("#CheckMnemonic").css('display', 'none');
        $("#HelperMnemonic").html("Your mnemonic is verified. Click on <br> You can now initialize a new wallet with this seed. <br> (If you already have other wallets it will not suppress them)");
-       $("#InitializeWalletDiv").css('display', 'block');
+    
+
       }
       else {
         console.log('invalidmnemonic');
@@ -153,10 +163,24 @@ $("#word24").html(reorderedWords[23]);
   });
 
 
-  $("#InitializeWallet").off("click").on("click", function () {
+  $("#CreateWallet").off("click").on("click", function () {
+
+    console.log('Vlicked on CeateWallet');
 
     // creates wallet from seed
+    let NewWallet = {};
 
+    NewWallet.name = $("#walletname").val();
+    NewWallet.type = $("input[name='wallettype']:checked").val();
+    //NewWallet.masteraddress = address; Warning, dont forget to replace by address aftr tests
+    NewWallet.masteraddress = '0x6a608185Aa89966d3Fc7cF396A907CB239E3e8C3';
+    NewWallet.blockchaindirectory = $("#blockchaindirectory").val();
+    NewWallet.keystoredirectory = $("#keystoredirectory").val();
+    NewWallet.datadirectory = $("#datadirectory").val();
+
+    console.log('NewWallet is: ', NewWallet);
+
+    //ipcRenderer.send("storeWallet", _NewWallet);    
 
 
   });
