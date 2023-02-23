@@ -180,7 +180,7 @@ $("#word24").html(reorderedWords[23]);
 
     console.log('NewWallet is: ', NewWallet);
 
-    //ipcRenderer.send("storeWallet", _NewWallet);    
+    ipcRenderer.send("storeWallet", _NewWallet);    
 
 
   });
