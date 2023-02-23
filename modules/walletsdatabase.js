@@ -64,7 +64,7 @@ ipcMain.on("getWallets", (event, arg) => {
         "datadirectory": docs[i].datadirectory,
         "enode": docs[i].enode,
         "type": docs[i].type,
-        "networkid": docs[i].type, 
+        "networkid": docs[i].networkid, 
         "contractaddress": docs[i].contractaddress,
         "wsport": docs[i].wsport,
         "wsaddress": docs[i].wsaddress,
