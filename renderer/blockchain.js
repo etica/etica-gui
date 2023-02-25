@@ -228,7 +228,7 @@ class Blockchain {
     rendererData.sumBalanceEti = 0;
     rendererData.addressData = [];
 
-    var wallets = EticaDatabase.getWallets();
+    var addressesnames = EticaDatabase.getAddressesNames();
     var counter = 0;
 
     web3Local.eth.getAccounts(function (err, res) {
@@ -236,16 +236,16 @@ class Blockchain {
         clbError(err);
       } else {
         for (var i = 0; i < res.length; i++) {
-          var walletName = vsprintf("Account %d", [i + 1]);
-          if (wallets) {
-            walletName = wallets.names[res[i]] || walletName;
+          var addressName = vsprintf("Account %d", [i + 1]);
+          if (addressesnames) {
+            addressName = addressesnames.names[res[i]] || addressName;
           }
 
           var addressInfo = {};
           addressInfo.balance = 0;
           addressInfo.balance_eti = 0;
           addressInfo.address = res[i];
-          addressInfo.name = walletName;
+          addressInfo.name = addressName;
           rendererData.addressData.push(addressInfo);
         }
 
@@ -299,7 +299,7 @@ class Blockchain {
     var rendererData = {};
     rendererData.addressData = [];
 
-    var wallets = EticaDatabase.getWallets();
+    var addressesnames = EticaDatabase.getAddressesNames();
     var counter = 0;
 
     web3Local.eth.getAccounts(function (err, res) {
@@ -307,14 +307,14 @@ class Blockchain {
         clbError(err);
       } else {
         for (var i = 0; i < res.length; i++) {
-          var walletName = vsprintf("Account %d", [i + 1]);
-          if (wallets) {
-            walletName = wallets.names[res[i]] || walletName;
+          var addressName = vsprintf("Account %d", [i + 1]);
+          if (addressesnames) {
+            addressName = addressesnames.names[res[i]] || addressName;
           }
 
           var addressInfo = {};
           addressInfo.address = res[i];
-          addressInfo.name = walletName;
+          addressInfo.name = addressName;
           rendererData.addressData.push(addressInfo);
         }
 

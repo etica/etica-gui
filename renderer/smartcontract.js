@@ -1402,7 +1402,7 @@ class SmartContract {
     rendererData.sumBosoms = 0;
     rendererData.addressData = [];
 
-    var wallets = EticaDatabase.getWallets();
+    var addressesnames = EticaDatabase.getAddressesNames();
     var counter_balance = 0;
     var counter_balance_eti = 0;
     var counter_stakes = 0;
@@ -1415,9 +1415,9 @@ class SmartContract {
         clbError(err);
       } else {
         for (var i = 0; i < res.length; i++) {
-          var walletName = vsprintf("Account %d", [i + 1]);
-          if (wallets) {
-            walletName = wallets.names[res[i]] || walletName;
+          var addressName = vsprintf("Account %d", [i + 1]);
+          if (addressesnames) {
+            addressName = addressesnames.names[res[i]] || addressName;
           }
 
           var addressInfo = {};
@@ -1427,7 +1427,7 @@ class SmartContract {
           addressInfo.blockedeticas = 0;
           addressInfo.bosoms = 0;
           addressInfo.address = res[i];
-          addressInfo.name = walletName;
+          addressInfo.name = addressName;
           rendererData.addressData.push(addressInfo);
         }
 
@@ -1528,10 +1528,10 @@ class SmartContract {
 
   async getStakesBoardBalancesofAddress(address) {
     
-         var wallets = EticaDatabase.getWallets();
-         var walletName = "";
-          if (wallets) {
-            walletName = wallets.names[address] || walletName;
+         var addressesnames = EticaDatabase.getAddressesNames();
+         var addressName = "";
+          if (addressesnames) {
+            addressName = addressesnames.names[address] || addressName;
           }
 
           var addressInfo = {};
@@ -1541,7 +1541,7 @@ class SmartContract {
           addressInfo.addressblockedeticas = await _getBlockedEticas(address);
           addressInfo.addressbosoms = await _getBalanceBosoms(address);
           addressInfo.address = address;
-          addressInfo.name = walletName;
+          addressInfo.name = addressName;
 
           return addressInfo;
     
@@ -1588,13 +1588,6 @@ class SmartContract {
 
   async getStakesofAddress(address) {
     
-    var wallets = EticaDatabase.getWallets();
-    var walletName = "";
-     if (wallets) {
-       walletName = wallets.names[address] || walletName;
-     }
-
-
      var addressStakes = {};
      let stakescounter = await getStakesCounters(address);
      addressStakes.stakes = await getStakes(address, stakescounter);

@@ -21,22 +21,22 @@ class Datatabse {
     });
   }
 
-  getWallets() {
-    var wallets = ipcRenderer.sendSync("getJSONFile", "wallets.json");
+  getAddressesNames() {
+    var addressesnames = ipcRenderer.sendSync("getJSONFile", "wallets.json");
 
-    if (!wallets) {
-      wallets = {
+    if (!addressesnames) {
+      addressesnames = {
         names: {}
       };
     }
 
-    return wallets;
+    return addressesnames;
   }
 
-  setWallets(wallets) {
+  setAddressesNames(addressesnames) {
     ipcRenderer.sendSync("setJSONFile", {
       file: "wallets.json",
-      data: wallets
+      data: addressesnames
     });
   }
 
