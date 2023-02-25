@@ -109,6 +109,9 @@ class Wallets {
         EticaWallets.addAddressToList(element.address);
       });
 
+      let runningwallet = ipcRenderer.sendSync("getRunningWallet");
+      console.log('runningwallet is', runningwallet);
+
       // render the wallets current state
       EticaMainGUI.renderTemplate("wallets.html", data);
       $(document).trigger("render_wallets");

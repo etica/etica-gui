@@ -10,6 +10,7 @@ class Geth {
     this.isRunning = false;
     this.gethProcess = null;
     this.logGethEvents = false;
+    this.wallet = null;
     // create the user data dir (needed for MacOS)
     if (!fs.existsSync(app.getPath("userData"))) {
       fs.mkdirSync(app.getPath("userData"));
@@ -46,18 +47,16 @@ class Geth {
     }
   }
 
-  startGeth(_wallet) {
+  startGeth(wallet) {
     console.log('startGeth called');
-    console.log('startGeth _wallet.blockchaindirectory,', _wallet.blockchaindirectory);
-    console.log('startGeth _wallet.keystoredirector,', _wallet.keystoredirectory);
-    console.log('startGeth _wallet.enode,', _wallet.enode);
+    this.wallet = wallet;
 
     let _networkid = '';
-    if(_wallet.type == 'mainnet'){
+    if(wallet.type == 'mainnet'){
       _networkid = '61803';
     }
     else {
-      _networkid = _wallet.networkid;
+      _networkid = wallet.networkid;
     }
 
     // let _blockchaindirectory = 'D:/EticaWalletDataDir/blockchaindata';
@@ -120,13 +119,13 @@ class Geth {
         "--ws.origins",
         "*",
         "--ws.addr",
-        ""+_wallet.wsaddress+"",
+        ""+wallet.wsaddress+"",
         "--ws.port",
-        ""+_wallet.wsport+"",
+        ""+wallet.wsport+"",
         "--port",
-        ""+_wallet.port+"",
-        "--datadir="+_wallet.blockchaindirectory+"",
-        "--keystore="+_wallet.keystoredirectory+"",
+        ""+wallet.port+"",
+        "--datadir="+wallet.blockchaindirectory+"",
+        "--keystore="+wallet.keystoredirectory+"",
         "--ws.api",
         "admin,eth,net,miner,personal,web3",
         "--networkid",
@@ -134,7 +133,7 @@ class Geth {
         "--syncmode",
         "snap",
         "--bootnodes",
-        ""+_wallet.enode+""
+        ""+wallet.enode+""
       ]); // LOCAL DEV NODE FOR TESTING //
 
       if (!this.gethProcess) {
@@ -182,6 +181,10 @@ ipcMain.on("stopGeth", (event, arg) => {
 
 ipcMain.on("startGeth", (event, arg) => {
   EticaGeth.startGeth(arg);
+});
+
+ipcMain.on("getRunningWallet", (event, arg) => {
+  event.returnValue = EticaGeth.wallet;
 });
 
 EticaGeth = new Geth();
