@@ -42,9 +42,7 @@ class Wallets {
   enableButtonTooltips() {
     EticaUtils.createToolTip("#btnNewAddress", "Create New Address");
     EticaUtils.createToolTip("#btnRefreshAddress", "Refresh Address List");
-    EticaUtils.createToolTip("#btnExportAccounts", "Export Accounts");
-    EticaUtils.createToolTip("#btnImportAccounts", "Import Accounts");
-    EticaUtils.createToolTip("#btnImportFromPrivateKey", "Import From Private Key");
+    EticaUtils.createToolTip("#btnExportAccounts", "Export Addresses");
   }
 
   validateNewAccountForm() {
@@ -220,6 +218,7 @@ $(document).on("render_wallets", function () {
     ipcRenderer.send("exportAccounts", {});
   });
 
+  /*
   $("#btnImportAccounts").off("click").on("click", function () {
     var ImportResult = ipcRenderer.sendSync("importAccounts", {});
 
@@ -262,6 +261,7 @@ $(document).on("render_wallets", function () {
       }
     });
   });
+  */
 
   $(".textAddress").off("click").on("click", function () {
     EticaMainGUI.copyToClipboard($(this).html());
