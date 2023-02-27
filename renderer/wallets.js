@@ -4,18 +4,15 @@ class Wallets {
   constructor() {
     this.addressList = [];
 
-    $.getJSON("https://min-api.cryptocompare.com/data/price?fsym=EGAZ&tsyms=USD", function (price) {
+  /*  $.getJSON("https://min-api.cryptocompare.com/data/price?fsym=EGAZ&tsyms=USD", function (price) {
       EticaWallets._setPrice(price.USD);
-    });
+    }); */
   }
 
-  _getPrice() {
-    return this.price;
-  }
-
+  /*
   _setPrice(price) {
     this.price = price;
-  }
+  } */
 
   getAddressList() {
     return this.addressList;
@@ -115,10 +112,6 @@ class Wallets {
       $(document).trigger("render_wallets");
       EticaWallets.enableButtonTooltips();
 
-      $("#labelSumDollars").html(vsprintf("/ %.2f $ / %.4f $ per EGAZ", [
-        data.sumBalance * EticaWallets._getPrice(),
-        EticaWallets._getPrice()
-      ]));
     });
   }
 }
