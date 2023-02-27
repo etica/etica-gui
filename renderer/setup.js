@@ -1,12 +1,9 @@
 const {ipcRenderer} = require("electron");
 
  $("#launchWallet").off("click").on("click", function () {
-    console.log('launching Geth from setup.js');
-    //EticaGeth.startGeth();
-    let options = {};
-    options.blockchaindirectory = 'D:/EticaWalletDataDir/blockchaindata';
-    options.keystoredirectory = 'D:/EticaWalletDataDir/keystore';
-    let wallet = {};
+
+    
+  /*let wallet = {};
 
     wallet.name = "Wallet D",
     wallet.masteraddress = "0x76925DBe657C695A32a804a22106CFFb0057Fd96",
@@ -19,7 +16,11 @@ const {ipcRenderer} = require("electron");
     wallet.networkid = "686970";
     wallet.wsport = "8551";
     wallet.wsaddress =  "127.0.0.1";
-    wallet.port = "30317";
+    wallet.port = "30317"; */
 
+    let wallets = ipcRenderer.sendSync("getWallets", {});
+    console.log('wallets are:', wallets);
+    let wallet = ipcRenderer.sendSync("getWallet", {masteraddress: wallets[0].masteraddress});
+    console.log('wallets is:', wallet);
     ipcResult = ipcRenderer.send("startGeth", wallet);
   });
