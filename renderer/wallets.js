@@ -1,4 +1,7 @@
 const {ipcRenderer} = require("electron");
+const bip39 = require("bip39");
+const { hdkey } = require('ethereumjs-wallet');
+const util = require('ethereumjs-util');
 
 class Wallets {
   constructor() {
@@ -123,16 +126,32 @@ $(document).on("render_wallets", function () {
     $("#addressTable").floatThead();
   }
 
-  $("#btnNewAddress").off("click").on("click", function () {
+  $("#btnNewAddress").off("click").on("click", async function () {
     $("#dlgCreateWalletPassword").iziModal();
     $("#walletPasswordFirst").val("");
     $("#walletPasswordSecond").val("");
     $("#dlgCreateWalletPassword").iziModal("open");
 
-    function doCreateNewWallet() {
+    async function doCreateNewWallet() {
       $("#dlgCreateWalletPassword").iziModal("close");
 
+         // get master privatekey from password:
+         // masterPrivateKey = ;
+
+         // get index of new account:
+            let accounts = await EticaBlockchain.getAccounts();
+            console.log('accounts is:', accounts);
+            const newindex = accounts.length;
+            console.log('new index is:', newindex);
+
+         // create new address:
+
+         const hdwallet = hdkey.fromMasterSeed(Buffer.from(masterPrivateKey.slice(2), 'hex'));
+         const newPrivateKey = hdwallet.derivePath("m/44'/60'/0'/0/"+newindex+"").getPrivateKey();
+
       if (EticaWallets.validateNewAccountForm()) {
+
+
         EticaBlockchain.createNewAccount($("#walletPasswordFirst").val(), function (error) {
           EticaMainGUI.showGeneralError(error);
         }, function (account) {
@@ -141,6 +160,20 @@ $(document).on("render_wallets", function () {
 
           iziToast.success({title: "Created", message: "New wallet was successfully created", position: "topRight", timeout: 5000});
         });
+
+
+        EticaBlockchain.importFromPrivateKey(newPrivateKey, $("#walletPasswordFirst").val(), function (error) {
+          EticaMainGUI.showGeneralError(error);
+        }, function (account) {
+
+          EticaWallets.addAddressToList(account);
+          EticaWallets.renderWalletsState();
+          iziToast.success({title: "Created", message: "New wallet address was successfully created", position: "topRight", timeout: 5000});
+
+        });
+
+
+        
       }
     }
 
