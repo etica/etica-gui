@@ -28,7 +28,9 @@ class AddressBook {
     EticaDatabase.setAddresses(addressBook);
   }
 
-  enableButtonTooltips() {}
+  enableButtonTooltips() {
+    EticaUtils.createToolTip("#btnNewAddress2", "Add an address to Addresses Book (receiving addresses)");
+  }
 
   renderAddressBook() {
     var addressObject = EticaAddressBook.getAddressList();
