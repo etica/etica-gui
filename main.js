@@ -24,7 +24,11 @@ locker.lock().then(function() {
       minWidth: 1100,
       minHeight: 700,
       backgroundColor: "#000000",
-      icon: "assets/images/icon.png"
+      icon: "assets/images/icon.png",
+      webPreferences: {
+        nodeIntegration: true,
+        contextIsolation: false,
+    }
     });
 
     // and load the index.html of the app.
