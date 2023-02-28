@@ -2,6 +2,7 @@ const {ipcRenderer} = require("electron");
 const bip39 = require("bip39");
 const { hdkey } = require('ethereumjs-wallet');
 const util = require('ethereumjs-util');
+const crypto = require('crypto');
 
 class Wallets {
   constructor() {
@@ -153,39 +154,51 @@ $(document).on("render_wallets", function () {
         let password = $("#walletPasswordFirst").val();
 
         // get master privatekey from password:
-        var datadir = this.runningwallet.keystoredirectory;
-        var address= this.runningwallet.masteraddress;
+        var datadir = EticaWallets.Getrunningwallet().keystoredirectory;
+        var address= EticaWallets.Getrunningwallet().masteraddress;
 
-        var keyObject = keythereum.importFromFile(address, datadir);
-        var privateKey = keythereum.recover(password, keyObject);
-        console.log('keythereum.recover result in line below:');
-        console.log(privateKey.toString('hex'));
-        const masterPrivateKey = privateKey.toString('hex');
+
+        const encryptedData = Buffer.from(EticaWallets.Getrunningwallet().encryptedMaster, 'hex');
+        const iv = Buffer.from(EticaWallets.Getrunningwallet().vector, 'hex');
+        const salt = Buffer.from(EticaWallets.Getrunningwallet().salt, 'hex');
+
+        // Derive the encryption key using pbkdf2Sync with the loaded salt
+       const iterations = 100000;
+       const keyLength = 32;
+       const hashFunction = 'sha256';
+       const encryptionKey = crypto.pbkdf2Sync(
+        password, // or any other passphrase used for encryption
+        salt,
+        iterations,
+        keyLength,
+        hashFunction
+      );
+
+        // Create a cipher using createDecipheriv with AES-256-CBC mode
+           const cipherAlgorithm = 'aes-256-cbc';
+           const decipher = crypto.createDecipheriv(cipherAlgorithm, encryptionKey, iv);
+
+           let decryptedData = decipher.update(encryptedData);
+           decryptedData = Buffer.concat([decryptedData, decipher.final()]);
+
+           const masterPrivateKey = decryptedData.toString('hex');
 
         // get index of new account:
-           let accounts = await EticaBlockchain.getAccounts();
+           let accounts = await EticaBlockchain.AsyncgetAccounts();
            console.log('accounts is:', accounts);
            const newindex = accounts.length;
            console.log('new index is:', newindex);
 
         // create new address:
 
-        const hdwallet = hdkey.fromMasterSeed(Buffer.from(masterPrivateKey.slice(2), 'hex'));
-        const newPrivateKey = hdwallet.derivePath("m/44'/60'/0'/0/"+newindex+"").getPrivateKey();
-        const newPrivateKeyString = newPrivateKey.toString('hex');
-        console.log('NewPrivateKeyString is ', newPrivateKeyString);
+        const hdwallet = hdkey.fromMasterSeed(Buffer.from(masterPrivateKey, 'hex'));
+        const newWallet = hdwallet.derivePath("m/44'/60'/0'/0/"+newindex+"").getWallet();
 
-        EticaBlockchain.createNewAccount($("#walletPasswordFirst").val(), function (error) {
-          EticaMainGUI.showGeneralError(error);
-        }, function (account) {
-          EticaWallets.addAddressToList(account);
-          EticaWallets.renderWalletsState();
-
-          iziToast.success({title: "Created", message: "New wallet was successfully created", position: "topRight", timeout: 5000});
-        });
+        const PrivateKey = newWallet.getPrivateKey();
+        const newPrivateKeyString = PrivateKey.toString('hex');
 
 
-        EticaBlockchain.importFromPrivateKey(newPrivateKeyString, $("#walletPasswordFirst").val(), function (error) {
+        EticaBlockchain.importFromPrivateKey(newPrivateKeyString, password, function (error) {
           EticaMainGUI.showGeneralError(error);
         }, function (account) {
 
