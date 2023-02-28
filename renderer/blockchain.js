@@ -44,6 +44,32 @@ class Blockchain {
     });
   }
 
+  async AsyncgetAccounts() {
+
+    async function getaccounts() {
+    try {
+      let _result;
+      await web3Local.eth.getAccounts(function (err, res) {
+        if (err) {
+          _result = err;
+        } else {
+          _result = res;
+        }
+      });
+
+      return _result;
+
+      } catch (e) {
+        console.log('AsyncgetAccounts() catched error e is:', e)
+        console.error(e);
+        return e;
+      }
+
+    }
+    return getaccounts();
+
+  }
+
   getAccounts_nocallback() {
     return web3Local.eth.getAccounts();
   }
