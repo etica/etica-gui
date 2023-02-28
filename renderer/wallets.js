@@ -6,6 +6,7 @@ const util = require('ethereumjs-util');
 class Wallets {
   constructor() {
     this.addressList = [];
+    this.runningwallet = {};
 
   /*  $.getJSON("https://min-api.cryptocompare.com/data/price?fsym=EGAZ&tsyms=USD", function (price) {
       EticaWallets._setPrice(price.USD);
@@ -16,6 +17,14 @@ class Wallets {
   _setPrice(price) {
     this.price = price;
   } */
+
+  Setrunningwallet(_wallet) {
+    this.runningwallet = _wallet;
+  } 
+
+  Getrunningwallet(_wallet) {
+    return this.runningwallet;
+  } 
 
   getAddressList() {
     return this.addressList;
@@ -107,8 +116,11 @@ class Wallets {
         EticaWallets.addAddressToList(element.address);
       });
 
-      let runningwallet = ipcRenderer.sendSync("getRunningWallet");
-      console.log('runningwallet is', runningwallet);
+      let _runningwallet = ipcRenderer.sendSync("getRunningWallet");
+      EticaWallets.Setrunningwallet(_runningwallet);
+      console.log('runningwallet is', EticaWallets.Getrunningwallet());
+
+      console.log('node version: ', process.version);
 
       // render the wallets current state
       EticaMainGUI.renderTemplate("wallets.html", data);
@@ -135,22 +147,33 @@ $(document).on("render_wallets", function () {
     async function doCreateNewWallet() {
       $("#dlgCreateWalletPassword").iziModal("close");
 
-         // get master privatekey from password:
-         // masterPrivateKey = ;
-
-         // get index of new account:
-            let accounts = await EticaBlockchain.getAccounts();
-            console.log('accounts is:', accounts);
-            const newindex = accounts.length;
-            console.log('new index is:', newindex);
-
-         // create new address:
-
-         const hdwallet = hdkey.fromMasterSeed(Buffer.from(masterPrivateKey.slice(2), 'hex'));
-         const newPrivateKey = hdwallet.derivePath("m/44'/60'/0'/0/"+newindex+"").getPrivateKey();
 
       if (EticaWallets.validateNewAccountForm()) {
 
+        let password = $("#walletPasswordFirst").val();
+
+        // get master privatekey from password:
+        var datadir = this.runningwallet.keystoredirectory;
+        var address= this.runningwallet.masteraddress;
+
+        var keyObject = keythereum.importFromFile(address, datadir);
+        var privateKey = keythereum.recover(password, keyObject);
+        console.log('keythereum.recover result in line below:');
+        console.log(privateKey.toString('hex'));
+        const masterPrivateKey = privateKey.toString('hex');
+
+        // get index of new account:
+           let accounts = await EticaBlockchain.getAccounts();
+           console.log('accounts is:', accounts);
+           const newindex = accounts.length;
+           console.log('new index is:', newindex);
+
+        // create new address:
+
+        const hdwallet = hdkey.fromMasterSeed(Buffer.from(masterPrivateKey.slice(2), 'hex'));
+        const newPrivateKey = hdwallet.derivePath("m/44'/60'/0'/0/"+newindex+"").getPrivateKey();
+        const newPrivateKeyString = newPrivateKey.toString('hex');
+        console.log('NewPrivateKeyString is ', newPrivateKeyString);
 
         EticaBlockchain.createNewAccount($("#walletPasswordFirst").val(), function (error) {
           EticaMainGUI.showGeneralError(error);
@@ -162,7 +185,7 @@ $(document).on("render_wallets", function () {
         });
 
 
-        EticaBlockchain.importFromPrivateKey(newPrivateKey, $("#walletPasswordFirst").val(), function (error) {
+        EticaBlockchain.importFromPrivateKey(newPrivateKeyString, $("#walletPasswordFirst").val(), function (error) {
           EticaMainGUI.showGeneralError(error);
         }, function (account) {
 
@@ -186,7 +209,7 @@ $(document).on("render_wallets", function () {
         doCreateNewWallet();
       }
     });
-  });
+  }); 
 
   $(".btnShowAddressTransactions").off("click").on("click", function () {
     EticaTransactions.setFilter($(this).attr("data-wallet"));
