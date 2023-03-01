@@ -212,4 +212,17 @@ $("#mainNavBtnSettings").click(function () {
   EticaSettings.renderSettingsState();
 });
 
+$("#iconCloseWallet").click(function () {
+  // Close Geth if running (should always be yes but check anyway to avoid returning error) and then close wallet:
+  let IsGethRunning = ipcRenderer.send("IsGethRunning", null);
+    if(IsGethRunning){
+       // first stop the geth process
+       ipcResult = ipcRenderer.send("stopGeth", null);
+    }
+    
+    // move to setup:
+    window.location.replace('./setup.html');
+});
+
+
 EticaMainGUI = new MainGUI();

@@ -165,6 +165,7 @@ class Geth {
 
   stopGeth() {
     this.isRunning = false;
+    this.wallet = null;
 
     if (os.type() == "Windows_NT") {
       const gethWrapePath = path.join(this.binaries, "WrapGeth.exe");
@@ -185,6 +186,10 @@ ipcMain.on("startGeth", (event, arg) => {
 
 ipcMain.on("getRunningWallet", (event, arg) => {
   event.returnValue = EticaGeth.wallet;
+});
+
+ipcMain.on("IsGethRunning", (event, arg) => {
+  event.returnValue = EticaGeth.isRunning;
 });
 
 EticaGeth = new Geth();

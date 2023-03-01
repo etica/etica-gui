@@ -130,8 +130,23 @@ $(document).on("render_settings", async function () {
       }
     });
   });
+
+  $("#btnCloseWallet").off("click").on("click", function () {
+
+
+    let IsGethRunning = ipcRenderer.send("IsGethRunning", null);
+    if(IsGethRunning){
+       // first stop the geth process
+       ipcResult = ipcRenderer.send("stopGeth", null);
+    }
+    
+    // move to setup:
+    window.location.replace('./setup.html');
+
+  });
+
+
 });
 
 // create new settings variable
 EticaSettings = new Settings();
-

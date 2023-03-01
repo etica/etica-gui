@@ -92,6 +92,14 @@ body.pg-loaded>.inner {
   padding-left: 5px;
 }
 
+#iconCloseWallet {
+  width: 17px;
+  position: absolute;
+  bottom: 0.7vh;
+  right: 4%;
+  cursor: pointer;
+}
+
 #localBlock {
   bottom: 2vh;
   height: 20px;
