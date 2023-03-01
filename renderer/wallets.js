@@ -106,6 +106,25 @@ class Wallets {
     }
   }
 
+
+  async Decipher(key, iv, encryptedData) {
+    const cipherAlgorithm = 'aes-256-cbc';
+
+    return new Promise(async (resolve, reject) => {
+    try {
+      const decipher = crypto.createDecipheriv(cipherAlgorithm, key, iv);
+      let decrypted = decipher.update(encryptedData);
+      decrypted = Buffer.concat([decrypted, decipher.final()]);
+      resolve(decrypted.toString());
+    } catch (err) {
+      EticaMainGUI.showGeneralError("Wrong Password. Failed to decrypt the master key with this password!");
+      reject(err);
+      throw new Error('Error decrypting data: ' + err.message);
+    }
+  });
+
+  }
+
   renderWalletsState() {
     // clear the list of addresses
     EticaWallets.clearAddressList();
@@ -151,16 +170,19 @@ $(document).on("render_wallets", function () {
 
       if (EticaWallets.validateNewAccountForm()) {
 
+        // get master seed  from password and creates new deterministic address 
+        // if first calculated derived address from seed equals expected masteraddress:
+
         let password = $("#walletPasswordFirst").val();
 
-        // get master privatekey from password:
-        var datadir = EticaWallets.Getrunningwallet().keystoredirectory;
-        var address= EticaWallets.Getrunningwallet().masteraddress;
+        var masteraddress= EticaWallets.Getrunningwallet().masteraddress;
+        var seedvector = EticaWallets.Getrunningwallet().vector;
+        var seedsalt = EticaWallets.Getrunningwallet().salt;
+        var seedencrypted = EticaWallets.Getrunningwallet().encryptedMaster;
 
-
-        const encryptedData = Buffer.from(EticaWallets.Getrunningwallet().encryptedMaster, 'hex');
-        const iv = Buffer.from(EticaWallets.Getrunningwallet().vector, 'hex');
-        const salt = Buffer.from(EticaWallets.Getrunningwallet().salt, 'hex');
+        const encryptedData = Buffer.from(seedencrypted, 'hex');
+        const iv = Buffer.from(seedvector, 'hex');
+        const salt = Buffer.from(seedsalt, 'hex');
 
         // Derive the encryption key using pbkdf2Sync with the loaded salt
        const iterations = 100000;
@@ -175,40 +197,50 @@ $(document).on("render_wallets", function () {
       );
 
         // Create a cipher using createDecipheriv with AES-256-CBC mode
-           const cipherAlgorithm = 'aes-256-cbc';
-           const decipher = crypto.createDecipheriv(cipherAlgorithm, encryptionKey, iv);
 
-           let decryptedData = decipher.update(encryptedData);
-           decryptedData = Buffer.concat([decryptedData, decipher.final()]);
+           const decryptedData = await EticaWallets.Decipher(Buffer.from(encryptionKey), iv, encryptedData);
+           const MasterSeed = decryptedData;
 
-           const masterPrivateKey = decryptedData.toString('hex');
+           const hdwallet = hdkey.fromMasterSeed(Buffer.from(MasterSeed, 'hex'));
+           
+           // Derive first wallet from decrypted seed to verify it equals masteraddress:
+           const firstWallet = hdwallet.derivePath("m/44'/60'/0'/0/0").getWallet();
+           const firstPublicKey = firstWallet.getPublicKey();
+           let firstaddress_without0x = util.pubToAddress(firstPublicKey, true).toString('hex');
+           const firstDerivedAddress = '0x' + firstaddress_without0x;
 
-        // get index of new account:
+           console.log('first address is', firstDerivedAddress);
+           console.log('masteraddress is', masteraddress);
+
+           // Additional security but Normally if wrong password the code would not reach this step and would have failed before because EticaWallets.Decipher -> crypto.createDecipheriv should stop the code:
+            if(firstDerivedAddress != masteraddress){
+              EticaMainGUI.showGeneralError("Unexpected master address generated from encrypted master key, cannot generate a new deterministic wallet address if the address is different from the one expected!");
+              return;
+            }
+          
+            // create new address:
+            else if(firstDerivedAddress === masteraddress) {
+        
+           // get index of new account:
            let accounts = await EticaBlockchain.AsyncgetAccounts();
-           console.log('accounts is:', accounts);
            const newindex = accounts.length;
-           console.log('new index is:', newindex);
 
-        // create new address:
+           // create new address:
+           const newWallet = hdwallet.derivePath("m/44'/60'/0'/0/"+newindex+"").getWallet();
+           const PrivateKey = newWallet.getPrivateKey();
+           const newPrivateKeyString = PrivateKey.toString('hex');
 
-        const hdwallet = hdkey.fromMasterSeed(Buffer.from(masterPrivateKey, 'hex'));
-        const newWallet = hdwallet.derivePath("m/44'/60'/0'/0/"+newindex+"").getWallet();
+           EticaBlockchain.importFromPrivateKey(newPrivateKeyString, password, function (error) {
+             EticaMainGUI.showGeneralError(error);
+           }, function (account) {
 
-        const PrivateKey = newWallet.getPrivateKey();
-        const newPrivateKeyString = PrivateKey.toString('hex');
-
-
-        EticaBlockchain.importFromPrivateKey(newPrivateKeyString, password, function (error) {
-          EticaMainGUI.showGeneralError(error);
-        }, function (account) {
-
-          EticaWallets.addAddressToList(account);
-          EticaWallets.renderWalletsState();
-          iziToast.success({title: "Created", message: "New wallet address was successfully created", position: "topRight", timeout: 5000});
+            EticaWallets.addAddressToList(account);
+            EticaWallets.renderWalletsState();
+            iziToast.success({title: "Created", message: "New wallet address was successfully created", position: "topRight", timeout: 5000});
 
         });
 
-
+      }
         
       }
     }

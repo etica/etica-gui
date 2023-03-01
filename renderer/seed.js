@@ -10,7 +10,7 @@ let user_mnemonic_order_array = [];
 let address;
 let pk;
 let pw;
-let masterPrivateKey;
+let masterSeed;
 
 
 function normalizeString(str) {
@@ -40,13 +40,19 @@ function GenerateNewSeed(){
  const hdWallet = hdkey.fromMasterSeed(seed);
  const hdMaster = hdkey.fromMasterSeed(Buffer.from(seed, 'hex'));
 
+
+ /*
  // Derive the extended private key for the HD master node
  const privateExtendedKey = hdMaster.privateExtendedKey();
 
  const PK = HDKey.fromExtendedKey(privateExtendedKey);
  const _masterPrivateKey = PK.privateKey.toString('hex');
 
-masterPrivateKey = _masterPrivateKey;
+masterPrivateKey = _masterPrivateKey; */
+
+const _masterSeed = seed.toString('hex');
+console.log('_masterSeed is:', _masterSeed);
+masterSeed = _masterSeed;
 
 
  const wallet = hdWallet.derivePath("m/44'/60'/0'/0/0").getWallet();
@@ -233,7 +239,7 @@ $("#word24").html(reorderedWords[23]);
 
     */
 
-// ------ ENCRYPT Master Private Key ---- //
+// ------ ENCRYPT Master seed ---- //
 
 // Generate a 128-bit salt
 const salt = crypto.randomBytes(16);
@@ -245,30 +251,26 @@ console.log('salt is', salt);
 const encryptionKey = crypto.pbkdf2Sync(pw, salt, 100000, 32, 'sha256');
 console.log('encrypting with encryptionKey string format', encryptionKey.toString('hex'));
 
-// Use the encryption key to encrypt the master private key
-/*
-const iv = crypto.randomBytes(16);
-const cipher = crypto.createCipheriv('aes-256-cbc', encryptionKey, iv);
-let encryptedMasterPrivateKey = cipher.update(masterPrivateKey, 'hex', 'base64');
-encryptedMasterPrivateKey += cipher.final('base64'); */
+// Use the encryption key to encrypt the master seeed
 
 const iv = crypto.randomBytes(16);
-const cipher = crypto.createCipheriv('aes-256-cbc', encryptionKey, iv);
-let encryptedMasterPrivateKey = cipher.update(masterPrivateKey);
-encryptedMasterPrivateKey = Buffer.concat([encryptedMasterPrivateKey, cipher.final()]);
+const cipherAlgorithm = 'aes-256-cbc';
+const cipher = crypto.createCipheriv(cipherAlgorithm, Buffer.from(encryptionKey), iv);
+let encryptedMasterSeed = cipher.update(masterSeed);
+encryptedMasterSeed = Buffer.concat([encryptedMasterSeed, cipher.final()]);
 
 // Store the encrypted master private key, salt, and initialization vector (iv)
-console.log('Encrypted Master Private Key:', encryptedMasterPrivateKey.toString('hex'));
+console.log('Encrypted Master Private Key:', encryptedMasterSeed.toString('hex'));
 console.log('Salt:', salt.toString('hex'));
 console.log('Initialization Vector (iv):', iv.toString('hex'));
-// ENCRYPT Master Private Key
+// ENCRYPT Master seed
 
 
-NewWallet.encryptedMaster = encryptedMasterPrivateKey.toString('hex');
+NewWallet.encryptedMaster = encryptedMasterSeed.toString('hex');
 NewWallet.salt = salt.toString('hex');
 NewWallet.vector = iv.toString('hex');
 
-// ---- ENCRYPT Master Private Key ----- //
+// ---- ENCRYPT Master seed ----- //
 
     if(NewWallet.type == 'mainnet'){
       // set mainnet values
