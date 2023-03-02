@@ -97,13 +97,52 @@
             <a class="btn btn-primary" href="./assets/templates/setup/newwallet.html">New Wallet</a>
           </div>
           <div class="col-md-12">
-            <a class="btn btn-success" id="launchWallet" href="./index.html">Select Wallet from directory</a>
+            <a class="btn btn-success" id="launchWallet" href="#">Launch Wallet from directory</a>
+            <button class="btn btn-success" id="selectWalletFolder">Select Wallet from directory</button>
           </div>
         </div>
       </div>
     </div>
 
   </div>
+
+
+
+  <!-- Form Modal -->
+  <div class="modal modal-black" id="SelectWalletsfromListModal" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header justify-content-center">
+          <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
+            <i class="tim-icons icon-simple-remove text-white"></i>
+          </button>
+          <div class="text-muted text-center ml-auto mr-auto">
+            <h3 class="mb-0">Etica Wallets Found</h3>
+          </div>
+        </div>
+        <div class="modal-body" style="height:78vh;">
+          <div class="btn-wrapper text-center">
+            <a href="#" class="btn btn-neutral btn-icon">
+              <img src="./assets/images/etica-logo-sanstexte.png">
+            </a>
+            <a href="#" class="btn btn-neutral btn-icon">
+              <img src="./assets/images/etica-logo-fond-noir-sanstitre.png">
+            </a>
+          </div>
+          <div class="text-center text-muted mb-4 mt-3">
+            <small>Wallets found in this directory</small>
+          </div>
+          
+          <div id="walletsList" style="overflow-y: scroll;height: 50vh;" class="perfect-scrollbar-on">
+
+          </div>
+        
+        </div>
+      </div>
+    </div>
+  </div>
+  <!--  End Modal -->
+
 
 </body>
 

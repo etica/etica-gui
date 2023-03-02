@@ -44,6 +44,10 @@ body.pg-loaded>.inner {
   padding-top: 7px;
 }
 
+#SelectWalletsfromListModal{
+  display: none;
+}
+
 /* Style sidebar links */
 .sidebar a {
   padding: 6px 8px 6px 16px;

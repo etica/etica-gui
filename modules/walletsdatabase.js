@@ -24,11 +24,26 @@ let db;
                   port:
 */
 
-ipcMain.on("setWalletDataDbPath", (event, arg) => {
+
+// Only this function reacts to this call:
+ipcMain.on("checkWalletDataDbPath", (event, arg) => {
   // set dbPath using IPC message
   const dbWalletDataDirectory = arg;
   const dbPath = path.join(dbWalletDataDirectory, "walletsdatabase.db");
 
+  db = new datastore({filename: dbPath});
+  db.loadDatabase(function (err) {
+    // Now commands will be executed
+  });
+});
+
+
+// All modules db files react to this call:
+ipcMain.on("setWalletDataDbPath", (event, arg) => {
+  // set dbPath using IPC message
+  const dbWalletDataDirectory = arg;
+  const dbPath = path.join(dbWalletDataDirectory, "walletsdatabase.db");
+console.log('dbWalletDataDirectory is', dbWalletDataDirectory);
   db = new datastore({filename: dbPath});
   db.loadDatabase(function (err) {
     // Now commands will be executed
