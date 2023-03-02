@@ -5,11 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
-const dbPath = path.join(app.getPath("userData"), "commits.db");
-const db = new datastore({filename: dbPath});
-db.loadDatabase(function (err) {
-  // Now commands will be executed
-});
+let db;
 
 
 /* Commit fields:
@@ -29,7 +25,18 @@ db.loadDatabase(function (err) {
                   status: _status, // status of the commit
 */
 
-// index the creationdate field
+ipcMain.on("setWalletDataDbPath", (event, arg) => {
+  // set dbPath using IPC message
+  const dbWalletDataDirectory = arg;
+  const dbPath = path.join(dbWalletDataDirectory, "commits.db");
+
+  db = new datastore({filename: dbPath});
+  db.loadDatabase(function (err) {
+    // Now commands will be executed
+  });
+
+
+  // index the creationdate field
 db.ensureIndex({
   fieldName: "creationdate"
 }, function (err) {
@@ -70,6 +77,9 @@ db.ensureIndex({
 }, function (err) {
   // If there was an error, err is not null
 });
+
+});
+
 
 ipcMain.on("storeCommit", (event, arg) => {
   console.log('--> storing Commit');

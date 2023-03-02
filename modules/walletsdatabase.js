@@ -5,12 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
-// replace app.getPath("userData"), get walletslist folder path from app.getPath("userData")/setupfile
-const dbPath = path.join(app.getPath("userData"), "walletsdatabase.db");
-const db = new datastore({filename: dbPath});
-db.loadDatabase(function (err) {
-  // Now commands will be executed
-});
+let db;
 
 
 /* Wallets fields:
@@ -28,6 +23,18 @@ db.loadDatabase(function (err) {
                   wsaddress:
                   port:
 */
+
+ipcMain.on("setWalletDataDbPath", (event, arg) => {
+  // set dbPath using IPC message
+  const dbWalletDataDirectory = arg;
+  const dbPath = path.join(dbWalletDataDirectory, "walletsdatabase.db");
+
+  db = new datastore({filename: dbPath});
+  db.loadDatabase(function (err) {
+    // Now commands will be executed
+  });
+});
+
 
 ipcMain.on("storeWallet", (event, arg) => {
   db.update({

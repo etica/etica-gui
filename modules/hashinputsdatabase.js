@@ -5,33 +5,44 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
-const hashinputdbPath = path.join(app.getPath("userData"), "hashinputs.db");
-const hashinputdb = new datastore({filename: hashinputdbPath});
-hashinputdb.loadDatabase(function (err) {
-  // Now commands will be executed
-});
+let hashinputdb;
 
-// index the commithash field
-hashinputdb.ensureIndex({
+ipcMain.on("setWalletDataDbPath", (event, arg) => {
+  // set dbPath using IPC message
+  const dbWalletDataDirectory = arg;
+  const dbPath = path.join(dbWalletDataDirectory, "hashinputs.db");
+
+  hashinputdb = new datastore({filename: dbPath});
+  hashinputdb.loadDatabase(function (err) {
+    // Now commands will be executed
+  });
+
+
+ // index the commithash field
+ hashinputdb.ensureIndex({
   fieldName: "commithash",
   unique: true 
-}, function (err) {
+ }, function (err) {
   // If there was an error, err is not null
-});
+ });
 
-// index the proposalhash field
-hashinputdb.ensureIndex({
+ // index the proposalhash field
+ hashinputdb.ensureIndex({
   fieldName: "proposalhash",
-}, function (err) {
+ }, function (err) {
   // If there was an error, err is not null
-});
+ });
 
-// index the voter field
-hashinputdb.ensureIndex({
+ // index the voter field
+ hashinputdb.ensureIndex({
   fieldName: "voter",
-}, function (err) {
+ }, function (err) {
   // If there was an error, err is not null
-});
+ });
+
+
+ });
+
 
 ipcMain.on("storeHashinput", (event, arg) => {
   console.log('--> storing Hashinputs');

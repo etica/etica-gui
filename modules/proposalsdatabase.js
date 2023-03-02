@@ -5,12 +5,7 @@ const path = require("path");
 const fs = require("fs");
 const os = require("os");
 
-const dbPath = path.join(app.getPath("userData"), "proposals.db");
-const db = new datastore({filename: dbPath});
-db.loadDatabase(function (err) {
-  // Now commands will be executed
-});
-
+let db;
 
 /* Proposal fields (within the wallet, we dont store all proposal data. Only data to identify proposal is stored, rest is queried on blockchain each time):
                   proposalhash: _proposal.proposed_release_hash,
@@ -37,6 +32,16 @@ db.loadDatabase(function (err) {
                         slashduration: _slashduration, // Time slash duration
                         slashamount: _slashamount
 */
+
+ipcMain.on("setWalletDataDbPath", (event, arg) => {
+  // set dbPath using IPC message
+  const dbWalletDataDirectory = arg;
+  const dbPath = path.join(dbWalletDataDirectory, "proposals.db");
+
+  db = new datastore({filename: dbPath});
+  db.loadDatabase(function (err) {
+    // Now commands will be executed
+  });
 
 // index the creationdate field
 db.ensureIndex({
@@ -93,6 +98,9 @@ db.ensureIndex({
   fieldName: "status",
 }, function (err) {
   // If there was an error, err is not null
+});
+
+
 });
 
 ipcMain.on("storeProposal", (event, arg) => {
