@@ -31,10 +31,12 @@ let walletFolderPath;
     console.log('wallets found is:', wallet);
 
     wallets.forEach(onewallet => {
-      $('#walletsList').append(`<li id="${onewallet.masteraddress}" class="onewalletlist">${onewallet.name}</li>`);
+      $('#walletsList').append(`<li class="onewalletli"><a data-address="${onewallet.masteraddress}" href="#" class="onewalletlist">${onewallet.name}</a></li>`);
     });
 
     $("#SelectWalletsfromListModal").css("display", "block");
+    let _directorymsg = 'Etica wallets found in directory: '+ walletFolderPath;
+    $("#checkeddirectorymsg").html(_directorymsg);
 
     // if directory verified and write user password, set all ds to walletdirectory and launch geth, then relocate to index.html:
     //let setwalletdirectory = ipcRenderer.sendSync("setWalletDataDbPath", {walletFilePath: walletFilePath});
@@ -44,6 +46,94 @@ let walletFolderPath;
   $("#selectWalletFolder").off("click").on("click", function () {
     let selectwallet = ipcRenderer.sendSync("selectWalletFolder");
   });
+
+
+  $(".onewalletli").off("click").on("click", function () {
+    console.log('clicked on wallet name');
+    var walletAddress = $(this).attr("data-address");
+
+    console.log('getting wallet with walletAddress:', walletAddress);
+
+    let wallet = ipcRenderer.sendSync("getWallet", {masteraddress: walletAddress});
+    console.log('wallets found is:', wallet);
+
+    let setwalletdirectory = ipcRenderer.sendSync("setWalletDataDbPath", {walletFilePath: wallet.datadirectory});
+    let ipcResult = ipcRenderer.send("startGeth", wallet);
+    window.location.replace('./../../../index.html');
+
+
+    // use if connection with password, check unlock wallet with password before launching wallet:
+    function doLaunchWallet() {
+      
+
+// if directory verified and write user password, set all ds to walletdirectory and launch geth, then relocate to index.html:
+    //let setwalletdirectory = ipcRenderer.sendSync("setWalletDataDbPath", {walletFilePath: walletFilePath});
+    //ipcResult = ipcRenderer.send("startGeth", wallet);
+
+
+    }
+
+    $("#btnChangeAddressNameConfirm").off("click").on("click", function () {
+      LaunchWallet();
+    });
+
+    $("#dlgChangeAddressName").off("keypress").on("keypress", function (e) {
+      if (e.which == 13) {
+        LaunchWallet();
+      }
+    });
+  });
+
+
+  $(".onewalletlist").off("click").on("click", function () {
+    console.log('clicked on wallet name2');
+  });
+
+  async function ScanDirforWallets(){
+
+    let checkwalletdirectory = ipcRenderer.send("checkWalletDataDbPath", walletFolderPath);
+    
+    let wallets = ipcRenderer.sendSync("getWallets", {});
+    console.log('wallets founds are:', wallets);
+    let wallet = ipcRenderer.sendSync("getWallet", {masteraddress: wallets[0].masteraddress});
+    console.log('wallets found is:', wallet);
+
+    wallets.forEach(onewallet => {
+      $('#walletsList').append(`<li><a id="${onewallet.masteraddress}" data-address="${onewallet.masteraddress}" href="#" class="onewalletlist">${onewallet.name}</a></li>`);
+    });
+
+    const links = document.querySelectorAll(".onewalletlist");
+
+// Add event listeners to each <a> element
+links.forEach(link => {
+  link.addEventListener("click", function() {
+    testone(this.getAttribute("data-address"));
+  });
+});
+
+    $("#SelectWalletsfromListModal").css("display", "block");
+    let _directorymsg = 'Etica wallets found in directory: '+ walletFolderPath;
+    $("#checkeddirectorymsg").html(_directorymsg);
+
+  }
+
+  function testone(i){
+    console.log('testone called');
+    console.log('testone called with address', i);
+
+    console.log('clicked on wallet name');
+    var walletAddress = i;
+
+    console.log('getting wallet with walletAddress:', walletAddress);
+
+    let wallet = ipcRenderer.sendSync("getWallet", {masteraddress: walletAddress});
+    console.log('wallets found is:', wallet);
+
+    let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", wallet.datadirectory);
+    let ipcResult = ipcRenderer.send("startGeth", wallet);
+    window.location.replace('./index.html');
+
+  }
 
   
 /*
@@ -66,6 +156,7 @@ let walletFolderPath;
 
     walletFolderPath = _walletFolderPath;
     console.log("walletFolderPath is now:", _walletFolderPath);
+    ScanDirforWallets();
   });
 
 

@@ -42,7 +42,9 @@
   }
   .onewalletlist{
     cursor: pointer;
-    width: 45%;
+    font-family: cursive;
+    /*color: #6e9593;*/
+    color: #ffffff;
   }
   </style>
 
@@ -128,20 +130,21 @@
             <i class="tim-icons icon-simple-remove text-white"></i>
           </button>
           <div class="text-muted text-center ml-auto mr-auto">
-            <h3 class="mb-0">Etica Wallets Found</h3>
+            <h3 class="mb-0">Etica Wallets</h3>
           </div>
         </div>
         <div class="modal-body">
           <div class="btn-wrapper text-center">
-            <a href="#" class="btn btn-neutral btn-icon">
+            <a href="#" class="btn btn-neutral btn-icon" style="background-color: #202020 !important;background-image: unset;">
               <img src="./assets/images/etica-logo-sanstexte.png">
             </a>
-            <a href="#" class="btn btn-neutral btn-icon">
+            <a href="#" class="btn btn-neutral btn-icon" style="background-color: #202020 !important;background-image: unset;">
               <img src="./assets/images/etica-logo-fond-noir-sanstitre.png">
             </a>
           </div>
           <div class="text-center text-muted mb-4 mt-3">
-            <small>Wallets found in this directory</small>
+            <small id="checkeddirectorymsg" style="color:#ffffff;">Wallets found in this directory</small>
+            <small id="checkeddirectorymsg" style="color:#ffffff;">Click on a wallet name to select</small>
           </div>
           
           <div id="walletsList" style="height: 50vh;">
