@@ -35,6 +35,17 @@
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="./assets/blk/demo/demo.css" rel="stylesheet" />
 
+  <style>
+.scrollable {
+    height: 75vh;
+    overflow: auto;
+  }
+  .onewalletlist{
+    cursor: pointer;
+    width: 45%;
+  }
+  </style>
+
   <script>
     if (typeof module === 'object') {
       window.module = module;
@@ -111,7 +122,7 @@
   <!-- Form Modal -->
   <div class="modal modal-black" id="SelectWalletsfromListModal" aria-labelledby="myModalLabel" aria-hidden="true">
     <div class="modal-dialog">
-      <div class="modal-content">
+      <div style="height: 75vh;background: #141414;color: rgb(6 108 104 / 80%);" class="modal-content scrollable">
         <div class="modal-header justify-content-center">
           <button type="button" class="close" data-dismiss="modal" aria-hidden="true">
             <i class="tim-icons icon-simple-remove text-white"></i>
@@ -120,7 +131,7 @@
             <h3 class="mb-0">Etica Wallets Found</h3>
           </div>
         </div>
-        <div class="modal-body" style="height:78vh;">
+        <div class="modal-body">
           <div class="btn-wrapper text-center">
             <a href="#" class="btn btn-neutral btn-icon">
               <img src="./assets/images/etica-logo-sanstexte.png">
@@ -133,7 +144,7 @@
             <small>Wallets found in this directory</small>
           </div>
           
-          <div id="walletsList" style="overflow-y: scroll;height: 50vh;" class="perfect-scrollbar-on">
+          <div id="walletsList" style="height: 50vh;">
 
           </div>
         
@@ -150,5 +161,9 @@
   // You can also require other files to run in this process
   require('./renderer/setup.js');
 </script>
+<script>
+  const scrollbar = new PerfectScrollbar('.scrollable');
+</script>
+
 
 </html>
