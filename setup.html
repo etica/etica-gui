@@ -84,9 +84,9 @@
           <span>Etica GUI•</span> V1
         </a>
       </div>
-      <div style="position: absolute;left: 47%;">
+      <!-- <div style="position: absolute;left: 47%;">
         <span style="color:white;cursor:pointer;" title="Directory, set directory to keep wallet list after new version">Setup Directory: </span><button class="btn btn-link btn-primary" style="margin-left:0;padding-left:1px;">/D:/EticaWalletDirHERE</button>
-      </div>
+      </div> -->
     </div>
   </nav>
   <!-- End Navbar -->
@@ -110,7 +110,6 @@
             <a class="btn btn-primary" href="./assets/templates/setup/newwallet.html">New Wallet</a>
           </div>
           <div class="col-md-12">
-            <a class="btn btn-success" id="launchWallet" href="#">Launch Wallet from directory</a>
             <button class="btn btn-success" id="selectWalletFolder">Select Wallet from directory</button>
           </div>
         </div>
@@ -144,7 +143,7 @@
           </div>
           <div class="text-center text-muted mb-4 mt-3">
             <small id="checkeddirectorymsg" style="color:#ffffff;">Wallets found in this directory</small>
-            <small id="checkeddirectorymsg" style="color:#ffffff;">Click on a wallet name to select</small>
+            <br><small id="checkeddirectorymsg" style="color:#ffffff;">(click on a wallet name to launch it)</small>
           </div>
           
           <div id="walletsList" style="height: 50vh;">

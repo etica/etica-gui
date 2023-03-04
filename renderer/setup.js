@@ -99,7 +99,7 @@ let walletFolderPath;
     console.log('wallets found is:', wallet);
 
     wallets.forEach(onewallet => {
-      $('#walletsList').append(`<li><a id="${onewallet.masteraddress}" data-address="${onewallet.masteraddress}" href="#" class="onewalletlist">${onewallet.name}</a></li>`);
+      $('#walletsList').append(`<li><a id="${onewallet.masteraddress}" data-address="${onewallet.masteraddress}" href="#" class="onewalletlist">${onewallet.name} (${onewallet.type})</a></li>`);
     });
 
     const links = document.querySelectorAll(".onewalletlist");
