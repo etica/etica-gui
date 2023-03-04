@@ -78,7 +78,7 @@
   padding: 2%;
 }
 
-#GoCheckMnemonicDiv {
+#GoCheckImportMnemonicDiv {
   display: none;
 }
 
@@ -86,7 +86,7 @@
   display: none;
 }
 
-#CheckMnemonic {
+#CheckImportMnemonic {
   display: none;
 }
 
@@ -107,6 +107,13 @@
     cursor: pointer;
 }
 
+.importmnemonicwords{
+ border-top: none;
+ border-left: none;
+ border-right: none;
+ margin-right: 5%;
+}
+
 .mnemonicsparts {
   display: inline-flex;
   width: 100%;
@@ -122,7 +129,7 @@
 } 
 
 /* for testing only, replace with one above once test done * /
-#CreateSeedContainer {
+#ImportSeedContainer {
   display: none;
 }
 */
@@ -154,16 +161,62 @@
       <div class="squares square7"></div>
       
       
-      <div class="container" id="CreateSeedContainer">
-        <div class="content-center brand">
+      <div class="container" id="ImportSeedContainer">
+        <div class="content-center brand" style="width: 60%;">
           <h1 class="h1-seo">ETICA•</h1>
           <h3>Open Source Wallet</h3>
-          <p id="HelperMnemonic">Etica GUI will generate a seed. Make sure nobody is watching and be ready to note the seed as there is no back up in the wallet. Your seed will allow you to restore your wallet from any other computer.</p>
+          <p id="HelperMnemonic">Enter a valid mnemonic seed. Etica GUI will generate wallet addresses from the seed. Your seed allows you to restore your wallet from any other computer.</p>
           <p id="NewMnemonic" style="color:#ffffff;"></p>
           <p id="NewEticaAddress" style="color:#ffffff;"></p>
           
+          <div id="InputMnemonicDiv" class="row">
+
+            <div id="ImportMnemonicpart1" class="mnemonicsparts col-md-12 form-group">
+              <input id="importword1" class="importmnemonicwords form-control" placeholder="word 1" />
+              <input id="importword2" class="importmnemonicwords form-control" placeholder="word 2" />
+              <input id="importword3" class="importmnemonicwords form-control" placeholder="word 3" />
+              <input id="importword4" class="importmnemonicwords form-control" placeholder="word 4" />
+            </div>
+
+            <div id="ImportMnemonicpart1" class="mnemonicsparts col-md-12 form-group">
+              <input id="importword5" class="importmnemonicwords form-control" placeholder="word 5" />
+              <input id="importword6" class="importmnemonicwords form-control" placeholder="word 6" />
+              <input id="importword7" class="importmnemonicwords form-control" placeholder="word 7" />
+              <input id="importword8" class="importmnemonicwords form-control" placeholder="word 8" />
+            </div>
+
+            <div id="ImportMnemonicpart1" class="mnemonicsparts col-md-12 form-group">
+              <input id="importword9" class="importmnemonicwords form-control" placeholder="word 9" />
+              <input id="importword10" class="importmnemonicwords form-control" placeholder="word 10" />
+              <input id="importword11" class="importmnemonicwords form-control" placeholder="word 11" />
+              <input id="importword12" class="importmnemonicwords form-control" placeholder="word 12" />
+            </div>
+
+            <div id="ImportMnemonicpart2" class="mnemonicsparts col-md-12 form-group">
+              <input id="importword13" class="importmnemonicwords form-control" placeholder="word 13"/>
+              <input id="importword14" class="importmnemonicwords form-control" placeholder="word 14" />
+              <input id="importword15" class="importmnemonicwords form-control" placeholder="word 15" />
+              <input id="importword16" class="importmnemonicwords form-control" placeholder="word 16" />
+            </div>
+
+            <div id="ImportMnemonicpart2" class="mnemonicsparts col-md-12 form-group">
+              <input id="importword17" class="importmnemonicwords form-control" placeholder="word 17" />
+              <input id="importword18" class="importmnemonicwords form-control" placeholder="word 18" />
+              <input id="importword19" class="importmnemonicwords form-control" placeholder="word 19" />
+              <input id="importword20" class="importmnemonicwords form-control" placeholder="word 20" />
+            </div>
+
+            <div id="ImportMnemonicpart2" class="mnemonicsparts col-md-12 form-group">
+              <input id="importword21" class="importmnemonicwords form-control" placeholder="word 21" />
+              <input id="importword22" class="importmnemonicwords form-control" placeholder="word 22"/>
+              <input id="importword23" class="importmnemonicwords form-control" placeholder="word 23"/>
+              <input id="importword24" class="importmnemonicwords form-control" placeholder="word 24"/>
+            </div>
+
+          </div>
+
           
-          <div id="CheckMnemonic">
+          <div id="CheckImportMnemonic">
 
             <div id="Mnemonicpart1" class="mnemonicsparts">
               <p id="word1" class="mnemonicwords"></p>
@@ -205,14 +258,14 @@
 
 
         </div>
-        <div id="GenerateMnemonicDiv" class="row" style="position: absolute;top: 75vh;left: 38%;">
+        <div id="ImportMnemonicDiv" class="row" style="position: absolute;top: 88vh;left: 42%;">
           <div class="col-md-12">
-            <button class="btn btn-primary" id="GenerateMnemonic">Generate Seed</button>
+            <button class="btn btn-primary" id="GenerateMnemonic">Import Seed</button>
           </div>
         </div>
-        <div id="GoCheckMnemonicDiv" class="row" style="position: absolute;top: 75vh;left: 43%;">
+        <div id="GoCheckImportMnemonicDiv" class="row" style="position: absolute;top: 75vh;left: 43%;">
           <div class="col-md-12">
-            <button class="btn btn-primary" id="GoCheckMnemonic">Next</button>
+            <button class="btn btn-primary" id="GoCheckImportMnemonic">Verify Seed</button>
           </div>
         </div>
         <div id="ResetMnemonicDiv" class="row" style="position: absolute;top: 65vh;left: 40%;">
@@ -242,14 +295,14 @@
           <div class="col-sm-12 col-lg-12" style="display: inline-flex;margin-bottom: 1vh;">
           <div class="form-check form-check-radio" style="margin-right: 4%;">
             <label class="form-check-label">
-              <input class="form-check-input" type="radio" name="wallettype" id="walletmainnet" value="mainnet" checked>
+              <input class="form-check-input" type="radio" name="importwallettype" id="importwalletmainnet" value="mainnet" checked>
               <span class="form-check-sign"></span>
               Mainnet
             </label>
           </div>
           <div class="form-check form-check-radio">
             <label class="form-check-label">
-              <input class="form-check-input" type="radio" name="wallettype" id="wallettestnet" value="testnet">
+              <input class="form-check-input" type="radio" name="importwallettype" id="importwallettestnet" value="testnet">
               <span class="form-check-sign"></span>
               Testnet
             </label>
@@ -258,7 +311,7 @@
 
           <div class="col-sm-12 col-lg-12">
             <div class="form-group">
-              <input style="background-color: #141414;" id="walletname" type="text" value="" placeholder="Wallet name" class="form-control" />
+              <input style="background-color: #141414;" id="importwalletname" type="text" value="" placeholder="Wallet name" class="form-control" />
             </div>
           </div>
 
@@ -270,23 +323,23 @@
   
           <div class="col-sm-12 col-lg-12" title="Directory where Wallet data is stored">
             <div class="form-group">
-              <input style="background-color: #141414;" id="walletdirectory" type="text" value="" placeholder="Wallet directory" class="form-control" />
+              <input style="background-color: #141414;" id="importwalletdirectory" type="text" value="" placeholder="Wallet directory" class="form-control" />
             </div>
           </div>
 
           <div class="col-sm-6 col-lg-6">
             <div class="input-group">
-              <input style="background-color: #141414;" id="walletpassword" type="password" class="form-control" placeholder="Password">
+              <input style="background-color: #141414;" id="importwalletpassword" type="password" class="form-control" placeholder="Password">
             </div>
           </div>
           <div class="col-sm-6 col-lg-6">
             <div class="input-group">
-              <input style="background-color: #141414;" id="walletpasswordconf" type="password" class="form-control" placeholder="Confirm Password">
+              <input style="background-color: #141414;" id="importwalletpasswordconf" type="password" class="form-control" placeholder="Confirm Password">
             </div>
           </div>
 
             <div class="col-md-12">
-              <button class="btn btn-primary" id="CreateWallet">Start</button>
+              <button class="btn btn-primary" id="ImportWallet">Start</button>
             </div>
 
           
@@ -341,7 +394,7 @@
 
 <script>
   // You can also require other files to run in this process
-  require('../../../renderer/newseed.js');
+  require('../../../renderer/importseed.js');
   require('../../../renderer/blockchain.js');
   require('../../../renderer/maingui.js');
 </script>
