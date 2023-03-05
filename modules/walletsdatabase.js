@@ -29,7 +29,7 @@ let db;
 ipcMain.on("checkWalletDataDbPath", (event, arg) => {
   // set dbPath using IPC message
   const dbWalletDataDirectory = arg;
-  const dbPath = path.join(dbWalletDataDirectory, "walletsregistry.db");
+  const dbPath = path.join(dbWalletDataDirectory, "eticaregistry.db");
 
   db = new datastore({filename: dbPath});
   db.loadDatabase(function (err) {
@@ -40,8 +40,8 @@ ipcMain.on("checkWalletDataDbPath", (event, arg) => {
 // All modules db files react to this call:
 ipcMain.on("setWalletDataDbPath", (event, arg) => {
   // set dbPath using IPC message. walletsregistry.db is located in main folder, one level above /walletaddress
-  const dbWalletDataDirectory = removeLastFolderFromPath(arg);
-  const dbPath = path.join(dbWalletDataDirectory, "walletsregistry.db");
+  const dbWalletDataDirectory = arg;
+  const dbPath = path.join(dbWalletDataDirectory, "eticaregistry.db");
   db = new datastore({filename: dbPath});
   db.loadDatabase(function (err) {
     // Now commands will be executed
@@ -78,6 +78,9 @@ ipcMain.on("getWallet", (event, arg) => {
   });
 });
 
+
+
+/*
 ipcMain.on("getWallets", (event, arg) => {
   db.find({}).exec(function (err, docs) {
     ResultData = [];
@@ -108,6 +111,135 @@ ipcMain.on("getWallets", (event, arg) => {
     event.returnValue = ResultData;
   });
 });
+*/
+
+/*
+ipcMain.on('getWallets', (event, arg) => {
+  const wallets = [];
+
+  // Prompt user to select a folder
+  dialog.showOpenDialog({ properties: ['openDirectory'] }).then(async (result) => {
+    if (!result.canceled) {
+      const folderPath = result.filePaths[0];
+
+      // Search for walletsregistry.db in subfolders
+      const searchForFiles = async (dir) => {
+        fs.readdir(dir, { withFileTypes: true }, (err, files) => {
+          if (err) throw err;
+
+          files.forEach(file => {
+            if (file.isDirectory()) {
+              searchForFiles(path.join(dir, file.name));
+            } else if (file.name === 'walletsregistry.db') {
+              const dbPath = path.join(dir, file.name);
+
+              const walletDb = new datastore({ filename: dbPath });
+              walletDb.loadDatabase(function (err) {
+                if (err) throw err;
+
+                walletDb.find({}).exec(function (err, docs) {
+                  if (err) throw err;
+
+                  for (let i = 0; i < docs.length; i++) {
+                    const wallet = {
+                      name: docs[i].name,
+                      masteraddress: docs[i].masteraddress,
+                      infos: docs[i].infos,
+                      blockchaindirectory: docs[i].blockchaindirectory,
+                      keystoredirectory: docs[i].keystoredirectory,
+                      datadirectory: docs[i].datadirectory,
+                      enode: docs[i].enode,
+                      type: docs[i].type,
+                      networkid: docs[i].networkid, 
+                      contractaddress: docs[i].contractaddress,
+                      wsport: docs[i].wsport,
+                      wsaddress: docs[i].wsaddress,
+                      port: docs[i].port
+                    };
+
+                    console.log('found one wallet', wallet);
+                    wallets.push(wallet);
+                  }
+
+                });
+              });
+            }
+          });
+        });
+      };
+
+      await searchForFiles(folderPath);
+      console.log('before call to ScanedFolderWalletsFound, wallets are::::!', wallets);
+      event.reply("ScanedFolderWalletsFound", wallets);
+      
+    }
+  });
+}); */
+
+
+ipcMain.on('getWallets', async (event, arg) => {
+  const wallets = [];
+
+  // Prompt user to select a folder
+  const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
+  if (!result.canceled) {
+    const folderPath = result.filePaths[0];
+
+    // Search for walletsregistry.db in subfolders
+    const searchForFiles = async (dir) => {
+      const files = await fs.promises.readdir(dir, { withFileTypes: true });
+
+      for (const file of files) {
+        if (file.isDirectory()) {
+          await searchForFiles(path.join(dir, file.name));
+        } else if (file.name === 'eticaregistry.db') {
+          const dbPath = path.join(dir, file.name);
+
+          const walletDb = new datastore({ filename: dbPath });
+          await new Promise((resolve, reject) => {
+            walletDb.loadDatabase((err) => {
+              if (err) reject(err);
+              else resolve();
+            });
+          });
+
+          const docs = await new Promise((resolve, reject) => {
+            walletDb.find({}).exec((err, docs) => {
+              if (err) reject(err);
+              else resolve(docs);
+            });
+          });
+
+          for (const doc of docs) {
+            const wallet = {
+              name: doc.name,
+              masteraddress: doc.masteraddress,
+              infos: doc.infos,
+              blockchaindirectory: doc.blockchaindirectory,
+              keystoredirectory: doc.keystoredirectory,
+              datadirectory: doc.datadirectory,
+              enode: doc.enode,
+              type: doc.type,
+              networkid: doc.networkid,
+              contractaddress: doc.contractaddress,
+              wsport: doc.wsport,
+              wsaddress: doc.wsaddress,
+              port: doc.port
+            };
+
+            console.log('found one wallet', wallet);
+            wallets.push(wallet);
+          }
+        }
+      }
+    };
+
+    await searchForFiles(folderPath);
+    console.log('before call to ScanedFolderWalletsFound, wallets are:', wallets);
+    event.reply("ScanedFolderWalletsFound", wallets);
+  }
+});
+
 
 ipcMain.on("deleteWallets", (event, arg) => {
 

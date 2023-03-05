@@ -3,12 +3,11 @@ const path = require("path");
 
 let walletFilePath;
 let walletFolderPath;
-let wallets;
 
   $("#selectWalletFolder").off("click").on("click", async function () {
 
     try {
-     let walletsfound = ipcRenderer.send("getWallets", {});
+      let selectwalletfolder= ipcRenderer.send("selectWalletFolder");
     } catch (error) {
       if (error.message === "NowalletFolderSelected") {
         // Handle user cancelation
@@ -33,7 +32,8 @@ let wallets;
 
   async function ScanDirforWallets(){
 
-
+    let checkwalletdirectory = ipcRenderer.send("checkWalletDataDbPath", walletFolderPath);
+    let wallets = ipcRenderer.sendSync("getWallets", {});
     console.log('wallets founds are:', wallets);
 
     if(wallets && wallets.length > 0){
@@ -70,19 +70,11 @@ let wallets;
 
   function launchwallet(i){
 
-    const selected_wallet = wallets.find(onewallet => onewallet.masteraddress === i);
-
-    console.log('selected_wallet is :: :: ::', selected_wallet);
-
-    let checkwalletdirectory = ipcRenderer.send("checkWalletDataDbPath", selected_wallet.datadirectory);
     var walletAddress = i;
     let wallet = ipcRenderer.sendSync("getWallet", {masteraddress: walletAddress});
-    
-    if(wallet){
-      let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", wallet.datadirectory);
-      let ipcResult = ipcRenderer.send("startGeth", wallet);
-      window.location.replace('./index.html');
-    }
+    let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", wallet.datadirectory);
+    let ipcResult = ipcRenderer.send("startGeth", wallet);
+    window.location.replace('./index.html');
 
   }
 
@@ -106,15 +98,6 @@ let wallets;
     console.log("walletFolderPath is updating");
     walletFolderPath = _walletFolderPath;
     console.log("walletFolderPath is now:", _walletFolderPath);
-    ScanDirforWallets();
-  }); 
-
-  ipcRenderer.on("ScanedFolderWalletsFound", (event, _wallets) => {
-    // Do something with the walletFilePath, such as load the wallet data
-
-    console.log("ScanedFolderWalletsFound resp received");
-    console.log("ScanedFolderWalletsFound resp received", _wallets);
-    wallets = _wallets;
     ScanDirforWallets();
   });
   
