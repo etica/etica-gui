@@ -89,6 +89,11 @@ let walletFolderPath;
     console.log('clicked on wallet name2');
   });
 
+  $("#closewalletsfoundbox").off("click").on("click", function () {
+    $("#checkeddirectorymsg").html("");
+    $("#SelectWalletsfromListModal").css("display", "none");
+  });
+
   async function ScanDirforWallets(){
 
     let checkwalletdirectory = ipcRenderer.send("checkWalletDataDbPath", walletFolderPath);
