@@ -48,7 +48,7 @@ ipcMain.on("getSetup", (event, arg) => {
 });
 
 
-// Step 1: Prompt user to select a wallet file
+// Prompt user to select a wallet file:
 ipcMain.on("selectWalletFile", async (event) => {
   const result = await dialog.showOpenDialog({
     properties: ["openFile"],
@@ -60,24 +60,18 @@ ipcMain.on("selectWalletFile", async (event) => {
 });
 
 ipcMain.on("selectWalletFolder", async (event) => {
-  const result = await dialog.showOpenDialog({
-    properties: ["openDirectory"],
-  });
-  if (!result.canceled && result.filePaths.length > 0) {
-    const walletFolderPath = result.filePaths[0];
-    event.reply("walletFolderSelected", walletFolderPath);
-  }
-});
-
-// Step 2: Load wallet data from local database using file path
-ipcMain.on("loadWalletData", async (event, walletFilePath) => {
-  const db = new datastore({ filename: walletFilePath });
-  db.loadDatabase(async (err) => {
-    if (err) {
-      event.reply("walletDataLoaded", { success: false, error: err });
+  try {
+    const result = await dialog.showOpenDialog({
+      properties: ["openDirectory"],
+    });
+    if (!result.canceled && result.filePaths.length > 0) {
+      const walletFolderPath = result.filePaths[0];
+      event.reply("walletFolderSelected", walletFolderPath);
     } else {
-      const walletData = await getWallet(db);
-      event.reply("walletDataLoaded", { success: true, data: walletData });
+      event.reply("NowalletFolderSelected", '');
+      throw new Error("NowalletFolderSelected");
     }
-  });
+  } catch (error) {
+    event.reply("NowalletFolderSelected", "");
+  }
 });

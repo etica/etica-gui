@@ -43,8 +43,20 @@ let walletFolderPath;
     //ipcResult = ipcRenderer.send("startGeth", wallet);
   });
 
-  $("#selectWalletFolder").off("click").on("click", function () {
-    let selectwallet = ipcRenderer.sendSync("selectWalletFolder");
+  $("#selectWalletFolder").off("click").on("click", async function () {
+
+    try {
+      let selectwalletfolder= ipcRenderer.send("selectWalletFolder");
+    } catch (error) {
+      if (error.message === "NowalletFolderSelected") {
+        // Handle user cancelation
+        console.log("Canceled wallet folder selection");
+      } else {
+        // Handle other errors
+        console.error("Error selecting wallet folder:", error);
+      }
+    }
+
   });
 
 
@@ -117,10 +129,9 @@ links.forEach(link => {
     console.log("walletFolderPath is now:", _walletFolderPath);
     ScanDirforWallets();
   });
-
-
-  ipcRenderer.on("walletDataLoaded", (event, _walletData) => {
-    // Do something with the walletFilePath, such as load the wallet data
-    console.log("walletDataLoaded:", _walletData);
-
-  });
+  
+  /*
+  ipcRenderer.on("NowalletFolderSelected", (event, error) => {
+    // Handle user cancelation
+    console.log("User canceled wallet folder selection");
+  }); */
