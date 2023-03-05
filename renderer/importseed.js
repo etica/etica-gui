@@ -46,8 +46,12 @@ function ImportNewSeed(){
   if (bip39.validateMnemonic(imported_mnemonic)) {
     console.log('The mnemonic is valid!');
   } else {
-    console.log('The mnemonic is invalid.');
-    EticaMainGUI.showGeneralError("Erroor, The mnemonic is invalid!");
+   $("#InputMnemonicDiv").hide();  
+   $("#ImportMnemonicDiv").hide();
+   $("#HelperMnemonic").html("This mnemonic is invalid.");
+   $("#NewMnemonic").css('display', 'block');
+   $("#NewMnemonic").html(imported_mnemonic);
+   $("#ResetMnemonicDiv").css('display', 'block');
     return false;
   }
 
@@ -309,7 +313,23 @@ NewWallet.vector = iv.toString('hex');
 
   $("#ResetMnemonic").off("click").on("click", function () {
 
-   ImportNewSeed();
+    imported_mnemonic = '';
+    imported_mnemonic_array = '';
+    user_mnemonic_order_array = [];
+    address = '';
+    pk = '';
+    pw = '';
+    masterSeed = '';
+
+    $("#InputMnemonicDiv").show();  
+    $("#ImportMnemonicDiv").show();
+    $("#HelperMnemonic").html("Enter a valid mnemonic seed. Etica GUI will generate wallet addresses from the seed. Your seed allows you to restore your wallet from any other computer.");
+    $("#NewMnemonic").html('');
+    $("#NewMnemonic").css('display', 'none');
+    $("#GoCheckImportMnemonicDiv").css('display', 'none');
+    $("#NewEticaAddress").html('');
+    $("#NewEticaAddress").css('display', 'none');
+    $("#ResetMnemonicDiv").css('display', 'none');
 
   });
 
