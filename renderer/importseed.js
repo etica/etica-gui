@@ -226,7 +226,6 @@ $("#mnemonicword24").html(reorderedWords[23]);
 
     NewWallet.name = $("#importwalletname").val();
     NewWallet.type = $("input[name='importwallettype']:checked").val();
-    //NewWallet.masteraddress = address; Warning, dont forget to replace by address aftr tests
     NewWallet.masteraddress = address;
     
     NewWallet.blockchaindirectory = $("#importblockchaindirectory").val();

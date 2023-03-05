@@ -2,7 +2,7 @@ const {ipcRenderer} = require("electron");
 const path = require("path");
 
 let walletFilePath;
-let walletFolderPath;
+let ScannedFolderPath;
 let wallets;
 
   $("#selectWalletFolder").off("click").on("click", async function () {
@@ -22,10 +22,6 @@ let wallets;
   });
 
 
-  $(".onewalletlist").off("click").on("click", function () {
-    console.log('clicked on wallet name2');
-  });
-
   $("#closewalletsfoundbox").off("click").on("click", function () {
     $("#checkeddirectorymsg").html("");
     $("#SelectWalletsfromListModal").css("display", "none");
@@ -33,8 +29,6 @@ let wallets;
 
   async function ScanDirforWallets(){
 
-
-    console.log('wallets founds are:', wallets);
 
     if(wallets && wallets.length > 0){
 
@@ -52,16 +46,16 @@ let wallets;
       });
   
       $("#SelectWalletsfromListModal").css("display", "block");
-      let _directorymsg = 'Etica wallets found in directory: '+ walletFolderPath;
+      let _directorymsg = 'Etica wallets found in directory: '+ ScannedFolderPath;
       $("#checkeddirectorymsg").html(_directorymsg);
 
     }
     else {
 
       $("#SelectWalletsfromListModal").css("display", "block");
-      let _directorymsg = 'Etica wallets found in directory: '+ walletFolderPath;
+      let _directorymsg = 'Etica wallets found in directory: '+ ScannedFolderPath;
       $("#checkeddirectorymsg").html(_directorymsg);
-      $('#walletsList').append('<p style="text-align:center;">No Etica wallets found in this directory</p>');
+      $('#walletsList').html('<p style="text-align:center;">No Etica wallets found in this directory</p>');
 
     }
 
@@ -71,8 +65,6 @@ let wallets;
   function launchwallet(i){
 
     const selected_wallet = wallets.find(onewallet => onewallet.masteraddress === i);
-
-    console.log('selected_wallet is :: :: ::', selected_wallet);
 
     let checkwalletdirectory = ipcRenderer.send("checkWalletDataDbPath", selected_wallet.datadirectory);
     var walletAddress = i;
@@ -86,35 +78,9 @@ let wallets;
 
   }
 
-  
-/*
-  ipcRenderer.on("walletFileSelected", (event, _walletFilePath) => {
-    // Do something with the walletFilePath, such as load the wallet data
-    console.log("Wallet file selected:", _walletFilePath);
-    walletFilePath = _walletFilePath;
-
-    console.log("walletFilePath is now:", walletFilePath);
-
-    walletFolderPath = path.dirname(walletFilePath);
-    console.log("walletFolderPath is now:", walletFolderPath);
-  }); */
-
-
-  ipcRenderer.on("walletFolderSelected", (event, _walletFolderPath) => {
-    // Do something with the walletFilePath, such as load the wallet data
-
-    console.log("walletFolderPath is updating");
-    walletFolderPath = _walletFolderPath;
-    console.log("walletFolderPath is now:", _walletFolderPath);
-    ScanDirforWallets();
-  }); 
-
-  ipcRenderer.on("ScanedFolderWalletsFound", (event, _wallets) => {
-    // Do something with the walletFilePath, such as load the wallet data
-
-    console.log("ScanedFolderWalletsFound resp received");
-    console.log("ScanedFolderWalletsFound resp received", _wallets);
-    wallets = _wallets;
+  ipcRenderer.on("ScanedFolderWalletsFound", (event, _res) => {
+    wallets = _res.wallets;
+    ScannedFolderPath = _res.folderPath;
     ScanDirforWallets();
   });
   

@@ -81,11 +81,12 @@ ipcMain.on("getWallet", (event, arg) => {
 
 ipcMain.on('getWallets', async (event, arg) => {
   const wallets = [];
+  let folderPath;
 
   // Prompt user to select a folder
   const result = await dialog.showOpenDialog({ properties: ['openDirectory'] });
   if (!result.canceled) {
-    const folderPath = result.filePaths[0];
+    folderPath = result.filePaths[0];
 
     // Search for walletsregistry.db in subfolders
     const searchForFiles = async (dir) => {
@@ -136,7 +137,10 @@ ipcMain.on('getWallets', async (event, arg) => {
     };
 
     await searchForFiles(folderPath);
-    event.reply("ScanedFolderWalletsFound", wallets);
+    let res = {};
+    res.wallets = wallets;
+    res.folderPath = folderPath;
+    event.reply("ScanedFolderWalletsFound", res);
   }
 });
 
