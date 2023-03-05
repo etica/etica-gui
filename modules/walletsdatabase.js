@@ -29,7 +29,7 @@ let db;
 ipcMain.on("checkWalletDataDbPath", (event, arg) => {
   // set dbPath using IPC message
   const dbWalletDataDirectory = arg;
-  const dbPath = path.join(dbWalletDataDirectory, "walletsdatabase.db");
+  const dbPath = path.join(dbWalletDataDirectory, "walletsregistry.db");
 
   db = new datastore({filename: dbPath});
   db.loadDatabase(function (err) {
@@ -39,9 +39,9 @@ ipcMain.on("checkWalletDataDbPath", (event, arg) => {
 
 // All modules db files react to this call:
 ipcMain.on("setWalletDataDbPath", (event, arg) => {
-  // set dbPath using IPC message
-  const dbWalletDataDirectory = arg;
-  const dbPath = path.join(dbWalletDataDirectory, "walletsdatabase.db");
+  // set dbPath using IPC message. walletsregistry.db is located in main folder, one level above /walletaddress
+  const dbWalletDataDirectory = removeLastFolderFromPath(arg);
+  const dbPath = path.join(dbWalletDataDirectory, "walletsregistry.db");
   db = new datastore({filename: dbPath});
   db.loadDatabase(function (err) {
     // Now commands will be executed
@@ -146,3 +146,17 @@ ipcMain.on("deleteWallets", (event, arg) => {
 
 
 });
+
+function removeLastFolderFromPath(path) {
+  // split the path into an array of folders
+  let folders = path.split("/");
+
+  // remove the last folder from the array
+  folders.pop();
+
+  // join the remaining folders back into a path
+  let newPath = folders.join("/");
+
+  // return the new path without the last folder
+  return newPath;
+}
