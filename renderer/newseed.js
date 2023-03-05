@@ -70,7 +70,7 @@ masterSeed = _masterSeed;
  const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
  if (!util.isValidPrivate(privateKeyBuffer)) {
-  EticaMainGUI.showGeneralError("Erroor, Invalid private key!");
+  EticaMainGUI.showGeneralErrorNewWallet("Erroor, Invalid private key!");
   return false;
  }
  
@@ -193,33 +193,33 @@ $("#word24").html(reorderedWords[23]);
     pw = $("#walletpassword").val();
     
     if(!$("#walletname").val()){
-      EticaMainGUI.showGeneralError("Wallet name cannot be empty!");
+      EticaMainGUI.showGeneralErrorNewWallet("Wallet name cannot be empty!");
       return false;
     }
 
     if(!$("#blockchaindirectory").val()){
-      EticaMainGUI.showGeneralError("Blockchain directory name cannot be empty!");
+      EticaMainGUI.showGeneralErrorNewWallet("Blockchain directory name cannot be empty!");
       return false;
     }
 
     if(!$("#walletdirectory").val()){
-      EticaMainGUI.showGeneralError("Wallet directory name cannot be empty!");
+      EticaMainGUI.showGeneralErrorNewWallet("Wallet directory name cannot be empty!");
       return false;
     }
 
     
     if(!$("#walletpassword").val()){
-      EticaMainGUI.showGeneralError("Password cannot be empty!");
+      EticaMainGUI.showGeneralErrorNewWallet("Password cannot be empty!");
       return false;
     }
 
     if($("#walletpassword").val() != $("#walletpasswordconf").val()){
-      EticaMainGUI.showGeneralError("Passwords do not match!");
+      EticaMainGUI.showGeneralErrorNewWallet("Passwords do not match!");
       return false;
     }
 
     if (pw != $("#walletpassword").val()){
-      EticaMainGUI.showGeneralError("Error, try again!"); // should never happen but extra security measure in case $("#walletpassword").val() changes value unexpectedly
+      EticaMainGUI.showGeneralErrorNewWallet("Error, try again!"); // should never happen but extra security measure in case $("#walletpassword").val() changes value unexpectedly
       return false;
     }
 
@@ -325,7 +325,7 @@ NewWallet.vector = iv.toString('hex');
             if(!stoploop){
               stoploop == true;
               var newaccount = EticaBlockchain.importFromPrivateKey(pk, pw, function (error) {
-                EticaMainGUI.showGeneralError(error);
+                EticaMainGUI.showGeneralErrorNewWallet(error);
               }, function (account) {
                 if (account) {
 
@@ -338,7 +338,7 @@ NewWallet.vector = iv.toString('hex');
                   window.location.replace('./../../../index.html');
           
                 } else {
-                  EticaMainGUI.showGeneralError("Error importing account from private key!");
+                  EticaMainGUI.showGeneralErrorNewWallet("Error importing account from private key!");
                 }
               });
 
@@ -347,7 +347,7 @@ NewWallet.vector = iv.toString('hex');
           }
         });
       } catch (err) {
-        EticaMainGUI.showGeneralError(err);
+        EticaMainGUI.showGeneralErrorNewWallet(err);
       }
     }, 2000);
     

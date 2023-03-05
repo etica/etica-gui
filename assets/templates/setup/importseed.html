@@ -71,7 +71,7 @@
 <style>
 
 
-#NewMnemonic {
+#NewImportMnemonic {
   display: none;
   border: solid 1px #247365;
   margin-top: 1vh;
@@ -82,7 +82,7 @@
   display: none;
 }
 
-#NewEticaAddress {
+#NewImportEticaAddress {
   display: none;
 }
 
@@ -90,11 +90,11 @@
   display: none;
 }
 
-#InitializeWalletDiv {
+#InitializeImportWalletDiv {
   display: none;
 }
 
-#ResetMnemonicDiv {
+#ResetImportMnemonicDiv {
   display: none;
 }
 
@@ -124,7 +124,7 @@
 }
 
 
-#SetWalletInfoContainer {
+#SetImportWalletInfoContainer {
   display: none;
 } 
 
@@ -166,47 +166,47 @@
           <h1 class="h1-seo">ETICA•</h1>
           <h3>Open Source Wallet</h3>
           <p id="HelperImportMnemonic">Enter a valid mnemonic seed. Etica GUI will generate wallet addresses from the seed. Your seed allows you to restore your wallet from any other computer.</p>
-          <p id="NewMnemonic" style="color:#ffffff;"></p>
-          <p id="NewEticaAddress" style="color:#ffffff;"></p>
+          <p id="NewImportMnemonic" style="color:#ffffff;"></p>
+          <p id="NewImportEticaAddress" style="color:#ffffff;"></p>
           
           <div id="InputMnemonicDiv" class="row">
 
-            <div id="ImportMnemonicpart1" class="mnemonicsparts col-md-12 form-group">
+            <div class="mnemonicsparts col-md-12 form-group">
               <input id="importword1" class="importmnemonicwords form-control" placeholder="word 1" />
               <input id="importword2" class="importmnemonicwords form-control" placeholder="word 2" />
               <input id="importword3" class="importmnemonicwords form-control" placeholder="word 3" />
               <input id="importword4" class="importmnemonicwords form-control" placeholder="word 4" />
             </div>
 
-            <div id="ImportMnemonicpart1" class="mnemonicsparts col-md-12 form-group">
+            <div class="mnemonicsparts col-md-12 form-group">
               <input id="importword5" class="importmnemonicwords form-control" placeholder="word 5" />
               <input id="importword6" class="importmnemonicwords form-control" placeholder="word 6" />
               <input id="importword7" class="importmnemonicwords form-control" placeholder="word 7" />
               <input id="importword8" class="importmnemonicwords form-control" placeholder="word 8" />
             </div>
 
-            <div id="ImportMnemonicpart1" class="mnemonicsparts col-md-12 form-group">
+            <div class="mnemonicsparts col-md-12 form-group">
               <input id="importword9" class="importmnemonicwords form-control" placeholder="word 9" />
               <input id="importword10" class="importmnemonicwords form-control" placeholder="word 10" />
               <input id="importword11" class="importmnemonicwords form-control" placeholder="word 11" />
               <input id="importword12" class="importmnemonicwords form-control" placeholder="word 12" />
             </div>
 
-            <div id="ImportMnemonicpart2" class="mnemonicsparts col-md-12 form-group">
+            <div class="mnemonicsparts col-md-12 form-group">
               <input id="importword13" class="importmnemonicwords form-control" placeholder="word 13"/>
               <input id="importword14" class="importmnemonicwords form-control" placeholder="word 14" />
               <input id="importword15" class="importmnemonicwords form-control" placeholder="word 15" />
               <input id="importword16" class="importmnemonicwords form-control" placeholder="word 16" />
             </div>
 
-            <div id="ImportMnemonicpart2" class="mnemonicsparts col-md-12 form-group">
+            <div class="mnemonicsparts col-md-12 form-group">
               <input id="importword17" class="importmnemonicwords form-control" placeholder="word 17" />
               <input id="importword18" class="importmnemonicwords form-control" placeholder="word 18" />
               <input id="importword19" class="importmnemonicwords form-control" placeholder="word 19" />
               <input id="importword20" class="importmnemonicwords form-control" placeholder="word 20" />
             </div>
 
-            <div id="ImportMnemonicpart2" class="mnemonicsparts col-md-12 form-group">
+            <div class="mnemonicsparts col-md-12 form-group">
               <input id="importword21" class="importmnemonicwords form-control" placeholder="word 21" />
               <input id="importword22" class="importmnemonicwords form-control" placeholder="word 22"/>
               <input id="importword23" class="importmnemonicwords form-control" placeholder="word 23"/>
@@ -218,40 +218,40 @@
           
           <div id="CheckImportMnemonic">
 
-            <div id="Mnemonicpart1" class="mnemonicsparts">
-              <p id="word1" class="mnemonicwords"></p>
-              <p id="word2" class="mnemonicwords"></p>
-              <p id="word3" class="mnemonicwords"></p>
-              <p id="word4" class="mnemonicwords"></p>
-              <p id="word5" class="mnemonicwords"></p>
-              <p id="word6" class="mnemonicwords"></p>
+            <div class="mnemonicsparts">
+              <p id="mnemonicword1" class="mnemonicwords"></p>
+              <p id="mnemonicword2" class="mnemonicwords"></p>
+              <p id="mnemonicword3" class="mnemonicwords"></p>
+              <p id="mnemonicword4" class="mnemonicwords"></p>
+              <p id="mnemonicword5" class="mnemonicwords"></p>
+              <p id="mnemonicword6" class="mnemonicwords"></p>
             </div>
 
-            <div id="Mnemonicpart2" class="mnemonicsparts">
-              <p id="word7" class="mnemonicwords"></p>
-              <p id="word8" class="mnemonicwords"></p>
-              <p id="word9" class="mnemonicwords"></p>
-              <p id="word10" class="mnemonicwords"></p>
-              <p id="word11" class="mnemonicwords"></p>
-              <p id="word12" class="mnemonicwords"></p>
+            <div class="mnemonicsparts">
+              <p id="mnemonicword7" class="mnemonicwords"></p>
+              <p id="mnemonicword8" class="mnemonicwords"></p>
+              <p id="mnemonicword9" class="mnemonicwords"></p>
+              <p id="mnemonicword10" class="mnemonicwords"></p>
+              <p id="mnemonicword11" class="mnemonicwords"></p>
+              <p id="mnemonicword12" class="mnemonicwords"></p>
             </div>
 
-            <div id="Mnemonicpart3" class="mnemonicsparts">
-              <p id="word13" class="mnemonicwords"></p>
-              <p id="word14" class="mnemonicwords"></p>
-              <p id="word15" class="mnemonicwords"></p>
-              <p id="word16" class="mnemonicwords"></p>
-              <p id="word17" class="mnemonicwords"></p>
-              <p id="word18" class="mnemonicwords"></p>
+            <div class="mnemonicsparts">
+              <p id="mnemonicword13" class="mnemonicwords"></p>
+              <p id="mnemonicword14" class="mnemonicwords"></p>
+              <p id="mnemonicword15" class="mnemonicwords"></p>
+              <p id="mnemonicword16" class="mnemonicwords"></p>
+              <p id="mnemonicword17" class="mnemonicwords"></p>
+              <p id="mnemonicword18" class="mnemonicwords"></p>
             </div>
 
-            <div id="Mnemonicpart4" class="mnemonicsparts">
-              <p id="word19" class="mnemonicwords"></p>
-              <p id="word20" class="mnemonicwords"></p>
-              <p id="word21" class="mnemonicwords"></p>
-              <p id="word22" class="mnemonicwords"></p>
-              <p id="word23" class="mnemonicwords"></p>
-              <p id="word24" class="mnemonicwords"></p>
+            <div class="mnemonicsparts">
+              <p id="mnemonicword19" class="mnemonicwords"></p>
+              <p id="mnemonicword20" class="mnemonicwords"></p>
+              <p id="mnemonicword21" class="mnemonicwords"></p>
+              <p id="mnemonicword22" class="mnemonicwords"></p>
+              <p id="mnemonicword23" class="mnemonicwords"></p>
+              <p id="mnemonicword24" class="mnemonicwords"></p>
             </div>
 
           </div>
@@ -260,7 +260,7 @@
         </div>
         <div id="ImportMnemonicDiv" class="row" style="position: absolute;top: 88vh;left: 42%;">
           <div class="col-md-12">
-            <button class="btn btn-primary" id="GenerateMnemonic">Import Seed</button>
+            <button class="btn btn-primary" id="ImportMnemonic">Import Seed</button>
           </div>
         </div>
         <div id="GoCheckImportMnemonicDiv" class="row" style="position: absolute;top: 75vh;left: 43%;">
@@ -268,20 +268,20 @@
             <button class="btn btn-primary" id="GoCheckImportMnemonic">Verify Seed</button>
           </div>
         </div>
-        <div id="ResetMnemonicDiv" class="row" style="position: absolute;top: 77vh;left: 40%;">
+        <div id="ResetImportMnemonicDiv" class="row" style="position: absolute;top: 77vh;left: 40%;">
           <div class="col-md-12">
-            <button class="btn btn-primary" id="ResetMnemonic">Go Back</button>
+            <button class="btn btn-primary" id="ResetImportMnemonic">Go Back</button>
           </div>
         </div>
-        <div id="InitializeWalletDiv" class="row" style="position: absolute;top: 75vh;left: 43%;">
+        <div id="InitializeImportWalletDiv" class="row" style="position: absolute;top: 75vh;left: 43%;">
           <div class="col-md-12">
-            <button class="btn btn-primary" id="InitializeWallet">Initialize Wallet</button>
+            <button class="btn btn-primary" id="InitializeImportWallet">Initialize Wallet</button>
           </div>
         </div>
       </div>
 
 
-      <div class="container" id="SetWalletInfoContainer">
+      <div class="container" id="SetImportWalletInfoContainer">
 
         <div class="content-center brand" style="position: absolute;top: 35%;left: 50%;">
           <h1 class="h1-seo">ETICA•</h1>
@@ -290,7 +290,7 @@
 
         </div>
 
-        <div id="SetWalletInfo" class="row" style="position: absolute;top: 45%;left:11%;width:70%;">
+        <div id="SetImportWalletInfo" class="row" style="position: absolute;top: 45%;left:11%;width:70%;">
 
           <div class="col-sm-12 col-lg-12" style="display: inline-flex;margin-bottom: 1vh;">
           <div class="form-check form-check-radio" style="margin-right: 4%;">
@@ -317,7 +317,7 @@
 
           <div class="col-sm-12 col-lg-12" title="Directory where Blockchain is stored">
             <div class="form-group">
-              <input style="background-color: #141414;" id="blockchaindirectory" type="text" value="" placeholder="Blockchain directory" class="form-control" />
+              <input style="background-color: #141414;" id="importblockchaindirectory" type="text" value="" placeholder="Blockchain directory" class="form-control" />
             </div>
           </div>
   
@@ -345,7 +345,7 @@
           
         </div>
 
-       <!-- <div id="SetWalletInfoAdvanced" class="row" style="position: absolute;top: 55%;left:11%;width:70%;">
+       <!-- <div id="SetImportWalletInfoAdvanced" class="row" style="position: absolute;top: 55%;left:11%;width:70%;">
 
         <div class="col-sm-12 col-lg-12">
           <div class="form-group">
@@ -381,12 +381,12 @@
   </div>
 
 
-  <div id="dlgGeneralError" class="modalDialog" data-izimodal-title="Application Error" data-izimodal-subtitle="Something went wrong, don't kill the fish..." data-izimodal-icon="icon-home">
+  <div id="dlgGeneralErrorImportWallet" class="modalDialog" data-izimodal-title="Application Error" data-izimodal-subtitle="Something went wrong, don't kill the fish..." data-izimodal-icon="icon-home">
     <div class="modalBody">
       <div class="form-group">
-        <span id="txtGeneralError"></span>
+        <span id="txtGeneralErrorImportWallet"></span>
       </div>
-      <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnGeneralErrorOK">OK</button>
+      <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnGeneralErrorImportWalletOK">OK</button>
     </div>
   </div>
 

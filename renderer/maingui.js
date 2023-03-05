@@ -76,6 +76,30 @@ class MainGUI {
     });
   }
 
+  showGeneralErrorNewWallet(errorText) {
+    $("#txtGeneralErrorNewWallet").html(errorText);
+
+    // create and open the dialog
+    $("#dlgGeneralErrorNewWallet").iziModal();
+    $("#dlgGeneralErrorNewWallet").iziModal("open");
+
+    $("#btnGeneralErrorNewWalletOK").click(function () {
+      $("#dlgGeneralErrorNewWallet").iziModal("close");
+    });
+  }
+
+  showGeneralErrorImportWallet(errorText) {
+    $("#txtGeneralErrorImportWallet").html(errorText);
+
+    // create and open the dialog
+    $("#dlgGeneralErrorImportWallet").iziModal();
+    $("#dlgGeneralErrorImportWallet").iziModal("open");
+
+    $("#btnGeneralErrorImportWalletOK").click(function () {
+      $("#dlgGeneralErrorImportWallet").iziModal("close");
+    });
+  }
+
   showGeneralConfirmation(confirmText, callback) {
     $("#txtGeneralConfirm").html(confirmText);
 

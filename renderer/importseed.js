@@ -24,10 +24,10 @@ function ImportNewSeed(){
    imported_mnemonic_array = [];
    user_mnemonic_order_array = [];
 
-   $("#SetWalletInfoContainer").css('display', 'none');
-   $("#ResetMnemonicDiv").css('display', 'none');
+   $("#SetImportWalletInfoContainer").css('display', 'none');
+   $("#ResetImportMnemonicDiv").css('display', 'none');
    $("#GoCheckImportMnemonicDiv").css('display', 'none');
-   $("#NewEticaAddress").css('display', 'none');
+   $("#NewImportEticaAddress").css('display', 'none');
    $("#CheckImportMnemonic").css('display', 'none');
    $("#InputMnemonicDiv").css('display', 'none');  
 
@@ -49,9 +49,9 @@ function ImportNewSeed(){
    $("#InputMnemonicDiv").hide();  
    $("#ImportMnemonicDiv").hide();
    $("#HelperImportMnemonic").html("This mnemonic is invalid.");
-   $("#NewMnemonic").css('display', 'block');
-   $("#NewMnemonic").html(imported_mnemonic);
-   $("#ResetMnemonicDiv").css('display', 'block');
+   $("#NewImportMnemonic").css('display', 'block');
+   $("#NewImportMnemonic").html(imported_mnemonic);
+   $("#ResetImportMnemonicDiv").css('display', 'block');
     return false;
   }
 
@@ -77,7 +77,7 @@ masterSeed = _masterSeed;
  const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
  if (!util.isValidPrivate(privateKeyBuffer)) {
-  EticaMainGUI.showGeneralError("Erroor, Invalid private key!");
+  EticaMainGUI.showGeneralErrorImportWallet("Erroor, Invalid private key!");
   return false;
  }
  
@@ -89,25 +89,25 @@ masterSeed = _masterSeed;
  $("#InputMnemonicDiv").hide();  
  $("#ImportMnemonicDiv").hide();
    $("#HelperImportMnemonic").html("This is your mnemonic (seed). <br> Next screen will ask you to verify the mnemonic");
-   $("#NewMnemonic").css('display', 'block');
+   $("#NewImportMnemonic").css('display', 'block');
    console.log('imported_mnemonic is :::::', imported_mnemonic);
-   $("#NewMnemonic").html(imported_mnemonic);
+   $("#NewImportMnemonic").html(imported_mnemonic);
    $("#GoCheckImportMnemonicDiv").css('display', 'block');
  
-   $("#NewEticaAddress").css('display', 'block');
-   $("#NewEticaAddress").html('Etica address: '+address+'');
+   $("#NewImportEticaAddress").css('display', 'block');
+   $("#NewImportEticaAddress").html('Etica address: '+address+'');
 }
 
 
-$("#InitializeWallet").off("click").on("click", function () {
+$("#InitializeImportWallet").off("click").on("click", function () {
 
   $("#ImportSeedContainer").css('display', 'none');
-  $("#SetWalletInfoContainer").css('display', 'block');
+  $("#SetImportWalletInfoContainer").css('display', 'block');
 
 });
 
 
- $("#GenerateMnemonic").off("click").on("click", function () {
+ $("#ImportMnemonic").off("click").on("click", function () {
 
   ImportNewSeed();
 
@@ -118,9 +118,9 @@ $("#InitializeWallet").off("click").on("click", function () {
 
     $(".mnemonicwords").show();
 
-    $("#NewMnemonic").css('display', 'none');
+    $("#NewImportMnemonic").css('display', 'none');
     $("#GoCheckImportMnemonicDiv").css('display', 'none');
-    $("#NewEticaAddress").css('display', 'none');
+    $("#NewImportEticaAddress").css('display', 'none');
     $("#CheckImportMnemonic").css('display', 'block');
 
     $("#HelperImportMnemonic").html("Select words in right order");
@@ -139,30 +139,30 @@ for (let i = indices.length - 1; i > 0; i--) {
 
 // Rearrange the words according to the shuffled indices
 const reorderedWords = indices.map(index => initialWords[index]);
-$("#word1").html(reorderedWords[0]);
-$("#word2").html(reorderedWords[1]);
-$("#word3").html(reorderedWords[2]);
-$("#word4").html(reorderedWords[3]);
-$("#word5").html(reorderedWords[4]);
-$("#word6").html(reorderedWords[5]);
-$("#word7").html(reorderedWords[6]);
-$("#word8").html(reorderedWords[7]);
-$("#word9").html(reorderedWords[8]);
-$("#word10").html(reorderedWords[9]);
-$("#word11").html(reorderedWords[10]);
-$("#word12").html(reorderedWords[11]);
-$("#word13").html(reorderedWords[12]);
-$("#word14").html(reorderedWords[13]);
-$("#word15").html(reorderedWords[14]);
-$("#word16").html(reorderedWords[15]);
-$("#word17").html(reorderedWords[16]);
-$("#word18").html(reorderedWords[17]);
-$("#word19").html(reorderedWords[18]);
-$("#word20").html(reorderedWords[19]);
-$("#word21").html(reorderedWords[20]);
-$("#word22").html(reorderedWords[21]);
-$("#word23").html(reorderedWords[22]);
-$("#word24").html(reorderedWords[23]);
+$("#mnemonicword1").html(reorderedWords[0]);
+$("#mnemonicword2").html(reorderedWords[1]);
+$("#mnemonicword3").html(reorderedWords[2]);
+$("#mnemonicword4").html(reorderedWords[3]);
+$("#mnemonicword5").html(reorderedWords[4]);
+$("#mnemonicword6").html(reorderedWords[5]);
+$("#mnemonicword7").html(reorderedWords[6]);
+$("#mnemonicword8").html(reorderedWords[7]);
+$("#mnemonicword9").html(reorderedWords[8]);
+$("#mnemonicword10").html(reorderedWords[9]);
+$("#mnemonicword11").html(reorderedWords[10]);
+$("#mnemonicword12").html(reorderedWords[11]);
+$("#mnemonicword13").html(reorderedWords[12]);
+$("#mnemonicword14").html(reorderedWords[13]);
+$("#mnemonicword15").html(reorderedWords[14]);
+$("#mnemonicword16").html(reorderedWords[15]);
+$("#mnemonicword17").html(reorderedWords[16]);
+$("#mnemonicword18").html(reorderedWords[17]);
+$("#mnemonicword19").html(reorderedWords[18]);
+$("#mnemonicword20").html(reorderedWords[19]);
+$("#mnemonicword21").html(reorderedWords[20]);
+$("#mnemonicword22").html(reorderedWords[21]);
+$("#mnemonicword23").html(reorderedWords[22]);
+$("#mnemonicword24").html(reorderedWords[23]);
 
 
   });
@@ -179,13 +179,13 @@ $("#word24").html(reorderedWords[23]);
       if(normalizeString(imported_mnemonic) === normalizeString(usermnemonic)){
        $("#CheckImportMnemonic").css('display', 'none');
        $("#HelperImportMnemonic").html("Your mnemonic is verified. ");
-       $("#InitializeWalletDiv").css('display', 'block');
+       $("#InitializeImportWalletDiv").css('display', 'block');
 
       }
       else {
         console.log('invalidmnemonic');
         $("#HelperImportMnemonic").html("You provided a wrong word order for this mnemonic. Please try again");
-        $("#ResetMnemonicDiv").css('display', 'block');
+        $("#ResetImportMnemonicDiv").css('display', 'block');
       }
 
 
@@ -199,47 +199,47 @@ $("#word24").html(reorderedWords[23]);
     // creates wallet from seed
     let NewWallet = {};
 
-    pw = $("#walletpassword").val();
+    pw = $("#importwalletpassword").val();
     
-    if(!$("#walletname").val()){
-      EticaMainGUI.showGeneralError("Wallet name cannot be empty!");
+    if(!$("#importwalletname").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Wallet name cannot be empty!");
       return false;
     }
 
-    if(!$("#blockchaindirectory").val()){
-      EticaMainGUI.showGeneralError("Blockchain directory name cannot be empty!");
+    if(!$("#importblockchaindirectory").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Blockchain directory name cannot be empty!");
       return false;
     }
 
-    if(!$("#walletdirectory").val()){
-      EticaMainGUI.showGeneralError("Wallet directory name cannot be empty!");
+    if(!$("#importwalletdirectory").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Wallet directory name cannot be empty!");
       return false;
     }
 
     
-    if(!$("#walletpassword").val()){
-      EticaMainGUI.showGeneralError("Password cannot be empty!");
+    if(!$("#importwalletpassword").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Password cannot be empty!");
       return false;
     }
 
-    if($("#walletpassword").val() != $("#walletpasswordconf").val()){
-      EticaMainGUI.showGeneralError("Passwords do not match!");
+    if($("#importwalletpassword").val() != $("#importwalletpasswordconf").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Passwords do not match!");
       return false;
     }
 
-    if (pw != $("#walletpassword").val()){
-      EticaMainGUI.showGeneralError("Error, try again!"); // should never happen but extra security measure in case $("#walletpassword").val() changes value unexpectedly
+    if (pw != $("#importwalletpassword").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Error, try again!"); // should never happen but extra security measure in case $("#importwalletpassword").val() changes value unexpectedly
       return false;
     }
 
-    NewWallet.name = $("#walletname").val();
+    NewWallet.name = $("#importwalletname").val();
     NewWallet.type = $("input[name='wallettype']:checked").val();
     //NewWallet.masteraddress = address; Warning, dont forget to replace by address aftr tests
     NewWallet.masteraddress = address;
     
-    NewWallet.blockchaindirectory = $("#blockchaindirectory").val();
-    NewWallet.keystoredirectory = ''+$("#walletdirectory").val()+'/keystores/'+NewWallet.masteraddress+'/keystore';
-    NewWallet.datadirectory = ''+$("#walletdirectory").val()+'/walletdata/'+NewWallet.masteraddress+'';
+    NewWallet.blockchaindirectory = $("#importblockchaindirectory").val();
+    NewWallet.keystoredirectory = ''+$("#importwalletdirectory").val()+'/keystores/'+NewWallet.masteraddress+'/keystore';
+    NewWallet.datadirectory = ''+$("#importwalletdirectory").val()+'/walletdata/'+NewWallet.masteraddress+'';
 
     /* Used if advanced settings:
     NewWallet.blockchaindirectory = $("#blockchaindirectory").val();
@@ -307,11 +307,9 @@ NewWallet.vector = iv.toString('hex');
 
     InitializeWeb3toImportAccount();
 
-
-
   });
 
-  $("#ResetMnemonic").off("click").on("click", function () {
+  $("#ResetImportMnemonic").off("click").on("click", function () {
 
     imported_mnemonic = '';
     imported_mnemonic_array = '';
@@ -324,12 +322,12 @@ NewWallet.vector = iv.toString('hex');
     $("#InputMnemonicDiv").show();  
     $("#ImportMnemonicDiv").show();
     $("#HelperImportMnemonic").html("Enter a valid mnemonic seed. Etica GUI will generate wallet addresses from the seed. Your seed allows you to restore your wallet from any other computer.");
-    $("#NewMnemonic").html('');
-    $("#NewMnemonic").css('display', 'none');
+    $("#NewImportMnemonic").html('');
+    $("#NewImportMnemonic").css('display', 'none');
     $("#GoCheckImportMnemonicDiv").css('display', 'none');
-    $("#NewEticaAddress").html('');
-    $("#NewEticaAddress").css('display', 'none');
-    $("#ResetMnemonicDiv").css('display', 'none');
+    $("#NewImportEticaAddress").html('');
+    $("#NewImportEticaAddress").css('display', 'none');
+    $("#ResetImportMnemonicDiv").css('display', 'none');
 
   });
 
@@ -350,7 +348,7 @@ NewWallet.vector = iv.toString('hex');
             if(!stoploop){
               stoploop == true;
               var newaccount = EticaBlockchain.importFromPrivateKey(pk, pw, function (error) {
-                EticaMainGUI.showGeneralError(error);
+                EticaMainGUI.showGeneralErrorImportWallet(error);
               }, function (account) {
                 if (account) {
 
@@ -363,7 +361,7 @@ NewWallet.vector = iv.toString('hex');
                   window.location.replace('./../../../index.html');
           
                 } else {
-                  EticaMainGUI.showGeneralError("Error importing account from private key!");
+                  EticaMainGUI.showGeneralErrorImportWallet("Error importing account from private key!");
                 }
               });
 
@@ -372,7 +370,7 @@ NewWallet.vector = iv.toString('hex');
           }
         });
       } catch (err) {
-        EticaMainGUI.showGeneralError(err);
+        EticaMainGUI.showGeneralErrorImportWallet(err);
       }
     }, 2000);
     

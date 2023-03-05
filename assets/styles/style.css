@@ -240,6 +240,14 @@ body.pg-loaded>.inner {
   height: 100px;
 }
 
+#dlgGeneralErrorNewWallet .modalBody {
+  height: 100px;
+}
+
+#dlgGeneralErrorImportWallet .modalBody {
+  height: 100px;
+}
+
 #dlgGeneralConfirm .modalBody {
   height: 100px;
 }
