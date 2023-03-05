@@ -34,12 +34,9 @@ function ImportNewSeed(){
 
    for (let i = 1; i <= 24; i++) {
     imported_mnemonic_array.push($("#importword" + i).val());
-    console.log('$("#word" + i).html() is', $("#word" + i).val());
-    console.log('imported_mnemonic_array is: ', imported_mnemonic_array);
   }
  
   imported_mnemonic = imported_mnemonic_array.join(' ');
-  console.log('imported_mnemonic is -> ', imported_mnemonic);
   //imported_mnemonic = 'tip wear indicate blast novel human october misery fruit yard friend choose message fee luggage gas between absorb ticket shiver fever message mule develop';
  
 
@@ -65,7 +62,6 @@ function ImportNewSeed(){
 
 
 const _masterSeed = seed.toString('hex');
-console.log('_masterSeed is:', _masterSeed);
 masterSeed = _masterSeed;
 
 
@@ -90,10 +86,8 @@ masterSeed = _masterSeed;
  $("#ImportMnemonicDiv").hide();
    $("#HelperImportMnemonic").html("This is your mnemonic (seed). <br> Next screen will ask you to verify the mnemonic");
    $("#NewImportMnemonic").css('display', 'block');
-   console.log('imported_mnemonic is :::::', imported_mnemonic);
    $("#NewImportMnemonic").html(imported_mnemonic);
    $("#GoCheckImportMnemonicDiv").css('display', 'block');
- 
    $("#NewImportEticaAddress").css('display', 'block');
    $("#NewImportEticaAddress").html('Etica address: '+address+'');
 }
@@ -187,8 +181,6 @@ $("#mnemonicword24").html(reorderedWords[23]);
         $("#HelperImportMnemonic").html("You provided a wrong word order for this mnemonic. Please try again");
         $("#ResetImportMnemonicDiv").css('display', 'block');
       }
-
-
     }
 
   });
@@ -254,11 +246,7 @@ $("#mnemonicword24").html(reorderedWords[23]);
 const salt = crypto.randomBytes(16);
 
 // Derive a 256-bit encryption key from the passphrase and salt
-console.log('deriving a 256-bit encryption key from password and salt');
-console.log('pw is', pw);
-console.log('salt is', salt);
 const encryptionKey = crypto.pbkdf2Sync(pw, salt, 100000, 32, 'sha256');
-console.log('encrypting with encryptionKey string format', encryptionKey.toString('hex'));
 
 // Use the encryption key to encrypt the master seeed
 
@@ -267,12 +255,6 @@ const cipherAlgorithm = 'aes-256-cbc';
 const cipher = crypto.createCipheriv(cipherAlgorithm, Buffer.from(encryptionKey), iv);
 let encryptedMasterSeed = cipher.update(masterSeed);
 encryptedMasterSeed = Buffer.concat([encryptedMasterSeed, cipher.final()]);
-
-// Store the encrypted master private key, salt, and initialization vector (iv)
-console.log('Encrypted Master Private Key:', encryptedMasterSeed.toString('hex'));
-console.log('Salt:', salt.toString('hex'));
-console.log('Initialization Vector (iv):', iv.toString('hex'));
-// ENCRYPT Master seed
 
 
 NewWallet.encryptedMaster = encryptedMasterSeed.toString('hex');

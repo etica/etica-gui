@@ -79,104 +79,6 @@ ipcMain.on("getWallet", (event, arg) => {
 });
 
 
-
-/*
-ipcMain.on("getWallets", (event, arg) => {
-  db.find({}).exec(function (err, docs) {
-    ResultData = [];
-
-    for (i = 0; i < Math.min(docs.length, 500); i++) {
-      
-      let _wallet = {
-        "name": docs[i].name,
-        "masteraddress": docs[i].masteraddress,
-        "infos": docs[i].infos,
-        "blockchaindirectory": docs[i].blockchaindirectory,
-        "keystoredirectory": docs[i].keystoredirectory,
-        "datadirectory": docs[i].datadirectory,
-        "enode": docs[i].enode,
-        "type": docs[i].type,
-        "networkid": docs[i].networkid, 
-        "contractaddress": docs[i].contractaddress,
-        "wsport": docs[i].wsport,
-        "wsaddress": docs[i].wsaddress,
-        "port": docs[i].port
-      };
-
-      ResultData.push(
-        _wallet
-      );
-    }
-    // return the proposals data
-    event.returnValue = ResultData;
-  });
-});
-*/
-
-/*
-ipcMain.on('getWallets', (event, arg) => {
-  const wallets = [];
-
-  // Prompt user to select a folder
-  dialog.showOpenDialog({ properties: ['openDirectory'] }).then(async (result) => {
-    if (!result.canceled) {
-      const folderPath = result.filePaths[0];
-
-      // Search for walletsregistry.db in subfolders
-      const searchForFiles = async (dir) => {
-        fs.readdir(dir, { withFileTypes: true }, (err, files) => {
-          if (err) throw err;
-
-          files.forEach(file => {
-            if (file.isDirectory()) {
-              searchForFiles(path.join(dir, file.name));
-            } else if (file.name === 'walletsregistry.db') {
-              const dbPath = path.join(dir, file.name);
-
-              const walletDb = new datastore({ filename: dbPath });
-              walletDb.loadDatabase(function (err) {
-                if (err) throw err;
-
-                walletDb.find({}).exec(function (err, docs) {
-                  if (err) throw err;
-
-                  for (let i = 0; i < docs.length; i++) {
-                    const wallet = {
-                      name: docs[i].name,
-                      masteraddress: docs[i].masteraddress,
-                      infos: docs[i].infos,
-                      blockchaindirectory: docs[i].blockchaindirectory,
-                      keystoredirectory: docs[i].keystoredirectory,
-                      datadirectory: docs[i].datadirectory,
-                      enode: docs[i].enode,
-                      type: docs[i].type,
-                      networkid: docs[i].networkid, 
-                      contractaddress: docs[i].contractaddress,
-                      wsport: docs[i].wsport,
-                      wsaddress: docs[i].wsaddress,
-                      port: docs[i].port
-                    };
-
-                    console.log('found one wallet', wallet);
-                    wallets.push(wallet);
-                  }
-
-                });
-              });
-            }
-          });
-        });
-      };
-
-      await searchForFiles(folderPath);
-      console.log('before call to ScanedFolderWalletsFound, wallets are::::!', wallets);
-      event.reply("ScanedFolderWalletsFound", wallets);
-      
-    }
-  });
-}); */
-
-
 ipcMain.on('getWallets', async (event, arg) => {
   const wallets = [];
 
@@ -227,7 +129,6 @@ ipcMain.on('getWallets', async (event, arg) => {
               port: doc.port
             };
 
-            console.log('found one wallet', wallet);
             wallets.push(wallet);
           }
         }
@@ -235,7 +136,6 @@ ipcMain.on('getWallets', async (event, arg) => {
     };
 
     await searchForFiles(folderPath);
-    console.log('before call to ScanedFolderWalletsFound, wallets are:', wallets);
     event.reply("ScanedFolderWalletsFound", wallets);
   }
 });
