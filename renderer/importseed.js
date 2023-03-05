@@ -48,7 +48,7 @@ function ImportNewSeed(){
   } else {
    $("#InputMnemonicDiv").hide();  
    $("#ImportMnemonicDiv").hide();
-   $("#HelperMnemonic").html("This mnemonic is invalid.");
+   $("#HelperImportMnemonic").html("This mnemonic is invalid.");
    $("#NewMnemonic").css('display', 'block');
    $("#NewMnemonic").html(imported_mnemonic);
    $("#ResetMnemonicDiv").css('display', 'block');
@@ -88,7 +88,7 @@ masterSeed = _masterSeed;
  
  $("#InputMnemonicDiv").hide();  
  $("#ImportMnemonicDiv").hide();
-   $("#HelperMnemonic").html("This is your mnemonic (seed). <br> Next screen will ask you to verify the mnemonic");
+   $("#HelperImportMnemonic").html("This is your mnemonic (seed). <br> Next screen will ask you to verify the mnemonic");
    $("#NewMnemonic").css('display', 'block');
    console.log('imported_mnemonic is :::::', imported_mnemonic);
    $("#NewMnemonic").html(imported_mnemonic);
@@ -123,7 +123,7 @@ $("#InitializeWallet").off("click").on("click", function () {
     $("#NewEticaAddress").css('display', 'none');
     $("#CheckImportMnemonic").css('display', 'block');
 
-    $("#HelperMnemonic").html("Select words in right order");
+    $("#HelperImportMnemonic").html("Select words in right order");
 
     // extract words:
 
@@ -178,13 +178,13 @@ $("#word24").html(reorderedWords[23]);
 
       if(normalizeString(imported_mnemonic) === normalizeString(usermnemonic)){
        $("#CheckImportMnemonic").css('display', 'none');
-       $("#HelperMnemonic").html("Your mnemonic is verified. ");
+       $("#HelperImportMnemonic").html("Your mnemonic is verified. ");
        $("#InitializeWalletDiv").css('display', 'block');
 
       }
       else {
         console.log('invalidmnemonic');
-        $("#HelperMnemonic").html("You provided a wrong word order for this mnemonic. Please try again");
+        $("#HelperImportMnemonic").html("You provided a wrong word order for this mnemonic. Please try again");
         $("#ResetMnemonicDiv").css('display', 'block');
       }
 
@@ -323,7 +323,7 @@ NewWallet.vector = iv.toString('hex');
 
     $("#InputMnemonicDiv").show();  
     $("#ImportMnemonicDiv").show();
-    $("#HelperMnemonic").html("Enter a valid mnemonic seed. Etica GUI will generate wallet addresses from the seed. Your seed allows you to restore your wallet from any other computer.");
+    $("#HelperImportMnemonic").html("Enter a valid mnemonic seed. Etica GUI will generate wallet addresses from the seed. Your seed allows you to restore your wallet from any other computer.");
     $("#NewMnemonic").html('');
     $("#NewMnemonic").css('display', 'none');
     $("#GoCheckImportMnemonicDiv").css('display', 'none');
