@@ -39,49 +39,12 @@ let walletFolderPath;
     $("#checkeddirectorymsg").html(_directorymsg);
 
     // if directory verified and write user password, set all ds to walletdirectory and launch geth, then relocate to index.html:
-    //let setwalletdirectory = ipcRenderer.sendSync("setWalletDataDbPath", {walletFilePath: walletFilePath});
+    //let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", walletFilePath);
     //ipcResult = ipcRenderer.send("startGeth", wallet);
   });
 
   $("#selectWalletFolder").off("click").on("click", function () {
     let selectwallet = ipcRenderer.sendSync("selectWalletFolder");
-  });
-
-
-  $(".onewalletli").off("click").on("click", function () {
-    console.log('clicked on wallet name');
-    var walletAddress = $(this).attr("data-address");
-
-    console.log('getting wallet with walletAddress:', walletAddress);
-
-    let wallet = ipcRenderer.sendSync("getWallet", {masteraddress: walletAddress});
-    console.log('wallets found is:', wallet);
-
-    let setwalletdirectory = ipcRenderer.sendSync("setWalletDataDbPath", {walletFilePath: wallet.datadirectory});
-    let ipcResult = ipcRenderer.send("startGeth", wallet);
-    window.location.replace('./../../../index.html');
-
-
-    // use if connection with password, check unlock wallet with password before launching wallet:
-    function doLaunchWallet() {
-      
-
-// if directory verified and write user password, set all ds to walletdirectory and launch geth, then relocate to index.html:
-    //let setwalletdirectory = ipcRenderer.sendSync("setWalletDataDbPath", {walletFilePath: walletFilePath});
-    //ipcResult = ipcRenderer.send("startGeth", wallet);
-
-
-    }
-
-    $("#btnChangeAddressNameConfirm").off("click").on("click", function () {
-      LaunchWallet();
-    });
-
-    $("#dlgChangeAddressName").off("keypress").on("keypress", function (e) {
-      if (e.which == 13) {
-        LaunchWallet();
-      }
-    });
   });
 
 
@@ -112,7 +75,7 @@ let walletFolderPath;
 // Add event listeners to each <a> element
 links.forEach(link => {
   link.addEventListener("click", function() {
-    testone(this.getAttribute("data-address"));
+    launchwallet(this.getAttribute("data-address"));
   });
 });
 
@@ -122,18 +85,10 @@ links.forEach(link => {
 
   }
 
-  function testone(i){
-    console.log('testone called');
-    console.log('testone called with address', i);
+  function launchwallet(i){
 
-    console.log('clicked on wallet name');
     var walletAddress = i;
-
-    console.log('getting wallet with walletAddress:', walletAddress);
-
     let wallet = ipcRenderer.sendSync("getWallet", {masteraddress: walletAddress});
-    console.log('wallets found is:', wallet);
-
     let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", wallet.datadirectory);
     let ipcResult = ipcRenderer.send("startGeth", wallet);
     window.location.replace('./index.html');
@@ -158,7 +113,6 @@ links.forEach(link => {
     // Do something with the walletFilePath, such as load the wallet data
 
     console.log("walletFolderPath is updating");
-
     walletFolderPath = _walletFolderPath;
     console.log("walletFolderPath is now:", _walletFolderPath);
     ScanDirforWallets();

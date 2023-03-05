@@ -233,7 +233,7 @@ $("#mnemonicword24").html(reorderedWords[23]);
     }
 
     NewWallet.name = $("#importwalletname").val();
-    NewWallet.type = $("input[name='wallettype']:checked").val();
+    NewWallet.type = $("input[name='importwallettype']:checked").val();
     //NewWallet.masteraddress = address; Warning, dont forget to replace by address aftr tests
     NewWallet.masteraddress = address;
     
@@ -298,6 +298,9 @@ NewWallet.vector = iv.toString('hex');
     NewWallet.port = "30317";
 
     }
+
+
+    let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", NewWallet.datadirectory);
 
     ipcRenderer.send("storeWallet", NewWallet);    
 

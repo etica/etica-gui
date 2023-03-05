@@ -291,14 +291,10 @@ NewWallet.vector = iv.toString('hex');
     }
 
     ipcRenderer.send("storeWallet", NewWallet);    
-
     let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: NewWallet.masteraddress});
-
+    let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", NewWallet.datadirectory);
     ipcResult = ipcRenderer.send("startGeth", _wallet);
-
     InitializeWeb3toImportAccount();
-
-
 
   });
 
