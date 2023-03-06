@@ -669,3 +669,16 @@ div.noAddressWrapper {
 #addrQRCode {
   text-align: center;
 }
+
+
+#settingsactions {
+  display: none;
+}
+
+#settingsadvanced {
+  display: none;
+}
+
+#settingsdirectories {
+  display: none;
+}

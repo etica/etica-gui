@@ -146,6 +146,44 @@ $(document).on("render_settings", async function () {
   });
 
 
+  // SETTINGS MENU
+  $("#gosettingsactions").off("click").on("click", function () {
+    
+    $("#settingsactions").css("display", "block");
+    $("#settingsmain").css("display", "none");
+    $("#settingsdirectories").css("display", "none");
+    $("#settingsadvanced").css("display", "none");
+
+  });
+
+  $("#gosettingsmain").off("click").on("click", function () {
+    
+    $("#settingsactions").css("display", "none");
+    $("#settingsmain").css("display", "block");
+    $("#settingsdirectories").css("display", "none");
+    $("#settingsadvanced").css("display", "none");
+
+  });
+
+  $("#gosettingsdirectories").off("click").on("click", function () {
+    
+    $("#settingsactions").css("display", "none");
+    $("#settingsmain").css("display", "none");
+    $("#settingsdirectories").css("display", "block");
+    $("#settingsadvanced").css("display", "none");
+
+  });
+
+  $("#gosettingsadvanced").off("click").on("click", function () {
+    
+    $("#settingsactions").css("display", "none");
+    $("#settingsmain").css("display", "none");
+    $("#settingsdirectories").css("display", "none");
+    $("#settingsadvanced").css("display", "block");
+
+  });
+
+
 });
 
 // create new settings variable

@@ -15,15 +15,19 @@
 
    <div style="text-align: center;">
     <div class="card-panel" style="display:inline-flex;background-color: #060708;">
-        <div class="cleanWrapper">
+        <div id="gosettingsmain" class="cleanWrapper">
            
-            <span class="cleanText" style="cursor: pointer;">Wallet Settings</span>
+            <span class="cleanText" style="cursor: pointer;">Main Settings</span>
         </div>
-        <div class="cleanWrapper">
+        <div id="gosettingsactions" class="cleanWrapper">
          
             <span class="cleanText" style="cursor: pointer;">Actions</span>
         </div>
-        <div class="cleanWrapper">
+        <div id="gosettingsdirectories" class="cleanWrapper">
+      
+          <span class="cleanText" style="cursor: pointer;">Directories</span>
+       </div>
+        <div id="gosettingsadvanced" class="cleanWrapper">
       
            <span class="cleanText" style="cursor: pointer;">Advanced</span>
         </div>
@@ -34,7 +38,9 @@
 
 
   <div class="settingsWrapper">
-    <div class="card-panel" style="display: none;">
+    
+    
+    <div id="settingsactions" class="card-panel" style="display: none;">
         <div class="cleanWrapper">
             <button type="button" class="btn btn-etica btnSettingsClean" id="btnSettingsCleanTransactions"><i class="far fa-trash-alt"></i></button>
             <span class="cleanText">Clean transactions data</span>
@@ -53,7 +59,44 @@
       </div>
     </div>
 
-  <div class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
+  
+  
+    <div id="settingsmain" class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
+      <form class="col s12">
+  
+        <span>Type: </span>
+        <div class="row" style="margin-bottom: 0;margin-top: 2vh;">
+          <div class="input-field col s12">
+            <input id="createProposalDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="opok kp okp" style="color: #ffffff;">
+            <label for="createProposalDiseaseHash" class="active">Wallet Name:</label>
+          </div>
+          <div class="input-field col s6">
+            <input id="createProposalChunkId" class="" placeholder="Enter chunk id (optional)" type="text" value="61803" style="color: #ffffff;" disabled>
+            <label for="createProposalChunkId" class="active" style="color:#9e9e9e;">Network ID:</label>
+          </div>
+        </div>
+        <div class="row" style="margin-bottom: 0;">
+          <div class="input-field col s6">
+            <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="0x34c61EA91bAcdA647269d4e310A86b875c09946f" style="color: #ffffff;" disabled>
+            <label for="createProposalTitle" class="active" style="color:#9e9e9e;">Etica Smart Contract:</label>
+          </div>
+        </div>
+        <div class="row" style="margin-bottom: 0;">
+          <div class="input-field col s6">
+            <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="" style="color: #ffffff;">
+            <label for="createProposalTitle" class="active">Keystore directory:</label>
+          </div>
+        </div>
+        <div class="row" style="margin-top: 0;margin-bottom: 0;">
+          <div class="input-field col s12">
+            <button type="button" class="button4 MarginRight5" id="btnCreateProposal">Update Wallet</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  
+  
+    <div id="settingsdirectories" class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
     <form class="col s12">
 
       <span>Type: </span>
@@ -87,7 +130,7 @@
     </form>
   </div>
 
-  <div class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
+  <div id="settingsadvanced" class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
     <form class="col s12">
 
       <span>Type: </span>
