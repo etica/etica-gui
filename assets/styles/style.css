@@ -430,9 +430,13 @@ div.sidebar svg {
   margin-bottom: 0 !important;
 }
 
-.sendWrapper,
+.sendWrapper {
+  padding: 30px;
+}
+
 .settingsWrapper {
   padding: 30px;
+  padding-top: unset;
 }
 
 #sendMaxAmmount {
