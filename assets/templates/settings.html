@@ -63,44 +63,51 @@
   <div class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
       <form class="col s12">
   
-        <span style="color:#55a362;">Wallet Type: Mainnet</span>
-        <span style="color: #46a92e;position:absolute;right:10%;">Master address: 0xioovhuehu1e565161e6</span>
+        <span style="color:#55a362;">Wallet Type: {{ wallet.type }}</span>
+        <span style="color:#8476ffe3;">Wallet Type: {{ wallet.type }}</span>
+        <span style="color: #856c53;position:absolute;right:5%;">Master address: {{ wallet.masteraddress }}</span>
         <div class="row" style="margin-bottom: 0;margin-top: 2vh;">
-          <div class="input-field col s12">
-            <input id="createProposalDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="opok kp okp" style="color: #ffffff;">
-            <label for="createProposalDiseaseHash" class="active">Wallet Name:</label>
+          <div class="input-field col s7">
+            <input id="settingsWalletName" class="" placeholder="Enter wallet name" type="text" value="{{ wallet.name }}" style="color: #ffffff;">
+            <label for="settingsWalletName" class="active">Wallet Name:</label>
           </div>
           <div class="input-field col s6">
-            <input id="createProposalChunkId" class="" placeholder="Enter chunk id (optional)" type="text" value="61803" style="color: #ffffff;" disabled>
-            <label for="createProposalChunkId" class="active" style="color:#9e9e9e;">Network ID:</label>
+            <input class="" placeholder="Enter network ID" type="text" value="{{ wallet.networkid }}" style="color: #ffffff;" disabled>
+            <label class="active" style="color:#9e9e9e;">Network ID:</label>
           </div>
         </div>
         <div class="row" style="margin-bottom: 0;">
           <div class="input-field col s7">
-            <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="0x34c61EA91bAcdA647269d4e310A86b875c09946f" style="color: #ffffff;" disabled>
-            <label for="createProposalTitle" class="active" style="color:#9e9e9e;">Etica Smart Contract:</label>
+            <input class="" placeholder="Enter Etica Smart contract address" type="text" value="{{ wallet.contractaddress }}" style="color: #ffffff;" disabled>
+            <label class="active" style="color:#9e9e9e;">Etica Smart Contract:</label>
           </div>
 
           <div class="input-field col s6" id="commitVoteChoice">
             <div>
-              <label for="commitVoteChoice" class="active">Unlock wallet on start:</label> <br><br>
-              <input class="approvalchoiceradio" type="radio" id="commitVoteApprovalChoice" name="commitchoice" value="true">
-              <label class="approvalchoicelabel" for="commitVoteApprovalChoice">Yes</label>
-  
-              <input class="approvalchoiceradio" type="radio" id="commitVoteDisapprovalChoice" name="commitchoice" value="false">
-              <label class="approvalchoicelabel" for="commitVoteDisapprovalChoice">No</label>
+              <label for="commitVoteChoice" class="active">Allow auto unlock wallet:</label> <br><br>
+              {{#if wallet.autounlock}}
+              <input class="approvalchoiceradio" type="radio" id="unlockChoiceYes" name="unlockchoice" value="true" checked>
+              <label class="approvalchoicelabel" for="unlockChoiceYes">Yes</label>
+              <input class="approvalchoiceradio" type="radio" id="unlockChoiceNo" name="unlockchoice" value="false">
+              <label class="approvalchoicelabel" for="unlockChoiceNo">No</label>
+              {{else}}
+              <input class="approvalchoiceradio" type="radio" id="unlockChoiceYes" name="unlockchoice" value="true">
+              <label class="approvalchoicelabel" for="unlockChoiceYes">Yes</label>
+              <input class="approvalchoiceradio" type="radio" id="unlockChoiceNo" name="unlockchoice" value="false" checked>
+              <label class="approvalchoicelabel" for="unlockChoiceNo">No</label>
+              {{/if}}
             </div>
          </div>
   
          <div class="input-field col s6">
-          <input id="createProposalTitle" class="" placeholder="Enter time the wallet remains unlocked (mins)" type="text" value="10" style="color: #ffffff;">
+          <input id="createProposalTitle" class="" placeholder="Enter time the wallet remains unlocked (mins)" type="text" value="{{ wallet.unlocktime }}" style="color: #ffffff;">
           <label for="createProposalTitle" class="active">Unlock duration (mins):</label>
         </div>
 
         </div>
         <div class="row" style="margin-top: 0;margin-bottom: 0;">
           <div class="input-field col s12">
-            <button type="button" class="button4 MarginRight5" id="btnCreateProposal">Update</button>
+            <button type="button" class="button4 MarginRight5" id="btnUpdateMainSettings">Update</button>
           </div>
         </div>
       </form>
@@ -109,22 +116,23 @@
   
 
   <div id="settingsdirectories">
-    <h6>Directoriess Settings</h6>
+    <h6>Directories Settings</h6>
+    <p style="color:red;">Warning, changes these paths could corrupt your wallet and create issues. <br> Only change one of these paths if you are forced to change the location of a folder on your system.</p>
     <div class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
     <form class="col s12">
       <div class="row" style="margin-bottom: 0;margin-top: 2vh;">
         <div class="input-field col s12">
-          <input id="createProposalDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="D:/ioajooija/datdrpzo" style="color: #ffffff;">
+          <input id="createProposalDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="{{ wallet.blockchaindirectory }}" style="color: #ffffff;">
           <label for="createProposalDiseaseHash" class="active">Blockchain directory:</label>
         </div>
-        <div class="input-field col s6">
-          <input id="createProposalChunkId" class="" placeholder="Enter chunk id (optional)" type="text" value="d:/isoj/zuihiz" style="color: #ffffff;">
+        <div class="input-field col s12">
+          <input id="createProposalChunkId" class="" placeholder="Enter chunk id (optional)" type="text" value="{{ wallet.datadirectory }}" style="color: #ffffff;">
           <label for="createProposalChunkId" class="active" style="color:#9e9e9e;">Wallet directory:</label>
         </div>
       </div>
       <div class="row" style="margin-bottom: 0;">
-        <div class="input-field col s6">
-          <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="D:/ioajooija/datdrpzo/pzokj/sjcius/gvqsdcoij" style="color: #ffffff;" disabled>
+        <div class="input-field col s12">
+          <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="{{ wallet.keystoredirectory }}" style="color: #ffffff;">
           <label for="createProposalTitle" class="active" style="color:#9e9e9e;">Keystore directory:</label>
         </div>
       </div>
@@ -144,19 +152,19 @@
     <form class="col s12">
       <div class="row" style="margin-bottom: 0;margin-top: 2vh;">
           <div class="input-field col s7">
-            <input id="createProposalTitle" class="" placeholder="port (node port)" type="text" value="30317" style="color: #ffffff;">
+            <input id="createProposalTitle" class="" placeholder="port (node port)" type="text" value="{{ wallet.port }}" style="color: #ffffff;">
             <label for="createProposalTitle" class="active">--port:</label>
           </div>
         <div class="input-field col s7">
-          <input id="createProposalDiseaseHash" class="" placeholder="ws port (node websocket port)" type="text" value="8551" style="color: #ffffff;">
+          <input id="createProposalDiseaseHash" class="" placeholder="ws port (node websocket port)" type="text" value="{{ wallet.wsport }}" style="color: #ffffff;">
           <label for="createProposalDiseaseHash" class="active">--ws.port:</label>
         </div>
         <div class="input-field col s7">
-          <input id="createProposalChunkId" class="" placeholder="ws address (node websocket address)" type="text" value="127.0.0.1" style="color: #ffffff;">
+          <input id="createProposalChunkId" class="" placeholder="ws address (node websocket address)" type="text" value="{{ wallet.wsaddress }}" style="color: #ffffff;">
           <label for="createProposalChunkId" class="active">--ws.addr:</label>
         </div>
         <div class="input-field col s12">
-          <input id="createProposalTitle" class="" placeholder="Enter the enode to connect to when wallet node starts" type="text" value="enode://bk5622fede894f1a37b2035a34b97f32fb31ddd93ae822b603c56b7f17cfb189631ea2ef17bfbed904f8bc564765634f2d9db0a128835178c8af9f1dde68efdetrugg48@159.167.45.158:99999" style="color: #ffffff;">
+          <input id="createProposalTitle" class="" placeholder="Enter the enode to connect to when wallet node starts" type="text" value="{{ wallet.enode }}" style="color: #ffffff;">
           <label for="createProposalTitle" class="active">Enode:</label>
         </div>
       </div>

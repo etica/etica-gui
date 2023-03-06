@@ -97,9 +97,9 @@ body.pg-loaded>.inner {
 }
 
 #iconCloseWallet {
-  width: 17px;
+  width: 15px;
   position: absolute;
-  bottom: 0.7vh;
+  bottom: 0.3vh;
   right: 4%;
   cursor: pointer;
 }

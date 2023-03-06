@@ -274,25 +274,36 @@ NewWallet.vector = iv.toString('hex');
 
     if(NewWallet.type == 'mainnet'){
       // set mainnet values
-      NewWallet.enode = '';
-      NewWallet.networkid = "";
+      NewWallet.enode = 'enode://b0e97d2f1a37b2035a34b97f32fb31ddd93ae822b603c56b7f17cfb189631ea2ef17bfbed904f8bc564765634f2d9db0a128835178c8af9f1dde68ee6b5e2bf7@167.172.47.195:30303';
+      NewWallet.networkid = "61803";
       NewWallet.wsport = "8551";
       NewWallet.wsaddress =  "127.0.0.1";
       NewWallet.port = "30317";
+      NewWallet.contractaddress = "0x34c61EA91bAcdA647269d4e310A86b875c09946f";
     }
     else {
      // Testnet values entered by user
-     NewWallet.enode = 'enode://56427938056c62a4a3f3bd1d7411e590ed8667e69712d3eb7474293f0bbf94aa4c1d11cb3a8b6ce0a86c31c4a6b1048796eaa8afb984b66be4990a10cf1dc9e7@127.0.0.1:30303';
-    NewWallet.networkid = "686970";
-    NewWallet.wsport = "8551";
-    NewWallet.wsaddress =  "127.0.0.1";
-    NewWallet.port = "30317";
-
+    if($("#ImportWalletTestnetNetworkId").val() == "61803"){
+      EticaMainGUI.showGeneralErrorImportWallet("Error, NetworkId can't be equal to mainnet NetworkId (61803) for a Testnet wallet!");
+      return false;
     }
+    else{
+      NewWallet.enode = 'enode://56427938056c62a4a3f3bd1d7411e590ed8667e69712d3eb7474293f0bbf94aa4c1d11cb3a8b6ce0a86c31c4a6b1048796eaa8afb984b66be4990a10cf1dc9e7@127.0.0.1:30303'; //$("#WalletTestnetEnode").val();
+      NewWallet.networkid = '686970'; // $("#WalletTestnetNetworkId").val();
+      NewWallet.wsport = "8551";
+      NewWallet.wsaddress =  "127.0.0.1";
+      NewWallet.port = "30317";
+      NewWallet.contractaddress = "0x3856a409F8B7488AFAd37A00Ee4aF876cEdAF1cF"; // $("#WalletTestnetContractAddress").val();
+    }
+    }
+
+    NewWallet.autounlock = true; // wallet set to autounlock by default
+    NewWallet.unlocktime = 10 * 60; // 10 minutes (in seconds) 
+
+    let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", NewWallet.datadirectory);
 
     ipcRenderer.send("storeWallet", NewWallet);    
     let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: NewWallet.masteraddress});
-    let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", NewWallet.datadirectory);
     ipcResult = ipcRenderer.send("startGeth", _wallet);
     InitializeWeb3toImportAccount();
 

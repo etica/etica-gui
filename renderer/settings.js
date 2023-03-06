@@ -2,13 +2,26 @@
 const {ipcRenderer} = require("electron");
 
 class Settings {
-  constructor() {}
+  constructor() {
+    this.runningwallet = {};
+  }
+
+  Setrunningwallet(_wallet) {
+    this.runningwallet = _wallet;
+  } 
+
+  Getrunningwallet(_wallet) {
+    return this.runningwallet;
+  } 
 
   renderSettingsState() {
     EticaBlockchain.getAccountsData(function (error) {
       EticaMainGUI.showGeneralError(error);
     }, function (data) {
-      console.log('data from settings is', data);
+
+      let _wallet = ipcRenderer.sendSync("getRunningWallet");
+      data.wallet = _wallet;
+      EticaWallets.Setrunningwallet(_wallet);
       EticaMainGUI.renderTemplate("settings.html", data);
     $(document).trigger("render_settings");
     });
@@ -142,6 +155,53 @@ $(document).on("render_settings", async function () {
     
     // move to setup:
     window.location.replace('./setup.html');
+
+  });
+
+
+  $("#btnUpdateMainSettings").off("click").on("click", function () {
+
+    console.log('btnUpdateMainSetting called');
+    let NewWallet = {};
+    NewWallet.masteraddress = EticaWallets.Getrunningwallet().masteraddress;
+
+    // Wallet name:
+    if($("#settingsWalletName").val() != ''){
+      NewWallet.name = $("#settingsWalletName").val();
+    }
+
+
+    // Wallet unlock choice:
+    let unlock_choice = null;
+    if (document.getElementById('unlockChoiceYes').checked && !document.getElementById('unlockChoiceNo').checked) {
+      unlock_choice = true;
+    }
+    if (!document.getElementById('unlockChoiceYes').checked && document.getElementById('unlockChoiceNo').checked) {
+      unlock_choice = false;
+    }
+
+    // if vote choice is not true or false it means there was an issue getting the vote choice from interface, we abort:
+    if(unlock_choice != true && unlock_choice != false){
+      EticaMainGUI.showGeneralError('Please select an option to allow or disallow Auto Unlock of wallet');
+      return;
+    }
+    NewWallet.autounlock = unlock_choice;
+
+
+    // Wallet unlocktime:
+    const minutes = Number($("#unlockTime").val());
+    if (!isNaN(minutes)) {
+      // Convert the minutes to seconds
+      const seconds = minutes * 60;
+      NewWallet.unlocktime = seconds; 
+    }
+    else {
+      NewWallet.unlocktime = 0;
+    }
+
+    console.log('NewWallet is ::: ', NewWallet);
+    ipcRenderer.send("updateWalletMainSettings", NewWallet); 
+
 
   });
 

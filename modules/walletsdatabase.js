@@ -51,8 +51,8 @@ ipcMain.on("setWalletDataDbPath", (event, arg) => {
 
 ipcMain.on("storeWallet", (event, arg) => {
   db.update({
-    name: arg.name
-  }, {$set:{ name: arg.name, masteraddress: arg.masteraddress, infos: arg.infos, type:arg.type, blockchaindirectory: arg.blockchaindirectory, keystoredirectory: arg.keystoredirectory, datadirectory: arg.datadirectory, enode: arg.enode, type:arg.type, networkid: arg.networkid, contractaddress: arg.contractaddress, wsport: arg.wsport, wsaddress: arg.wsaddress, port: arg.port, encryptedMaster: arg.encryptedMaster, salt: arg.salt, vector: arg.vector}}, {
+    masteraddress: arg.masteraddress
+  }, {$set:{ name: arg.name, masteraddress: arg.masteraddress, infos: arg.infos, type:arg.type, blockchaindirectory: arg.blockchaindirectory, keystoredirectory: arg.keystoredirectory, datadirectory: arg.datadirectory, enode: arg.enode, networkid: arg.networkid, contractaddress: arg.contractaddress, wsport: arg.wsport, wsaddress: arg.wsaddress, port: arg.port, encryptedMaster: arg.encryptedMaster, salt: arg.salt, vector: arg.vector, autounlock: arg.autounlock, unlocktime: arg.unlocktime}}, {
     upsert: true
   }, function (err, numReplaced, upsert) {
     // do nothing for now
@@ -61,8 +61,43 @@ ipcMain.on("storeWallet", (event, arg) => {
 
 ipcMain.on("updateWallet", (event, arg) => {
   db.update({
-    name: arg.name
-  }, {$set:{ name: arg.name, masteraddress: arg.masteraddress, infos: arg.infos, type:arg.type, blockchaindirectory: arg.blockchaindirectory, keystoredirectory: arg.keystoredirectory, datadirectory: arg.datadirectory, enode: arg.enode, type:arg.type, networkid: arg.networkid, contractaddress: arg.contractaddress, wsport: arg.wsport, wsaddress: arg.wsaddress, port: arg.port, encryptedMaster: arg.encryptedMaster, salt: arg.salt, vector: arg.vector}}, {
+    masteraddress: arg.masteraddress
+  }, {$set:{ name: arg.name, masteraddress: arg.masteraddress, infos: arg.infos, type:arg.type, blockchaindirectory: arg.blockchaindirectory, keystoredirectory: arg.keystoredirectory, datadirectory: arg.datadirectory, enode: arg.enode, networkid: arg.networkid, contractaddress: arg.contractaddress, wsport: arg.wsport, wsaddress: arg.wsaddress, port: arg.port, encryptedMaster: arg.encryptedMaster, salt: arg.salt, vector: arg.vector, autounlock: arg.autounlock, unlocktime: arg.unlocktime}}, {
+    upsert: false
+  }, function (err, numReplaced, upsert) {
+    // do nothing for now
+  });
+});
+
+
+// Wallet Main Settings:
+ipcMain.on("updateWalletMainSettings", (event, arg) => {
+  db.update({
+    masteraddress: arg.masteraddress
+  }, {$set:{ name: arg.name, autounlock: arg.autounlock, unlocktime: arg.unlocktime}}, {
+    upsert: false
+  }, function (err, numReplaced, upsert) {
+    // do nothing for now
+  });
+});
+
+
+// Wallet Direcotries:
+ipcMain.on("updateWalletDirectories", (event, arg) => {
+  db.update({
+    masteraddress: arg.masteraddress
+  }, {$set:{ blockchaindirectory: arg.blockchaindirectory, keystoredirectory: arg.keystoredirectory, datadirectory: arg.datadirectory}}, {
+    upsert: false
+  }, function (err, numReplaced, upsert) {
+    // do nothing for now
+  });
+});
+
+
+ipcMain.on("updateWalletAdvanced", (event, arg) => {
+  db.update({
+    masteraddress: arg.masteraddress
+  }, {$set:{ enode: arg.enode, wsport: arg.wsport, wsaddress: arg.wsaddress, port: arg.port}}, {
     upsert: false
   }, function (err, numReplaced, upsert) {
     // do nothing for now
@@ -127,7 +162,9 @@ ipcMain.on('getWallets', async (event, arg) => {
               contractaddress: doc.contractaddress,
               wsport: doc.wsport,
               wsaddress: doc.wsaddress,
-              port: doc.port
+              port: doc.port,
+              autounlock: doc.autounlock,
+              unlocktime: doc.unlocktime
             };
 
             wallets.push(wallet);
