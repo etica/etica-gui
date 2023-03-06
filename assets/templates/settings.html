@@ -15,22 +15,18 @@
 
    <div style="text-align: center;">
     <div class="card-panel" style="display:inline-flex;background-color: #060708;">
-        <div id="gosettingsmain" class="cleanWrapper">
-           
+        <div id="gosettingsmain" class="cleanWrapper">         
             <span class="cleanText" style="cursor: pointer;">Main Settings</span>
         </div>
-        <div id="gosettingsactions" class="cleanWrapper">
-         
-            <span class="cleanText" style="cursor: pointer;">Actions</span>
-        </div>
-        <div id="gosettingsdirectories" class="cleanWrapper">
-      
+        <div id="gosettingsdirectories" class="cleanWrapper">   
           <span class="cleanText" style="cursor: pointer;">Directories</span>
        </div>
-        <div id="gosettingsadvanced" class="cleanWrapper">
-      
+        <div id="gosettingsadvanced" class="cleanWrapper">    
            <span class="cleanText" style="cursor: pointer;">Advanced</span>
         </div>
+        <div id="gosettingsactions" class="cleanWrapper">
+          <span class="cleanText" style="cursor: pointer;">Actions</span>
+      </div>
     </div>
    </div> 
 
@@ -39,8 +35,9 @@
 
   <div class="settingsWrapper">
     
-    
-    <div id="settingsactions" class="card-panel" style="display: none;">
+    <div id="settingsactions">
+      <h6>Actions</h6>
+    <div class="card-panel">
         <div class="cleanWrapper">
             <button type="button" class="btn btn-etica btnSettingsClean" id="btnSettingsCleanTransactions"><i class="far fa-trash-alt"></i></button>
             <span class="cleanText">Clean transactions data</span>
@@ -58,13 +55,16 @@
           <span class="cleanText">Close Wallet</span>
       </div>
     </div>
-
+  </div>
   
   
-    <div id="settingsmain" class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
+  <div id="settingsmain">
+    <h6>Main Settings</h6>  
+  <div class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
       <form class="col s12">
   
-        <span>Type: </span>
+        <span style="color:#55a362;">Wallet Type: Mainnet</span>
+        <span style="color: #46a92e;position:absolute;right:10%;">Master address: 0xioovhuehu1e565161e6</span>
         <div class="row" style="margin-bottom: 0;margin-top: 2vh;">
           <div class="input-field col s12">
             <input id="createProposalDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="opok kp okp" style="color: #ffffff;">
@@ -76,92 +76,97 @@
           </div>
         </div>
         <div class="row" style="margin-bottom: 0;">
-          <div class="input-field col s6">
+          <div class="input-field col s7">
             <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="0x34c61EA91bAcdA647269d4e310A86b875c09946f" style="color: #ffffff;" disabled>
             <label for="createProposalTitle" class="active" style="color:#9e9e9e;">Etica Smart Contract:</label>
           </div>
+
+          <div class="input-field col s6" id="commitVoteChoice">
+            <div>
+              <label for="commitVoteChoice" class="active">Unlock wallet on start:</label> <br><br>
+              <input class="approvalchoiceradio" type="radio" id="commitVoteApprovalChoice" name="commitchoice" value="true">
+              <label class="approvalchoicelabel" for="commitVoteApprovalChoice">Yes</label>
+  
+              <input class="approvalchoiceradio" type="radio" id="commitVoteDisapprovalChoice" name="commitchoice" value="false">
+              <label class="approvalchoicelabel" for="commitVoteDisapprovalChoice">No</label>
+            </div>
+         </div>
+  
+         <div class="input-field col s6">
+          <input id="createProposalTitle" class="" placeholder="Enter time the wallet remains unlocked (mins)" type="text" value="10" style="color: #ffffff;">
+          <label for="createProposalTitle" class="active">Unlock duration (mins):</label>
         </div>
-        <div class="row" style="margin-bottom: 0;">
-          <div class="input-field col s6">
-            <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="" style="color: #ffffff;">
-            <label for="createProposalTitle" class="active">Keystore directory:</label>
-          </div>
+
         </div>
         <div class="row" style="margin-top: 0;margin-bottom: 0;">
           <div class="input-field col s12">
-            <button type="button" class="button4 MarginRight5" id="btnCreateProposal">Update Wallet</button>
+            <button type="button" class="button4 MarginRight5" id="btnCreateProposal">Update</button>
           </div>
         </div>
       </form>
     </div>
+  </div>
   
-  
-    <div id="settingsdirectories" class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
-    <form class="col s12">
 
-      <span>Type: </span>
+  <div id="settingsdirectories">
+    <h6>Directoriess Settings</h6>
+    <div class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
+    <form class="col s12">
       <div class="row" style="margin-bottom: 0;margin-top: 2vh;">
         <div class="input-field col s12">
-          <input id="createProposalDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="opok kp okp" style="color: #ffffff;">
-          <label for="createProposalDiseaseHash" class="active">Wallet Name:</label>
+          <input id="createProposalDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="D:/ioajooija/datdrpzo" style="color: #ffffff;">
+          <label for="createProposalDiseaseHash" class="active">Blockchain directory:</label>
         </div>
         <div class="input-field col s6">
-          <input id="createProposalChunkId" class="" placeholder="Enter chunk id (optional)" type="text" value="61803" style="color: #ffffff;" disabled>
-          <label for="createProposalChunkId" class="active" style="color:#9e9e9e;">Network ID:</label>
-        </div>
-      </div>
-      <div class="row" style="margin-bottom: 0;">
-        <div class="input-field col s6">
-          <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="0x34c61EA91bAcdA647269d4e310A86b875c09946f" style="color: #ffffff;" disabled>
-          <label for="createProposalTitle" class="active" style="color:#9e9e9e;">Etica Smart Contract:</label>
+          <input id="createProposalChunkId" class="" placeholder="Enter chunk id (optional)" type="text" value="d:/isoj/zuihiz" style="color: #ffffff;">
+          <label for="createProposalChunkId" class="active" style="color:#9e9e9e;">Wallet directory:</label>
         </div>
       </div>
       <div class="row" style="margin-bottom: 0;">
         <div class="input-field col s6">
-          <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="" style="color: #ffffff;">
-          <label for="createProposalTitle" class="active">Keystore directory:</label>
+          <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="D:/ioajooija/datdrpzo/pzokj/sjcius/gvqsdcoij" style="color: #ffffff;" disabled>
+          <label for="createProposalTitle" class="active" style="color:#9e9e9e;">Keystore directory:</label>
         </div>
       </div>
       <div class="row" style="margin-top: 0;margin-bottom: 0;">
         <div class="input-field col s12">
-          <button type="button" class="button4 MarginRight5" id="btnCreateProposal">Update Wallet</button>
+          <button type="button" class="button4 MarginRight5" id="btnCreateProposal">Update</button>
         </div>
       </div>
     </form>
   </div>
+  </div>
 
-  <div id="settingsadvanced" class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
+  
+  <div id="settingsadvanced">
+    <h6>Advanced Settings</h6>
+  <div class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
     <form class="col s12">
-
-      <span>Type: </span>
       <div class="row" style="margin-bottom: 0;margin-top: 2vh;">
+          <div class="input-field col s7">
+            <input id="createProposalTitle" class="" placeholder="port (node port)" type="text" value="30317" style="color: #ffffff;">
+            <label for="createProposalTitle" class="active">--port:</label>
+          </div>
+        <div class="input-field col s7">
+          <input id="createProposalDiseaseHash" class="" placeholder="ws port (node websocket port)" type="text" value="8551" style="color: #ffffff;">
+          <label for="createProposalDiseaseHash" class="active">--ws.port:</label>
+        </div>
+        <div class="input-field col s7">
+          <input id="createProposalChunkId" class="" placeholder="ws address (node websocket address)" type="text" value="127.0.0.1" style="color: #ffffff;">
+          <label for="createProposalChunkId" class="active">--ws.addr:</label>
+        </div>
         <div class="input-field col s12">
-          <input id="createProposalDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="" style="color: #ffffff;">
-          <label for="createProposalDiseaseHash" class="active">Wallet Name:</label>
-        </div>
-        <div class="input-field col s6">
-          <input id="createProposalChunkId" class="" placeholder="Enter chunk id (optional)" type="text" value="" style="color: #ffffff;">
-          <label for="createProposalChunkId" class="active">Blockchain directory:</label>
-        </div>
-      </div>
-      <div class="row" style="margin-bottom: 0;">
-        <div class="input-field col s6">
-          <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="" style="color: #ffffff;">
-          <label for="createProposalTitle" class="active">Wallet data directory:</label>
-        </div>
-      </div>
-      <div class="row" style="margin-bottom: 0;">
-        <div class="input-field col s6">
-          <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="" style="color: #ffffff;">
-          <label for="createProposalTitle" class="active">Keystore directory:</label>
+          <input id="createProposalTitle" class="" placeholder="Enter the enode to connect to when wallet node starts" type="text" value="enode://bk5622fede894f1a37b2035a34b97f32fb31ddd93ae822b603c56b7f17cfb189631ea2ef17bfbed904f8bc564765634f2d9db0a128835178c8af9f1dde68efdetrugg48@159.167.45.158:99999" style="color: #ffffff;">
+          <label for="createProposalTitle" class="active">Enode:</label>
         </div>
       </div>
       <div class="row" style="margin-top: 0;margin-bottom: 0;">
         <div class="input-field col s12">
-          <button type="button" class="button4 MarginRight5" id="btnCreateProposal">Update Wallet</button>
+          <button type="button" class="button4 MarginRight5" id="btnCreateProposal">Update</button>
         </div>
       </div>
     </form>
+  </div>
   </div>
 
 </div>
