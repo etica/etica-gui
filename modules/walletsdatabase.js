@@ -77,30 +77,24 @@ ipcMain.on("updateWalletMainSettings", (event, arg) => {
   }, {$set:{ name: arg.name, autounlock: arg.autounlock, unlocktime: arg.unlocktime}}, {
     upsert: false
   }, function (err, numReplaced, upsert) {
-    // do nothing for now
+    // Retrieve the updated wallet and send it as a response
+    db.findOne({ masteraddress: arg.masteraddress }, function (err, updatedWallet) {
+      event.sender.send("updateWalletMainSettingsResponse", updatedWallet);
+    });
   });
 });
 
 
-// Wallet Direcotries:
-ipcMain.on("updateWalletDirectories", (event, arg) => {
+ipcMain.on("updateWalletAdvancedSettings", (event, arg) => {
   db.update({
     masteraddress: arg.masteraddress
-  }, {$set:{ blockchaindirectory: arg.blockchaindirectory, keystoredirectory: arg.keystoredirectory, datadirectory: arg.datadirectory}}, {
+  }, {$set:{ port: arg.port, wsport: arg.wsport, enode: arg.enode}}, {
     upsert: false
   }, function (err, numReplaced, upsert) {
-    // do nothing for now
-  });
-});
-
-
-ipcMain.on("updateWalletAdvanced", (event, arg) => {
-  db.update({
-    masteraddress: arg.masteraddress
-  }, {$set:{ enode: arg.enode, wsport: arg.wsport, wsaddress: arg.wsaddress, port: arg.port}}, {
-    upsert: false
-  }, function (err, numReplaced, upsert) {
-    // do nothing for now
+    // Retrieve the updated wallet and send it as a response
+    db.findOne({ masteraddress: arg.masteraddress }, function (err, updatedWallet) {
+      event.sender.send("updateWalletAdvancedSettingsResponse", updatedWallet);
+    });
   });
 });
 

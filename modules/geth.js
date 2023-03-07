@@ -192,4 +192,10 @@ ipcMain.on("IsGethRunning", (event, arg) => {
   event.returnValue = EticaGeth.isRunning;
 });
 
+ipcMain.on("updateGethRunningWalletSettings", (event, arg) => {
+  if(EticaGeth.wallet){
+    EticaGeth.wallet = arg;
+  }
+});
+
 EticaGeth = new Geth();

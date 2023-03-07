@@ -117,28 +117,23 @@
 
   <div id="settingsdirectories">
     <h6>Directories Settings</h6>
-    <p style="color:red;">Warning, changes these paths could corrupt your wallet and create issues. <br> Only change one of these paths if you are forced to change the location of a folder on your system.</p>
+    <p style="color:#585858;">Warning, changes to the location of one of these folders would corrupt this wallet. <br> If you need to change one of these folder paths, import your seed into a new wallet and provid a new folder path at wallet creation</p>
     <div class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
     <form class="col s12">
       <div class="row" style="margin-bottom: 0;margin-top: 2vh;">
         <div class="input-field col s12">
-          <input id="createProposalDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="{{ wallet.blockchaindirectory }}" style="color: #ffffff;">
-          <label for="createProposalDiseaseHash" class="active">Blockchain directory:</label>
+          <input id="createProposalDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="{{ wallet.blockchaindirectory }}" style="color: #ffffff;" disabled>
+          <label for="createProposalDiseaseHash" class="active" style="color:#9e9e9e;">Blockchain directory:</label>
         </div>
         <div class="input-field col s12">
-          <input id="createProposalChunkId" class="" placeholder="Enter chunk id (optional)" type="text" value="{{ wallet.datadirectory }}" style="color: #ffffff;">
+          <input id="createProposalChunkId" class="" placeholder="Enter chunk id (optional)" type="text" value="{{ wallet.datadirectory }}" style="color: #ffffff;" disabled>
           <label for="createProposalChunkId" class="active" style="color:#9e9e9e;">Wallet directory:</label>
         </div>
       </div>
       <div class="row" style="margin-bottom: 0;">
         <div class="input-field col s12">
-          <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="{{ wallet.keystoredirectory }}" style="color: #ffffff;">
+          <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="{{ wallet.keystoredirectory }}" style="color: #ffffff;" disabled>
           <label for="createProposalTitle" class="active" style="color:#9e9e9e;">Keystore directory:</label>
-        </div>
-      </div>
-      <div class="row" style="margin-top: 0;margin-bottom: 0;">
-        <div class="input-field col s12">
-          <button type="button" class="button4 MarginRight5" id="btnCreateProposal">Update</button>
         </div>
       </div>
     </form>
@@ -151,26 +146,26 @@
   <div class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
     <form class="col s12">
       <div class="row" style="margin-bottom: 0;margin-top: 2vh;">
+        <div class="input-field col s7">
+          <input class="" placeholder="ws address (node websocket address)" type="text" value="{{ wallet.wsaddress }}" style="color: #ffffff;" disabled>
+          <label class="active" style="color:#9e9e9e;">--ws.addr:</label>
+        </div>
           <div class="input-field col s7">
-            <input id="createProposalTitle" class="" placeholder="port (node port)" type="text" value="{{ wallet.port }}" style="color: #ffffff;">
-            <label for="createProposalTitle" class="active">--port:</label>
+            <input id="settingsWalletPort" class="" placeholder="port (node port)" type="text" value="{{ wallet.port }}" style="color: #ffffff;">
+            <label for="settingsWalletPort" class="active">--port:</label>
           </div>
         <div class="input-field col s7">
-          <input id="createProposalDiseaseHash" class="" placeholder="ws port (node websocket port)" type="text" value="{{ wallet.wsport }}" style="color: #ffffff;">
-          <label for="createProposalDiseaseHash" class="active">--ws.port:</label>
-        </div>
-        <div class="input-field col s7">
-          <input id="createProposalChunkId" class="" placeholder="ws address (node websocket address)" type="text" value="{{ wallet.wsaddress }}" style="color: #ffffff;">
-          <label for="createProposalChunkId" class="active">--ws.addr:</label>
+          <input id="settingsWalletWsPort" class="" placeholder="ws port (node websocket port)" type="text" value="{{ wallet.wsport }}" style="color: #ffffff;">
+          <label for="settingsWalletWsPort" class="active">--ws.port:</label>
         </div>
         <div class="input-field col s12">
-          <input id="createProposalTitle" class="" placeholder="Enter the enode to connect to when wallet node starts" type="text" value="{{ wallet.enode }}" style="color: #ffffff;">
-          <label for="createProposalTitle" class="active">Enode:</label>
+          <input id="settingsWalletEnode" class="" placeholder="Enter the enode to connect to when wallet node starts" type="text" value="{{ wallet.enode }}" style="color: #ffffff;">
+          <label for="settingsWalletEnode" class="active">Enode (the initial peer the wallet should connect to):</label>
         </div>
       </div>
       <div class="row" style="margin-top: 0;margin-bottom: 0;">
         <div class="input-field col s12">
-          <button type="button" class="button4 MarginRight5" id="btnCreateProposal">Update</button>
+          <button type="button" class="button4 MarginRight5" id="btnUpdateAdvancedSettings">Update</button>
         </div>
       </div>
     </form>

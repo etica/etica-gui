@@ -20,6 +20,7 @@ class Settings {
     }, function (data) {
 
       let _wallet = ipcRenderer.sendSync("getRunningWallet");
+      console.log('getRunningWallet is currently', _wallet);
       data.wallet = _wallet;
       EticaWallets.Setrunningwallet(_wallet);
       EticaMainGUI.renderTemplate("settings.html", data);
@@ -169,6 +170,10 @@ $(document).on("render_settings", async function () {
     if($("#settingsWalletName").val() != ''){
       NewWallet.name = $("#settingsWalletName").val();
     }
+    else{
+      EticaMainGUI.showGeneralError('Wallet name cannot be empty!');
+      return false;
+    }
 
 
     // Wallet unlock choice:
@@ -180,10 +185,10 @@ $(document).on("render_settings", async function () {
       unlock_choice = false;
     }
 
-    // if vote choice is not true or false it means there was an issue getting the vote choice from interface, we abort:
+    // if unlock choice is not true or false it means there was an issue getting the unlock choice from interface, we abort:
     if(unlock_choice != true && unlock_choice != false){
       EticaMainGUI.showGeneralError('Please select an option to allow or disallow Auto Unlock of wallet');
-      return;
+      return false;
     }
     NewWallet.autounlock = unlock_choice;
 
@@ -199,9 +204,70 @@ $(document).on("render_settings", async function () {
       NewWallet.unlocktime = 0;
     }
 
-    console.log('NewWallet is ::: ', NewWallet);
     ipcRenderer.send("updateWalletMainSettings", NewWallet); 
 
+    // retrieve updated wallet to pass it to Geth:
+    // Check if the event listener has already been added before adding it again and create issue multiple popups
+     if (!ipcRenderer.listenerCount("updateWalletMainSettingsResponse")) {
+        ipcRenderer.on("updateWalletMainSettingsResponse", (event, updatedWallet) => {
+          // `updatedWallet` contains the response from the `updateWalletMainSettings` event
+          // updates Geth running wallet:
+          ipcRenderer.send("updateGethRunningWalletSettings", updatedWallet);
+          iziToast.success({title: "Updated", message: "Wallet main settings updated", position: "topRight", timeout: 5000});
+        });
+    }
+
+  });
+
+
+
+  $("#btnUpdateAdvancedSettings").off("click").on("click", function () {
+
+
+    let enodeUrl = $("#settingsWalletEnode").val();
+    
+    if (!(typeof enodeUrl === "string" && enodeUrl.startsWith("enode://"))) {
+      EticaMainGUI.showGeneralError('Enode is invalid. An enode url should start with enode://');
+      return false;
+    } 
+
+    let NewWallet = {};
+    NewWallet.masteraddress = EticaWallets.Getrunningwallet().masteraddress;
+    NewWallet.enode = enodeUrl;
+
+    
+    
+    // Wallet port:
+    if($("#settingsWalletPort").val() != ''){
+      NewWallet.port= $("#settingsWalletPort").val();
+    }
+    else{
+      EticaMainGUI.showGeneralError('port cannot be empty!');
+      return false;
+    }
+    
+    
+    // Wallet wsport:
+    if($("#settingsWalletWsPort").val() != ''){
+      NewWallet.wsport= $("#settingsWalletWsPort").val();
+    }
+    else{
+      EticaMainGUI.showGeneralError('ws.port cannot be empty!');
+      return false;
+    }
+
+    ipcRenderer.send("updateWalletAdvancedSettings", NewWallet); 
+
+    // retrieve updated wallet to pass it to Geth:
+    // Check if the event listener has already been added before adding it again and create issue multiple popups
+     if (!ipcRenderer.listenerCount("updateWalletAdvancedSettingsResponse")) {
+        ipcRenderer.on("updateWalletAdvancedSettingsResponse", (event, updatedWallet) => {
+          // `updatedWallet` contains the response from the `updateWalletAdvancedSettings` event
+          // updates Geth running wallet:
+          ipcRenderer.send("updateGethRunningWalletSettings", updatedWallet);
+          iziToast.success({title: "Updated", message: "Wallet network settings updated. These changes will be effective at next wallet launch", position: "topRight", timeout: 5000});
+        });
+    }
 
   });
 
