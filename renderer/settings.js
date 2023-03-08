@@ -21,6 +21,15 @@ class Settings {
 
       let _wallet = ipcRenderer.sendSync("getRunningWallet");
       console.log('getRunningWallet is currently', _wallet);
+
+      if(_wallet.type == 'mainnet'){
+       _wallet.ismainnet = true;
+       _wallet.istestnet = false;
+      }
+      else if(_wallet.type == 'testnet'){
+        _wallet.ismainnet = false;
+        _wallet.istestnet = true;
+      }
       data.wallet = _wallet;
       EticaWallets.Setrunningwallet(_wallet);
       EticaMainGUI.renderTemplate("settings.html", data);

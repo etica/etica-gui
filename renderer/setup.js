@@ -32,6 +32,7 @@ let wallets;
 
     if(wallets && wallets.length > 0){
 
+      $('#walletsList').html('');
       wallets.forEach(onewallet => {
         $('#walletsList').append(`<li><a id="${onewallet.masteraddress}" data-address="${onewallet.masteraddress}" href="#" class="onewalletlist">${onewallet.name} (${onewallet.type})</a></li>`);
       });
