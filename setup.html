@@ -35,6 +35,8 @@
   <!-- CSS Just for demo purpose, don't include it in your project -->
   <link href="./assets/blk/demo/demo.css" rel="stylesheet" />
 
+  <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
+
   <style>
 .scrollable {
     height: 75vh;
@@ -113,9 +115,6 @@
             <button class="btn btn-success" id="selectWalletFolder">Select Wallet from directory</button>
           </div>
         </div>
-        <div id="SetupConnection" class="row" style="position: absolute;top: 64%;left: 35%;">
-          
-        </div>
       </div>
     </div>
 
@@ -132,10 +131,13 @@
             <i class="tim-icons icon-simple-remove text-white"></i>
           </button>
           <div class="text-muted text-center ml-auto mr-auto">
-            <h3 class="mb-0">Etica Wallets</h3>
+            <h3 class="mb-0" style="color:#424242;">ETICA GUI</h3>
           </div>
         </div>
         <div class="modal-body">
+
+
+       <div id="setupwalletlist" style="display:none;">
           <div class="btn-wrapper text-center">
             <a href="#" class="btn btn-neutral btn-icon" style="background-color: #202020 !important;background-image: unset;">
               <img src="./assets/images/etica-logo-sanstexte.png">
@@ -146,12 +148,51 @@
           </div>
           <div class="text-center text-muted mb-4 mt-3">
             <small id="checkeddirectorymsg" style="color:#ffffff;">Wallets found in this directory</small>
-            <br><small id="checkeddirectorymsg" style="color:#ffffff;">(click on a wallet name to launch it)</small>
+            <br><small style="color:#ffffff;">(click on a wallet name to launch it)</small>
+            <div class="col-md-12">
+              <button class="btn btn-success" id="selectWalletFolder2">Select Wallet from directory</button>
+            </div>
           </div>
           
           <div id="walletsList" style="height: 50vh;">
 
           </div>
+
+       </div>
+
+       <div id="setupconnection">
+
+        <div class="btn-wrapper text-center">
+          <a href="#" class="btn btn-neutral btn-icon" style="background-color: #202020 !important;background-image: unset;">
+            <img src="./assets/images/etica-logo-sanstexte.png">
+          </a>
+          <a href="#" class="btn btn-neutral btn-icon" style="background-color: #202020 !important;background-image: unset;">
+            <img src="./assets/images/etica-logo-fond-noir-sanstitre.png">
+          </a>
+        </div>
+        <div class="text-center text-muted mb-4 mt-3">
+          <small id="SetupConnectName" style="color:#ffffff;">Wallets III</small>
+        </div>
+        
+        <div class="row">
+
+          <div class="col-sm-12 col-lg-12">
+            <div class="form-group">
+              <input style="background-color: #141414;" id="SetupConnectPw" type="text" value="" placeholder="password" class="form-control" />
+              <input style="background-color: #141414;" id="SetupConnectAddress" type="text" value="" class="form-control" hidden />
+              <i id="SetupConnectError" style="color:red;"></i>
+            </div>
+          </div>
+          <div class="col-md-12" style="text-align:center;">
+            <button class="btn btn-secondary" id="SetupBackBtn" style="background: #363636;">Back</button> <button class="btn btn-primary" id="SetupConnectBtn">Connect</button>
+          </div>
+
+        </div>
+
+
+       </div>
+
+
         
         </div>
       </div>
@@ -165,6 +206,7 @@
 <script>
   // You can also require other files to run in this process
   require('./renderer/setup.js');
+  require('./renderer/blockchain.js');
 </script>
 <script>
   const scrollbar = new PerfectScrollbar('.scrollable');
