@@ -194,16 +194,22 @@ $(document).on("render_settings", async function () {
 
 
     // Wallet unlocktime:
-    const minutes = Number($("#unlockTime").val());
+    let _minutes = $("#unlockTime").val();
+    console.log('_minutes', _minutes);
+    const minutes = Number(_minutes);
+    console.log('minutes is:', minutes);
     if (!isNaN(minutes)) {
+      console.log('!isNaN(minutes) true passed');
       // Convert the minutes to seconds
       const seconds = minutes * 60;
       NewWallet.unlocktime = seconds; 
     }
     else {
+      console.log('!isNaN(minutes) not passed');
       NewWallet.unlocktime = 0;
     }
 
+    console.log('NewWallet is :: :: :: ::', NewWallet);
     ipcRenderer.send("updateWalletMainSettings", NewWallet); 
 
     // retrieve updated wallet to pass it to Geth:

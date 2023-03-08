@@ -84,7 +84,7 @@
 
           <div class="input-field col s6" id="commitVoteChoice">
             <div>
-              <label for="commitVoteChoice" class="active">Allow auto unlock wallet:</label> <br><br>
+              <label for="commitVoteChoice" class="active">Allow unlock wallet:</label> <br><br>
               {{#if wallet.autounlock}}
               <input class="approvalchoiceradio" type="radio" id="unlockChoiceYes" name="unlockchoice" value="true" checked>
               <label class="approvalchoicelabel" for="unlockChoiceYes">Yes</label>
@@ -100,8 +100,9 @@
          </div>
   
          <div class="input-field col s6">
-          <input id="createProposalTitle" class="" placeholder="Enter time the wallet remains unlocked (mins)" type="text" value="{{ wallet.unlocktime }}" style="color: #ffffff;">
-          <label for="createProposalTitle" class="active">Unlock duration (mins):</label>
+          <input id="unlockTime" class="" placeholder="Enter time the wallet remains unlocked (mins)" type="text" value="{{ wallet.unlocktime }}" style="color: #ffffff;">
+          <i>Example: 600 secs will unlock wallet for 10 minutes.</i>
+          <label for="unlockTime" class="active">Unlock duration (secs):</label>
         </div>
 
         </div>
@@ -122,18 +123,18 @@
     <form class="col s12">
       <div class="row" style="margin-bottom: 0;margin-top: 2vh;">
         <div class="input-field col s12">
-          <input id="createProposalDiseaseHash" class="" placeholder="Enter disease hash" type="text" value="{{ wallet.blockchaindirectory }}" style="color: #ffffff;" disabled>
-          <label for="createProposalDiseaseHash" class="active" style="color:#9e9e9e;">Blockchain directory:</label>
+          <input id="" class="" placeholder="Enter disease hash" type="text" value="{{ wallet.blockchaindirectory }}" style="color: #ffffff;" disabled>
+          <label for="" class="active" style="color:#9e9e9e;">Blockchain directory:</label>
         </div>
         <div class="input-field col s12">
-          <input id="createProposalChunkId" class="" placeholder="Enter chunk id (optional)" type="text" value="{{ wallet.datadirectory }}" style="color: #ffffff;" disabled>
-          <label for="createProposalChunkId" class="active" style="color:#9e9e9e;">Wallet directory:</label>
+          <input id="" class="" placeholder="Enter chunk id (optional)" type="text" value="{{ wallet.datadirectory }}" style="color: #ffffff;" disabled>
+          <label for="" class="active" style="color:#9e9e9e;">Wallet directory:</label>
         </div>
       </div>
       <div class="row" style="margin-bottom: 0;">
         <div class="input-field col s12">
-          <input id="createProposalTitle" class="" placeholder="Enter proposal title" type="text" value="{{ wallet.keystoredirectory }}" style="color: #ffffff;" disabled>
-          <label for="createProposalTitle" class="active" style="color:#9e9e9e;">Keystore directory:</label>
+          <input id="" class="" placeholder="Enter proposal title" type="text" value="{{ wallet.keystoredirectory }}" style="color: #ffffff;" disabled>
+          <label for="" class="active" style="color:#9e9e9e;">Keystore directory:</label>
         </div>
       </div>
     </form>
