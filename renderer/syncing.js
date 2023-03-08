@@ -36,6 +36,7 @@ isFullySynced = false;
 
 initWeb3Passed =false;
 alreadyCatchedUp = false;
+auto_unlock_done = false;
 
 
 var peerCountInterval = setInterval(function () {
@@ -143,7 +144,7 @@ function StartSyncProcess() {
     });
 
   }, 30000);
-
+  
 
   /*
 
@@ -155,6 +156,45 @@ function StartSyncProcess() {
 
   */
   
+}
+
+
+function autounlockWallet() {
+
+// Only once:
+if(!auto_unlock_done){
+
+  auto_unlock_done = true;
+  // unlock accounts
+  let _temppw = ipcRenderer.sendSync("getTempPw");
+  let _wallet = ipcRenderer.sendSync("getRunningWallet");
+  
+  if(_wallet.autounlock){
+  
+    web3Local.eth.getAccounts(async function (err, res) {
+      if (err) {
+        clbError(err);
+      } else {
+        for (var w = 0; w < res.length; w++) {
+          const account = res[w];
+          await web3Local.eth.personal.unlockAccount(account, _temppw, _wallet.unlocktime, async function (error, result) { 
+            if (error) {
+              console.log("error autounlocking account!");
+              console.log("error autounlocking account!", error);
+              return false;
+            }
+            console.log('account:', account);
+            console.log('result is', result);
+            let isunlocked = await EticaBlockchain.isUnlocked(account);
+            console.log('isunlocked', isunlocked);
+          });
+        }
+      }
+    });
+  
+  }
+}
+
 }
 
 var RetrySuscribeSyncing = setInterval( function () {
@@ -213,6 +253,7 @@ var InitWeb3 = setInterval(async function () {
         console.log('initWeb3Passed is now: ', initWeb3Passed);
         clearInterval(InitWeb3);
         StartSyncProcess();
+        autounlockWallet();
       }
     });
   } catch (err) {

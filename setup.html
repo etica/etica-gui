@@ -123,9 +123,9 @@
 
 
   <!-- Form Modal -->
-  <div class="modal modal-black" id="SelectWalletsfromListModal" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal modal-black" id="SelectWalletsfromListModal" aria-labelledby="myModalLabel" aria-hidden="true" style="background-color: #000000eb;">
     <div class="modal-dialog">
-      <div style="height: 75vh;background: #141414;color: rgb(6 108 104 / 80%);" class="modal-content scrollable">
+      <div style="height: 75vh;background: #0e0e0e;color: rgb(6 108 104 / 80%);" class="modal-content scrollable">
         <div class="modal-header justify-content-center">
           <button type="button" id="closewalletsfoundbox" class="close" data-dismiss="modal" aria-hidden="true">
             <i class="tim-icons icon-simple-remove text-white"></i>
@@ -148,12 +148,12 @@
           </div>
           <div class="text-center text-muted mb-4 mt-3">
             <small id="checkeddirectorymsg" style="color:#ffffff;">Wallets found in this directory</small>
-            <br><small style="color:#ffffff;">(click on a wallet name to launch it)</small>
+            <br>
             <div class="col-md-12">
-              <button class="btn btn-success" id="selectWalletFolder2">Select Wallet from directory</button>
+              <button class="btn btn-success" id="selectWalletFolder2">Select Wallet from another directory</button>
             </div>
           </div>
-          
+          <small style="color:#ffffff;">(click on a wallet name to launch it)</small>
           <div id="walletsList" style="height: 50vh;">
 
           </div>
@@ -171,7 +171,7 @@
           </a>
         </div>
         <div class="text-center text-muted mb-4 mt-3">
-          <small id="SetupConnectName" style="color:#ffffff;">Wallets III</small>
+          <small id="SetupConnectName" style="color:#ffffff;"></small>
         </div>
         
         <div class="row">

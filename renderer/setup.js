@@ -158,7 +158,8 @@ let stoploop = false;
                 console.log('password verified');
                 web3Local.currentProvider.connection.close();
                 
-                launchwallet(_address);
+                wallet.pw = _pw;
+                launchwallet(wallet);
 
               }
 
@@ -182,7 +183,17 @@ let stoploop = false;
 }
 
 
-  function launchwallet(i){
+  
+function launchwallet(wallet){
+  
+    let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", wallet.datadirectory);
+    let ipcResult = ipcRenderer.send("startGeth", wallet);
+    window.location.replace('./index.html');
+
+}
+
+/*
+function former_used_wallets.find_wallet_launchwallet(i){
 
     const selected_wallet = wallets.find(onewallet => onewallet.masteraddress === i);
 
@@ -197,6 +208,7 @@ let stoploop = false;
     }
 
   }
+  */
 
   ipcRenderer.on("ScanedFolderWalletsFound", (event, _res) => {
     wallets = _res.wallets;

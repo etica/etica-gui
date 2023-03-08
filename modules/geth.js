@@ -6,11 +6,15 @@ const fs = require("fs");
 const os = require("os");
 
 class Geth {
+
+  #walletpw; // privateVariable
+
   constructor() {
     this.isRunning = false;
     this.gethProcess = null;
     this.logGethEvents = false;
     this.wallet = null;
+    this.#walletpw = null;
     // create the user data dir (needed for MacOS)
     if (!fs.existsSync(app.getPath("userData"))) {
       fs.mkdirSync(app.getPath("userData"));
@@ -49,6 +53,10 @@ class Geth {
 
   startGeth(wallet) {
     console.log('startGeth called');
+    if(wallet.pw != ''){
+      this.#walletpw = wallet.pw;
+      wallet.pw = '';
+    }
     this.wallet = wallet;
 
     let _networkid = '';
@@ -174,6 +182,13 @@ class Geth {
       this.gethProcess.kill("SIGTERM");
     }
   }
+
+  getTempPw() {
+    let _p = this.#walletpw;
+    this.#walletpw = null;
+    return _p;
+  }
+
 }
 
 ipcMain.on("stopGeth", (event, arg) => {
@@ -188,9 +203,14 @@ ipcMain.on("getRunningWallet", (event, arg) => {
   event.returnValue = EticaGeth.wallet;
 });
 
+ipcMain.on("getTempPw", (event, arg) => {
+  event.returnValue = EticaGeth.getTempPw();
+});
+
 ipcMain.on("IsGethRunning", (event, arg) => {
   event.returnValue = EticaGeth.isRunning;
 });
+
 
 ipcMain.on("updateGethRunningWalletSettings", (event, arg) => {
   if(EticaGeth.wallet){
