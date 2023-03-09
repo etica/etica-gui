@@ -50,6 +50,108 @@ class SmartContract {
     }
 
 
+
+  
+    // SEND EGAZ  //
+
+    getTranasctionFee_sendEgaz(fromAddress, toAddress, amount, clbError, clbSuccess) {
+      web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+        if (error) {
+          clbError(error);
+        } else {
+          
+          toAddress = toAddress.toLowerCase(); // make sure toAddress is in lower case to avoid invalid type address error in txData object:
+          var amountToSend = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+  
+          var RawTransaction = {
+            from: fromAddress,
+            to: toAddress,
+            value: amountToSend,
+            nonce: result
+          };
+  
+          web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+            if (error) {
+              clbError(error);
+            } else {
+              var usedGas = result + 1;
+              web3Local.eth.getGasPrice(function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+                  clbSuccess(result * usedGas);
+                }
+              });
+            }
+          });
+  
+        }
+      });
+    }
+  
+  
+    async prepareTransaction_SendEgaz(password, fromAddress, toAddress, amount, clbError, clbSuccess) {
+  
+          let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+  
+          if(isunlocked == 'locked'){
+            await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+              if (error) {
+                clbError("Wrong password for the selected address!");
+              }
+            });
+          }
+  
+          web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+            if (error) {
+              clbError(error);
+            } else {
+  
+              toAddress = toAddress.toLowerCase(); // make sure toAddress is in lower case to avoid invalid type address error in txData object:
+              var amountToSend = web3Local.utils.toWei(amount, "ether"); //convert to wei value
+  
+              var RawTransaction = {
+                from: fromAddress,
+                to: toAddress,
+                value: amountToSend,
+                nonce: result
+              };
+  
+              web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+                if (error) {
+                  clbError(error);
+                } else {
+                  RawTransaction.gas = result + 1;
+                  web3Local.eth.getGasPrice(function (error, result) {
+                    if (error) {
+                      clbError(error);
+                    } else {
+                      RawTransaction.gasPrice = result;
+                      web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                        if (error) {
+                          clbError(error);
+                        } else {
+                          clbSuccess(result);
+                        }
+                      });
+                    }
+                  });
+                }
+              });
+            }
+          });
+  
+    }
+  
+     // SEND EGAZ //
+
+
+
+
+
+
+    // SEND ETI   //
+
   getTranasctionFee_sendEti(fromAddress, toAddress, amount, clbError, clbSuccess) {
     web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
       if (error) {

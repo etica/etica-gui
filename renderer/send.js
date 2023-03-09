@@ -152,7 +152,7 @@ $(document).on("render_send", function () {
 
   $("#btnSendTransaction").off("click").on("click", function () {
     if (EgazSend.validateSendForm()) {
-      EticaBlockchain.getTranasctionFee($("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
+      EticaContract.getTranasctionFee_sendEgaz($("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, async function (data) {
 
@@ -195,7 +195,7 @@ $(document).on("render_send", function () {
             _password = $("#walletPassword").val();
           }
 
-          EticaBlockchain.prepareTransaction(_password, $("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
+          EticaContract.prepareTransaction_SendEgaz(_password, $("#sendFromAddress").val(), $("#sendToAddress").val(), $("#sendAmmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {
