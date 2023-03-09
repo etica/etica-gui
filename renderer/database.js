@@ -4,32 +4,77 @@ const {ipcRenderer} = require("electron");
 class Datatabase {
   constructor() {
 
+    this.filepath = null;
 
   }
 
-  getCounters() {
+
+  async getFilepath(){
+
     let runningwallet = ipcRenderer.sendSync("getRunningWallet");
     let dbWalletDataDirectory = runningwallet.datadirectory;
-    let _filepath = dbWalletDataDirectory+'/counters.json';
-    console.log('getCounters _filepath is', _filepath);
-    var counters = ipcRenderer.sendSync("getJSONFile", _filepath);
+    this.filepath = dbWalletDataDirectory+'/counters.json';
+    return this.filepath;
 
-    if (counters == null) {
-      counters = {};
+  }
+
+
+  async getCounters() {
+
+    if(this.filepath){
+      console.log('getCounters this.filepath ok is', this.filepath);
+      var counters = ipcRenderer.sendSync("getJSONFile", this.filepath);
+      if (counters == null) {
+        counters = {};
+      }
+      return counters;
     }
+    else {
 
-    return counters;
+      console.log('getCounters this.filepath not ok is', this.filepath);
+
+      let runningwallet = await ipcRenderer.sendSync("getRunningWallet");
+      let dbWalletDataDirectory = runningwallet.datadirectory;
+      this.filepath = dbWalletDataDirectory+'/counters.json';
+
+      console.log('this.filepath is now ::: ', this.filepath);
+      var counters = ipcRenderer.sendSync("getJSONFile", this.filepath);
+      if (counters == null) {
+        counters = {};
+      }
+      return counters;
+    }
+    
+    
   }
 
-  setCounters(counters) {
-    let runningwallet = ipcRenderer.sendSync("getRunningWallet");
+  async setCounters(counters) {
+
+  if(this.filepath){
+    console.log('setCounters this.filepath ok is', this.filepath);
+    let runningwallet = await ipcRenderer.sendSync("getRunningWallet");
     let dbWalletDataDirectory = runningwallet.datadirectory;
-    let _filepath = dbWalletDataDirectory+'/counters.json';
-    console.log('setCounters _filepath is', _filepath);
+    this.filepath = dbWalletDataDirectory+'/counters.json';
+    console.log('setCounters this.filepath is', this.filepath);
     ipcRenderer.sendSync("setJSONFile", {
-      file: _filepath,
+      file: this.filepath,
       data: counters
     });
+  }
+  else {
+    console.log('setCounters this.filepath not ok is', this.filepath);
+    let runningwallet = await ipcRenderer.sendSync("getRunningWallet");
+    let dbWalletDataDirectory = runningwallet.datadirectory;
+    this.filepath = dbWalletDataDirectory+'/counters.json';
+
+    console.log('setCounters this.filepath is now', this.filepath);
+    ipcRenderer.sendSync("setJSONFile", {
+      file: this.filepath,
+      data: counters
+    });
+
+  }
+
   }
 
   getAddressesNames() {

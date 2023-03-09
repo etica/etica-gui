@@ -156,7 +156,9 @@ $(document).on("render_send", function () {
         EticaMainGUI.showGeneralError(error);
       }, async function (data) {
 
-        let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+        let isunlocked = await EticaBlockchain.isUnlocked($("#sendFromAddress").val());
+
+        console.log('isunlocked is', isunlocked);
 
         $("#walletPassword").show();
         $(".sendTXPass").show();
