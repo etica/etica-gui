@@ -52,9 +52,9 @@ $(document).on("render_settings", async function () {
             // first disable keepInSync
             EticaTransactions.disableKeepInSync();
             // then delete the transactions data
-            var counters = EticaDatabase.getCounters();
-            counters.transactions = 0;
-            EticaDatabase.setCounters(counters);
+            let maincounter = ipcRenderer.sendSync("getCounter", "MainCounter");
+            maincounter.block = 0;
+            ipcRenderer.send("updateCounter", maincounter);
             ipcResult = ipcRenderer.sendSync("deleteTransactions", null);
 
             if (ipcResult.success) {
@@ -73,7 +73,7 @@ $(document).on("render_settings", async function () {
                   EticaMainGUI.showGeneralError(error);
                 } else {
                   //EticaTransactions.enableKeepInSync();
-                  let j = counters.transactions;
+                  let j = maincounter.block;
                   let resp = '';
                   console.log('j before loop is', j);
                   while (j + 500 < localBlock.number){
@@ -82,13 +82,13 @@ $(document).on("render_settings", async function () {
                     j = j + 500;
                     if (resp != 'blockscannedsuccess') break;
                   }
-                  counters = EticaDatabase.getCounters();
-                  console.log('counters.transactions after loop is ', counters.transactions);
+                  maincounter = ipcRenderer.sendSync("getCounter", "MainCounter");
+                  console.log('maincounter.block after loop is ', maincounter.block);
                   console.log('j after loop is', j);
                   console.log('localBlock.number is ', localBlock.number);
-                  if(localBlock.number > counters.transactions && (localBlock.number - counters.transactions) <= 500){
-                    console.log('inside last call to syncTransactionsForAllAddresses()');
-                    await EticaTransactions.syncTransactionsForAllAddresses(localBlock.number);
+                  if(localBlock.number > maincounter.block && (localBlock.number - maincounter.block) <= 500){
+                    console.log('inside last call to EticaTransactions.ScanTxs()');
+                    EticaTransactions.ScanTxs(maincounter, localBlock.number, 500);
                   }
 
                   loading_screen.finish();

@@ -773,20 +773,9 @@ class Transactions {
 
         });
 
-          /* if(counter+1 == addressList.length){ */
-                   // update the counter and store it back to file system
-                  // counters.transactions = blocknb;
-                  // EticaDatabase.setCounters(counters);
-         /* } */
-
-
         return 'done';
       
    /* } else {
-
-       // update the counter and store it back to file system
-       //counters.transactions = lastBlock;
-       //EticaDatabase.setCounters(counters);
 
       //$("#ResyncTxsProgress").css("display", "block");
       SyncProgress.setText("Syncing transactions is complete.");
@@ -814,6 +803,7 @@ class Transactions {
                 console.log('bloncknb in syncing is', blocknb);
                 startBlock = blocknb + 1;
                 console.log('startBlock is now ::: ', startBlock);
+                MainCounter.block = blocknb;
     
                   if(startBlock >= lastBlock){
 
