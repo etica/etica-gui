@@ -304,6 +304,26 @@ class Blockchain {
     }
 
     async function updateBalanceETI(index) {
+
+      let _isEticaContractDeployed = await isEticaContractDeployed(ETICA_ADDRESS);
+      
+      if(_isEticaContractDeployed == '0x'){
+
+          rendererData.addressData[index].balance_eti = 0;
+          rendererData.sumBalanceEti = 0;
+          
+          if (index < rendererData.addressData.length - 1) {
+            index++;
+            updateBalanceETI(index);
+          } else {
+            rendererData.sumBalanceEti = parseFloat(rendererData.sumBalanceEti).toFixed(2);
+            clbSuccess(rendererData);
+          }
+
+      }
+      
+      else {
+
       let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
       let balance = await contract.methods.balanceOf(rendererData.addressData[index].address).call();
 
@@ -317,9 +337,33 @@ class Blockchain {
           rendererData.sumBalanceEti = parseFloat(rendererData.sumBalanceEti).toFixed(2);
           clbSuccess(rendererData);
         }
+
     }
 
   }
+
+
+  // created for Update ETI function, checks if smart contract deployed before querying Etica smart contract to avoid issues with testnet smart contracts not deployed 
+  // or smart contract not accessible at first sync
+  async function isEticaContractDeployed(address) {
+
+    let isdeployed = await web3Local.eth.getCode(address, (error, bytecode) => {
+       if (error) {
+         console.error(error);
+       } else {
+         if (bytecode === '0x') {
+           return false;
+         } else {
+           return true;
+         }
+       }
+     });
+ 
+     return isdeployed;
+ 
+   }
+
+}
 
   getAddressListData(clbError, clbSuccess) {
     var rendererData = {};
