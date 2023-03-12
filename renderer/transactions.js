@@ -35,11 +35,7 @@ class Transactions {
     this.filter = "";
   }
 
-  async syncTransactionsForSingleAddress(addressList, counters, startBlock, lastBlock) {
-   console.log('in syncTransactionsForSingleAddress');
-   console.log('in syncTransactionsForSingleAddress addressList is', addressList);
-   console.log('in syncTransactionsForSingleAddress counters is', counters);
-   console.log('in syncTransactionsForSingleAddress lastBlock is', lastBlock);
+  async syncTransactionsofWalletAddresses(addressList, counters, startBlock, lastBlock) {
 
    let addressListlowercase = addressList.map(element => element.toLowerCase());
    console.log('addressListlowercase is', addressListlowercase);
@@ -800,31 +796,6 @@ class Transactions {
     } */
   }
 
- /* async syncTransactionsForAllAddresses(lastBlock) {
-    var counters = EticaDatabase.getCounters();
-    console.log('counters is', counters);
-    var counter = 0;
-    let results_array = [];
-    let res = 'test';
-
-    let data = await EticaBlockchain.getAccounts_nocallback();
-      EticaTransactions.setIsSyncing(true);
-      let previousaddress = await EticaTransactions.syncTransactionsForSingleAddress(data, counters, lastBlock);
-      console.log('syncTransactionsForSingleAddress () result previousaddress is', previousaddress);
-      let newcounters = EticaDatabase.getCounters();
-      console.log('newcounters is', newcounters);
-      if(previousaddress == 'done'){
-      console.log('expected done result received from syncTransactionsForSingleAddress ()');
-      res = 'blockscannedsuccess';
-    }
-    else {
-      res = 'blockscannedfailure';
-    }
-
-  return res;
-
-  } */
-
 
   async ScanTxs(startBlock, lastBlock, batchSize) {
     
@@ -838,7 +809,7 @@ class Transactions {
               
     
               for(let blocknb=startBlock; blocknb <= maxBlock; blocknb++){
-                let result = await EticaTransactions.syncTransactionsForSingleAddress(data, counters, blocknb, maxBlock);
+                let result = await EticaTransactions.syncTransactionsofWalletAddresses(data, counters, blocknb, maxBlock);
                 console.log('in loop');
                 console.log('bloncknb in syncing is', blocknb);
                 startBlock = blocknb + 1;
