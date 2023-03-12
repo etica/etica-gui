@@ -35,7 +35,7 @@ class Transactions {
     this.filter = "";
   }
 
-  async syncTransactionsofWalletAddresses(addressList, counters, startBlock, lastBlock) {
+  async syncTransactionsofWalletAddresses(addressList, startBlock, lastBlock) {
 
    let addressListlowercase = addressList.map(element => element.toLowerCase());
    console.log('addressListlowercase is', addressListlowercase);
@@ -775,8 +775,8 @@ class Transactions {
 
           /* if(counter+1 == addressList.length){ */
                    // update the counter and store it back to file system
-                   counters.transactions = blocknb;
-                   EticaDatabase.setCounters(counters);
+                  // counters.transactions = blocknb;
+                  // EticaDatabase.setCounters(counters);
          /* } */
 
 
@@ -797,25 +797,27 @@ class Transactions {
   }
 
 
-  async ScanTxs(startBlock, lastBlock, batchSize) {
-    
+  async ScanTxs(maincounter, lastBlock, batchSize) {
+
+    // sync all the transactions to the current block
     EticaTransactions.setIsSyncing(true);
+    let startBlock = maincounter.block;
+    let data = await EticaBlockchain.getAccounts_nocallback();
+    
+    
     var scanTxsInterval = setInterval(async function () {
     let maxBlock = startBlock + batchSize;
-    
-    // sync all the transactions to the current block
-    var counters = EticaDatabase.getCounters();
-    let data = await EticaBlockchain.getAccounts_nocallback();
-              
-    
+      
               for(let blocknb=startBlock; blocknb <= maxBlock; blocknb++){
-                let result = await EticaTransactions.syncTransactionsofWalletAddresses(data, counters, blocknb, maxBlock);
+                let result = await EticaTransactions.syncTransactionsofWalletAddresses(data, blocknb, maxBlock);
                 console.log('in loop');
                 console.log('bloncknb in syncing is', blocknb);
                 startBlock = blocknb + 1;
                 console.log('startBlock is now ::: ', startBlock);
     
                   if(startBlock >= lastBlock){
+
+                     ipcRenderer.send("updateCounter", MainCounter);
                     
                      EticaTransactions.setIsSyncing(false);
                      // signal that the sync is complete

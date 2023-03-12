@@ -100,6 +100,7 @@ require("./modules/database.js");
 require("./modules/commitsdatabase.js");
 require("./modules/proposalsdatabase.js");
 require("./modules/hashinputsdatabase.js");
+require("./modules/counters.js");
 
 require("./modules/menu.js");
 

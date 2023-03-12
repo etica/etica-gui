@@ -83,8 +83,23 @@ function StartSyncProcess() {
 
                   // enable the keep in sync feature
                   EticaTransactions.enableKeepInSync();
+
                   // sync all the transactions to the current block
-                  EticaTransactions.ScanTxs(0, localBlock.number, 500);
+                  let maincounter = ipcRenderer.sendSync("getCounter", "MainCounter");
+                  console.log('maincounter is', maincounter);
+                  if(maincounter && maincounter.block){
+                    console.log('calling ScanTxs() scenario I');
+                    EticaTransactions.ScanTxs(maincounter, localBlock.number, 500);
+                  }
+                  else {
+                    console.log('calling ScanTxs() scenario II');
+                    let newcounter = {};
+                    newcounter.name = "MainCounter";
+                    newcounter.block = 0;
+                    ipcRenderer.send("createCounter", newcounter);
+                    EticaTransactions.ScanTxs(0, localBlock.number, 500);
+                  }
+                  
                 }
               }
             } else {
