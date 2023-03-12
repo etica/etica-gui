@@ -35,7 +35,7 @@ class Transactions {
     this.filter = "";
   }
 
-  async syncTransactionsForSingleAddress(addressList, counters, lastBlock) {
+  async syncTransactionsForSingleAddress(addressList, counters, startBlock, lastBlock) {
    console.log('in syncTransactionsForSingleAddress');
    console.log('in syncTransactionsForSingleAddress addressList is', addressList);
    console.log('in syncTransactionsForSingleAddress counters is', counters);
@@ -44,10 +44,6 @@ class Transactions {
    let addressListlowercase = addressList.map(element => element.toLowerCase());
    console.log('addressListlowercase is', addressListlowercase);
 
-
-   /* if (counter < addressList.length) {  */
-
-      var startBlock = parseInt(counters.transactions) || 0;
 
       console.log('startBlock is', startBlock);
       console.log('lastBlock is', lastBlock);
@@ -73,10 +69,8 @@ class Transactions {
             });
           }
         }); */
-
-
-      for(let blocknb=startBlock; blocknb <= lastBlock; blocknb++){
       
+        let blocknb = startBlock;
 
         await EticaBlockchain.getBlock(blocknb, true, function (error) {
           EticaMainGUI.showGeneralError(error);
@@ -787,16 +781,9 @@ class Transactions {
                    // update the counter and store it back to file system
                    counters.transactions = blocknb;
                    EticaDatabase.setCounters(counters);
-                   console.log('reached update counters is', counters);
          /* } */
-      
-      }
 
 
-        // call the transaction sync for the next address
-        //EticaTransactions.syncTransactionsForSingleAddress(addressList, counters, lastBlock, counter + 1);
-        SyncProgress.setText("Syncing transactions is complete.");
-        EticaTransactions.setIsSyncing(false);
         return 'done';
       
    /* } else {
@@ -813,7 +800,7 @@ class Transactions {
     } */
   }
 
-  async syncTransactionsForAllAddresses(lastBlock) {
+ /* async syncTransactionsForAllAddresses(lastBlock) {
     var counters = EticaDatabase.getCounters();
     console.log('counters is', counters);
     var counter = 0;
@@ -836,7 +823,47 @@ class Transactions {
 
   return res;
 
+  } */
+
+
+  async ScanTxs(startBlock, lastBlock, batchSize) {
+    
+    EticaTransactions.setIsSyncing(true);
+    var scanTxsInterval = setInterval(async function () {
+    let maxBlock = startBlock + batchSize;
+    
+    // sync all the transactions to the current block
+    var counters = EticaDatabase.getCounters();
+    let data = await EticaBlockchain.getAccounts_nocallback();
+              
+    
+              for(let blocknb=startBlock; blocknb <= maxBlock; blocknb++){
+                let result = await EticaTransactions.syncTransactionsForSingleAddress(data, counters, blocknb, maxBlock);
+                console.log('in loop');
+                console.log('bloncknb in syncing is', blocknb);
+                startBlock = blocknb + 1;
+                console.log('startBlock is now ::: ', startBlock);
+    
+                  if(startBlock >= lastBlock){
+                    
+                     EticaTransactions.setIsSyncing(false);
+                     // signal that the sync is complete
+                     $(document).trigger("onSyncComplete");
+
+                     if (scanTxsInterval) {
+                        SyncProgress.setText("Syncing transactions is complete.");   
+                        EticaTransactions.setIsSyncing(false);
+                        clearInterval(scanTxsInterval);
+                    }
+
+                  }
+              }
+
+  }, 2000);
+              
   }
+
+
 
   renderTransactions() {
     if (!EticaTransactions.getIsLoading()) {

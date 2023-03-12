@@ -84,10 +84,7 @@ function StartSyncProcess() {
                   // enable the keep in sync feature
                   EticaTransactions.enableKeepInSync();
                   // sync all the transactions to the current block
-                  EticaTransactions.syncTransactionsForAllAddresses(localBlock.number);
-
-                  // signal that the sync is complete
-                  $(document).trigger("onSyncComplete");
+                  EticaTransactions.ScanTxs(0, localBlock.number, 500);
                 }
               }
             } else {
@@ -132,18 +129,6 @@ function StartSyncProcess() {
       }
     }
   });
-
-  // Updates balances every 30 seconds, if error means issue with node connection and reconnect with InitializeWeb3():
-  SyncBalancesInterval = setInterval(function () {
-
-    EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
-      InitializeWeb3();
-    }, function (data) {
-      //console.log('updated Balances');
-    });
-
-  }, 30000);
   
 
   /*
@@ -213,7 +198,7 @@ var RetrySuscribeSyncing = setInterval( function () {
   } catch (err) {
     EticaMainGUI.showGeneralError(err);
   }
-}, 2000);
+}, 60000);
 
 
 function InitializeWeb3() {
