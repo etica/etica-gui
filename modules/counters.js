@@ -62,9 +62,9 @@ ipcMain.on("updateCounter", (event, arg) => {
   });
 });
 
-ipcMain.on("getCounter", (event, arg) => {
+ipcMain.on("getCounter", (event, argname) => {
   db.findOne({
-    name: arg.name,
+    name: argname,
   }).exec(function (err, _counter) {
     event.returnValue = _counter;
   });

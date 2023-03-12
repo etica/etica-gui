@@ -795,7 +795,8 @@ class Transactions {
     
     
     var scanTxsInterval = setInterval(async function () {
-    let maxBlock = startBlock + batchSize;
+    let nextBatchLimit = startBlock + batchSize;
+    let maxBlock = Math.min(nextBatchLimit, lastBlock);
       
               for(let blocknb=startBlock; blocknb <= maxBlock; blocknb++){
                 let result = await EticaTransactions.syncTransactionsofWalletAddresses(data, blocknb, maxBlock);
@@ -803,19 +804,17 @@ class Transactions {
                 console.log('bloncknb in syncing is', blocknb);
                 startBlock = blocknb + 1;
                 console.log('startBlock is now ::: ', startBlock);
-                MainCounter.block = blocknb;
     
-                  if(startBlock >= lastBlock){
+                  if(blocknb >= lastBlock){
 
-                     ipcRenderer.send("updateCounter", MainCounter);
-                    
                      EticaTransactions.setIsSyncing(false);
+                     maincounter.block = blocknb;          
+                     ipcRenderer.send("updateCounter", maincounter);
                      // signal that the sync is complete
                      $(document).trigger("onSyncComplete");
+                     SyncProgress.setText("Syncing transactions is complete.");
 
                      if (scanTxsInterval) {
-                        SyncProgress.setText("Syncing transactions is complete.");   
-                        EticaTransactions.setIsSyncing(false);
                         clearInterval(scanTxsInterval);
                     }
 
