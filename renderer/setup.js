@@ -21,6 +21,18 @@ let wallets;
 
   });
 
+  $("#selectWalletFolder").on("mouseover", async function () {
+
+    $("#selectfolderhelper").css("display", "block");
+
+  });
+
+  $("#selectWalletFolder").on("mouseout", async function () {
+
+    $("#selectfolderhelper").css("display", "none");
+
+  });
+
   $("#selectWalletFolder2").off("click").on("click", async function () {
 
     try {
@@ -39,11 +51,19 @@ let wallets;
 
 
   $("#closewalletsfoundbox").off("click").on("click", function () {
+    // reset in case fields were filled by preload wallet:
+    $("#PreLoadWalletMode").val('');
+    $("#PreLoadDirectory").val('');
+    // go back to home screen:
     $("#checkeddirectorymsg").html("");
     $("#SelectWalletsfromListModal").css("display", "none");
   });
 
   $("#SetupBackBtn").off("click").on("click", function () {
+    // reset in case fields were filled by preload wallet:
+    $("#PreLoadWalletMode").val('');
+    $("#PreLoadDirectory").val('');
+    // go back to wallets list:
     $("#setupconnection").css("display", "none");
     $("#setupwalletlist").css("display", "block");
   });
@@ -81,6 +101,14 @@ let wallets;
 
     }
 
+
+    // Make sure UI showing wallets found list: 
+    $("#setupconnection").css("display", "none");
+    $("#setupwalletlist").css("display", "block");
+    // Show Back Button that returns to wallets list instead of return to home screen:
+    $("#SetupBackBtn").css("display", "block");
+    $("#SetupBackBtnFromPreload").css("display", "none");
+
   }
 
 
@@ -103,6 +131,18 @@ let wallets;
     let address = $("#SetupConnectAddress").val();
     console.log('pw is', pw);
     console.log('address is', address);
+
+    // if user is using popup with preload settings to connect to wallet
+    if($("#PreLoadWalletMode").val() == 'preloadmode'){
+      let preloaddirectory = $("#PreLoadDirectory").val();
+      ipcRenderer.send("checkWalletDataDbPath", preloaddirectory);
+    }
+    // user is using a wallet selected from a folder
+    else {
+      const selected_wallet = wallets.find(onewallet => onewallet.masteraddress === address);
+      ipcRenderer.send("checkWalletDataDbPath", selected_wallet.datadirectory);
+    }
+
     connectwallet( address, pw);
 
   });
@@ -110,10 +150,6 @@ let wallets;
 
 function connectwallet(_address, _pw){
 
-
-  const selected_wallet = wallets.find(onewallet => onewallet.masteraddress === _address);
-
-  let checkwalletdirectory = ipcRenderer.send("checkWalletDataDbPath", selected_wallet.datadirectory);
   var walletAddress = _address;
   let wallet = ipcRenderer.sendSync("getWallet", {masteraddress: walletAddress});
   
@@ -185,7 +221,17 @@ let stoploop = false;
 
   
 function launchwallet(wallet){
-  
+    
+    // Save preload wallet for preload popup with last wallet used next opening wallet //
+    let preloadw = {};
+    preloadw.keyword = 'LastWalletUsed';
+    preloadw.walletname = wallet.name;
+    preloadw.walletdirectory = wallet.datadirectory; 
+    preloadw.walletaddress = wallet.masteraddress;
+    ipcRenderer.send("InsertOrUpdateWalletPreload", preloadw);
+    // Save preload wallet for preload popup with last wallet used next opening wallet //
+
+    // launch wallet
     let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", wallet.datadirectory);
     let ipcResult = ipcRenderer.send("startGeth", wallet);
     window.location.replace('./index.html');
@@ -216,6 +262,46 @@ function former_used_wallets.find_wallet_launchwallet(i){
     ScanDirforWallets();
   });
   
+  function loadpreloadwallet() {
+
+  $("#PreLoadWalletMode").val('');
+  $("#PreLoadDirectory").val('');
+
+  let walletpreload = ipcRenderer.sendSync("getWalletPreload", "LastWalletUsed");
+
+
+  if(walletpreload && walletpreload.walletname &&  walletpreload.walletdirectory && walletpreload.walletaddress){
+ 
+    console.log('walletpreload loaded');
+    console.log('walletpreload loaded', walletpreload);
+
+    $("#PreLoadWalletMode").val('preloadmode');
+    $("#PreLoadDirectory").val(walletpreload.walletdirectory);
+    $("#SetupConnectAddress").val(walletpreload.walletaddress);
+    $("#SetupConnectName").html(walletpreload.walletname);
+
+
+    $("#SelectWalletsfromListModal").css("display", "block");
+    $("#setupconnection").css("display", "block");
+    $("#setupwalletlist").css("display", "none");
+    $("#checkeddirectorymsg").html("");
+    $("#SetupBackBtn").css("display", "none");
+    $("#SetupBackBtnFromPreload").css("display", "block");
+
+  }
+
+  else {
+
+    console.log('no walletpreload loaded');
+    $("#checkeddirectorymsg").html("");
+    $("#SelectWalletsfromListModal").css("display", "none");
+
+  }
+
+  }
+
+  loadpreloadwallet();
+
   /*
   ipcRenderer.on("NowalletFolderSelected", (event, error) => {
     // Handle user cancelation

@@ -18,32 +18,23 @@ db.loadDatabase(function (err) {
                   default_keystoredirectory: last used Directory for keystore
 */
 
-ipcMain.on("updateSetup", (event, arg) => {
-  db.update({
-
-  }, {$set:{ registerdirectory: arg.registerdirectory, default_blockchaindirectory: arg.default_blockchaindirectory, default_keystoredirectory: arg.default_keystoredirectory}}, {
-    upsert: true
-  }, function (err, numReplaced, upsert) {
-    // do nothing for now
-  });
+ipcMain.on("InsertOrUpdateWalletPreload", (event, arg) => {
+  db.update(
+    { keyword: arg.keyword },
+    { $set: { walletname: arg.walletname, walletdirectory: arg.walletdirectory, walletaddress: arg.walletaddress } },
+    { upsert: true },
+    function (err, doc) {
+      // do nothing for now
+    }
+  );
 });
 
-ipcMain.on("getSetup", (event, arg) => {
-  db.find({}).exec(function (err, docs) {
-    ResultData = [];
 
-      let _setup = {
-        "registerdirectory": docs[0].registerdirectory,
-        "default_blockchaindirectory": docs[0].default_blockchaindirectory,
-        "default_keystoredirectory": docs[0].default_keystoredirectory
-      };
-
-      ResultData.push(
-        _setup
-      );
-
-    // return the proposals data
-    event.returnValue = ResultData;
+ipcMain.on("getWalletPreload", (event, arg) => {
+  db.findOne({
+    keyword: arg
+  }).exec(function (err, _walletpreload) {
+    event.returnValue = _walletpreload;
   });
 });
 
