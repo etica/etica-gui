@@ -283,7 +283,7 @@ NewWallet.vector = iv.toString('hex');
       NewWallet.wsport = "8551";
       NewWallet.wsaddress =  "127.0.0.1";
       NewWallet.port = "30317";
-      NewWallet.contractaddress = '0x1804d5D62Bfa9AbF149eF05Dd4C999cCa2af48C2'; // $("#ImportWalletTestnetContractAddress").val();
+      NewWallet.contractaddress = '0x49E32a9706b5cBa3E609Cad9973c087b2E0a7BDe'; // $("#ImportWalletTestnetContractAddress").val();
     }
     }
 
