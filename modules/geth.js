@@ -172,6 +172,7 @@ class Geth {
   }
 
   stopGeth() {
+    console.log('stopGeth called');
     this.isRunning = false;
     this.wallet = null;
 

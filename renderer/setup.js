@@ -59,6 +59,16 @@ let wallets;
     $("#SelectWalletsfromListModal").css("display", "none");
   });
 
+  $("#SetupBackBtnFromPreload").off("click").on("click", function () {
+    // reset in case fields were filled by preload wallet:
+    $("#PreLoadWalletMode").val('');
+    $("#PreLoadDirectory").val('');
+    // go back to home screen:
+    $("#checkeddirectorymsg").html("");
+    $("#SelectWalletsfromListModal").css("display", "none");
+  });
+  
+
   $("#SetupBackBtn").off("click").on("click", function () {
     // reset in case fields were filled by preload wallet:
     $("#PreLoadWalletMode").val('');
@@ -127,6 +137,9 @@ let wallets;
 
   $("#SetupConnectBtn").off("click").on("click", function () {
     
+    $("#SetupConnectionLoader").css("display", "block");
+    $("#SetupConnectionBtns").css("display", "none");
+
     let pw = $("#SetupConnectPw").val();
     let address = $("#SetupConnectAddress").val();
     console.log('pw is', pw);
@@ -158,7 +171,10 @@ function connectwallet(_address, _pw){
     let ipcResult = ipcRenderer.send("startGeth", wallet);
   }
   else{
+    ipcResult = ipcRenderer.send("stopGeth", null);
     $("#SetupConnectError").html('error wallet not found in datadirectory');
+    $("#SetupConnectionLoader").css("display", "none");
+    $("#SetupConnectionBtns").css("display", "inline-flex");
     return false;
   }
 
@@ -180,9 +196,12 @@ let stoploop = false;
 
               await web3Local.eth.personal.unlockAccount(_address, _pw, function (error, result) { 
                 if (error) {
+                  ipcResult = ipcRenderer.send("stopGeth", null);
                   console.log("Wrong password for the selected address!");
                   console.log("Wrong password for the selected address!", error);
-                  $("#SetupConnectError").html('Wrong password for the selected wallet!');
+                  $("#SetupConnectError").html('wrong password');
+                  $("#SetupConnectionLoader").css("display", "none");
+                  $("#SetupConnectionBtns").css("display", "inline-flex");
                   return false;
                 }
               });
@@ -200,8 +219,9 @@ let stoploop = false;
               }
 
               else {
-                console.log('password not verified');
-                $("#SetupConnectError").html('Wrong password!');
+                //console.log('wallet not unlocked');
+                //ipcResult = ipcRenderer.send("stopGeth", null);
+                //$("#SetupConnectError").html('wallet not unlocked yet');
                 return false;
               }
 
@@ -211,7 +231,10 @@ let stoploop = false;
         });
       } catch (err) {
         console.log('err :::::', err);
+        ipcResult = ipcRenderer.send("stopGeth", null);
         $("#SetupConnectError").html(err);
+        $("#SetupConnectionLoader").css("display", "none");
+        $("#SetupConnectionBtns").css("display", "inline-flex");
       }
     }, 2000);
 
