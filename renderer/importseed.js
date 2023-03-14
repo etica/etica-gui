@@ -296,7 +296,7 @@ NewWallet.vector = iv.toString('hex');
     ipcRenderer.send("storeWallet", NewWallet);    
 
     let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: NewWallet.masteraddress});
-
+    ipcRenderer.send("initializeGeth", _wallet);
     ipcResult = ipcRenderer.send("startGeth", _wallet);
 
     InitializeWeb3toImportAccount();

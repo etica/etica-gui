@@ -12,6 +12,7 @@ class Geth {
   constructor() {
     this.isRunning = false;
     this.gethProcess = null;
+    this.gethInitProcess = null;
     this.logGethEvents = false;
     this.wallet = null;
     this.#walletpw = null;
@@ -52,7 +53,7 @@ class Geth {
   }
 
   startGeth(wallet) {
-    console.log('startGeth called');
+    console.log('startGeth called!');
     if(wallet.pw != ''){
       this.#walletpw = wallet.pw;
       wallet.pw = '';
@@ -171,6 +172,69 @@ class Geth {
     }
   }
 
+  initializeGeth(wallet) {
+    
+    const datadir = wallet.blockchaindirectory;
+    const nodekeyPath = `${datadir}/geth/nodekey`;
+
+    if (fs.existsSync(nodekeyPath)) {
+       console.log('Geth data directory has already been initialized, abort');
+       return false;
+    } else {
+       console.log('Geth data directory has not been initialized, keep going');
+    }
+
+    let genesisfile = '';
+    let _networkid = '';
+
+    if(wallet.type == 'mainnet'){
+      _networkid = '61803';
+      genesisfile = path.join(this.rootPath, "needs", "etica_genesis.json");
+    }
+    else {
+      _networkid = wallet.networkid;
+      genesisfile = path.join(this.rootPath, "needs", "testnet_genesis.json");
+    }
+
+    try {
+      const gethPath = path.join(this.binaries, "geth");
+      console.log('initialising geth --datadir', datadir);
+      console.log('initialising geth --networkid', _networkid);
+      console.log('initialising geth genesisfile', genesisfile);
+      // LOCAL DEV NODE FOR TESTING //
+      this.gethInitProcess = child_process.spawn(gethPath, [
+        "--datadir="+datadir+"",
+        "--networkid",
+        ""+_networkid+"",
+        "init",
+         ""+genesisfile+""
+      ]); // LOCAL DEV NODE FOR TESTING //
+
+      if (!this.gethInitProcess) {
+        dialog.showErrorBox("Error initialising Geth", "Geth to initialize this blockchain directory!");
+      } else {
+        this.gethInitProcess.on("error", function (err) {
+          dialog.showErrorBox("Error initialising Geth", "Geth error when attempts to initialize with this blockchain directory!");
+        });
+        this.gethInitProcess.stdout.on('data', (data) => {
+          console.log(`stdout: ${data}`);
+        });
+        this.gethInitProcess.stderr.on('data', (data) => {
+          console.error(`stderr: ${data}`);
+        });
+        this.gethInitProcess.on("close", function (code) {
+            console.log(`gethInitProcess closed with code ${code}`);
+        });
+        this.gethInitProcess.on('exit', (code) => {
+          console.log(`gethInitProcess exited with code ${code}`);
+          // Do any necessary cleanup or data saving here
+        });
+      }
+    } catch (err) {
+      dialog.showErrorBox("Error initialising Geth", err.message);
+    }
+  }
+
   stopGeth() {
     console.log('stopGeth called');
     this.isRunning = false;
@@ -198,6 +262,10 @@ ipcMain.on("stopGeth", (event, arg) => {
 
 ipcMain.on("startGeth", (event, arg) => {
   EticaGeth.startGeth(arg);
+});
+
+ipcMain.on("initializeGeth", (event, arg) => {
+  EticaGeth.initializeGeth(arg);
 });
 
 ipcMain.on("getRunningWallet", (event, arg) => {

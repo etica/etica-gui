@@ -1,14 +1,12 @@
-# Etica Desktop Wallet
+# Etica GUI
 
 **Clone and run to see it in action.**
 
-This is a desktop wallet for [EticaProtocol](https://www.eticaprotocol.org/) project. It supports both ETI and EGAZ.
-The wallet allows to:  
--> create new accounts, export and import accounts  
+This is a desktop wallet for [EticaProtocol](https://www.eticaprotocol.org/) project. It supports both ETI and EGAZ. The wallet allows to:
+-> create and import wallets from mnemonic  
 -> send and receive EGAZ  
 -> send and receive ETI  
--> interact with Etica smart contract (make proposals, vote...)  
--> keep track of accounts' addresses votes and alert when a vote must be revealed to avoid losing ETI  
+-> interact with whole Etica smart contract (create proposals, votes ...)
 
 ## To Use
 
@@ -21,17 +19,6 @@ git clone https://github.com/etica/etica-gui.git
 cd etica-gui
 # Install dependencies
 npm install
-# create .etica directory
-mkdir .etica
-# copy enodes default list on .etica directory
-cp needs/static-nodes.json .etica/
-# initiate Blockchain with etica_genesis.json (windows)
-./bin/win/geth --datadir ".etica" --networkid 61803 init needs/etica_genesis.json
-# initiate Blockchain with etica_genesis.json (linux)
-./bin/linux/geth --datadir ".etica" --networkid 61803 init needs/etica_genesis.json
-# initiate Blockchain with etica_genesis.json (macos)
-./bin/macos/geth --datadir ".etica" --networkid 61803 init needs/etica_genesis.json
-
 # Run the app
 npm start
 ```
