@@ -145,7 +145,7 @@ $(document).on("render_settings", async function () {
 
           setTimeout(() => {
             // delete the blockchain date async and wait for 5 seconds
-            ipcResult = ipcRenderer.sendSync("deleteBlockchainData", null);
+           // ipcResult = ipcRenderer.sendSync("deleteBlockchainData", null);
             // finally quit the application
             ipcResult = ipcRenderer.send("appQuit", null);
           }, 5000);
