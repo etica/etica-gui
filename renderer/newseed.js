@@ -223,12 +223,12 @@ $("#word24").html(reorderedWords[23]);
     }
 
     
-    if(!$("#NewWalletNetworkId").val()){
+    if($("input[name='wallettype']:checked").val() == 'testnet' && !$("#NewWalletNetworkId").val()){
       EticaMainGUI.showGeneralErrorNewWallet("Blockchain Network ID cannot be empty!");
       return false;
     }
     
-    if(!$("#NewWalletEnode").val()){
+    if($("input[name='wallettype']:checked").val() == 'testnet' && !$("#NewWalletEnode").val()){
       let enodeUrl = $("#NewWalletEnode").val();
       if (!(typeof enodeUrl === "string" && enodeUrl.startsWith("enode://"))) {
         EticaMainGUI.showGeneralError('Enode is invalid. An enode url should start with enode://');
@@ -236,7 +236,7 @@ $("#word24").html(reorderedWords[23]);
       }
     }
 
-    if(!$("#NewWalletContractAddress").val()){
+    if($("input[name='wallettype']:checked").val() == 'testnet' && !$("#NewWalletContractAddress").val()){
       EticaMainGUI.showGeneralErrorNewWallet("Etica smart contract address cannot be empty!");
       return false;
     }
@@ -308,7 +308,7 @@ NewWallet.vector = iv.toString('hex');
     }
     else {
      // Testnet values entered by user
-    if($("#ImportWalletTestnetNetworkId").val() == "61803"){
+    if($("#NewWalletNetworkId").val() == "61803"){
       EticaMainGUI.showGeneralErrorImportWallet("Error, NetworkId can't be equal to mainnet NetworkId (61803) for a Testnet wallet!");
       return false;
     }
