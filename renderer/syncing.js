@@ -54,7 +54,6 @@ function StartSyncProcess() {
   var subscription = web3Local.eth.subscribe("syncing", function (error, sync) {
     console.log('inside StartSyncProcess syncing subscription');
     if (!error) {
-      console.log('inside StartSyncProcess syncing subscription no error');
       console.log('inside StartSyncProcess syncing subscription no error sync is', sync);
       if (!sync) {
         console.log('inside StartSyncProcess syncing subscription no error, not synced');
@@ -178,14 +177,13 @@ if(!auto_unlock_done){
           const account = res[w];
           await web3Local.eth.personal.unlockAccount(account, _temppw, _wallet.unlocktime, async function (error, result) { 
             if (error) {
-              console.log("error autounlocking account!");
               console.log("error autounlocking account!", error);
               return false;
             }
-            console.log('account:', account);
-            console.log('result is', result);
+            //console.log('account:', account);
+            //console.log('result is', result);
             let isunlocked = await EticaBlockchain.isUnlocked(account);
-            console.log('isunlocked', isunlocked);
+            //console.log('isunlocked', isunlocked);
           });
         }
       }
@@ -222,14 +220,14 @@ function setEticaContractAddress() {
 
 var RetrySuscribeSyncing = setInterval( function () {
   try {
-    console.log('Inside RetrySuscribeSyncing');
+    //console.log('Inside RetrySuscribeSyncing');
     if(initWeb3Passed){
     if(alreadyCatchedUp == false){
-      console.log('Retry StartSyncProcess()');
+     // console.log('Retry StartSyncProcess()');
       StartSyncProcess();
     }
     else{
-      console.log('clearInterval RetrySuscribeSyncing');
+    //  console.log('clearInterval RetrySuscribeSyncing');
       clearInterval(RetrySuscribeSyncing);
     }
   }
