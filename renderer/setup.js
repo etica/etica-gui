@@ -125,7 +125,6 @@ let wallets;
 
   function selectwallet(walletName, walletAddress){
 
-    console.log('selectwallet called');
     $("#SetupConnectName").html(walletName);
     $("#SetupConnectAddress").val(walletAddress);
 
@@ -142,8 +141,6 @@ let wallets;
 
     let pw = $("#SetupConnectPw").val();
     let address = $("#SetupConnectAddress").val();
-    console.log('pw is', pw);
-    console.log('address is', address);
 
     // if user is using popup with preload settings to connect to wallet
     if($("#PreLoadWalletMode").val() == 'preloadmode'){
@@ -197,8 +194,7 @@ let stoploop = false;
               await web3Local.eth.personal.unlockAccount(_address, _pw, function (error, result) { 
                 if (error) {
                   ipcResult = ipcRenderer.send("stopGeth", null);
-                  console.log("Wrong password for the selected address!");
-                  console.log("Wrong password for the selected address!", error);
+                 // console.log("Wrong password for the selected address!", error);
                   $("#SetupConnectError").html('wrong password');
                   $("#SetupConnectionLoader").css("display", "none");
                   $("#SetupConnectionBtns").css("display", "inline-flex");
@@ -210,8 +206,9 @@ let stoploop = false;
 
               if(isunlocked == 'unlocked'){
 
-                console.log('password verified');
+               // console.log('password verified');
                 web3Local.currentProvider.connection.close();
+                ipcResult = ipcRenderer.send("stopGeth", null);
                 
                 wallet.pw = _pw;
                 launchwallet(wallet);
@@ -230,7 +227,7 @@ let stoploop = false;
           }
         });
       } catch (err) {
-        console.log('err :::::', err);
+        //console.log('err :', err);
         ipcResult = ipcRenderer.send("stopGeth", null);
         $("#SetupConnectError").html(err);
         $("#SetupConnectionLoader").css("display", "none");
@@ -294,9 +291,6 @@ function former_used_wallets.find_wallet_launchwallet(i){
 
 
   if(walletpreload && walletpreload.walletname &&  walletpreload.walletdirectory && walletpreload.walletaddress){
- 
-    console.log('walletpreload loaded');
-    console.log('walletpreload loaded', walletpreload);
 
     $("#PreLoadWalletMode").val('preloadmode');
     $("#PreLoadDirectory").val(walletpreload.walletdirectory);
@@ -315,7 +309,6 @@ function former_used_wallets.find_wallet_launchwallet(i){
 
   else {
 
-    console.log('no walletpreload loaded');
     $("#checkeddirectorymsg").html("");
     $("#SelectWalletsfromListModal").css("display", "none");
 
