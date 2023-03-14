@@ -164,11 +164,11 @@ function connectwallet(_address, _pw){
   let wallet = ipcRenderer.sendSync("getWallet", {masteraddress: walletAddress});
   
   if(wallet){
-    let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", wallet.datadirectory);
-    let ipcResult = ipcRenderer.send("startGeth", wallet);
+    ipcRenderer.send("setWalletDataDbPath", wallet.datadirectory);
+    ipcRenderer.send("startGeth", wallet);
   }
   else{
-    ipcResult = ipcRenderer.send("stopGeth", null);
+    ipcRenderer.send("stopGeth", null);
     $("#SetupConnectError").html('error wallet not found in datadirectory');
     $("#SetupConnectionLoader").css("display", "none");
     $("#SetupConnectionBtns").css("display", "inline-flex");
@@ -193,7 +193,7 @@ let stoploop = false;
 
               await web3Local.eth.personal.unlockAccount(_address, _pw, function (error, result) { 
                 if (error) {
-                  ipcResult = ipcRenderer.send("stopGeth", null);
+                  ipcRenderer.send("stopGeth", null);
                  // console.log("Wrong password for the selected address!", error);
                   $("#SetupConnectError").html('wrong password');
                   $("#SetupConnectionLoader").css("display", "none");
@@ -208,7 +208,7 @@ let stoploop = false;
 
                // console.log('password verified');
                 web3Local.currentProvider.connection.close();
-                ipcResult = ipcRenderer.send("stopGeth", null);
+                ipcRenderer.send("stopGeth", null);
                 
                 wallet.pw = _pw;
                 launchwallet(wallet);
@@ -228,7 +228,7 @@ let stoploop = false;
         });
       } catch (err) {
         //console.log('err :', err);
-        ipcResult = ipcRenderer.send("stopGeth", null);
+        ipcRenderer.send("stopGeth", null);
         $("#SetupConnectError").html(err);
         $("#SetupConnectionLoader").css("display", "none");
         $("#SetupConnectionBtns").css("display", "inline-flex");
@@ -253,7 +253,7 @@ function launchwallet(wallet){
 
     // launch wallet
     let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", wallet.datadirectory);
-    let ipcResult = ipcRenderer.send("startGeth", wallet);
+    ipcRenderer.send("startGeth", wallet);
     window.location.replace('./index.html');
 
 }
