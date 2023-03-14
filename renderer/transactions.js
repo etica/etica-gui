@@ -82,27 +82,25 @@ class Transactions {
               EticaMainGUI.showGeneralError(error);
             }, async function (logevents) {
 
-              console.log('in getPastEvents, logevents loaded');
+             // console.log('in getPastEvents, logevents loaded');
             data.transactions.forEach(async (onetx) => {
-              console.log('onetx step1 ok');
-              console.log('onetx step1', onetx);
+            //  console.log('onetx step1 ok');
+            //  console.log('onetx step1', onetx);
               if (onetx.from && onetx.to) {
-                console.log('onetx step2, onetx.from && onetx.to: ', onetx);
-                console.log('addressListlowercase is', addressListlowercase);
-                console.log('EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to) :', EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to));
-                  console.log('addressListlowercase.includes((onetx.from).toLowerCase()) || addressListlowercase.includes((onetx.to).toLowerCase()):', addressListlowercase.includes((onetx.from).toLowerCase()) || addressListlowercase.includes((onetx.to).toLowerCase()));
+               // console.log('onetx step2, onetx.from && onetx.to: ', onetx);
+               // console.log('addressListlowercase is', addressListlowercase);
                 if (addressListlowercase.includes((onetx.from).toLowerCase()) || addressListlowercase.includes((onetx.to).toLowerCase())) {
 
-                  console.log('onetx step3, EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to) :', EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to));
-                  console.log('onetx step3, onetx is:', onetx);
+                //  console.log('onetx step3, EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to) :', EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to));
+                //  console.log('onetx step3, onetx is:', onetx);
 
                   if (logevents.filter(onevent => onevent.transactionHash === onetx.hash)){
-                    console.log('onevent => onevent.transactionHash === onetx.hash) is true:', onetx);
+                //    console.log('onevent => onevent.transactionHash === onetx.hash) is true:', onetx);
                     var txevents = logevents.filter(function(onelogevent) {
                       return onelogevent.transactionHash == onetx.hash;
                     });
   
-                    console.log('I txevents before is: ', txevents);
+                 //   console.log('I txevents before is: ', txevents);
                    
 
                     // if none transfer events in tx we remove transfers events as main event is not a transfer (unless tx made from another smart contract but we dont handle that case):
@@ -111,7 +109,7 @@ class Transactions {
                     });
 
                     if(nonetransferevents && nonetransferevents.length > 0){
-                      console.log('II in nonetransferevents is: ', nonetransferevents);
+                 //     console.log('II in nonetransferevents is: ', nonetransferevents);
                       let transferevents = txevents.filter(function(onevent) {
                         return onevent.event == 'Transfer' 
                       });
@@ -119,15 +117,15 @@ class Transactions {
                       console.log('I transfereents is: ', transferevents);
                       transferevents.forEach(f => {
                         let _eventindex = txevents.findIndex(e => e.logIndex === f.logIndex);
-                        console.log('I _eventindex  is: ', _eventindex);
+                  //   console.log('I _eventindex  is: ', _eventindex);
                         txevents.splice(_eventindex,1);
                       });
                     }
                     
-                    console.log('txevents after is: ', txevents);
+                   // console.log('txevents after is: ', txevents);
 
                     txevents.forEach(async (onetxevent) => { 
-                      console.log('onetxevent step4 :', onetxevent);
+                    //  console.log('onetxevent step4 :', onetxevent);
                   let _valueeti = 0;
                   let _fromaddreti = null;
                   let _toaddreti = null;
@@ -135,13 +133,12 @@ class Transactions {
                   let _slashamount = null;
                   let _inorout = 'neutral'; // if tx is received: received, if tx is sent: sent
                   let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'StakeClaimed', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
-                  console.log('onetxevent.returnValues before includes is ', onetxevent);
+             
                 // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
                 if(!includedevents.includes(onetxevent.event)){
                    return;
                 }
 
-                console.log('onetxevent.returnValues is ', onetxevent);
                   if(onetxevent.event == 'Transfer'){
 
                     _valueeti = onetxevent.returnValues.tokens;
@@ -281,17 +278,14 @@ class Transactions {
                     inorout: _inorout
                   };
                   
-                  console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is: ', Transaction);
+                  
                   // store transaction and notify about new transactions
                   ipcRenderer.send("storeTransaction", Transaction);
-                  console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is', Transaction);
+              
 
                   if(onetxevent.event == 'NewCommit'){
 
-                    console.log('line 283 inside NewCommit Condition');
-                    console.log('line 284 geeting hashinput of commit: ', onetxevent.returnValues.votehash);
                     let _hashinput = ipcRenderer.sendSync("getHashinput", {commithash: onetxevent.returnValues.votehash});
-                    console.log('line 285 _hashinput is: ', _hashinput);
                     let _commit = ipcRenderer.sendSync("getCommit", {votehash: onetxevent.returnValues.votehash, voter: onetxevent.returnValues._voter});
                     let _hashchoice = null;
                     let _hashvary = null;
@@ -313,37 +307,25 @@ class Transactions {
                        _hashproposalhash = _hashinput.proposalhash;
   
                        let _proposal = await EticaContract.proposals(_hashinput.proposalhash);
-                       console.log('line 299 _proposal is', _proposal);
+                     
                        let _proposaldata = await EticaContract.propsdatas(_hashinput.proposalhash);
-                       console.log('line 301 _proposaldata is', _proposaldata);
+                  
                        _hashproposaltitle = _proposal[6];
                        let _propend = _proposaldata[1]; // endtime
-                       console.log('_propend is', _propend);
-                       console.log('type of _propend is', typeof _propend);
-
                        
                        let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
                        let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
                        let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();                       
                        let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
-                       console.log('MIN_CLAIM_INTERVAL is', MIN_CLAIM_INTERVAL);
-                       console.log('_proposal[3] is', _proposal[3]);
+                       
                        let _period = await EticaContract.periods(_proposal[3]);
-                       console.log('_period is', _period);
+                       
                        let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
-                       console.log('seconds_claimable is', seconds_claimable);  
-
-
+          
                        _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
-                       console.log('_timestamp_claimable is', _timestamp_claimable);
-                       console.log('revealing duration is', DEFAULT_REVEALING_TIME);
-
-
                        _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
-                       console.log('_hashproposalend is', _hashproposalend);
                        let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
                        _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
-                       console.log('_hashproposaldeadline is', _hashproposaldeadline);
                     }
 
 
@@ -364,9 +346,7 @@ class Transactions {
                     status: _status,
                     };
 
-                    console.log('line 299 before storing _NewCommit', _NewCommit);
                     ipcRenderer.send("storeCommit", _NewCommit);
-                    console.log('line 301 after storing _NewCommit', _NewCommit);
 
                   }
 
@@ -402,24 +382,19 @@ class Transactions {
                           let _proposaldata = await EticaContract.propsdatas(_commit.proposalhash);
       
                           let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
-                          console.log('DEFAULT_REVEALING_TIME is', DEFAULT_REVEALING_TIME);
+                          
                           let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
-                          console.log('DEFAULT_VOTING_TIME is', DEFAULT_VOTING_TIME);
+                          
                           let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
-                          console.log('REWARD_INTERVAL is', REWARD_INTERVAL);
+                          
                           let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
-                          console.log('MIN_CLAIM_INTERVAL is', MIN_CLAIM_INTERVAL);
-                          console.log('_proposal[3] is', _proposal[3]);
+                          
                           
                           let _period = await EticaContract.periods(_proposal[3]);
-                             console.log('_period is', _period);
+                          
                           let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
-                             console.log('seconds_claimable is', seconds_claimable);     
-                          let _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
-                             console.log('_timestamp_claimable is', _timestamp_claimable);
-                             console.log('revealing duration is', DEFAULT_REVEALING_TIME);
-      
-      
+                              
+                          let _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");      
       
                           let _hashproposaltitle = _proposal[6];
                           let _propend = _proposaldata[1]; // endtime
@@ -440,27 +415,18 @@ class Transactions {
                               status: _status
                           };
       
-              console.log('line 777 before updating with status _UpdatedCommit', _UpdatedCommit);
               ipcRenderer.send("updateCommitwithStatus", _UpdatedCommit);
-              console.log('line 779 after updating with status _UpdatedCommit', _UpdatedCommit);
-      
       
                        }
       
                       }
 
 
-                      if(onetxevent.event == 'RewardClaimed'){         
-                        console.log('in rewardclaimed linie 434');        
+                      if(onetxevent.event == 'RewardClaimed'){               
     
                         let _commit = ipcRenderer.sendSync("getCommitbyProposalHash", {proposalhash: onetxevent.returnValues.proposal_hash, voter: onetxevent.returnValues.voter});
-                        console.log('in rewardclaimed linie 434 _commit is: ', _commit);  
-                        console.log('in rewardclaimed linie 434 onetxevent.returnValues is: ', onetxevent.returnValues);  
 
-                        let _proposal = ipcRenderer.sendSync("getProposalifOwner", {proposalhash: onetxevent.returnValues.proposal_hash, proposer: onetxevent.returnValues.voter});
-                        console.log('in rewardclaimed linie 463 _proposal is: ', _proposal);  
-                        console.log('in rewardclaimed linie 464 onetxevent.returnValues is: ', onetxevent.returnValues); 
-                        
+                        let _proposal = ipcRenderer.sendSync("getProposalifOwner", {proposalhash: onetxevent.returnValues.proposal_hash, proposer: onetxevent.returnValues.voter});                         
                  
                         if(_commit && _commit.proposalhash == onetxevent.returnValues.proposal_hash){
       
@@ -470,10 +436,8 @@ class Transactions {
                               status: 3,
                               rewardamount: onetxevent.returnValues.amount
                           };
-      
-                          console.log('line 777 before updating with status _UpdatedCommit', _UpdatedCommit);
+
                           ipcRenderer.send("updateCommitRewardAmount", _UpdatedCommit);
-                          console.log('line 779 after updating with status _UpdatedCommit', _UpdatedCommit);
       
                        }
 
@@ -502,10 +466,7 @@ class Transactions {
                               slashamount:0
                           };
       
-                          console.log('line 777 before updating with status _UpdatedProposal', _UpdatedProposal);
                           ipcRenderer.send("updateProposalReward", _UpdatedProposal);
-                          console.log('line 779 after updating with status _UpdatedProposal', _UpdatedProposal);
-      
       
                         } 
       
@@ -527,10 +488,8 @@ class Transactions {
                               slashduration: onetxevent.returnValues.duration,
                               slashamount: onetxevent.returnValues.amount
                           };
-      
-              console.log('line 777 before updating reward amount with status _UpdatedCommitSlash', _UpdatedCommit);
+  
               ipcRenderer.send("updateCommitSlash", _UpdatedCommit);
-              console.log('line 779 after updating with status _UpdatedCommitSlash', _UpdatedCommit);
       
       
                        }
@@ -538,8 +497,6 @@ class Transactions {
   
   
                        if(_proposal && _proposal.proposalhash == onetxevent.returnValues.proposal_hash){
-  
-                        console.log('inside found _proposal is true: ');
   
                         let proposaldata = await EticaContract.propsdatas(onetxevent.returnValues.proposal_hash);
                         let _status = _proposal.status;
@@ -560,10 +517,7 @@ class Transactions {
                             slashamount: onetxevent.returnValues.amount
                         };
     
-                        console.log('line 777 before updating with status _UpdatedProposalSlash', _UpdatedProposal);
-                        ipcRenderer.send("updateProposalSlash", _UpdatedProposal);
-                        console.log('line 779 after updating with status _UpdatedProposalSlash', _UpdatedProposal);
-    
+                        ipcRenderer.send("updateProposalSlash", _UpdatedProposal);  
     
                       } 
   
@@ -585,18 +539,13 @@ class Transactions {
                               fee: onetxevent.returnValues.fee
                           };
       
-              console.log('line 777 before updating reward amount with status _UpdatedCommitFee', _UpdatedCommit);
               ipcRenderer.send("updateCommitFee", _UpdatedCommit);
-              console.log('line 779 after updating with status _UpdatedCommitFee', _UpdatedCommit);
-      
       
                        }
   
   
   
                        if(_proposal && _proposal.proposalhash == onetxevent.returnValues.proposal_hash){
-  
-                        console.log('inside found _proposal is true: ');
   
                         let proposaldata = await EticaContract.propsdatas(onetxevent.returnValues.proposal_hash);
                         let _status = _proposal.status;
@@ -616,10 +565,7 @@ class Transactions {
                             fee: onetxevent.returnValues.fee
                         };
     
-                        console.log('line 777 before updating with status _UpdatedProposalFee', _UpdatedProposal);
                         ipcRenderer.send("updateProposalFee", _UpdatedProposal);
-                        console.log('line 779 after updating with status _UpdatedProposalSlash', _UpdatedProposal);
-    
     
                       } 
   
@@ -628,9 +574,7 @@ class Transactions {
 
                       if(onetxevent.event == 'NewProposal'){
 
-                        console.log('line 474 inside NewProposal Condition');
                         let _savedproposal = ipcRenderer.sendSync("getProposal", {proposalhash: onetxevent.returnValues.proposed_release_hash});
-                        console.log('line 476 _savedproposal is: ', _savedproposal);
   
                         let _hashproposalend =null;
                         let _hashproposaldeadline =null;
@@ -650,42 +594,22 @@ class Transactions {
                         }
       
                            let _proposal = await EticaContract.proposals(onetxevent.returnValues.proposed_release_hash);
-                           console.log('line 659 _proposal is', _proposal);
                            let _proposaldata = await EticaContract.propsdatas(onetxevent.returnValues.proposed_release_hash);
-                           console.log('line 659 _proposaldata is', _proposaldata);
-                           let _propend = _proposaldata[1]; // endtime
-                           console.log('_propend is', _propend);
-                            console.log('type of _propend is', typeof _propend);
-      
-                            
-      
+                           let _propend = _proposaldata[1]; // endtime      
       
                             let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
-                            console.log('DEFAULT_REVEALING_TIME is', DEFAULT_REVEALING_TIME);
                             let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
-                            console.log('DEFAULT_VOTING_TIME is', DEFAULT_VOTING_TIME);
                             let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
-                            console.log('REWARD_INTERVAL is', REWARD_INTERVAL);
                             let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
-                            console.log('MIN_CLAIM_INTERVAL is', MIN_CLAIM_INTERVAL);
-                            console.log('_proposal[3] is', _proposal[3]);
                             
                             let _period = await EticaContract.periods(_proposal[3]);
-                               console.log('_period is', _period);
-                            let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
-                               console.log('seconds_claimable is', seconds_claimable);    
+                            let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);  
       
-                            
                             _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
-                            console.log('_timestamp_claimable is', _timestamp_claimable);
-                            console.log('revealing duration is', DEFAULT_REVEALING_TIME);
-      
       
                             _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
-                            console.log('_hashproposalend is', _hashproposalend);
-                           let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
+                            let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
                              _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
-                           console.log('_hashproposaldeadline is', _hashproposaldeadline);
       
                            let _diseaseindex = await EticaContract.diseasesbyIds(_proposal.disease_id);
                            let _disease = await EticaContract.diseases(_diseaseindex);
@@ -711,10 +635,8 @@ class Transactions {
                           timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"), // blocktimestamp
                           blocknumber: data.number // blocktimestamp
                         };
-      
-                        console.log('line 558before storing _NewProposal', _NewProposal);
+
                         ipcRenderer.send("storeProposal", _NewProposal);
-                        console.log('line 560 after storing _NewProposal', _NewProposal);
       
                       }
 
@@ -751,17 +673,12 @@ class Transactions {
                       inorout: _inoroutegaz
                     };
     
-                    console.log('before stored Transaction from onetx.input== is: ', Transaction);
                     // store transaction and notify about new transactions
                     ipcRenderer.send("storeTransaction", Transaction);
-                    console.log('stored Transaction from onetx.input== is: ', Transaction);
 
 
                   }
-
-
-
-                  
+                 
                 }
               }
             });
@@ -800,9 +717,8 @@ class Transactions {
       
               for(let blocknb=startBlock; blocknb <= maxBlock; blocknb++){
                 let result = await EticaTransactions.syncTransactionsofWalletAddresses(data, blocknb, maxBlock);
-                //console.log('bloncknb in syncing is', blocknb);
+                
                 startBlock = blocknb + 1;
-                //console.log('startBlock is now ::: ', startBlock);
     
                   if(blocknb >= lastBlock){
 
@@ -915,23 +831,13 @@ class Transactions {
             EticaMainGUI.showGeneralError(error);
           }, async function (logevents) {
 
-          console.log('in enableKeepInSync() getPastEvents, logevents loaded');
           data.transactions.forEach(onetx => {
-            console.log('enableKeepInSync() onetx step1 ok');
-            console.log('enableKeepInSync() onetx step1', onetx);
-
 
             if (onetx.from && onetx.to) {
-              console.log('enableKeepInSync() onetx step2, onetx.from && onetx.to: ', onetx);
+
               if (EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to)) {
 
-                console.log('enableKeepInSync() onetx step3, EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to) :', onetx);
-
                 if (logevents.filter(onevent => onevent.transactionHash === onetx.hash)){
-                  console.log('enableKeepInSync() onevent => onevent.transactionHash === onetx.hash) is true:', onetx);
-                  console.log('enableKeepInSync() logevents) is :', logevents);
-
-                  console.log('II txevents before is: ', txevents);
 
                   var txevents = logevents.filter(function(onelogevent) {
                     return onelogevent.transactionHash == onetx.hash;
@@ -943,23 +849,17 @@ class Transactions {
                   });
 
                   if(nonetransferevents && nonetransferevents.length > 0){
-                    console.log('II in nonetransferevents is: ', nonetransferevents);
                     let transferevents = txevents.filter(function(onevent) {
                       return onevent.event == 'Transfer' 
                     });
 
-                    console.log('II transfereents is: ', transferevents);
                     transferevents.forEach(f => {
                       let _eventindex = txevents.findIndex(e => e.logIndex === f.logIndex);
-                      console.log('II _eventindex  is: ', _eventindex);
                       txevents.splice(_eventindex,1);
                     });
                   }
-                    
-                    console.log('II txevents after is: ', txevents);
                   
                   txevents.forEach( async(onetxevent) => { 
-                    console.log('enableKeepInSync() onetxevent step4 :', onetxevent);
                 let _valueeti = 0;
                 let _fromaddreti = null;
                 let _toaddreti = null;
@@ -1111,16 +1011,12 @@ class Transactions {
                   inorout: _inorout
                 };
                 
-                console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is: ', Transaction);
                 // store transaction and notify about new transactions
                 ipcRenderer.send("storeTransaction", Transaction);
 
                 if(onetxevent.event == 'NewCommit'){
 
-                  console.log('line 643 inside NewCommit Condition');
-                  console.log('line 644 geeting hashinput of commit: ', onetxevent.returnValues.votehash);
                   let _hashinput = ipcRenderer.sendSync("getHashinput", {commithash: onetxevent.returnValues.votehash});
-                  console.log('line 644 _hashinput is: ', _hashinput);
                   let _commit = ipcRenderer.sendSync("getCommit", {votehash: onetxevent.returnValues.votehash, voter: onetxevent.returnValues._voter});
                   let _hashchoice = null;
                   let _hashvary = null;
@@ -1142,47 +1038,23 @@ class Transactions {
                      _hashproposalhash = _hashinput.proposalhash;
 
                      let _proposal = await EticaContract.proposals(_hashinput.proposalhash);
-                     console.log('line 659 _proposal is', _proposal);
                      let _proposaldata = await EticaContract.propsdatas(_hashinput.proposalhash);
-                     console.log('line 659 _proposaldata is', _proposaldata);
                      _hashproposaltitle = _proposal[6];
                      let _propend = _proposaldata[1]; // endtime
-                     console.log('_propend is', _propend);
-                      console.log('type of _propend is', typeof _propend);
-
-                      
-
 
                       let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
-                      console.log('DEFAULT_REVEALING_TIME is', DEFAULT_REVEALING_TIME);
                       let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
-                      console.log('DEFAULT_VOTING_TIME is', DEFAULT_VOTING_TIME);
                       let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
-                      console.log('REWARD_INTERVAL is', REWARD_INTERVAL);
                       let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
-                      console.log('MIN_CLAIM_INTERVAL is', MIN_CLAIM_INTERVAL);
-                      console.log('_proposal[3] is', _proposal[3]);
                       
                       let _period = await EticaContract.periods(_proposal[3]);
-                         console.log('_period is', _period);
                       let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
-                         console.log('seconds_claimable is', seconds_claimable);    
-
                       
                       _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
-                      console.log('_timestamp_claimable is', _timestamp_claimable);
-                      console.log('revealing duration is', DEFAULT_REVEALING_TIME);
-
-
                       _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
-                      console.log('_hashproposalend is', _hashproposalend);
                      let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
                        _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
-                     console.log('_hashproposaldeadline is', _hashproposaldeadline);
                     }
-
-                  
-
 
                   var _NewCommit = {
                   votehash: onetxevent.returnValues.votehash,
@@ -1201,9 +1073,7 @@ class Transactions {
                   status: _status,
                   };
 
-                  console.log('line 671 before storing _NewCommit', _NewCommit);
                   ipcRenderer.send("storeCommit", _NewCommit);
-                  console.log('line 673 after storing _NewCommit', _NewCommit);
 
                 }
 
@@ -1238,24 +1108,16 @@ class Transactions {
                     let _proposaldata = await EticaContract.propsdatas(_commit.proposalhash);
 
                     let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
-                    console.log('DEFAULT_REVEALING_TIME is', DEFAULT_REVEALING_TIME);
+                    
                     let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
-                    console.log('DEFAULT_VOTING_TIME is', DEFAULT_VOTING_TIME);
+                    
                     let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
-                    console.log('REWARD_INTERVAL is', REWARD_INTERVAL);
+                    
                     let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
-                    console.log('MIN_CLAIM_INTERVAL is', MIN_CLAIM_INTERVAL);
-                    console.log('_proposal[3] is', _proposal[3]);
                     
                     let _period = await EticaContract.periods(_proposal[3]);
-                       console.log('_period is', _period);
                     let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
-                       console.log('seconds_claimable is', seconds_claimable);     
                     let _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
-                       console.log('_timestamp_claimable is', _timestamp_claimable);
-                       console.log('revealing duration is', DEFAULT_REVEALING_TIME);
-
-
 
                     let _hashproposaltitle = _proposal[6];
                     let _propend = _proposaldata[1]; // endtime
@@ -1276,10 +1138,7 @@ class Transactions {
                         status: _status
                     };
 
-        console.log('line 777 before updating with status _UpdatedCommit', _UpdatedCommit);
         ipcRenderer.send("updateCommitwithStatus", _UpdatedCommit);
-        console.log('line 779 after updating with status _UpdatedCommit', _UpdatedCommit);
-
 
                  }
 
@@ -1290,9 +1149,6 @@ class Transactions {
     
                       let _commit = ipcRenderer.sendSync("getCommitbyProposalHash", {proposalhash: onetxevent.returnValues.proposal_hash, voter: onetxevent.returnValues.voter});
                       let _proposal = ipcRenderer.sendSync("getProposalifOwner", {proposalhash: onetxevent.returnValues.proposal_hash, proposer: onetxevent.returnValues.voter});
-                      console.log('RewardClaimed _proposal is: ', _proposal);
-                      console.log('RewardClaimed onetxevent.returnValues.proposal_hash is: ', onetxevent.returnValues.proposal_hash);
-                      console.log('RewardClaimed onetxevent.returnValues.voter is: ', onetxevent.returnValues.voter);
                
                       if(_commit && _commit.proposalhash == onetxevent.returnValues.proposal_hash){
     
@@ -1302,22 +1158,15 @@ class Transactions {
                             status: 3,
                             rewardamount: onetxevent.returnValues.amount
                         };
-    
-            console.log('line 777 before updating reward amount with status _UpdatedCommit', _UpdatedCommit);
-            ipcRenderer.send("updateCommitRewardAmount", _UpdatedCommit);
-            console.log('line 779 after updating with status _UpdatedCommit', _UpdatedCommit);
-    
-    
-                     }
 
+            ipcRenderer.send("updateCommitRewardAmount", _UpdatedCommit);
+  
+                     }
 
 
                      if(_proposal && _proposal.proposalhash == onetxevent.returnValues.proposal_hash){
 
-                      console.log('inside found _proposal is true: ');
-
                       let proposaldata = await EticaContract.propsdatas(onetxevent.returnValues.proposal_hash);
-                      console.log('RewardClaimed proposaldata is: ', proposaldata);
                       let _status = _proposal.status;
 
                       // make sure we retrieved proposal without issues, to avoid undefinied status:
@@ -1337,10 +1186,8 @@ class Transactions {
                           slashduration:0,
                           slashamount:0
                       };
-  
-                      console.log('line 777 before updating with status _UpdatedProposal', _UpdatedProposal);
+
                       ipcRenderer.send("updateProposalReward", _UpdatedProposal);
-                      console.log('line 779 after updating with status _UpdatedProposal', _UpdatedProposal);
   
   
                     } 
@@ -1364,18 +1211,12 @@ class Transactions {
                             slashamount: onetxevent.returnValues.amount
                         };
     
-            console.log('line 777 before updating reward amount with status _UpdatedCommitSlash', _UpdatedCommit);
             ipcRenderer.send("updateCommitSlash", _UpdatedCommit);
-            console.log('line 779 after updating with status _UpdatedCommitSlash', _UpdatedCommit);
-    
     
                      }
 
 
-
                      if(_proposal && _proposal.proposalhash == onetxevent.returnValues.proposal_hash){
-
-                      console.log('inside found _proposal is true: ');
 
                       let proposaldata = await EticaContract.propsdatas(onetxevent.returnValues.proposal_hash);
                       let _status = _proposal.status;
@@ -1396,10 +1237,7 @@ class Transactions {
                           slashamount: onetxevent.returnValues.amount
                       };
   
-                      console.log('line 777 before updating with status _UpdatedProposalSlash', _UpdatedProposal);
                       ipcRenderer.send("updateProposalSlash", _UpdatedProposal);
-                      console.log('line 779 after updating with status _UpdatedProposalSlash', _UpdatedProposal);
-  
   
                     } 
 
@@ -1420,10 +1258,8 @@ class Transactions {
                             status: 3,
                             fee: onetxevent.returnValues.fee
                         };
-    
-            console.log('line 777 before updating reward amount with status _UpdatedCommitFee', _UpdatedCommit);
+
             ipcRenderer.send("updateCommitFee", _UpdatedCommit);
-            console.log('line 779 after updating with status _UpdatedCommitFee', _UpdatedCommit);
     
     
                      }
@@ -1431,8 +1267,6 @@ class Transactions {
 
 
                      if(_proposal && _proposal.proposalhash == onetxevent.returnValues.proposal_hash){
-
-                      console.log('inside found _proposal is true: ');
 
                       let proposaldata = await EticaContract.propsdatas(onetxevent.returnValues.proposal_hash);
                       let _status = _proposal.status;
@@ -1451,11 +1285,8 @@ class Transactions {
                           claimed: _claimed,
                           fee: onetxevent.returnValues.fee
                       };
-  
-                      console.log('line 777 before updating with status _UpdatedProposalFee', _UpdatedProposal);
+
                       ipcRenderer.send("updateProposalFee", _UpdatedProposal);
-                      console.log('line 779 after updating with status _UpdatedProposalSlash', _UpdatedProposal);
-  
   
                     } 
 
@@ -1465,9 +1296,7 @@ class Transactions {
 
                     if(onetxevent.event == 'NewProposal'){
 
-                      console.log('line 643 inside NewProposal Condition');
                       let _savedproposal = ipcRenderer.sendSync("getProposal", {proposalhash: onetxevent.returnValues.proposed_release_hash});
-                      console.log('line 644 _savedproposal is: ', _savedproposal);
 
                       let _hashproposalend =null;
                       let _hashproposaldeadline =null;
@@ -1487,42 +1316,29 @@ class Transactions {
                       }
     
                          let _proposal = await EticaContract.proposals(onetxevent.returnValues.proposed_release_hash);
-                         console.log('line 659 _proposal is', _proposal);
+                         
                          let _proposaldata = await EticaContract.propsdatas(onetxevent.returnValues.proposed_release_hash);
-                         console.log('line 659 _proposaldata is', _proposaldata);
+                         
                          let _propend = _proposaldata[1]; // endtime
-                         console.log('_propend is', _propend);
-                          console.log('type of _propend is', typeof _propend);
-    
-                          
-    
     
                           let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
-                          console.log('DEFAULT_REVEALING_TIME is', DEFAULT_REVEALING_TIME);
+                          
                           let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
-                          console.log('DEFAULT_VOTING_TIME is', DEFAULT_VOTING_TIME);
+                          
                           let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
-                          console.log('REWARD_INTERVAL is', REWARD_INTERVAL);
+                          
                           let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
-                          console.log('MIN_CLAIM_INTERVAL is', MIN_CLAIM_INTERVAL);
-                          console.log('_proposal[3] is', _proposal[3]);
                           
                           let _period = await EticaContract.periods(_proposal[3]);
-                             console.log('_period is', _period);
-                          let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
-                             console.log('seconds_claimable is', seconds_claimable);    
-    
-                          
+                          let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);  
+                            
                           _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
-                          console.log('_timestamp_claimable is', _timestamp_claimable);
-                          console.log('revealing duration is', DEFAULT_REVEALING_TIME);
-    
     
                           _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
-                          console.log('_hashproposalend is', _hashproposalend);
+  
                          let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
-                           _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
-                         console.log('_hashproposaldeadline is', _hashproposaldeadline);
+                          _hashproposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
+                         
     
                          let _diseaseindex = await EticaContract.diseasesbyIds(_proposal.disease_id);
                          let _disease = await EticaContract.diseases(_diseaseindex);
@@ -1549,16 +1365,12 @@ class Transactions {
                         blocknumber: data.number // blocktimestamp
                       };
     
-                      console.log('line 1109 before storing _NewProposal', _NewProposal);
                       ipcRenderer.send("storeProposal", _NewProposal);
-                      console.log('line 1109 after storing _NewProposal', _NewProposal);
     
                     }
 
-
-                console.log('stored Transaction from logevents.filter(onevent => onevent.transactionHash === onetx.hash) is', Transaction);
                 $(document).trigger("onNewAccountTransaction");
-                console.log('new tx before iziToast.info is: ', Transaction);
+              
                 if(!unique_txs.includes(onetx.hash.toLowerCase())){
                   iziToast.info({
                     title: "New Transaction",
@@ -1610,15 +1422,11 @@ class Transactions {
                     slashduration: null,
                     inorout: _inoroutegaz
                   };
-  
-                  console.log('before stored Transaction from onetx.input== is: ', Transaction);
+ 
                   // store transaction and notify about new transactions
-                  ipcRenderer.send("storeTransaction", Transaction);
-                  console.log('stored Transaction from onetx.input== is: ', Transaction);
-                  
+                  ipcRenderer.send("storeTransaction", Transaction);             
                   
                 $(document).trigger("onNewAccountTransaction");
-                console.log('new tx before iziToast.info is: ', Transaction);
                 if(!unique_txs.includes(onetx.hash.toLowerCase())){
                   iziToast.info({
                     title: "New Transaction",
