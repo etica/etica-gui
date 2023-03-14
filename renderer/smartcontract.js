@@ -7,10 +7,31 @@ const ETICA_ADDRESS = '0x49E32a9706b5cBa3E609Cad9973c087b2E0a7BDe'; // local dev
 
 class SmartContract {
   constructor() {
+    this.ETICA_ADDRESS = null;
   }
+
+
+  setEticaContractAddress(_wallet) {
+    if(_wallet.type == 'mainnet'){
+      this.ETICA_ADDRESS = '0x34c61EA91bAcdA647269d4e310A86b875c09946f';
+      console.log('this.ETICA_ADDRESS mainnet is now: ', this.ETICA_ADDRESS);
+    }
+    else {
+      this.ETICA_ADDRESS = _wallet.contractaddress;
+      console.log('this.ETICA_ADDRESS testnet is now ::: ', this.ETICA_ADDRESS);
+    }
+  } 
+
+  getEticaContractAddress() {
+    console.log('getEticaContractAddress() this.ETICA_ADDRESS is', this.ETICA_ADDRESS);
+    return this.ETICA_ADDRESS;
+  }
+
+
 
   getEticaContract()
   {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     var contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
     return contract;
   } 
@@ -24,6 +45,7 @@ class SmartContract {
 
   stakesAmount(fromAddress, clbError, clbSuccess) {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let _stakesAmount = get_stakesAmount(fromAddress);
   clbSuccess(_stakesAmount);
 
@@ -37,7 +59,7 @@ class SmartContract {
 
 
   balanceEti(fromAddress) {
-
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     let _balanceEti = get_balanceEti(fromAddress);
     return _balanceEti;
   
@@ -153,6 +175,7 @@ class SmartContract {
     // SEND ETI   //
 
   getTranasctionFee_sendEti(fromAddress, toAddress, amount, clbError, clbSuccess) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
       if (error) {
         clbError(error);
@@ -202,7 +225,7 @@ class SmartContract {
 
 
   async prepareTransaction_SendEti(password, fromAddress, toAddress, amount, clbError, clbSuccess) {
-
+        const ETICA_ADDRESS = this.ETICA_ADDRESS;
         let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
         if(isunlocked == 'locked'){
@@ -273,6 +296,7 @@ class SmartContract {
    // STAKE ETI //
 
    getTranasctionFee_stakeEti(fromAddress, amount, clbError, clbSuccess) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
       if (error) {
         clbError(error);
@@ -322,7 +346,7 @@ class SmartContract {
 
 
   async prepareTransaction_StakeEti(password, fromAddress, amount, clbError, clbSuccess) {
-
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
         if(isunlocked == 'locked'){
@@ -396,9 +420,7 @@ class SmartContract {
       //  CREATE DISEASE //
 
       getTranasctionFee_createdisease(fromAddress, _diseasename, clbError, clbSuccess) {
-        console.log('in getTranasctionFee_createdisease()');
-        console.log('getTranasctionFee_createdisease() fromAddress is ', fromAddress);
-        console.log('getTranasctionFee_createdisease() _diseasename is ', _diseasename);
+        const ETICA_ADDRESS = this.ETICA_ADDRESS;
         web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
           if (error) {
             clbError(error);
@@ -442,7 +464,7 @@ class SmartContract {
     
     
       async prepareTransaction_createdisease(password, fromAddress, _diseasename, clbError, clbSuccess) {
-
+        const ETICA_ADDRESS = this.ETICA_ADDRESS;
         let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
         if(isunlocked == 'locked'){
@@ -509,6 +531,7 @@ class SmartContract {
         //  CREATE CHUNK //
 
         getTranasctionFee_createchunk(fromAddress, _diseasehash, _title, _description, clbError, clbSuccess) {
+          const ETICA_ADDRESS = this.ETICA_ADDRESS;
           web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
             if (error) {
               clbError(error);
@@ -560,7 +583,7 @@ class SmartContract {
       
       
         async prepareTransaction_createchunk(password, fromAddress, _diseasehash, _title, _description, clbError, clbSuccess) {
-          
+          const ETICA_ADDRESS = this.ETICA_ADDRESS;
           let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
              if(isunlocked == 'locked'){
@@ -636,6 +659,7 @@ class SmartContract {
         //  CREATE PROPOSAL //
 
         getTranasctionFee_createproposal(fromAddress, _diseasehash, _title, _description, raw_release_hash, _freefield, _chunkid, clbError, clbSuccess) {
+          const ETICA_ADDRESS = this.ETICA_ADDRESS;
           web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
             if (error) {
               clbError(error);
@@ -700,7 +724,7 @@ class SmartContract {
       
       
         async prepareTransaction_createproposal(password, fromAddress, _diseasehash, _title, _description, raw_release_hash, _freefield, _chunkid, clbError, clbSuccess) {
-          
+          const ETICA_ADDRESS = this.ETICA_ADDRESS;
           let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
              if(isunlocked == 'locked'){
@@ -787,6 +811,7 @@ class SmartContract {
          //  COMMIT VOTE //
 
         getTranasctionFee_commitvote(fromAddress, votehash, amount, clbError, clbSuccess) {
+          const ETICA_ADDRESS = this.ETICA_ADDRESS;
           web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
             if (error) {
               clbError(error);
@@ -837,6 +862,7 @@ class SmartContract {
       
       
         async prepareTransaction_commitvote(password, fromAddress, votehash, amount, clbError, clbSuccess) {
+          const ETICA_ADDRESS = this.ETICA_ADDRESS;
           
           let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
@@ -907,6 +933,7 @@ class SmartContract {
          //  REVEAL VOTE //
 
         getTranasctionFee_revealvote(fromAddress, _proposed_release_hash, _approved, _vary, clbError, clbSuccess) {
+          const ETICA_ADDRESS = this.ETICA_ADDRESS;
           web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
             if (error) {
               clbError(error);
@@ -959,7 +986,7 @@ class SmartContract {
       
       
         async prepareTransaction_revealvote(password, fromAddress, _proposed_release_hash, _approved, _vary, clbError, clbSuccess) {
-          
+          const ETICA_ADDRESS = this.ETICA_ADDRESS;
           let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
           if(isunlocked == 'locked'){
@@ -1033,6 +1060,7 @@ class SmartContract {
          //  CLAIM PROPOSAL //
 
         getTranasctionFee_claimproposal(fromAddress, _proposed_release_hash, clbError, clbSuccess) {
+          const ETICA_ADDRESS = this.ETICA_ADDRESS;
           web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
             if (error) {
               clbError(error);
@@ -1077,7 +1105,7 @@ class SmartContract {
       
       
         async prepareTransaction_claimproposal(password, fromAddress, _proposed_release_hash, clbError, clbSuccess) {
-          
+          const ETICA_ADDRESS = this.ETICA_ADDRESS;
           let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
           if(isunlocked == 'locked'){
@@ -1143,6 +1171,7 @@ class SmartContract {
         //  CONSOLIDATE STAKE //
 
    getTranasctionFee_stakescsldt(fromAddress, _endTime, _min_limit, _maxidx, clbError, clbSuccess) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
       if (error) {
         clbError(error);
@@ -1194,7 +1223,7 @@ class SmartContract {
 
 
   async prepareTransaction_stakescsldt(password, fromAddress, _endTime, _min_limit, _maxidx, clbError, clbSuccess) {
-    
+              const ETICA_ADDRESS = this.ETICA_ADDRESS;
               let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
               if(isunlocked == 'locked'){
@@ -1268,6 +1297,7 @@ class SmartContract {
    //  SNAP STAKE //
 
    getTranasctionFee_stakesnap(fromAddress, stakeidx, amount, clbError, clbSuccess) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
       if (error) {
         clbError(error);
@@ -1316,7 +1346,7 @@ class SmartContract {
 
 
   async prepareTransaction_stakesnap(password, fromAddress, stakeidx, amount, clbError, clbSuccess) {
-    
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
       if(isunlocked == 'locked'){
@@ -1386,6 +1416,7 @@ class SmartContract {
    //  CLAIM STAKE //
 
    getTranasctionFee_stakeclmidx(fromAddress, stakeidx, clbError, clbSuccess) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
       if (error) {
         clbError(error);
@@ -1429,7 +1460,7 @@ class SmartContract {
 
 
   async prepareTransaction_stakeclmidx(password, fromAddress, stakeidx, clbError, clbSuccess) {
-    
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
 
        if(isunlocked == 'locked'){
@@ -1496,6 +1527,7 @@ class SmartContract {
    // GETTER FUNCTIONS
 
    getStakesData(clbError, clbSuccess) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     var rendererData = {};
     rendererData.sumBalance = 0;
     rendererData.sumBalanceEti = 0;
@@ -1630,6 +1662,7 @@ class SmartContract {
 
   async getStakesBoardBalancesofAddress(address) {
     
+         const ETICA_ADDRESS = this.ETICA_ADDRESS;
          var addressesnames = EticaDatabase.getAddressesNames();
          var addressName = "";
           if (addressesnames) {
@@ -1690,6 +1723,7 @@ class SmartContract {
 
   async getStakesofAddress(address) {
     
+     const ETICA_ADDRESS = this.ETICA_ADDRESS;
      var addressStakes = {};
      let stakescounter = await getStakesCounters(address);
      addressStakes.stakes = await getStakes(address, stakescounter);
@@ -1725,6 +1759,7 @@ class SmartContract {
 
   async testgetProposal(clbError, clbSuccess) {
 
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     let datas ={};
     let prophash = await getProposaltest();
     let prophash2 = await getProposaltest2();
@@ -1764,7 +1799,7 @@ class SmartContract {
 
 async diseasesbyIds(_hash) {
 
-
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   async function callwithlogerrors() {
   try {
   let diseaseindex = await diseasesbyIds(_hash);
@@ -1789,6 +1824,7 @@ return callwithlogerrors();
 //returns whole disease object from global index, returns 0 if disease doesnt exists:
 async diseases(_index) {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let disease = await diseases(_index);
   return disease;
 
@@ -1804,6 +1840,7 @@ async function diseases(_diseaseindex) {
 //returns whole chunk object from global index, returns 0 if disease doesnt exists:
 async chunks(_index) {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let chunk = await chunks(_index);
   return chunk;
 
@@ -1817,6 +1854,7 @@ async function chunks(_chunkindex) {
 
 async diseaseproposals(_hash, _index) {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let _diseaseproposals = await getDiseaseProposals(_hash, _index);
   return _diseaseproposals;
 
@@ -1831,6 +1869,7 @@ async diseaseproposals(_hash, _index) {
 
 async diseaseProposalsCounter(_hash) {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let _diseasenbproposals = await diseaseProposalsCounter(_hash);
   return _diseasenbproposals;
 
@@ -1844,6 +1883,7 @@ async diseaseProposalsCounter(_hash) {
 
 async diseaseChunksCounter(_hash) {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let _diseasenbchunks = await diseaseChunksCounter(_hash);
   return _diseasenbchunks;
 
@@ -1857,6 +1897,7 @@ async diseaseChunksCounter(_hash) {
 
 async getdiseasehashbyName(_name) {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let diseasehash = await getdiseasehashbyName(_name);
   return diseasehash;
 
@@ -1871,6 +1912,7 @@ async getdiseasehashbyName(_name) {
 
 async proposals(_hash) {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let proposal = await proposals(_hash);
   return proposal;
 
@@ -1884,6 +1926,7 @@ async function proposals(_proposalhash) {
 
 async propsdatas(_hash) {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let propopsaldata = await propsdatas(_hash);
   return propopsaldata;
 
@@ -1897,6 +1940,7 @@ async function propsdatas(_proposalhash) {
 
 async getdiseasehashbyName(_name) {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let diseasehash = await getdiseasehashbyName(_name);
   return diseasehash;
 
@@ -1911,6 +1955,7 @@ async function getdiseasehashbyName(_name) {
 
 async periods(_id) {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let period = await periods(_id);
   return period;
 
@@ -1925,6 +1970,7 @@ async function periods(periodid) {
 
 async DEFAULT_REVEALING_TIME() {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let _revealingduration = await revealingduration();
   return _revealingduration;
 
@@ -1938,6 +1984,7 @@ async function revealingduration() {
 
 async DEFAULT_VOTING_TIME() {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let _votingduration = await votingduration();
   return _votingduration;
 
@@ -1952,11 +1999,12 @@ async function votingduration() {
 
 async REWARD_INTERVAL() {
 
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
   let _intervalduration = await intervalduration();
   return _intervalduration;
 
 async function intervalduration() {
-  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
     let _duration = await contract.methods.REWARD_INTERVAL().call();
     return _duration;
 }

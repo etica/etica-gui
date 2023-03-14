@@ -195,6 +195,27 @@ if(!auto_unlock_done){
 
 }
 
+function setEticaContractAddress() {
+
+    // get running wallet:
+    let _wallet = ipcRenderer.sendSync("getRunningWallet");
+    
+    if(_wallet.contractaddress){
+    
+      let etica_contract = EticaContract.getEticaContractAddress();
+      console.log('current_address is', etica_contract);
+      if(etica_contract != _wallet.contractaddress){
+        EticaContract.setEticaContractAddress(_wallet);
+      }
+    
+    }
+    // should never happen:
+    else {
+      EticaMainGUI.showGeneralError('Error, no smart contract address provided');
+    }
+
+  }
+
 var RetrySuscribeSyncing = setInterval( function () {
   try {
     console.log('Inside RetrySuscribeSyncing');
@@ -252,6 +273,7 @@ var InitWeb3 = setInterval(async function () {
         clearInterval(InitWeb3);
         StartSyncProcess();
         autounlockWallet();
+        setEticaContractAddress();
       }
     });
   } catch (err) {
