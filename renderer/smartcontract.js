@@ -2,8 +2,6 @@
 const {ipcRenderer} = require("electron");
 
 let EticaContractJSON = require('../EticaRelease.json');
-//const ETICA_ADDRESS = '0x34c61EA91bAcdA647269d4e310A86b875c09946f'; // mainnet
-const ETICA_ADDRESS = '0x49E32a9706b5cBa3E609Cad9973c087b2E0a7BDe'; // local dev blockchain
 
 class SmartContract {
   constructor() {
@@ -13,21 +11,16 @@ class SmartContract {
 
   setEticaContractAddress(_wallet) {
     if(_wallet.type == 'mainnet'){
-      this.ETICA_ADDRESS = '0x34c61EA91bAcdA647269d4e310A86b875c09946f';
-      console.log('this.ETICA_ADDRESS mainnet is now: ', this.ETICA_ADDRESS);
+      this.ETICA_ADDRESS = '0x34c61EA91bAcdA647269d4e310A86b875c09946f'; // Etica mainnet smart contract
     }
     else {
       this.ETICA_ADDRESS = _wallet.contractaddress;
-      console.log('this.ETICA_ADDRESS testnet is now ::: ', this.ETICA_ADDRESS);
     }
   } 
 
   getEticaContractAddress() {
-    console.log('getEticaContractAddress() this.ETICA_ADDRESS is', this.ETICA_ADDRESS);
     return this.ETICA_ADDRESS;
   }
-
-
 
   getEticaContract()
   {

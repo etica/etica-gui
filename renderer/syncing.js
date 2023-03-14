@@ -203,9 +203,12 @@ function setEticaContractAddress() {
     if(_wallet.contractaddress){
     
       let etica_contract = EticaContract.getEticaContractAddress();
-      console.log('current_address is', etica_contract);
+      let etica_blockchain = EticaBlockchain.getEticaContractAddress();
       if(etica_contract != _wallet.contractaddress){
         EticaContract.setEticaContractAddress(_wallet);
+      }
+      if(etica_blockchain != _wallet.contractaddress){
+        EticaBlockchain.setEticaContractAddress(_wallet);
       }
     
     }
@@ -262,7 +265,6 @@ var InitWeb3 = setInterval(async function () {
       console.log('provider close');
     }); */
 
-
     console.log('inside InitWeb3');
     web3Local.eth.net.isListening(function (error, success) {
       if (!error) {
@@ -271,9 +273,9 @@ var InitWeb3 = setInterval(async function () {
         initWeb3Passed = true; 
         console.log('initWeb3Passed is now: ', initWeb3Passed);
         clearInterval(InitWeb3);
+        setEticaContractAddress();
         StartSyncProcess();
         autounlockWallet();
-        setEticaContractAddress();
       }
     });
   } catch (err) {

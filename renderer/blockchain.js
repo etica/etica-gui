@@ -3,14 +3,25 @@ const {ipcRenderer} = require("electron");
 
 let EticaContractJSON = require('../EticaRelease.json');
 
-//const ETICA_ADDRESS = '0x34c61EA91bAcdA647269d4e310A86b875c09946f'; // mainnet
-const ETICA_ADDRESS = '0x49E32a9706b5cBa3E609Cad9973c087b2E0a7BDe'; // local dev blockchain
-
 class Blockchain {
   
   constructor() {
     this.txSubscribe = null;
     this.bhSubscribe = null;
+    this.ETICA_ADDRESS = null;
+  }
+
+  setEticaContractAddress(_wallet) {
+    if(_wallet.type == 'mainnet'){
+      this.ETICA_ADDRESS = '0x34c61EA91bAcdA647269d4e310A86b875c09946f'; // // Etica mainnet smart contract
+    }
+    else {
+      this.ETICA_ADDRESS = _wallet.contractaddress;
+    }
+  } 
+
+  getEticaContractAddress() {
+    return this.ETICA_ADDRESS;
   }
 
   getBlock(blockToGet, includeData, clbError, clbSuccess) {
@@ -24,6 +35,7 @@ class Blockchain {
   }
 
   getPastEvents(options, clbError, clbSuccess) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
     contract.getPastEvents('allEvents', options, function (error, block) {
       if (error) {
@@ -249,6 +261,14 @@ class Blockchain {
   }
 
   getAccountsData(clbError, clbSuccess) {
+    
+    // since getAccountsData is a function called very early in init process need to set ETICA_ADDRESS if not yet
+    // ETICA_ADDRESS is set by syncing.setEticaContractAddress() otherwise
+    if(!this.ETICA_ADDRESS){
+      let _wallet = ipcRenderer.sendSync("getRunningWallet");
+      this.setEticaContractAddress(_wallet);
+    }
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
     var rendererData = {};
     rendererData.sumBalance = 0;
     rendererData.sumBalanceEti = 0;
@@ -346,7 +366,7 @@ class Blockchain {
   // created for Update ETI function, checks if smart contract deployed before querying Etica smart contract to avoid issues with testnet smart contracts not deployed 
   // or smart contract not accessible at first sync
   async function isEticaContractDeployed(address) {
-
+    console.log('checking is deployed at address', address);
     let isdeployed = await web3Local.eth.getCode(address, (error, bytecode) => {
        if (error) {
          console.error(error);
