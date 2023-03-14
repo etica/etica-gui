@@ -104,6 +104,22 @@ $("#InitializeWallet").off("click").on("click", function () {
 
   });
 
+  $("input[name='wallettype']").click(function() {
+
+    if ($("#wallettestnet").is(":checked")) {
+      // testnet wallet:
+      $("#NewWalletNetworkIdDiv").css('display', 'block');
+      $("#NewWalletEnodeDiv").css('display', 'block');
+      $("#NewWalletContractAddressDiv").css('display', 'block');
+    } else {
+      // mainnet wallet, not necessary & user can update settings once wallet created:
+      $("#NewWalletNetworkIdDiv").css('display', 'none');
+      $("#NewWalletEnodeDiv").css('display', 'none');
+      $("#NewWalletContractAddressDiv").css('display', 'none');
+    }
+    
+});  
+
 
   $("#GoCheckMnemonic").off("click").on("click", function () {
 
@@ -208,6 +224,25 @@ $("#word24").html(reorderedWords[23]);
     }
 
     
+    if(!$("#NewWalletNetworkId").val()){
+      EticaMainGUI.showGeneralErrorNewWallet("Blockchain Network ID cannot be empty!");
+      return false;
+    }
+    
+    if(!$("#NewWalletEnode").val()){
+      let enodeUrl = $("#NewWalletEnode").val();
+      if (!(typeof enodeUrl === "string" && enodeUrl.startsWith("enode://"))) {
+        EticaMainGUI.showGeneralError('Enode is invalid. An enode url should start with enode://');
+        return false;
+      }
+    }
+
+    if(!$("#NewWalletContractAddress").val()){
+      EticaMainGUI.showGeneralErrorNewWallet("Etica smart contract address cannot be empty!");
+      return false;
+    }
+
+    
     if(!$("#walletpassword").val()){
       EticaMainGUI.showGeneralErrorNewWallet("Password cannot be empty!");
       return false;
@@ -288,12 +323,12 @@ NewWallet.vector = iv.toString('hex');
       return false;
     }
     else{
-      NewWallet.enode = 'enode://56427938056c62a4a3f3bd1d7411e590ed8667e69712d3eb7474293f0bbf94aa4c1d11cb3a8b6ce0a86c31c4a6b1048796eaa8afb984b66be4990a10cf1dc9e7@127.0.0.1:30303'; //$("#WalletTestnetEnode").val();
-      NewWallet.networkid = '686970'; // $("#WalletTestnetNetworkId").val();
+      NewWallet.enode = $("#NewWalletEnode").val();
+      NewWallet.networkid = $("#NewWalletNetworkId").val();
       NewWallet.wsport = "8551";
       NewWallet.wsaddress =  "127.0.0.1";
       NewWallet.port = "30317";
-      NewWallet.contractaddress = "0x49E32a9706b5cBa3E609Cad9973c087b2E0a7BDe"; // $("#WalletTestnetContractAddress").val();
+      NewWallet.contractaddress = $("#NewWalletContractAddress").val();
     }
     }
 
@@ -310,7 +345,11 @@ NewWallet.vector = iv.toString('hex');
       console.log('!ipcRenderer.listenerCount("initializeGethResponse") passed');
       ipcRenderer.on("initializeGethResponse", (event, code) => {
         console.log('code response is', code);
+
+        _wallet.pw = pw;
         ipcRenderer.send("startGeth", _wallet);
+        _wallet.pw = '';
+        
         InitializeWeb3toImportAccount(_wallet);
       }); 
     }

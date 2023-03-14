@@ -108,6 +108,23 @@ $("#InitializeImportWallet").off("click").on("click", function () {
   });
 
 
+  $("input[name='importwallettype']").click(function() {
+
+      if ($("#importwallettestnet").is(":checked")) {
+        // testnet wallet:
+        $("#importwalletNetworkIdDiv").css('display', 'block');
+        $("#importwalletEnodeDiv").css('display', 'block');
+        $("#importwalletContractAddressDiv").css('display', 'block');
+      } else {
+        // mainnet wallet, not necessary & user can update settings once wallet created:
+        $("#importwalletNetworkIdDiv").css('display', 'none');
+        $("#importwalletEnodeDiv").css('display', 'none');
+        $("#importwalletContractAddressDiv").css('display', 'none');
+      }
+
+  });  
+
+
   $("#GoCheckImportMnemonic").off("click").on("click", function () {
 
     $(".mnemonicwords").show();
@@ -208,6 +225,25 @@ $("#mnemonicword24").html(reorderedWords[23]);
       return false;
     }
 
+
+    if(!$("#importwalletNetworkId").val()){
+      EticaMainGUI.showGeneralErrorNewWallet("Blockchain Network ID cannot be empty!");
+      return false;
+    }
+    
+    if(!$("#importwalletEnode").val()){
+      let enodeUrl = $("#importwalletEnode").val();
+      if (!(typeof enodeUrl === "string" && enodeUrl.startsWith("enode://"))) {
+        EticaMainGUI.showGeneralError('Enode is invalid. An enode url should start with enode://');
+        return false;
+      }
+    }
+
+    if(!$("#importwalletContractAddress").val()){
+      EticaMainGUI.showGeneralErrorNewWallet("Etica smart contract address cannot be empty!");
+      return false;
+    }
+
     
     if(!$("#importwalletpassword").val()){
       EticaMainGUI.showGeneralErrorImportWallet("Password cannot be empty!");
@@ -278,12 +314,12 @@ NewWallet.vector = iv.toString('hex');
       return false;
     }
     else{
-      NewWallet.enode = 'enode://56427938056c62a4a3f3bd1d7411e590ed8667e69712d3eb7474293f0bbf94aa4c1d11cb3a8b6ce0a86c31c4a6b1048796eaa8afb984b66be4990a10cf1dc9e7@127.0.0.1:30303'; // $("#ImportWalletTestnetEnode").val();
-      NewWallet.networkid = '686970'; // $("#ImportWalletTestnetNetworkId").val();
+      NewWallet.enode = $("#importwalletEnode").val();
+      NewWallet.networkid = $("#importwalletNetworkId").val();
       NewWallet.wsport = "8551";
       NewWallet.wsaddress =  "127.0.0.1";
       NewWallet.port = "30317";
-      NewWallet.contractaddress = '0x49E32a9706b5cBa3E609Cad9973c087b2E0a7BDe'; // $("#ImportWalletTestnetContractAddress").val();
+      NewWallet.contractaddress = $("#importwalletContractAddress").val();
     }
     }
 
@@ -297,9 +333,17 @@ NewWallet.vector = iv.toString('hex');
 
     let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: NewWallet.masteraddress});
     ipcRenderer.send("initializeGeth", _wallet);
-    ipcResult = ipcRenderer.send("startGeth", _wallet);
 
-    InitializeWeb3toImportAccount();
+    if (!ipcRenderer.listenerCount("initializeGethResponse")) {
+      console.log('!ipcRenderer.listenerCount("initializeGethResponse") passed');
+      ipcRenderer.on("initializeGethResponse", (event, code) => {
+        console.log('code response is', code);
+        _wallet.pw = pw;
+        ipcRenderer.send("startGeth", _wallet);
+        _wallet.pw = '';
+        InitializeWeb3toImportAccount(_wallet);
+      }); 
+    }
 
   });
 
@@ -326,7 +370,7 @@ NewWallet.vector = iv.toString('hex');
   });
 
 
-  function InitializeWeb3toImportAccount() {
+  function InitializeWeb3toImportAccount(_wallet) {
     let stoploop = false;
     var InitWeb3 = setInterval(async function () {
       try {
@@ -351,6 +395,16 @@ NewWallet.vector = iv.toString('hex');
   
                   // close web3Local connection then
                   web3Local.currentProvider.connection.close();
+                  
+                  // save preload for  wallet preload settings connection:
+                  let preloadw = {};
+                  preloadw.keyword = 'LastWalletUsed';
+                  preloadw.walletname = _wallet.name;
+                  preloadw.walletdirectory = _wallet.datadirectory; 
+                  preloadw.walletaddress = _wallet.masteraddress;
+                  ipcRenderer.send("InsertOrUpdateWalletPreload", preloadw);
+
+                  
                   // move to index:
                   window.location.replace('./../../../index.html');
           

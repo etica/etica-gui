@@ -236,7 +236,7 @@ var RetrySuscribeSyncing = setInterval( function () {
   } catch (err) {
     EticaMainGUI.showGeneralError(err);
   }
-}, 21000);
+}, 3000);
 
 
 function InitializeWeb3() {

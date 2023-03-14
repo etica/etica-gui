@@ -121,6 +121,18 @@
   display: none;
 } 
 
+#NewWalletNetworkIdDiv {
+  display: none;
+}
+
+#NewWalletEnodeDiv {
+  display: none;
+}
+
+#NewWalletEnodeDiv {
+  display: none;
+}
+
 /* for testing only, replace with one above once test done * /
 #CreateSeedContainer {
   display: none;
@@ -271,6 +283,24 @@
           <div class="col-sm-12 col-lg-12" title="Directory where Wallet data is stored">
             <div class="form-group">
               <input style="background-color: #141414;" id="walletdirectory" type="text" value="" placeholder="Wallet directory" class="form-control" />
+            </div>
+          </div>
+
+          <div id="NewWalletNetworkIdDiv" class="col-sm-12 col-lg-12" title="Blockchain Network ID the wallet should connect to">
+            <div class="form-group">
+              <input style="background-color: #141414;" id="NewWalletNetworkId" type="text" value="" placeholder="Blockchain Network ID" class="form-control" />
+            </div>
+          </div>
+
+          <div id="NewWalletEnodeDiv" class="col-sm-12 col-lg-12" title="The Enode the wallet should connect to">
+            <div class="form-group">
+              <input style="background-color: #141414;" id="NewWalletEnode" type="text" value="" placeholder="Enode peer" class="form-control" />
+            </div>
+          </div>
+
+          <div id="NewWalletContractAddressDiv" class="col-sm-12 col-lg-12" title="Enter address of an Etica Smart Contract deployed on this Testnet blockchain">
+            <div class="form-group">
+              <input style="background-color: #141414;" id="NewWalletContractAddress" type="text" value="" placeholder="Testnet Etica Smart Contract Address" class="form-control" />
             </div>
           </div>
 

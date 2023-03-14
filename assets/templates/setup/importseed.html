@@ -126,7 +126,19 @@
 
 #SetImportWalletInfoContainer {
   display: none;
-} 
+}
+
+#importwalletNetworkIdDiv {
+  display: none;
+}
+
+#importwalletEnodeDiv {
+  display: none;
+}
+
+#importwalletEnodeDiv {
+  display: none;
+}
 
 /* for testing only, replace with one above once test done * /
 #ImportSeedContainer {
@@ -283,14 +295,14 @@
 
       <div class="container" id="SetImportWalletInfoContainer">
 
-        <div class="content-center brand" style="position: absolute;top: 35%;left: 50%;">
+        <div class="content-center brand" style="position: absolute;top: 27vh;left: 50%;">
           <h1 class="h1-seo">ETICA•</h1>
           <h3>Open Source Wallet</h3>
           <p>Wallet Settings</p>
 
         </div>
 
-        <div id="SetImportWalletInfo" class="row" style="position: absolute;top: 45%;left:11%;width:70%;">
+        <div id="SetImportWalletInfo" class="row" style="position: absolute;top: 38vh;left:11%;width:70%;">
 
           <div class="col-sm-12 col-lg-12" style="display: inline-flex;margin-bottom: 1vh;">
           <div class="form-check form-check-radio" style="margin-right: 4%;">
@@ -324,6 +336,24 @@
           <div class="col-sm-12 col-lg-12" title="Directory where Wallet data is stored">
             <div class="form-group">
               <input style="background-color: #141414;" id="importwalletdirectory" type="text" value="" placeholder="Wallet directory" class="form-control" />
+            </div>
+          </div>
+
+          <div id="importwalletNetworkIdDiv" class="col-sm-12 col-lg-12" title="Blockchain Network ID the wallet should connect to">
+            <div class="form-group">
+              <input style="background-color: #141414;" id="importwalletNetworkId" type="text" value="" placeholder="Blockchain Network ID" class="form-control" />
+            </div>
+          </div>
+
+          <div id="importwalletEnodeDiv" class="col-sm-12 col-lg-12" title="The Enode the wallet should connect to">
+            <div class="form-group">
+              <input style="background-color: #141414;" id="importwalletEnode" type="text" value="" placeholder="Enode peer" class="form-control" />
+            </div>
+          </div>
+
+          <div id="importwalletContractAddressDiv" class="col-sm-12 col-lg-12" title="Enter address of an Etica Smart Contract deployed on this Testnet blockchain">
+            <div class="form-group">
+              <input style="background-color: #141414;" id="importwalletContractAddress" type="text" value="" placeholder="Testnet Etica Smart Contract Address" class="form-control" />
             </div>
           </div>
 
