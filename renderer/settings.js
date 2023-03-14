@@ -157,7 +157,7 @@ $(document).on("render_settings", async function () {
   $("#btnCloseWallet").off("click").on("click", function () {
 
 
-    let IsGethRunning = ipcRenderer.send("IsGethRunning", null);
+    let IsGethRunning = ipcRenderer.sendSync("IsGethRunning", null);
     if(IsGethRunning){
        // first stop the geth process
        ipcResult = ipcRenderer.send("stopGeth", null);

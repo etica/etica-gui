@@ -238,7 +238,7 @@ $("#mainNavBtnSettings").click(function () {
 
 $("#iconCloseWallet").click(function () {
   // Close Geth if running (should always be yes but check anyway to avoid returning error) and then close wallet:
-  let IsGethRunning = ipcRenderer.send("IsGethRunning", null);
+  let IsGethRunning = ipcRenderer.sendSync("IsGethRunning", null);
     if(IsGethRunning){
        // first stop the geth process
        ipcResult = ipcRenderer.send("stopGeth", null);

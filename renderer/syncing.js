@@ -105,7 +105,7 @@ function StartSyncProcess() {
               InitializeWeb3();
             }
           });
-        }, 10000);
+        }, 5000);
       }
     } else {
       EticaMainGUI.showGeneralError(error);
@@ -220,21 +220,35 @@ function setEticaContractAddress() {
 
 var RetrySuscribeSyncing = setInterval( function () {
   try {
-    //console.log('Inside RetrySuscribeSyncing');
+    console.log('Inside RetrySuscribeSyncing');
     if(initWeb3Passed){
     if(alreadyCatchedUp == false){
-     // console.log('Retry StartSyncProcess()');
-      StartSyncProcess();
+
+      web3Local.eth.isSyncing(function (error, sync) {
+        if (!error && sync) {    
+           // do nothing syncing ok in progress  
+          // console.log('RetrySuscribeSyncing do nothing case I');
+        } else if (!sync){
+         // console.log('RetrySuscribeSyncing call StartSyncProcess() case II');
+          StartSyncProcess(); 
+        }    
+        else if (error) {
+         // console.log('error', error);
+         // console.log('RetrySuscribeSyncing call error case III');
+          InitializeWeb3();
+        }
+      });
+
     }
     else{
-    //  console.log('clearInterval RetrySuscribeSyncing');
+      console.log('clearInterval RetrySuscribeSyncing');
       clearInterval(RetrySuscribeSyncing);
     }
   }
   } catch (err) {
     EticaMainGUI.showGeneralError(err);
   }
-}, 3000);
+}, 10000);
 
 
 function InitializeWeb3() {
