@@ -800,10 +800,9 @@ class Transactions {
       
               for(let blocknb=startBlock; blocknb <= maxBlock; blocknb++){
                 let result = await EticaTransactions.syncTransactionsofWalletAddresses(data, blocknb, maxBlock);
-                console.log('in loop');
-                console.log('bloncknb in syncing is', blocknb);
+                //console.log('bloncknb in syncing is', blocknb);
                 startBlock = blocknb + 1;
-                console.log('startBlock is now ::: ', startBlock);
+                //console.log('startBlock is now ::: ', startBlock);
     
                   if(blocknb >= lastBlock){
 
