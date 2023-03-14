@@ -179,6 +179,7 @@ class Geth {
 
     if (fs.existsSync(nodekeyPath)) {
        console.log('Geth data directory has already been initialized, abort');
+       event.sender.send('initializeGethResponse', 2);
        return false;
     } else {
        console.log('Geth data directory has not been initialized, keep going');
@@ -214,6 +215,7 @@ class Geth {
         dialog.showErrorBox("Error initialising Geth", "Geth to initialize this blockchain directory!");
       } else {
         this.gethInitProcess.on("error", function (err) {
+          console.log(`err: ${err}`);
           dialog.showErrorBox("Error initialising Geth", "Geth error when attempts to initialize with this blockchain directory!", err);
         });
         this.gethInitProcess.stdout.on('data', (data) => {
