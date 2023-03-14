@@ -41,7 +41,7 @@ function ImportNewSeed(){
  
 
   if (bip39.validateMnemonic(imported_mnemonic)) {
-    console.log('The mnemonic is valid!');
+   // console.log('The mnemonic is valid!');
   } else {
    $("#InputMnemonicDiv").hide();  
    $("#ImportMnemonicDiv").hide();
@@ -194,7 +194,7 @@ $("#mnemonicword24").html(reorderedWords[23]);
 
       }
       else {
-        console.log('invalidmnemonic');
+        //console.log('invalidmnemonic');
         $("#HelperImportMnemonic").html("You provided a wrong word order for this mnemonic. Please try again");
         $("#ResetImportMnemonicDiv").css('display', 'block');
       }
@@ -335,9 +335,8 @@ NewWallet.vector = iv.toString('hex');
     ipcRenderer.send("initializeGeth", _wallet);
 
     if (!ipcRenderer.listenerCount("initializeGethResponse")) {
-      console.log('!ipcRenderer.listenerCount("initializeGethResponse") passed');
       ipcRenderer.on("initializeGethResponse", (event, code) => {
-        console.log('code response is', code);
+       // console.log('code response is', code);
         _wallet.pw = pw;
         ipcRenderer.send("startGeth", _wallet);
         _wallet.pw = '';

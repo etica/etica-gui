@@ -51,7 +51,6 @@ function GenerateNewSeed(){
 masterPrivateKey = _masterPrivateKey; */
 
 const _masterSeed = seed.toString('hex');
-console.log('_masterSeed is:', _masterSeed);
 masterSeed = _masterSeed;
 
 
@@ -190,7 +189,7 @@ $("#word24").html(reorderedWords[23]);
 
       }
       else {
-        console.log('invalidmnemonic');
+       // console.log('invalidmnemonic');
         $("#HelperMnemonic").html("You provided a wrong word order for this mnemonic. Please try again");
         $("#ResetMnemonicDiv").css('display', 'block');
       }
@@ -280,11 +279,7 @@ $("#word24").html(reorderedWords[23]);
 const salt = crypto.randomBytes(16);
 
 // Derive a 256-bit encryption key from the passphrase and salt
-console.log('deriving a 256-bit encryption key from password and salt');
-console.log('pw is', pw);
-console.log('salt is', salt);
 const encryptionKey = crypto.pbkdf2Sync(pw, salt, 100000, 32, 'sha256');
-console.log('encrypting with encryptionKey string format', encryptionKey.toString('hex'));
 
 // Use the encryption key to encrypt the master seeed
 
@@ -295,11 +290,6 @@ let encryptedMasterSeed = cipher.update(masterSeed);
 encryptedMasterSeed = Buffer.concat([encryptedMasterSeed, cipher.final()]);
 
 // Store the encrypted master private key, salt, and initialization vector (iv)
-console.log('Encrypted Master Private Key:', encryptedMasterSeed.toString('hex'));
-console.log('Salt:', salt.toString('hex'));
-console.log('Initialization Vector (iv):', iv.toString('hex'));
-// ENCRYPT Master seed
-
 
 NewWallet.encryptedMaster = encryptedMasterSeed.toString('hex');
 NewWallet.salt = salt.toString('hex');
@@ -342,9 +332,8 @@ NewWallet.vector = iv.toString('hex');
     ipcRenderer.send("initializeGeth", _wallet);
 
     if (!ipcRenderer.listenerCount("initializeGethResponse")) {
-      console.log('!ipcRenderer.listenerCount("initializeGethResponse") passed');
       ipcRenderer.on("initializeGethResponse", (event, code) => {
-        console.log('code response is', code);
+       // console.log('code response is', code);
 
         _wallet.pw = pw;
         ipcRenderer.send("startGeth", _wallet);
