@@ -305,8 +305,15 @@ NewWallet.vector = iv.toString('hex');
     ipcRenderer.send("storeWallet", NewWallet);    
     let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: NewWallet.masteraddress});
     ipcRenderer.send("initializeGeth", _wallet);
-    ipcResult = ipcRenderer.send("startGeth", _wallet);
-    InitializeWeb3toImportAccount();
+
+    if (!ipcRenderer.listenerCount("initializeGethResponse")) {
+      console.log('!ipcRenderer.listenerCount("initializeGethResponse") passed');
+      ipcRenderer.on("initializeGethResponse", (event, code) => {
+        console.log('code response is', code);
+        ipcRenderer.send("startGeth", _wallet);
+        InitializeWeb3toImportAccount(_wallet);
+      }); 
+    }
 
   });
 
@@ -317,7 +324,7 @@ NewWallet.vector = iv.toString('hex');
   });
 
 
-  function InitializeWeb3toImportAccount() {
+  function InitializeWeb3toImportAccount(_wallet) {
     let stoploop = false;
     var InitWeb3 = setInterval(async function () {
       try {
@@ -342,8 +349,19 @@ NewWallet.vector = iv.toString('hex');
   
                   // close web3Local connection then
                   web3Local.currentProvider.connection.close();
-                  // move to index:
-                  window.location.replace('./../../../index.html');
+                  // stopGeth
+                  ipcRenderer.send("stopGeth", null);
+                  
+                  // save preload for  wallet preload settings connection:
+                  let preloadw = {};
+                  preloadw.keyword = 'LastWalletUsed';
+                  preloadw.walletname = _wallet.name;
+                  preloadw.walletdirectory = _wallet.datadirectory; 
+                  preloadw.walletaddress = _wallet.masteraddress;
+                  ipcRenderer.send("InsertOrUpdateWalletPreload", preloadw);
+
+                  // move to setup:
+                  window.location.replace('./../../../setup.html');
           
                 } else {
                   EticaMainGUI.showGeneralErrorNewWallet("Error importing account from private key!");

@@ -172,7 +172,7 @@ class Geth {
     }
   }
 
-  initializeGeth(wallet) {
+  initializeGeth(wallet, event) {
     
     const datadir = wallet.blockchaindirectory;
     const nodekeyPath = `${datadir}/geth/nodekey`;
@@ -227,6 +227,7 @@ class Geth {
         });
         this.gethInitProcess.on('exit', (code) => {
           console.log(`gethInitProcess exited with code ${code}`);
+          event.sender.send('initializeGethResponse', code);
           // Do any necessary cleanup or data saving here
         });
       }
@@ -265,7 +266,7 @@ ipcMain.on("startGeth", (event, arg) => {
 });
 
 ipcMain.on("initializeGeth", (event, arg) => {
-  EticaGeth.initializeGeth(arg);
+  EticaGeth.initializeGeth(arg, event);
 });
 
 ipcMain.on("getRunningWallet", (event, arg) => {

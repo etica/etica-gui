@@ -55,6 +55,7 @@ function StartSyncProcess() {
     console.log('inside StartSyncProcess syncing subscription');
     if (!error) {
       console.log('inside StartSyncProcess syncing subscription no error');
+      console.log('inside StartSyncProcess syncing subscription no error sync is', sync);
       if (!sync) {
         console.log('inside StartSyncProcess syncing subscription no error, not synced');
         SyncProgress.setText("Syncing blockchain, please wait...");
@@ -235,7 +236,7 @@ var RetrySuscribeSyncing = setInterval( function () {
   } catch (err) {
     EticaMainGUI.showGeneralError(err);
   }
-}, 60000);
+}, 21000);
 
 
 function InitializeWeb3() {
@@ -273,8 +274,8 @@ var InitWeb3 = setInterval(async function () {
         initWeb3Passed = true; 
         console.log('initWeb3Passed is now: ', initWeb3Passed);
         clearInterval(InitWeb3);
-        setEticaContractAddress();
         StartSyncProcess();
+        setEticaContractAddress();
         autounlockWallet();
       }
     });
