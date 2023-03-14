@@ -214,7 +214,7 @@ class Geth {
         dialog.showErrorBox("Error initialising Geth", "Geth to initialize this blockchain directory!");
       } else {
         this.gethInitProcess.on("error", function (err) {
-          dialog.showErrorBox("Error initialising Geth", "Geth error when attempts to initialize with this blockchain directory!");
+          dialog.showErrorBox("Error initialising Geth", "Geth error when attempts to initialize with this blockchain directory!", err);
         });
         this.gethInitProcess.stdout.on('data', (data) => {
           console.log(`stdout: ${data}`);
