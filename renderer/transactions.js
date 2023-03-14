@@ -38,11 +38,11 @@ class Transactions {
   async syncTransactionsofWalletAddresses(addressList, startBlock, lastBlock) {
 
    let addressListlowercase = addressList.map(element => element.toLowerCase());
-   console.log('addressListlowercase is', addressListlowercase);
+   //console.log('addressListlowercase is', addressListlowercase);
 
 
-      console.log('startBlock is', startBlock);
-      console.log('lastBlock is', lastBlock);
+      //console.log('startBlock is', startBlock);
+      //console.log('lastBlock is', lastBlock);
 
 
 /*
