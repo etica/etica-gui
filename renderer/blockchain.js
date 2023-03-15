@@ -366,7 +366,7 @@ class Blockchain {
   // created for Update ETI function, checks if smart contract deployed before querying Etica smart contract to avoid issues with testnet smart contracts not deployed 
   // or smart contract not accessible at first sync
   async function isEticaContractDeployed(address) {
-    console.log('checking is deployed at address', address);
+    //console.log('checking is deployed at address', address);
     let isdeployed = await web3Local.eth.getCode(address, (error, bytecode) => {
        if (error) {
          console.error(error);

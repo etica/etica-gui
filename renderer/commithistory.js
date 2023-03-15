@@ -31,14 +31,8 @@ class CommitHistory {
 
 
   calculateHash(_proposalhash, _choice, _voter, _vary) {
-    console.log(' calculating _votehash');
-    console.log(' calculating _votehash _proposalhash', _proposalhash);
-    console.log(' calculating _votehash _choice', _choice);
-    console.log(' calculating _votehash _voter', _voter);
-    console.log(' calculating _votehash _vary', _vary);
 
       let _votehash = web3Local.utils.keccak256(web3Local.eth.abi.encodeParameters([ "bytes32", "bool", "address", "string" ], [_proposalhash, _choice, _voter, _vary]));
-      console.log('_votehash is', _votehash);
       return _votehash;
   }
   
@@ -73,7 +67,6 @@ class CommitHistory {
       renderData.sumBalanceEti = data.sumBalanceEti;
       renderData.sumBalance = data.sumBalance;
       data.commitData = renderData.commitData;
-      console.log('data from renderCommitHistory is', data);
       
       EticaMainGUI.renderTemplate("commithistory.html", data);
       $(document).trigger("render_commithistory");
@@ -179,10 +172,6 @@ $(document).on("render_commithistory", function () {
       
       let vote_checked_choice = null;
       let vote_checked_choice_text = null;
-      console.log("document.getElementById('inputVoteApprovalChoice').checked", document.getElementById('inputVoteApprovalChoice').checked);
-      console.log("document.getElementById('inputVoteDisapprovalChoice').checked", document.getElementById('inputVoteDisapprovalChoice').checked);
-      console.log("document.getElementById('inputVoteApprovalChoice').value", document.getElementById('inputVoteApprovalChoice').value);
-      console.log("document.getElementById('inputVoteDisapprovalChoice').value", document.getElementById('inputVoteDisapprovalChoice').value);
       if (document.getElementById('inputVoteApprovalChoice').checked && !document.getElementById('inputVoteDisapprovalChoice').checked) {
         vote_checked_choice = true;
         vote_checked_choice_text = 'Approve';
@@ -201,8 +190,6 @@ $(document).on("render_commithistory", function () {
       
 
       let calculatedhash = EticaCommitHistory.calculateHash(commitproposalhash, vote_checked_choice, commitvoter, commitprivacyphrase);
-       console.log('calculatedhash is:', calculatedhash);
-       console.log('right calculatedhash is:', calculatedhash ==  commitvotehash);
 
        if(calculatedhash !=  commitvotehash){
         EticaMainGUI.showGeneralError('Wrong parameters. The hash of these parameters do not match with the commit hash.');
@@ -241,9 +228,7 @@ $(document).on("render_commithistory", function () {
         status: 1
         };
 
-        console.log('line 299 before storing _NewCommit', _UpdatedCommit);
         ipcRenderer.send("updateCommit", _UpdatedCommit);
-        console.log('line 301 after storing _NewCommit', _UpdatedCommit);
 
        }
       
