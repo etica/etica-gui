@@ -29,8 +29,6 @@ class StakesBoard {
 
   renderStakesBoard(SearchedAddress=null) {
 
-    console.log('SearchedAddress is', SearchedAddress);
-
     BoardStakes.setFilter(SearchedAddress);
 
 
@@ -39,14 +37,10 @@ class StakesBoard {
       EticaMainGUI.showGeneralError(error);
     }, async function (walletdata) {
 
-      console.log('walletdata is', walletdata);
-
       let data = await EticaContract.getStakesBoardBalancesofAddress(SearchedAddress);
 
-      console.log('data before is', data);
       data.sumBalance = walletdata.sumBalance; // wallet egaz balance
       data.sumBalanceEti = walletdata.sumBalanceEti; // wallet eti balance
-      console.log('data after is', data);
 
       if( SearchedAddress != null){
         let _stakesresult = await BoardStakes.SearchInput(SearchedAddress);
@@ -68,7 +62,6 @@ class StakesBoard {
         // please provide an address, with select options
       }
 
-      console.log('data final to stakesboard is', data);
       EticaMainGUI.renderTemplate("stakesboard.html", data);
       $(document).trigger("render_stakesboard");
 
@@ -118,11 +111,8 @@ class StakesBoard {
   async SearchInput(_searchedaddress) {
     
     let _result = [];
-
-        console.log('_searchedaddress is', _searchedaddress);
       
         let address_stakes = await EticaContract.getStakesofAddress(_searchedaddress);
-        console.log('stakes of Address is', address_stakes);
               
         // if stakes:
         if( address_stakes && address_stakes.stakescounter > 0){
@@ -189,9 +179,6 @@ $(document).on("render_stakesboard", function () {
     var stakeaddress = $(this).attr("data-stakeaddress");
     var stakeamount = $(this).attr("data-stakeamount");
 
-    console.log('stakeindex is', stakeindex);
-    console.log('stakeaddress is', stakeaddress);
-    console.log('stakeamount is', stakeamount);
                   EticaContract.getTranasctionFee_stakeclmidx(stakeaddress, stakeindex, function (error) {
                     EticaMainGUI.showGeneralError(error);
                   }, function (data) {
@@ -327,18 +314,13 @@ $(document).on("render_stakesboard", function () {
       let input_minlimit_year = $("#inputMinLimitYear").val();
       let input_maxindex = $("#inputMaxConsolidateIndex").val();
       let _stakescounter = $("#CsldtStakesCounter").val();
-      console.log('_stakescounter iss', _stakescounter);
 
       let _endtimestring = ''+input_endtime_month+'/'+input_endtime_day+'/'+input_endtime_year+' 00:00';
       let _minlimitstring = ''+input_minlimit_month+'/'+input_minlimit_day+'/'+input_minlimit_year+' 00:00';
-      console.log('_endtimestring is :', _endtimestring);
-      console.log('_minlimitstring is :', _minlimitstring);
 
       let _endtime = moment(_endtimestring, "M/D/YYYY H:mm").unix();
-      console.log('_endtime is :', _endtime);
 
       let _minlimit = moment(_minlimitstring, "M/D/YYYY H:mm").unix();
-      console.log('_minlimit is :', _minlimit);
 
 
       if(BoardStakes.validateConsolidationParams(_endtime, _minlimit, input_maxindex, _stakescounter)){

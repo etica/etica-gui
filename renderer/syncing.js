@@ -49,17 +49,17 @@ function StartSyncProcess() {
   //var alreadyCatchedUp = false;
   var nodeSyncInterval = null;
   var SyncBalancesInterval = null;
-  console.log('inside StartSyncProcess');
+  //console.log('inside StartSyncProcess');
 
   var subscription = web3Local.eth.subscribe("syncing", function (error, sync) {
-    console.log('inside StartSyncProcess syncing subscription');
+   // console.log('inside StartSyncProcess syncing subscription');
     if (!error) {
-      console.log('inside StartSyncProcess syncing subscription no error sync is', sync);
+     // console.log('inside StartSyncProcess syncing subscription no error sync is', sync);
       if (!sync) {
-        console.log('inside StartSyncProcess syncing subscription no error, not synced');
+      //  console.log('inside StartSyncProcess syncing subscription no error, not synced');
         SyncProgress.setText("Syncing blockchain, please wait...");
         if (nodeSyncInterval) {
-          console.log('inside clearInterval(nodeSyncInterval)');
+         // console.log('inside clearInterval(nodeSyncInterval)');
           clearInterval(nodeSyncInterval);
         }
 
@@ -69,7 +69,7 @@ function StartSyncProcess() {
             //console.log('local block number is', localBlock.number);
             if (!error) {
               if (localBlock.number > 0) {
-                console.log('local block number > 0 is', localBlock.number);
+               // console.log('local block number > 0 is', localBlock.number);
                 if (!EticaTransactions.getIsSyncing()) {
                   SyncProgress.animate(1);
                   SyncProgress.setText(vsprintf("%d/%d (100%%)", [localBlock.number, localBlock.number]));
@@ -219,7 +219,7 @@ function setEticaContractAddress() {
 
 var RetrySuscribeSyncing = setInterval( function () {
   try {
-    console.log('Inside RetrySuscribeSyncing');
+   // console.log('Inside RetrySuscribeSyncing');
     if(initWeb3Passed){
     if(alreadyCatchedUp == false){
 
@@ -240,7 +240,7 @@ var RetrySuscribeSyncing = setInterval( function () {
 
     }
     else{
-      console.log('clearInterval RetrySuscribeSyncing');
+     // console.log('clearInterval RetrySuscribeSyncing');
       clearInterval(RetrySuscribeSyncing);
     }
   }
@@ -277,13 +277,13 @@ var InitWeb3 = setInterval(async function () {
       console.log('provider close');
     }); */
 
-    console.log('inside InitWeb3');
+   // console.log('inside InitWeb3');
     web3Local.eth.net.isListening(function (error, success) {
       if (!error) {
-        console.log('inside InitWeb3 no error passed');
+      //  console.log('inside InitWeb3 no error passed');
         $(document).trigger("onGethReady");
         initWeb3Passed = true; 
-        console.log('initWeb3Passed is now: ', initWeb3Passed);
+      //  console.log('initWeb3Passed is now: ', initWeb3Passed);
         clearInterval(InitWeb3);
         StartSyncProcess();
         setEticaContractAddress();

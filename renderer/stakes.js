@@ -91,9 +91,6 @@ $(document).on("render_stakes", function () {
 
   $("#btnStakeEti").off("click").on("click", function () {
     if (StakesEtica.validateSendForm()) {
-      console.log('StakesEtica.validateSendForm() true');
-      console.log('$("#stakeEtiFromAddress").val()', $("#stakeEtiFromAddress").val());
-      console.log('$("#stakeEtiAmount").val()', $("#stakeEtiAmount").val());
       EticaContract.getTranasctionFee_stakeEti($("#stakeEtiFromAddress").val(), $("#stakeEtiAmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, async function (data) {

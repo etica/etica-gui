@@ -12,7 +12,7 @@ let wallets;
     } catch (error) {
       if (error.message === "NowalletFolderSelected") {
         // Handle user cancelation
-        console.log("Canceled wallet folder selection");
+       // console.log("Canceled wallet folder selection");
       } else {
         // Handle other errors
         console.error("Error selecting wallet folder:", error);
@@ -40,7 +40,7 @@ let wallets;
     } catch (error) {
       if (error.message === "NowalletFolderSelected") {
         // Handle user cancelation
-        console.log("Canceled wallet folder selection");
+      //  console.log("Canceled wallet folder selection");
       } else {
         // Handle other errors
         console.error("Error selecting wallet folder:", error);
