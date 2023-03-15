@@ -71,14 +71,8 @@ class CommitVote {
   }
 
   calculateHash(_proposalhash, _choice, _voter, _vary) {
-    console.log(' calculating _votehash');
-    console.log(' calculating _votehash _proposalhash', _proposalhash);
-    console.log(' calculating _votehash _choice', _choice);
-    console.log(' calculating _votehash _voter', _voter);
-    console.log(' calculating _votehash _vary', _vary);
 
       let _votehash = web3Local.utils.keccak256(web3Local.eth.abi.encodeParameters([ "bytes32", "bool", "address", "string" ], [_proposalhash, _choice, _voter, _vary]));
-      console.log('_votehash is', _votehash);
       return _votehash;
   }
 

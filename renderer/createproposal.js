@@ -89,8 +89,7 @@ $(document).on("render_createProposal", function () {
     if (ProposalCreate.validateSendForm()) {
 
       let diseaseindex = await EticaContract.diseasesbyIds($("#createProposalDiseaseHash").val());
-      console.log('diseaseindex is', diseaseindex);
-      console.log('type of diseaseindex is', typeof diseaseindex);
+
       let diseasename = '';
 
       if( !(diseaseindex > 0) ){
@@ -99,7 +98,7 @@ $(document).on("render_createProposal", function () {
       }
       else {
         let _disease = await EticaContract.diseases(diseaseindex);
-        console.log('_disease is', _disease);
+  
         diseasename = _disease[1];
       }
 

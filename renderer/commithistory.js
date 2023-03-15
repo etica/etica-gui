@@ -254,11 +254,8 @@ $(document).on("render_commithistory", function () {
     var commitvotehash = $(this).attr("data-votehash");
     var commitvoter = $(this).attr("data-voter");
 
-    console.log('Reveal commitvotehash is', commitvotehash);
-
     let _commit = ipcRenderer.sendSync("getCommit", {votehash: commitvotehash, voter:commitvoter});
 
-    console.log('Reveal db _commit is', _commit);
            
                   if(!_commit || _commit.votehash != commitvotehash){
                     EticaMainGUI.showGeneralError('No vote parameters saved for this vote.');

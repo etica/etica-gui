@@ -71,7 +71,6 @@ $(document).on("render_createDisease", function () {
 
 
       let disease_exists = await EticaContract.getdiseasehashbyName($("#createDiseaseName").val());
-      console.log('disease_exists is', disease_exists);
 
       if(disease_exists != '0x0000000000000000000000000000000000000000000000000000000000000000'){
         EticaMainGUI.showGeneralError("This disease name already exists!");
