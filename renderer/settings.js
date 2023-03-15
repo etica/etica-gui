@@ -20,7 +20,6 @@ class Settings {
     }, function (data) {
 
       let _wallet = ipcRenderer.sendSync("getRunningWallet");
-      console.log('getRunningWallet is currently', _wallet);
 
       if(_wallet.type == 'mainnet'){
        _wallet.ismainnet = true;

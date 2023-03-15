@@ -138,9 +138,8 @@ class Wallets {
 
       let _runningwallet = ipcRenderer.sendSync("getRunningWallet");
       EticaWallets.Setrunningwallet(_runningwallet);
-      console.log('runningwallet is', EticaWallets.Getrunningwallet());
-
-      console.log('node version: ', process.version);
+      //console.log('runningwallet is', EticaWallets.Getrunningwallet());
+      //console.log('node version: ', process.version);
 
       // render the wallets current state
       EticaMainGUI.renderTemplate("wallets.html", data);
