@@ -64,7 +64,7 @@ function StartSyncProcess() {
         }
 
         nodeSyncInterval = setInterval(function () {
-          console.log('inside nodeSyncInterval');
+          //console.log('inside nodeSyncInterval');
           web3Local.eth.getBlock("latest", function (error, localBlock) {
             //console.log('local block number is', localBlock.number);
             if (!error) {

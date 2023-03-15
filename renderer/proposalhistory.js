@@ -34,7 +34,6 @@ class ProposalHistory {
       renderData.sumBalanceEti = data.sumBalanceEti;
       renderData.sumBalance = data.sumBalance;
       data.proposalData = renderData.proposalData;
-      console.log('data from renderProposalHistory is', data);
       
       EticaMainGUI.renderTemplate("proposalhistory.html", data);
       $(document).trigger("render_commithistory");
