@@ -705,6 +705,7 @@ class Transactions {
 
   async ScanTxs(maincounter, lastBlock, batchSize) {
 
+    SyncProgress.setText("Scanning wallet transactions");
     // sync all the transactions to the current block
     EticaTransactions.setIsSyncing(true);
     let startBlock = maincounter.block;
@@ -719,6 +720,19 @@ class Transactions {
                 let result = await EticaTransactions.syncTransactionsofWalletAddresses(data, blocknb, maxBlock);
                 
                 startBlock = blocknb + 1;
+
+                if(blocknb >= maxBlock){
+                  maincounter.block = blocknb;          
+                  ipcRenderer.send("updateCounter", maincounter);
+                }
+
+                if((blocknb % 1000 === 0)){
+                  SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (%d%%)", [
+                    blocknb,
+                    lastBlock,
+                    Math.floor(blocknb / lastBlock * 100)
+                  ]));
+                }
     
                   if(blocknb >= lastBlock){
 
@@ -727,7 +741,7 @@ class Transactions {
                      ipcRenderer.send("updateCounter", maincounter);
                      // signal that the sync is complete
                      $(document).trigger("onSyncComplete");
-                     SyncProgress.setText("Syncing transactions is complete.");
+                     SyncProgress.setText("Scanning transactions is complete.");
 
                      if (scanTxsInterval) {
                         clearInterval(scanTxsInterval);

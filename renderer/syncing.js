@@ -86,7 +86,6 @@ function StartSyncProcess() {
 
                   // sync all the transactions to the current block
                   let maincounter = ipcRenderer.sendSync("getCounter", "MainCounter");
-                  console.log('maincounter is', maincounter);
                   if(maincounter && maincounter.block){
                     EticaTransactions.ScanTxs(maincounter, localBlock.number, 500);
                   }
