@@ -89,13 +89,15 @@ $(document).on("render_commitVote", function () {
     $("#commitVoteFromAddressName").html(addrName.trim());
 
     let balance = await EticaContract.balanceEti(this.value);
-    $("#commitVoteMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
+    $("#commitVoteEtiAvailable").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
+    let bosoms = await EticaContract.balanceBosoms(this.value);
+    $("#commitVoteMaxAmount").html(parseFloat(web3Local.utils.fromWei(bosoms, "ether")));
 
   });
 
   $("#btnCommitVoteAll").off("click").on("click", function () {
     $("#commitVoteAmount").focus();
-    $("#commitVoteAmount").val($("#commitVoteMaxAmmount").html());
+    $("#commitVoteAmount").val($("#commitVoteMaxAmount").html());
   });
 
   $("#btnCommitVote").off("click").on("click", function () {

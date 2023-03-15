@@ -65,7 +65,19 @@ class SmartContract {
     }
 
 
+  balanceBosoms(fromAddress) {
 
+      const ETICA_ADDRESS = this.ETICA_ADDRESS;
+      let _balanceBosoms = get_balanceBosoms(fromAddress);
+      return _balanceBosoms;
+
+      async function get_balanceBosoms(address) {
+        let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+        let amount = await contract.methods.bosoms(address).call();
+        return amount;
+      }
+
+    }  
   
     // SEND EGAZ  //
 

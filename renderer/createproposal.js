@@ -80,8 +80,8 @@ $(document).on("render_createProposal", function () {
     $(".fromAddressSelect input").val(addrValue.trim());
     $("#createProposalFromAddressName").html(addrName.trim());
 
-    let balance = await EticaContract.balanceEti(this.value);
-    $("#createProposalMaxAmmount").html(parseFloat(web3Local.utils.fromWei(balance, "ether")));
+    let bosoms = await EticaContract.balanceBosoms(this.value);
+    $("#createProposalAvailableBosoms").html(parseFloat(web3Local.utils.fromWei(bosoms, "ether")));
 
   });
 
