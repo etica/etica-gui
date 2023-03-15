@@ -72,30 +72,15 @@ $(document).on("render_settings", async function () {
                   EticaMainGUI.showGeneralError(error);
                 } else {
                   //EticaTransactions.enableKeepInSync();
-                  let j = maincounter.block;
                   let resp = '';
-                  console.log('j before loop is', j);
-                  while (j + 500 < localBlock.number){
-                    resp = await EticaTransactions.syncTransactionsForAllAddresses(j);
-                    console.log('syncTransactionsForAllAddresses from settings resp is ', resp);
-                    j = j + 500;
-                    if (resp != 'blockscannedsuccess') break;
-                  }
+                    resp = await EticaTransactions.ScanTxs(maincounter, localBlock.number, 500);
                   maincounter = ipcRenderer.sendSync("getCounter", "MainCounter");
-                  console.log('maincounter.block after loop is ', maincounter.block);
-                  console.log('j after loop is', j);
-                  console.log('localBlock.number is ', localBlock.number);
-                  if(localBlock.number > maincounter.block && (localBlock.number - maincounter.block) <= 500){
-                    console.log('inside last call to EticaTransactions.ScanTxs()');
-                    EticaTransactions.ScanTxs(maincounter, localBlock.number, 500);
-                  }
 
                   loading_screen.finish();
 
                   iziToast.success({title: "Rescync initiated", message: "Transactions Resync initiated, it may take a few minutes please wait", position: "topRight", timeout: 5000});
                 }
               });
-
 
             } else {
               EticaMainGUI.showGeneralError("Error deleting proposals: ");
@@ -170,7 +155,6 @@ $(document).on("render_settings", async function () {
 
   $("#btnUpdateMainSettings").off("click").on("click", function () {
 
-    console.log('btnUpdateMainSetting called');
     let NewWallet = {};
     NewWallet.masteraddress = EticaWallets.Getrunningwallet().masteraddress;
 
@@ -203,21 +187,16 @@ $(document).on("render_settings", async function () {
 
     // Wallet unlocktime:
     let _minutes = $("#unlockTime").val();
-    console.log('_minutes', _minutes);
     const minutes = Number(_minutes);
-    console.log('minutes is:', minutes);
     if (!isNaN(minutes)) {
-      console.log('!isNaN(minutes) true passed');
       // Convert the minutes to seconds
       const seconds = minutes * 60;
       NewWallet.unlocktime = seconds; 
     }
     else {
-      console.log('!isNaN(minutes) not passed');
       NewWallet.unlocktime = 0;
     }
 
-    console.log('NewWallet is :: :: :: ::', NewWallet);
     ipcRenderer.send("updateWalletMainSettings", NewWallet); 
 
     // retrieve updated wallet to pass it to Geth:
