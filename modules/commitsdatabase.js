@@ -82,8 +82,6 @@ db.ensureIndex({
 
 
 ipcMain.on("storeCommit", (event, arg) => {
-  console.log('--> storing Commit');
-  console.log('--> storing Commit', arg);
   db.update({
     votehash: arg.votehash,
     txhash: arg.txhash,
@@ -96,8 +94,6 @@ ipcMain.on("storeCommit", (event, arg) => {
 });
 
 ipcMain.on("updateCommit", (event, arg) => {
-  console.log('--> updateing Commit');
-  console.log('--> updating Commit', arg);
   db.update({
     votehash: arg.votehash,
     voter: arg.voter
@@ -111,8 +107,6 @@ ipcMain.on("updateCommit", (event, arg) => {
 
 
 ipcMain.on("updateCommitwithStatus", (event, arg) => {
-  console.log('--> updateing Commit');
-  console.log('--> updating Commit', arg);
   db.update({
     votehash: arg.votehash,
     voter: arg.voter
@@ -125,8 +119,6 @@ ipcMain.on("updateCommitwithStatus", (event, arg) => {
 });
 
 ipcMain.on("updateCommitRewardAmount", (event, arg) => {
-  console.log('--> updateing Commit');
-  console.log('--> updating Commit', arg);
   db.update({
     votehash: arg.votehash,
     voter: arg.voter
@@ -185,11 +177,8 @@ ipcMain.on("getCommitbyProposalHash", (event, arg) => {
 ipcMain.on("getCommits", (event, arg) => {
   db.find({}).exec(function (err, docs) {
     ResultData = [];
-    console.log('in getCommmits');
     let _now = Date.now();
-    console.log('in getCommmits _now is', _now);
     let CurrentDate = moment(_now);
-    console.log('in getCommmits CurrentDate is', CurrentDate);
 
     // sort the data
     docs.sort((a, b) => {
@@ -224,9 +213,6 @@ ipcMain.on("getCommits", (event, arg) => {
         _proposaltitle = docs[i].proposaltitle;
 
         if(docs[i].proposalend != null && docs[i].proposalend !=''){
-          console.log('in docs[i].proposalend');
-          console.log('in docs[i].proposalend is is', i);
-          console.log('docs[i].proposalend is', docs[i].proposalend);
           let _end = moment(docs[i].proposalend).format("YYYY-MM-DD HH:mm:ss");
           let _deadline = moment(docs[i].proposaldeadline).format("YYYY-MM-DD HH:mm:ss");
           let _timestamp_claimable = moment(docs[i].timestampclaimable).format("YYYY-MM-DD HH:mm:ss");
@@ -273,7 +259,6 @@ ipcMain.on("getCommits", (event, arg) => {
         "fee": docs[i].fee,
         "timestamp": docs[i].timestamp
       };
-      console.log('_commit ', i, ' is', _commit);
 
       ResultData.push(
         _commit

@@ -38,8 +38,6 @@ db.ensureIndex({
 
 
 ipcMain.on("storeTransaction", (event, arg) => {
-  console.log('--> storing Transaction');
-  console.log('--> storing Transaction', arg);
   db.update({
     txhash: arg.txhash,
     logIndex: arg.logIndex

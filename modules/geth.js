@@ -199,9 +199,9 @@ class Geth {
 
     try {
       const gethPath = path.join(this.binaries, "geth");
-      console.log('initialising geth --datadir', datadir);
-      console.log('initialising geth --networkid', _networkid);
-      console.log('initialising geth genesisfile', genesisfile);
+      //console.log('initialising geth --datadir', datadir);
+      //console.log('initialising geth --networkid', _networkid);
+      //console.log('initialising geth genesisfile', genesisfile);
       // LOCAL DEV NODE FOR TESTING //
       this.gethInitProcess = child_process.spawn(gethPath, [
         "--datadir="+datadir+"",

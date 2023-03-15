@@ -45,8 +45,6 @@ ipcMain.on("setWalletDataDbPath", (event, arg) => {
 
 
 ipcMain.on("storeHashinput", (event, arg) => {
-  console.log('--> storing Hashinputs');
-  console.log('--> storing Hashinputs', arg);
   hashinputdb.update({
     commithash: arg.commithash
   }, arg, {
@@ -57,8 +55,6 @@ ipcMain.on("storeHashinput", (event, arg) => {
 });
 
 ipcMain.on("getHashinput", (event, arg) => {
-  console.log('--> getting Hashinput');
-  console.log('--> getting Hashinput arg is: ', arg);
   hashinputdb.find({commithash: arg.commithash}).exec(function (err, docs) {
     if(docs && docs.length > 0){
       event.returnValue = docs[0];
@@ -70,7 +66,6 @@ ipcMain.on("getHashinput", (event, arg) => {
 });
 
 ipcMain.on("getHashinputs", (event, arg) => {
-  console.log('--> getting Hashinputs');
   hashinputdb.find({}).exec(function (err, docs) {
     ResultData = [];
 

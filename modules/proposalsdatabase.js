@@ -104,8 +104,6 @@ db.ensureIndex({
 });
 
 ipcMain.on("storeProposal", (event, arg) => {
-  console.log('--> storing Proposal');
-  console.log('--> storing Proposal', arg);
   db.update({
     proposalhash: arg.proposalhash
   }, {$set:{ proposalhash: arg.proposalhash, proposer:arg.proposer, rawreleasehash: arg.rawreleasehash, title: arg.title, diseasename: arg.diseasename, diseasehash: arg.diseasehash, chunktitle: arg.chunktitle, chunkid: arg.chunkid, proposalend: arg.proposalend, proposaldeadline: arg.proposaldeadline, timestampclaimable:arg.timestampclaimable, txhash: arg.txhash, status: arg.status, claimed: arg.claimed, approvalthreshold: arg.approvalthreshold, timestamp: arg.timestamp}}, {
@@ -116,8 +114,6 @@ ipcMain.on("storeProposal", (event, arg) => {
 });
 
 ipcMain.on("updateProposalReward", (event, arg) => {
-  console.log('--> updating Proposal');
-  console.log('--> updating Proposal', arg);
   db.update({
     proposalhash: arg.proposalhash,
     proposer: arg.proposer
@@ -130,8 +126,6 @@ ipcMain.on("updateProposalReward", (event, arg) => {
 });
 
 ipcMain.on("updateProposalSlash", (event, arg) => {
-  console.log('--> updating Proposal');
-  console.log('--> updating Proposal', arg);
   db.update({
     proposalhash: arg.proposalhash,
     proposer: arg.proposer
@@ -144,8 +138,6 @@ ipcMain.on("updateProposalSlash", (event, arg) => {
 });
 
 ipcMain.on("updateProposalFee", (event, arg) => {
-  console.log('--> updating Proposal');
-  console.log('--> updating Proposal', arg);
   db.update({
     proposalhash: arg.proposalhash,
     proposer: arg.proposer
@@ -186,11 +178,8 @@ ipcMain.on("getProposalifOwner", (event, arg) => {
 ipcMain.on("getProposals", (event, arg) => {
   db.find({}).exec(function (err, docs) {
     ResultData = [];
-    console.log('in getProposals');
     let _now = Date.now();
-    console.log('in getProposals _now is', _now);
     let CurrentDate = moment(_now);
-    console.log('in getProposals CurrentDate is', CurrentDate);
 
     // sort the data
     docs.sort((a, b) => {
@@ -223,9 +212,6 @@ ipcMain.on("getProposals", (event, arg) => {
         _title = docs[i].title;
 
         if(docs[i].proposalend != null && docs[i].proposalend !=''){
-          console.log('in docs[i].proposalend');
-          console.log('in docs[i].proposalend is is', i);
-          console.log('docs[i].proposalend is', docs[i].proposalend);
           let _end = moment(docs[i].proposalend).format("YYYY-MM-DD HH:mm:ss");
           let _deadline = moment(docs[i].proposaldeadline).format("YYYY-MM-DD HH:mm:ss");
           let _timestamp_claimable = moment(docs[i].timestampclaimable).format("YYYY-MM-DD HH:mm:ss");
@@ -271,7 +257,6 @@ ipcMain.on("getProposals", (event, arg) => {
         "fee": docs[i].fee,
         "timestamp": docs[i].timestamp
       };
-      console.log('_proposal ', i, ' is', _proposal);
 
       ResultData.push(
         _proposal
