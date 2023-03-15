@@ -12,11 +12,6 @@ class CommitVote {
       $(document).trigger("render_commitVote");
     });
 
-    EticaContract.testgetProposal(function (error) {
-      EticaMainGUI.showGeneralError(error);
-    }, function (data) {
-      console.log('Test get proposal and disease is datas is', data);
-    });
   }
 
   validateSendForm() {

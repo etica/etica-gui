@@ -1750,46 +1750,6 @@ class SmartContract {
 
 
 
-  async testgetProposal(clbError, clbSuccess) {
-
-    const ETICA_ADDRESS = this.ETICA_ADDRESS;
-    let datas ={};
-    let prophash = await getProposaltest();
-    let prophash2 = await getProposaltest2();
-    let diseasehash1 = await getDiseasetest1();
-    let diseasehash2 = await getDiseasetest2();
-    datas.diseasehash1 = diseasehash1;
-    datas.diseasehash2 = diseasehash2;
-    datas.prophash = prophash;
-    datas.prophash2 = prophash2;
-    datas.diseasehash2 = diseasehash2;
-    clbSuccess(datas);
-
-  async function getProposaltest() {
-    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
-      let proposalhash = await contract.methods.diseaseproposals('0xf6d8716087544b8fe1a306611913078dd677450d90295497e433503483ffea6e',1).call();
-      return proposalhash;
-  }
-  async function getProposaltest2() {
-    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
-      let proposalhash = await contract.methods.diseaseproposals('0x569e75fc77c1a856f6daaf9e69d8a9566ca34aa47f9133711ce065a571af0cfd',1).call();
-      return proposalhash;
-  }
-  async function getDiseasetest1() {
-    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
-      let diseasehash = await contract.methods.getdiseasehashbyName('Disease Test').call();
-      return diseasehash;
-  }
-  async function getDiseasetest2() {
-    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
-      let diseasehash = await contract.methods.getdiseasehashbyName('').call();
-      return diseasehash;
-  }
-
-}
-
-
-
 async diseasesbyIds(_hash) {
 
   const ETICA_ADDRESS = this.ETICA_ADDRESS;
