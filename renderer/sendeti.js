@@ -152,10 +152,6 @@ $(document).on("render_sendEti", function () {
 
   $("#btnSendEti").off("click").on("click", function () {
     if (EtiSend.validateSendForm()) {
-      console.log('EtiSend.validateSendForm() true');
-      console.log('$("#sendEtiFromAddress").val()', $("#sendEtiFromAddress").val());
-      console.log('$("#sendEtiToAddress").val()', $("#sendEtiToAddress").val());
-      console.log('$("#sendEtiAmmount").val()', $("#sendEtiAmmount").val());
       EticaContract.getTranasctionFee_sendEti($("#sendEtiFromAddress").val(), $("#sendEtiToAddress").val(), $("#sendEtiAmmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
       }, async function (data) {

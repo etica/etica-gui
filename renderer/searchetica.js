@@ -107,29 +107,23 @@ class SearchEtica {
     
     let _result = [];
 
-    console.log('_searchhash is', _searchhash);
     // check if _searchhash is a disease name: 
     let diseasehashbyname = await EticaContract.getdiseasehashbyName(_searchhash);
-    console.log('diseasehashbyname is', diseasehashbyname);
 
     if(diseasehashbyname != '0x0000000000000000000000000000000000000000000000000000000000000000' && diseasehashbyname != null){
       _searchhash = diseasehashbyname;
     }
-    console.log('new _searchhash is', _searchhash);
 
     let _now = Date.now();
     let CurrentDate = moment(_now);
 
     // search for disease:  
     let diseaseindex = await EticaContract.diseasesbyIds(_searchhash);
-      console.log('diseaseindex is', diseaseindex);
-      console.log('type of diseaseindex is', typeof diseaseindex);
 
       // disease found:
       if( (diseaseindex > 0) ){
 
         let _disease = await EticaContract.diseases(diseaseindex);
-        console.log('_disease is', _disease);
 
               // get disease proposals:
               let nbproposals =  await EticaContract.diseaseProposalsCounter(_disease[0]);
@@ -154,16 +148,13 @@ class SearchEtica {
 
                let oneproposal = [];
                let prophash = await EticaContract.diseaseproposals(_disease[0],i);
-               console.log('prop hash is', prophash); 
                oneproposal = await EticaContract.proposals(prophash);
-               console.log('oneproposal is', oneproposal); 
                // get chunk:
                if(oneproposal[4] != 0){
                 oneproposal[4] = await EticaContract.chunks(oneproposal[4]);
                }
                
                let oneproposaldata = await EticaContract.propsdatas(prophash);
-               console.log('oneproposaldata is', oneproposaldata); 
                oneproposal[10] = oneproposaldata; // oneproposal[10] contains propsdatas struct
 
                if(oneproposal[10].status == 0){
@@ -208,15 +199,8 @@ class SearchEtica {
               let _ratiobn = _ratio_numerator.div(_ratio_denumerator);
               let _ratio = parseInt(_ratiobn)/100;
         
-              console.log('afyer num and denum _ratio is', _ratio);
-              console.log('type of untouchd ratio is', typeof _ratio);
-              console.log('_ratio.toString()is', _ratio.toString());
-              console.log('oneproposal[10].forvotes is', oneproposal[10].forvotes);
-              console.log('oneproposal[10].againstvotes is', oneproposal[10].againstvotes);
               _ratio = parseFloat(_ratio.toString());
-              console.log('parseFloat(_ratio.toString()) is', _ratio);
               _ratio = _ratio.toFixed(2);
-              console.log('_ratio.toFixed(2) is', _ratio);
               oneproposal.votesratio = _ratio+ '%';
               }
               else {
@@ -249,7 +233,6 @@ class SearchEtica {
         _result['proposals'] = diseaseproposals;
         _result['diseasenbproposals'] = nbproposals;
         _result['diseasenbchunks'] = nbchunks;
-        console.log('_result is', _result);
         return _result;
       
       }
@@ -258,7 +241,6 @@ class SearchEtica {
         // search for proposal: 
         let _proposal = await EticaContract.proposals(_searchhash);
         let _chunk = null;
-        console.log('_proposal is', _proposal);
 
         // proposal found:
         if(_proposal[0] > 0){
@@ -283,8 +265,7 @@ class SearchEtica {
           _result['proposal'] = _proposal;
           _result['disease'] = _disease;
           _result['chunk'] = _chunk;
-          _result['period'] = _period;  
-          console.log('_result is', _result);     
+          _result['period'] = _period;    
           return _result;
 
         }
@@ -292,7 +273,6 @@ class SearchEtica {
         else {
 
           // nothing found, return empty result:
-          console.log('_result is', _result);
           return _result;
 
         }

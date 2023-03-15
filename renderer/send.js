@@ -158,8 +158,6 @@ $(document).on("render_send", function () {
 
         let isunlocked = await EticaBlockchain.isUnlocked($("#sendFromAddress").val());
 
-        console.log('isunlocked is', isunlocked);
-
         $("#walletPassword").show();
         $(".sendTXPass").show();
         $(".sendTXdivider").show();
