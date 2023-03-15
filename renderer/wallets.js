@@ -52,7 +52,6 @@ class Wallets {
   enableButtonTooltips() {
     EticaUtils.createToolTip("#btnNewAddress", "Create New Address");
     EticaUtils.createToolTip("#btnRefreshAddress", "Refresh Address List");
-    EticaUtils.createToolTip("#btnExportAccounts", "Export Addresses");
   }
 
   validateNewAccountForm() {
@@ -208,9 +207,6 @@ $(document).on("render_wallets", function () {
            let firstaddress_without0x = util.pubToAddress(firstPublicKey, true).toString('hex');
            const firstDerivedAddress = '0x' + firstaddress_without0x;
 
-           console.log('first address is', firstDerivedAddress);
-           console.log('masteraddress is', masteraddress);
-
            // Additional security but Normally if wrong password the code would not reach this step and would have failed before because EticaWallets.Decipher -> crypto.createDecipheriv should stop the code:
             if(firstDerivedAddress != masteraddress){
               EticaMainGUI.showGeneralError("Unexpected master address generated from encrypted master key, cannot generate a new deterministic wallet address if the address is different from the one expected!");
@@ -307,9 +303,10 @@ $(document).on("render_wallets", function () {
     EticaWallets.renderWalletsState();
   });
 
+  /*
   $("#btnExportAccounts").off("click").on("click", function () {
     ipcRenderer.send("exportAccounts", {});
-  });
+  }); */
 
   /*
   $("#btnImportAccounts").off("click").on("click", function () {
