@@ -203,6 +203,13 @@ $(document).on("render_stakesboard", function () {
             
                           iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});              
                         
+                         // unlock accounts
+                         let _wallet = ipcRenderer.sendSync("getRunningWallet");
+
+                         if(_wallet.autounlock){
+                              EticaBlockchain.unlockAccounts($("#ClaimStakewalletPassword").val(), _wallet.unlocktime);
+                         }
+
                         });
                       });
                     }
@@ -264,6 +271,14 @@ $(document).on("render_stakesboard", function () {
             
                           iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});              
                         
+                         // unlock accounts
+                         let _wallet = ipcRenderer.sendSync("getRunningWallet");
+
+                         if(_wallet.autounlock){
+                              EticaBlockchain.unlockAccounts($("#SnapStakewalletPassword").val(), _wallet.unlocktime);
+                         }
+
+
                         });
                       });
                     }
@@ -347,6 +362,13 @@ $(document).on("render_stakesboard", function () {
             
                           iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});              
                         
+                         // unlock accounts
+                         let _wallet = ipcRenderer.sendSync("getRunningWallet");
+
+                         if(_wallet.autounlock){
+                              EticaBlockchain.unlockAccounts($("#ConsolidateStakeswalletPassword").val(), _wallet.unlocktime);
+                         }
+
                         });
                       });
                     }

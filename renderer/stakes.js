@@ -142,7 +142,7 @@ $(document).on("render_stakes", function () {
             _password = $("#walletPasswordStakeEti").val();
           }
 
-          EticaContract.prepareTransaction_StakeEti(_password.val(), $("#stakeEtiFromAddress").val(), $("#stakeEtiAmount").val(), function (error) {
+          EticaContract.prepareTransaction_StakeEti(_password, $("#stakeEtiFromAddress").val(), $("#stakeEtiAmount").val(), function (error) {
             EticaMainGUI.showGeneralError(error);
           }, function (data) {
             EticaBlockchain.sendTransaction(data.raw, function (error) {
@@ -151,6 +151,13 @@ $(document).on("render_stakes", function () {
               StakesEtica.resetSendForm();
 
               iziToast.success({title: "Sent", message: "Transaction was successfully sent to the chain", position: "topRight", timeout: 5000});
+
+              // unlock accounts
+              let _wallet = ipcRenderer.sendSync("getRunningWallet");
+
+                if(_wallet.autounlock){
+                      EticaBlockchain.unlockAccounts(_password, _wallet.unlocktime);
+                }
 
             /*  EticaBlockchain.getTransaction(data, function (error) {
                 EticaMainGUI.showGeneralError(error);
