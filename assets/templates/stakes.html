@@ -12,7 +12,7 @@
 </div>
 
 
-<div class="sendWrapper">
+<div id="newstakeStakesDiv" class="sendWrapper">
   <div class="card-panel">
     <form class="col s12">
       <div class="row">
@@ -48,10 +48,13 @@
       </div>
     </form>
   </div>
+  <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+    <button type="button" id="showmainStakesDiv" class="buttonback">Back</button>
+    </span>
 </div>
 
 
-
+<div id="mainStakesDiv">
 <div style="height: 5vh;">
   <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
     &nbsp Staked ETI: {{sumStakedEti}} <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" />
@@ -64,8 +67,14 @@
   </span>
 </div>
 
+<div style="height: 5vh;">
+<span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+  <button type="button" id="shownewStakeStakesDiv" class="button4" style="width: 100px;">New Stake</button>
+</span>
+</div>
 
-<div style="height: calc(100vh - 20vh);" class="addressList {{#if addressData.length}}walletsWrapper{{else}}noWalletsWrapper{{/if}}">
+
+<div style="height: calc(100vh - 21vh);" class="addressList {{#if addressData.length}}walletsWrapper{{else}}noWalletsWrapper{{/if}}">
   {{#if addressData.length}}
     <table class="bordered" id="addressTable">
       <thead>
@@ -109,6 +118,7 @@
   {{else}}
     <div id="noWalletsPresent">You don't have any wallets, please import them, or create a new one</div>
   {{/if}}
+</div>
 </div>
 
 <!-- send details dialog -->
