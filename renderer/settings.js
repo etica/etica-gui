@@ -73,7 +73,7 @@ $(document).on("render_settings", async function () {
                 } else {
                   //EticaTransactions.enableKeepInSync();
                   let resp = '';
-                    resp = await EticaTransactions.ScanTxs(maincounter, localBlock.number, 500);
+                    resp = await EticaTransactions.ScanTxs(maincounter, localBlock.number, 2000);
                   maincounter = ipcRenderer.sendSync("getCounter", "MainCounter");
 
                   loading_screen.finish();
