@@ -186,12 +186,10 @@ $(document).on("render_settings", async function () {
 
 
     // Wallet unlocktime:
-    let _minutes = $("#unlockTime").val();
-    const minutes = Number(_minutes);
-    if (!isNaN(minutes)) {
-      // Convert the minutes to seconds
-      const seconds = minutes * 60;
-      NewWallet.unlocktime = seconds; 
+    let _inputseconds = $("#unlockTime").val();
+    const _seconds = Number(_inputseconds);
+    if (!isNaN(_seconds)) {
+      NewWallet.unlocktime = _seconds; 
     }
     else {
       NewWallet.unlocktime = 0;

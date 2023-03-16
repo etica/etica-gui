@@ -202,7 +202,30 @@ class Blockchain {
 }
 
 
+async unlockAccounts(password, duration) {
+  
+    // unlock accounts
+    
+      web3Local.eth.getAccounts(async function (err, res) {
+        if (err) {
+          clbError(err);
+        } else {
+          for (var w = 0; w < res.length; w++) {
+            const account = res[w];
+            await web3Local.eth.personal.unlockAccount(account, password, duration, async function (error, result) { 
+              if (error) {
+                console.log("error unlocking accounts!", error);
+                return false;
+              }
 
+              let isunlocked = await EticaBlockchain.isUnlocked(account);
+              console.log('unlocked accounts', isunlocked);
+            });
+          }
+        }
+      });
+  
+  }
 
 
 
