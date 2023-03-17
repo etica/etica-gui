@@ -32,7 +32,7 @@ class SearchEtica {
     EticaSearch.setFilter($('#inputSearchEtica').val());
 
     EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
+     // EticaMainGUI.showGeneralError(error);
     }, async function (data) {
 
       if( SearchFor != null){

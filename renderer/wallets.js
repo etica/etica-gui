@@ -129,7 +129,7 @@ class Wallets {
     EticaWallets.clearAddressList();
 
     EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
+     // EticaMainGUI.showGeneralError(error);
     }, function (data) {
       data.addressData.forEach(element => {
         EticaWallets.addAddressToList(element.address);

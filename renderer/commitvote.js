@@ -6,7 +6,7 @@ class CommitVote {
 
   renderSendState() {
     EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
+     // EticaMainGUI.showGeneralError(error);
     }, function (data) {
       EticaMainGUI.renderTemplate("commitvote.html", data);
       $(document).trigger("render_commitVote");

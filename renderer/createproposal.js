@@ -6,7 +6,7 @@ class CreateProposal {
 
   renderSendState() {
     EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
+     // EticaMainGUI.showGeneralError(error);
     }, function (data) {
       EticaMainGUI.renderTemplate("createproposal.html", data);
       $(document).trigger("render_createProposal");

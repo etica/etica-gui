@@ -69,7 +69,7 @@ class Transactions {
         let blocknb = startBlock;
 
         await EticaBlockchain.getBlock(blocknb, true, function (error) {
-          EticaMainGUI.showGeneralError(error);
+         // EticaMainGUI.showGeneralError(error);
         }, async function (data) {
           if (data.transactions) {
 

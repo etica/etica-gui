@@ -6,7 +6,7 @@ class CreateChunk {
 
   renderSendState() {
     EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
+     // EticaMainGUI.showGeneralError(error);
     }, function (data) {
       EticaMainGUI.renderTemplate("createchunk.html", data);
       $(document).trigger("render_createChunk");

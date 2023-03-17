@@ -16,7 +16,7 @@ class Settings {
 
   renderSettingsState() {
     EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
+     // EticaMainGUI.showGeneralError(error);
     }, function (data) {
 
       let _wallet = ipcRenderer.sendSync("getRunningWallet");

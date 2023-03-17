@@ -34,7 +34,7 @@ class StakesBoard {
 
 
     EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
+     // EticaMainGUI.showGeneralError(error);
     }, async function (walletdata) {
 
       let data = await EticaContract.getStakesBoardBalancesofAddress(SearchedAddress);

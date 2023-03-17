@@ -6,7 +6,7 @@ class SendTransaction {
 
   renderSendState() {
     EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
+     // EticaMainGUI.showGeneralError(error);
     }, function (data) {
       EticaMainGUI.renderTemplate("send.html", data);
       $(document).trigger("render_send");

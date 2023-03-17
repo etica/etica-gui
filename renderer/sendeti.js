@@ -6,7 +6,7 @@ class SendEti {
 
   renderSendState() {
     EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
+     // EticaMainGUI.showGeneralError(error);
     }, function (data) {
       EticaMainGUI.renderTemplate("sendeti.html", data);
       $(document).trigger("render_sendEti");

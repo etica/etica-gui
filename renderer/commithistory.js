@@ -62,7 +62,7 @@ class CommitHistory {
     });
 
     EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
+     // EticaMainGUI.showGeneralError(error);
     }, function (data) {
       renderData.sumBalanceEti = data.sumBalanceEti;
       renderData.sumBalance = data.sumBalance;

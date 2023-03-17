@@ -6,7 +6,7 @@ class CreateDisease {
 
   renderSendState() {
     EticaBlockchain.getAccountsData(function (error) {
-      EticaMainGUI.showGeneralError(error);
+     // EticaMainGUI.showGeneralError(error);
     }, function (data) {
       EticaMainGUI.renderTemplate("createdisease.html", data);
       $(document).trigger("render_createDisease");
