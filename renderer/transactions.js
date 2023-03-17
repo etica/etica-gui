@@ -89,15 +89,52 @@ class Transactions {
               if (onetx.from && onetx.to) {
                // console.log('onetx step2, onetx.from && onetx.to: ', onetx);
                // console.log('addressListlowercase is', addressListlowercase);
-                if (addressListlowercase.includes((onetx.from).toLowerCase()) || addressListlowercase.includes((onetx.to).toLowerCase())) {
+
+
+               // NEED TO CHECK TRANSFERS IN CASE OF BATCHED PAYMENT TRANSFER EVENTS //
+               // (for ETI transfers made in batch by batch payment contracts, wallet address is not in tx.from or tx.to):  //
+               let existTransfertoWallet = false;
+
+               if (logevents.filter(onevent => onevent.transactionHash === onetx.hash)){
+               
+                var txevents_temp = logevents.filter(function(onelogevent) {
+                return onelogevent.transactionHash == onetx.hash;
+              });
+
+              let wallettransferevents = txevents_temp.filter(function(onevent) {
+                return (onevent.event == 'Transfer' && addressListlowercase.includes((onevent.returnValues.to).toLowerCase()));
+              });
+
+              if(wallettransferevents && wallettransferevents.length > 0){
+                existTransfertoWallet = true;
+              }
+            
+              }
+
+               // (for ETI transfers made in batch by batch payment contracts, wallet address is not in tx.from or tx.to):  //
+               // NEED TO CHECK TRANSFERS IN CASE OF BATCHED PAYMENT TRANSFER EVENTS //
+               
+
+
+
+
+               if (addressListlowercase.includes((onetx.from).toLowerCase()) || addressListlowercase.includes((onetx.to).toLowerCase()) || existTransfertoWallet) {
 
                 //  console.log('onetx step3, EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to) :', EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to));
                 //  console.log('onetx step3, onetx is:', onetx);
 
                   if (logevents.filter(onevent => onevent.transactionHash === onetx.hash)){
                 //    console.log('onevent => onevent.transactionHash === onetx.hash) is true:', onetx);
-                    var txevents = logevents.filter(function(onelogevent) {
+                    /*var txevents = logevents.filter(function(onelogevent) {
                       return onelogevent.transactionHash == onetx.hash;
+                    }); */
+
+                    var txevents = logevents.filter(function(onelogevent) {
+                      if (onelogevent.event == 'Transfer' && !addressListlowercase.includes((onelogevent.returnValues.to).toLowerCase())) {
+                        return false; // exclude this element because transfer from batch payment that doesnt belong to this wallet
+                      } else {
+                        return onelogevent.transactionHash == onetx.hash; // keep this element
+                      }
                     });
   
                  //   console.log('I txevents before is: ', txevents);
@@ -849,12 +886,47 @@ class Transactions {
 
             if (onetx.from && onetx.to) {
 
-              if (EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to)) {
+
+
+               // NEED TO CHECK TRANSFERS IN CASE OF BATCHED PAYMENT TRANSFER EVENTS //
+               // (for ETI transfers made in batch by batch payment contracts, wallet address is not in tx.from or tx.to):  //
+               var existTransfertoWallet = false;
+
+               if (logevents.filter(onevent => onevent.transactionHash === onetx.hash)){
+               
+                var txevents_temp = logevents.filter(function(onelogevent) {
+                return onelogevent.transactionHash == onetx.hash;
+              });
+
+              var wallettransferevents = txevents_temp.filter(function(onevent) {
+                return (onevent.event == 'Transfer' && addressListlowercase.includes((onevent.returnValues.to).toLowerCase()));
+              });
+
+              if(wallettransferevents && wallettransferevents.length > 0){
+                existTransfertoWallet = true;
+              }
+            
+              }
+
+               // (for ETI transfers made in batch by batch payment contracts, wallet address is not in tx.from or tx.to):  //
+               // NEED TO CHECK TRANSFERS IN CASE OF BATCHED PAYMENT TRANSFER EVENTS //
+
+
+              if (EticaWallets.getAddressExists(onetx.from) || EticaWallets.getAddressExists(onetx.to) || existTransfertoWallet) {
 
                 if (logevents.filter(onevent => onevent.transactionHash === onetx.hash)){
 
-                  var txevents = logevents.filter(function(onelogevent) {
+                 /* var txevents = logevents.filter(function(onelogevent) {
                     return onelogevent.transactionHash == onetx.hash;
+                  }); */
+
+
+                  var txevents = logevents.filter(function(onelogevent) {
+                    if (onelogevent.event == 'Transfer' && !addressListlowercase.includes((onelogevent.returnValues.to).toLowerCase())) {
+                      return false; // exclude this element because transfer from batch payment that doesnt belong to this wallet
+                    } else {
+                      return onelogevent.transactionHash == onetx.hash; // keep this element
+                    }
                   });
 
                   // if none transfer events in tx we remove transfers events as main event is not a transfer (unless tx made from another smart contract but we dont handle that case):
