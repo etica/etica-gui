@@ -87,7 +87,7 @@ function StartSyncProcess() {
                   // sync all the transactions to the current block
                   let maincounter = ipcRenderer.sendSync("getCounter", "MainCounter");
                   if(maincounter && maincounter.block){
-                    EticaTransactions.ScanTxs(maincounter, localBlock.number, 2000); // former was 500
+                    EticaTransactions.ScanTxs(maincounter, localBlock.number, 500); // former was 500
                   }
                   else {
                     let newcounter = {};
