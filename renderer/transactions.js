@@ -908,7 +908,7 @@ class Transactions {
               });
 
               var wallettransferevents = txevents_temp.filter(function(onevent) {
-                return (onevent.event == 'Transfer' && addressListlowercase.includes((onevent.returnValues.to).toLowerCase()));
+                return (onevent.event == 'Transfer' && EticaWallets.getAddressExists((onevent.returnValues.to).toLowerCase()));
               });
 
               if(wallettransferevents && wallettransferevents.length > 0){
@@ -931,7 +931,7 @@ class Transactions {
 
 
                   var txevents = logevents.filter(function(onelogevent) {
-                    if (onelogevent.event == 'Transfer' && !addressListlowercase.includes((onelogevent.returnValues.to).toLowerCase())) {
+                    if (onelogevent.event == 'Transfer' && !EticaWallets.getAddressExists((onelogevent.returnValues.to).toLowerCase())) {
                       return false; // exclude this element because transfer from batch payment that doesnt belong to this wallet
                     } else {
                       return onelogevent.transactionHash == onetx.hash; // keep this element
