@@ -100,14 +100,16 @@ function StartSyncProcess() {
                 }
               }
             } else {
-              EticaMainGUI.showGeneralError(error);
+              //EticaMainGUI.showGeneralError(error);
+              console.log('error getting latest block', error);
               InitializeWeb3();
             }
           });
         }, 5000);
       }
     } else {
-      EticaMainGUI.showGeneralError(error);
+      //EticaMainGUI.showGeneralError(error);
+      console.log('error suscribe sync', error);
     }
   }).on("data", function (sync) {
     if (sync && sync.HighestBlock > 0) {
@@ -130,7 +132,8 @@ function StartSyncProcess() {
               Math.floor(sync.currentBlock / sync.highestBlock * 100)
             ]));
           } else if (error) {
-            EticaMainGUI.showGeneralError(error);
+            //EticaMainGUI.showGeneralError(error);
+            console.log('error suscribe sync.on.changed', error);
             InitializeWeb3();
           }
         });
