@@ -170,7 +170,8 @@ class Transactions {
                   let _slashamount = null;
                   let _inorout = 'neutral'; // if tx is received: received, if tx is sent: sent
                   let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'StakeClaimed', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
-             
+                  var _toaddress = onetx.to.toLowerCase();
+
                 // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
                 if(!includedevents.includes(onetxevent.event)){
                    return;
@@ -181,6 +182,7 @@ class Transactions {
                     _valueeti = onetxevent.returnValues.tokens;
                     _fromaddreti = onetxevent.returnValues.from;
                     _toaddreti = onetxevent.returnValues.to;
+                    _toaddress = onetxevent.returnValues.to;
 
                     if(addressListlowercase.includes((onetxevent.returnValues.from).toLowerCase())){
                      _inorout = 'sent';
@@ -304,7 +306,7 @@ class Transactions {
                     txhash: onetx.hash.toLowerCase(),
                     fromaddr: onetx.from.toLowerCase(),
                     timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
-                    toaddr: onetx.to.toLowerCase(),
+                    toaddr: _toaddress,
                     value: Number(onetx.value).toExponential(5).toString().replace("+", ""),
                     eventtype: onetxevent.event,
                     logIndex:onetxevent.logIndex, // index position in the block
@@ -959,6 +961,7 @@ class Transactions {
                 let _slashduration = null;
                 let _inorout = 'neutral'; // if tx is received: received, if tx is sent: sent
                 let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'StakeClaimed', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
+                var _toaddress = onetx.to.toLowerCase();
 
                 // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
                 if(!includedevents.includes(onetxevent.event)){
@@ -970,6 +973,7 @@ class Transactions {
                   _valueeti = onetxevent.returnValues.tokens;
                   _fromaddreti = onetxevent.returnValues.from;
                   _toaddreti = onetxevent.returnValues.to;
+                  _toaddress = onetxevent.returnValues.to;
 
                   if(EticaWallets.getAddressExists(onetxevent.returnValues.from)){
                     _inorout = 'sent';
@@ -1093,7 +1097,7 @@ class Transactions {
                   txhash: onetx.hash.toLowerCase(),
                   fromaddr: onetx.from.toLowerCase(),
                   timestamp: moment.unix(data.timestamp).format("YYYY-MM-DD HH:mm:ss"),
-                  toaddr: onetx.to.toLowerCase(),
+                  toaddr: _toaddress,
                   value: Number(onetx.value).toExponential(5).toString().replace("+", ""),
                   eventtype: onetxevent.event,
                   logIndex:onetxevent.logIndex, // index position in the block
