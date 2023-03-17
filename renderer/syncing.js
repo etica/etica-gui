@@ -94,7 +94,7 @@ function StartSyncProcess() {
                     newcounter.name = "MainCounter";
                     newcounter.block = 0;
                     ipcRenderer.send("createCounter", newcounter);
-                    EticaTransactions.ScanTxs(newcounter, localBlock.number, 2000);
+                    EticaTransactions.ScanTxs(newcounter, localBlock.number, 500);
                   }
                   
                 }
