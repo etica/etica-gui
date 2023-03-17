@@ -683,8 +683,15 @@ class Transactions {
                     });
                   }
 
-                  // If no input in tx then it is an egaz transfer:
-                  if(onetx.input == '0x'){
+                  // If no input (0x) in tx then it is an egaz transfer:
+                  if(onetx.input == '0x' && !existTransfertoWallet){
+
+                    // add other check because of existTransfertoWallet, indeed existTransfertoWallet let pass txs that contain transfer events even if tx deosnt belong to wallet
+                    // but is not necessary due to (&& !existTransfertoWallet) above:
+                    if(!addressListlowercase.includes((onetx.from).toLowerCase()) && !addressListlowercase.includes((onetx.to).toLowerCase())){
+                      // leave because tx doesnt belong to wallet
+                      return false;
+                     }
 
                     let _inoroutegaz = 'neutral';
                     if(addressListlowercase.includes((onetx.from).toLowerCase())){
@@ -1480,8 +1487,15 @@ class Transactions {
                   });
                 }
 
-                // If no input in tx then it is an egaz transfer:
-                if(onetx.input == '0x'){
+                // If no input (0x) in tx then it is an egaz transfer:
+                if(onetx.input == '0x' && !existTransfertoWallet){
+
+                  // add other check because of existTransfertoWallet, indeed existTransfertoWallet let pass txs that contain transfer events even if tx deosnt belong to wallet
+                  // but is not necessary due to (&& !existTransfertoWallet) above:
+                  if(!EticaWallets.getAddressExists(onetx.from) && !EticaWallets.getAddressExists(onetx.to)){
+                    // leave because tx doesnt belong to wallet
+                    return false;
+                   }
 
                   let _inoroutegaz = 'neutral';
 
