@@ -26,8 +26,8 @@
     Etica GUI Wallet
   </title>
   <!--     Fonts and icons     -->
-  <link href="./assets/blk/googlefontpoppins.css" rel="stylesheet" />
-  <link href="./assets/blk/fontawesome.css" rel="stylesheet">
+  <link href="./assets/blk/css/googlefontpoppins.css" rel="stylesheet" />
+  <link href="./assets/blk/css/fontawesome.css" rel="stylesheet">
   <!-- Nucleo Icons -->
   <link href="./assets/blk/css/nucleo-icons.css" rel="stylesheet" />
   <!-- CSS Files -->
@@ -241,7 +241,10 @@
 
           <div class="col-sm-12 col-lg-12">
             <div class="form-group">
-              <input style="background-color: #141414;" id="SetupConnectPw" type="text" value="" placeholder="password" class="form-control" />
+              <div>
+              <input style="background-color: #141414;" id="SetupConnectPw" type="password" value="" placeholder="password" class="form-control" />
+              <i class="far fa-eye" id="togglePassword" style="cursor: pointer;position: absolute;right: 2%;bottom: 5vh;color: #b5b5b5;"></i>
+              </div>
               <input style="background-color: #141414;" id="SetupConnectAddress" type="text" value="" class="form-control" hidden />
               <input style="background-color: #141414;" id="PreLoadDirectory" type="text" value="" class="form-control" hidden />
               <input style="background-color: #141414;" id="PreLoadWalletMode" type="text" value="" class="form-control" hidden />

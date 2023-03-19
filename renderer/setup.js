@@ -78,6 +78,24 @@ let wallets;
     $("#setupwalletlist").css("display", "block");
   });
 
+
+
+
+
+  const togglePassword = document.querySelector('#togglePassword');
+  const password = document.querySelector('#SetupConnectPw');
+
+  $("#togglePassword").off("click").on("click", function () {
+    // toggle the type attribute
+    const type = $("#SetupConnectPw").attr('type') === 'password' ? 'text' : 'password';
+    $("#SetupConnectPw").attr('type', type);
+    // toggle the eye slash icon
+    this.classList.toggle('fa-eye-slash');
+});
+
+
+
+
   async function ScanDirforWallets(){
 
 
