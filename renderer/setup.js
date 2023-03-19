@@ -128,6 +128,7 @@ let wallets;
     $("#SetupConnectName").html(walletName);
     $("#SetupConnectAddress").val(walletAddress);
 
+    $("#SetupConnectError").html('');
     $("#setupconnection").css("display", "block");
     $("#setupwalletlist").css("display", "none");
 
@@ -138,6 +139,7 @@ let wallets;
     
     $("#SetupConnectionLoader").css("display", "block");
     $("#SetupConnectionBtns").css("display", "none");
+    $("#SetupConnectError").html('');
 
     let pw = $("#SetupConnectPw").val();
     let address = $("#SetupConnectAddress").val();
@@ -177,6 +179,7 @@ function connectwallet(_address, _pw){
 
 
 let stoploop = false;
+let restartGeth_counter = 1;
     var InitWeb3 = setInterval(async function () {
       try {
 
@@ -224,11 +227,21 @@ let stoploop = false;
 
             }
 
+          } else{
+            console.log('web3Local.eth.net.isListening() error is:', error);
+            restartGeth_counter = restartGeth_counter + 1;
+            // InitWeb3 = setInterval() is called every 2 secs
+            // so restartGeth() will be called every 12 seconds
+            // every 12 seconds if failing to connect to wsport we restart Geth:
+            if( (restartGeth_counter % 6 === 0) && !stoploop){
+              restartGeth(wallet, restartGeth_counter);
+            }
+            
           }
         });
       } catch (err) {
-        //console.log('err :', err);
         ipcRenderer.send("stopGeth", null);
+        clearInterval(InitWeb3);
         $("#SetupConnectError").html(err);
         $("#SetupConnectionLoader").css("display", "none");
         $("#SetupConnectionBtns").css("display", "inline-flex");
@@ -255,6 +268,16 @@ function launchwallet(wallet){
     let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", wallet.datadirectory);
     ipcRenderer.send("startGeth", wallet);
     window.location.replace('./index.html');
+
+}
+
+
+function restartGeth(wallet, counter){
+  console.log('restarting Geth');
+  var _restarttimes = counter/6;
+  $("#SetupConnectError").html('failed to connect on wsport '+wallet.wsport+' . Restarting Geth, please wait ('+_restarttimes+')');
+  ipcRenderer.send("stopGeth", null);
+  ipcRenderer.send("startGeth", wallet);
 
 }
 
