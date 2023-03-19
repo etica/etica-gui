@@ -37,6 +37,7 @@ isFullySynced = false;
 initWeb3Passed =false;
 alreadyCatchedUp = false;
 auto_unlock_done = false;
+restartGeth_counter = 1;
 
 
 var peerCountInterval = setInterval(function () {
@@ -253,6 +254,14 @@ var RetrySuscribeSyncing = setInterval( function () {
 }, 10000);
 
 
+function restartGeth(wallet, counter){
+  var _restarttimes = counter/6;
+  console.log('failed to connect on wsport '+wallet.wsport+' . Restarting Geth, please wait ('+_restarttimes+')');
+  ipcRenderer.send("stopGeth", null);
+  ipcRenderer.send("startGeth", wallet);
+}
+
+
 function InitializeWeb3() {
 var InitWeb3 = setInterval(async function () {
   try {
@@ -283,6 +292,7 @@ var InitWeb3 = setInterval(async function () {
    // console.log('inside InitWeb3');
     web3Local.eth.net.isListening(function (error, success) {
       if (!error) {
+        restartGeth_counter = 1; // reset restartGeth_counter
       //  console.log('inside InitWeb3 no error passed');
         $(document).trigger("onGethReady");
         initWeb3Passed = true; 
@@ -291,6 +301,18 @@ var InitWeb3 = setInterval(async function () {
         StartSyncProcess();
         setEticaContractAddress();
         autounlockWallet();
+      } else{
+        //console.log('InitializeWeb3.web3Local.eth.net.isListening() error is:', error);
+        restartGeth_counter = restartGeth_counter + 1;
+        // InitWeb3 = setInterval() is called every 2 secs
+        // so restartGeth() will be called every 12 seconds
+        // every 12 seconds if failing to connect to wsport we restart Geth:
+        if( (restartGeth_counter % 6 === 0) && !initWeb3Passed){
+          var wallet = ipcRenderer.sendSync("getRunningWallet");
+          if(wallet){
+            restartGeth(wallet, restartGeth_counter);
+          } 
+        }
       }
     });
   } catch (err) {
