@@ -1,7 +1,117 @@
 
 @font-face {
-    font-family: 'Marcellus-Regular';
-    src: url('../fonts/Marcellus-Regular.ttf') format('truetype');
+    font-family: 'Marcellus';
+    src: url('./fonts/Marcellus-Regular.ttf') format('truetype');
     font-weight: normal;
     font-style: normal;
   }
+
+
+  @font-face {
+    font-family: 'Juralight';
+    src: url('./fonts/Jura-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Juramedium';
+    src: url('./fonts/Jura-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Juraregular';
+    src: url('./fonts/Jura-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Jurasemibold';
+    src: url('./fonts/Jura-Semibold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Jurabold';
+    src: url('./fonts/Jura-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Sairalight';
+    src: url('./fonts/Saira-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Sairamedium';
+    src: url('./fonts/Saira-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Sairaregular';
+    src: url('./fonts/Saira-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Sairasemibold';
+    src: url('./fonts/Saira-Semibold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Sairabold';
+    src: url('./fonts/Saira-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+  @font-face {
+    font-family: 'Athitilight';
+    src: url('./fonts/Athiti-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Athitimedium';
+    src: url('./fonts/Athiti-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Athitiregular';
+    src: url('./fonts/Athiti-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Athitisemibold';
+    src: url('./fonts/Athiti-Semibold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Athitibold';
+    src: url('./fonts/Athiti-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+  
