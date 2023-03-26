@@ -1,10 +1,10 @@
 <div class="walletsHeader">
   <div class="sumBalanceHeader">
-    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;font-family: juramedium;">
       <img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
       {{sumBalance}} EGAZ
     </span>
-    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;">
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;font-family: juramedium;">
       <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
       {{sumBalanceEti}} ETI
     </span>
@@ -28,7 +28,7 @@
           <small id="createDiseaseFromAddressName" class="form-text text-muted"></small>
         </div>
         <div class="input-field col s6" style="top:2vh;position: relative; left:3%;">
-          <i id="createDiseaseMaxAmmount" class="MarginRight5">0</i><i>ETI available on this address</i>
+          <i id="createDiseaseMaxAmmount" class="MarginRight5" style="font-family: sairaregular;">0</i><i style="font-family: juramedium;">ETI available on this address</i>
         </div>
       </div>
       <div class="row">
@@ -37,12 +37,12 @@
           <label for="createDiseaseName" class="active">Name:</label>
         </div>
       </div>
-      <div class="row">
+      <div class="row" style="margin-bottom: unset;">
         <div class="input-field col s12">
           <button type="button" class="button4 MarginRight5" id="btnCreateDisease">Create Disease</button>
         </div>
         <div class="input-field col s12">
-          <i>cost: <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" class="MarginRight5" /> 100 ETI</i>    
+          <i style="font-family: juramedium;">cost: <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" class="MarginRight5" /> <span style="font-family: sairaregular;"> 100 ETI </span></i>    
         </div>
       </div>
     </form>
