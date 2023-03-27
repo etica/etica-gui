@@ -197,6 +197,7 @@ function connectwallet(_address, _pw){
 
 
 let stoploop = false;
+let successconnect = false;
 let restartGeth_counter = 1;
     var InitWeb3 = setInterval(async function () {
       try {
@@ -223,11 +224,13 @@ let restartGeth_counter = 1;
                     return false;
                   } else {
                     // Handle other errors here
-                    ipcRenderer.send("stopGeth", null);
                     $("#SetupConnectError").html('error starting the node');
                     $("#SetupConnectionLoader").css("display", "none");
                     $("#SetupConnectionBtns").css("display", "inline-flex");
                     console.error("Error unlocking account:", error);
+                    if(!successconnect){
+                      ipcRenderer.send("stopGeth", null);
+                    }
                     return false;
                   }
                 }
@@ -236,7 +239,7 @@ let restartGeth_counter = 1;
               let isunlocked = await EticaBlockchain.isUnlocked(_address);
 
               if(isunlocked == 'unlocked'){
-
+                successconnect = true; // avoid late call to stopGeth by web3Local.eth.personal.unlockAccount() error because could get wallet stuck if called after last startgeth
                // console.log('password verified');
                 web3Local.currentProvider.connection.close();
                 ipcRenderer.send("stopGeth", null);

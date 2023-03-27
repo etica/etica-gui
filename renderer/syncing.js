@@ -258,7 +258,9 @@ function restartGeth(wallet, counter){
   var _restarttimes = counter/6;
   console.log('failed to connect on wsport '+wallet.wsport+' . Restarting Geth, please wait ('+_restarttimes+')');
   ipcRenderer.send("stopGeth", null);
-  ipcRenderer.send("startGeth", wallet);
+  setTimeout(() => {
+    ipcRenderer.send("startGeth", wallet);
+  }, 600);
 }
 
 
