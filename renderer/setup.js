@@ -214,12 +214,22 @@ let restartGeth_counter = 1;
 
               await web3Local.eth.personal.unlockAccount(_address, _pw, function (error, result) { 
                 if (error) {
-                  ipcRenderer.send("stopGeth", null);
-                 // console.log("Wrong password for the selected address!", error);
-                  $("#SetupConnectError").html('wrong password');
-                  $("#SetupConnectionLoader").css("display", "none");
-                  $("#SetupConnectionBtns").css("display", "inline-flex");
-                  return false;
+                  if (error.message.includes("could not decrypt")) {
+                    ipcRenderer.send("stopGeth", null);
+                    $("#SetupConnectError").html('wrong password');
+                    $("#SetupConnectionLoader").css("display", "none");
+                    $("#SetupConnectionBtns").css("display", "inline-flex");
+                    console.error("Error unlocking account:", error);
+                    return false;
+                  } else {
+                    // Handle other errors here
+                    ipcRenderer.send("stopGeth", null);
+                    $("#SetupConnectError").html('error starting the node');
+                    $("#SetupConnectionLoader").css("display", "none");
+                    $("#SetupConnectionBtns").css("display", "inline-flex");
+                    console.error("Error unlocking account:", error);
+                    return false;
+                  }
                 }
               });
 
@@ -295,7 +305,10 @@ function restartGeth(wallet, counter){
   var _restarttimes = counter/6;
   $("#SetupConnectError").html('failed to connect on wsport '+wallet.wsport+' . Restarting Geth, please wait ('+_restarttimes+')');
   ipcRenderer.send("stopGeth", null);
-  ipcRenderer.send("startGeth", wallet);
+  // wait 600 ms before calling startGeth
+  setTimeout(() => {
+    ipcRenderer.send("startGeth", wallet);
+  }, 600);
 
 }
 
