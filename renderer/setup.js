@@ -309,7 +309,6 @@ function restartGeth(wallet, counter){
   setTimeout(() => {
     ipcRenderer.send("startGeth", wallet);
   }, 600);
-
 }
 
 /*
