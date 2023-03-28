@@ -97,7 +97,7 @@ class tableTransactions {
           targets: 7,
           render: function (data, type, row) {
             if(data != null){
-              return '<span style="color:rgb(48, 162, 140);display: inline-block;">'+parseFloat(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(data)).toString(), "ether")).toFixed(5)+'<img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 17px;top: 0.5vh;height: 17px;position: relative;margin-left:3px;" /></span><br><span style="color:rgb(48, 162, 140);display: inline-block;">'+parseFloat(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(row[6])).toString(), "ether")).toFixed(5)+'<img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 17px;top: 0.5vh;height: 17px;position: relative;margin-left:3px;" /></span>';
+              return '<span class="txsvalues" style="display: inline-block;">'+parseFloat(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(data)).toString(), "ether")).toFixed(5)+'<img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 17px;top: 0.5vh;height: 17px;position: relative;margin-left:3px;" /></span><br><span class="txsvalues" style="display: inline-block;">'+parseFloat(web3Local.utils.fromWei(EticaUtils.toFixed(parseFloat(row[6])).toString(), "ether")).toFixed(5)+'<img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 17px;top: 0.5vh;height: 17px;position: relative;margin-left:3px;" /></span>';
             }
             else{
               return 0;

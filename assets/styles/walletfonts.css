@@ -114,4 +114,88 @@
   }
 
 
+
+
+  @font-face {
+    font-family: 'Changaextralight';
+    src: url('./fonts/Changa-ExtraLight.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Changalight';
+    src: url('./fonts/Changa-Light.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Changamedium';
+    src: url('./fonts/Changa-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Changaregular';
+    src: url('./fonts/Changa-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+
+  @font-face {
+    font-family: 'Cinzelmedium';
+    src: url('./fonts/Cinzel-Medium.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Cinzelregular';
+    src: url('./fonts/Cinzel-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Cinzelsemibold';
+    src: url('./fonts/Cinzel-SemiBold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+  @font-face {
+    font-family: 'Quanticoregular';
+    src: url('./fonts/Quantico-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Quanticoitalic';
+    src: url('./fonts/Quantico-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
+  @font-face {
+    font-family: 'Quanticobold';
+    src: url('./fonts/Quantico-Bold.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: 'Quanticobolditalic';
+    src: url('./fonts/Quantico-BoldItalic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+
+
   

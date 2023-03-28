@@ -393,6 +393,13 @@ table.dataTable td {
     content: "";
     clear: both;
     height: 0; }
+
+    .txsvalues {
+      font-family: 'Quanticoregular';
+      /*color:rgb(48, 162, 140);*/
+      color: rgb(77 181 138);
+      font-family: 'Athitimedium';
+    }
  
 @media screen and (max-width: 767px) {
   .dataTables_wrapper .dataTables_info,
