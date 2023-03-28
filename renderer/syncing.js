@@ -90,13 +90,42 @@ function StartSyncProcess() {
                   if(maincounter && maincounter.block){
                     EticaTransactions.ScanTxs(maincounter, localBlock.number, 500); // former was 500
                   }
-                  else {
+                  else {         
+                    let _wallet = ipcRenderer.sendSync("getRunningWallet");
+                    console.log('_wallet.seedcreationtype is', _wallet.seedcreationtype);
                     let newcounter = {};
                     newcounter.name = "MainCounter";
-                    newcounter.block = 0;
+                    // New seed case:
+                    if(_wallet && _wallet.seedcreationtype && _wallet.seedcreationtype == 'newseed' && localBlock.number > 3000){
+                      newcounter.block = localBlock.number - 3000; // retrieve 3000 blocks to catch any potential transaction that happened since wallet seed created
+                      
+                      if(!_wallet.seedblockheight){
+                        // set wallet seed block height:
+                        _wallet.seedblockheight = localBlock.number;
+                        ipcRenderer.send("setWalletBlockHeight", _wallet);
+                        ipcRenderer.send("updateGethRunningWalletSettings", _wallet);
+                      }  
+                    
+                    }
+                    // New import seed case:
+                    else if(_wallet && _wallet.seedcreationtype && _wallet.seedcreationtype == 'importedseed'){
+                        // import seed from given block height:
+                        if(_wallet.seedblockheight && _wallet.seedblockheight < localBlock.number){
+                          newcounter.block = _wallet.seedblockheight; // start scanning txs from imported seed block height
+                        }
+                        else{
+                          newcounter.block = 0;
+                        }
+                    }
+                    else {
+                        newcounter.block = 0;
+                    }
+                    console.log('newcouter is', newcounter);
+                    console.log('newwallet is', _wallet);
                     ipcRenderer.send("createCounter", newcounter);
                     EticaTransactions.ScanTxs(newcounter, localBlock.number, 500);
-                  }
+
+                    }
                   
                 }
               }

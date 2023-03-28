@@ -325,6 +325,9 @@ NewWallet.vector = iv.toString('hex');
     NewWallet.autounlock = true; // wallet set to autounlock by default
     NewWallet.unlocktime = 10 * 60; // 10 minutes (in seconds) 
 
+    NewWallet.seedcreationtype = 'newseed';
+    NewWallet.seedblockheight = null;
+
     let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", NewWallet.datadirectory);
 
     ipcRenderer.send("storeWallet", NewWallet);    

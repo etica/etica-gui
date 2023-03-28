@@ -22,6 +22,8 @@ let db;
                   wsport:
                   wsaddress:
                   port:
+                  seedcreationtype: 'newseed' | 'importedseed' |'importedpk'
+                  seedblockheight: blocknumber of seed creation to start scanning txs from
 */
 
 
@@ -52,7 +54,7 @@ ipcMain.on("setWalletDataDbPath", (event, arg) => {
 ipcMain.on("storeWallet", (event, arg) => {
   db.update({
     masteraddress: arg.masteraddress
-  }, {$set:{ name: arg.name, masteraddress: arg.masteraddress, infos: arg.infos, type:arg.type, blockchaindirectory: arg.blockchaindirectory, keystoredirectory: arg.keystoredirectory, datadirectory: arg.datadirectory, enode: arg.enode, networkid: arg.networkid, contractaddress: arg.contractaddress, wsport: arg.wsport, wsaddress: arg.wsaddress, port: arg.port, encryptedMaster: arg.encryptedMaster, salt: arg.salt, vector: arg.vector, autounlock: arg.autounlock, unlocktime: arg.unlocktime}}, {
+  }, {$set:{ name: arg.name, masteraddress: arg.masteraddress, infos: arg.infos, type:arg.type, blockchaindirectory: arg.blockchaindirectory, keystoredirectory: arg.keystoredirectory, datadirectory: arg.datadirectory, enode: arg.enode, networkid: arg.networkid, contractaddress: arg.contractaddress, wsport: arg.wsport, wsaddress: arg.wsaddress, port: arg.port, encryptedMaster: arg.encryptedMaster, salt: arg.salt, vector: arg.vector, autounlock: arg.autounlock, unlocktime: arg.unlocktime, seedcreationtype: arg.seedcreationtype, seedblockheight: arg.seedblockheight}}, {
     upsert: true
   }, function (err, numReplaced, upsert) {
     // do nothing for now
@@ -95,6 +97,17 @@ ipcMain.on("updateWalletAdvancedSettings", (event, arg) => {
     db.findOne({ masteraddress: arg.masteraddress }, function (err, updatedWallet) {
       event.sender.send("updateWalletAdvancedSettingsResponse", updatedWallet);
     });
+  });
+});
+
+// Wallet Main Settings:
+ipcMain.on("setWalletBlockHeight", (event, arg) => {
+  db.update({
+    masteraddress: arg.masteraddress
+  }, {$set:{ seedblockheight: arg.seedblockheight}}, {
+    upsert: false
+  }, function (err, numReplaced, upsert) {
+    // do nothing
   });
 });
 
