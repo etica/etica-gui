@@ -73,7 +73,7 @@ masterSeed = _masterSeed;
  const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
  if (!util.isValidPrivate(privateKeyBuffer)) {
-  EticaMainGUI.showGeneralErrorImportWallet("Erroor, Invalid private key!");
+  EticaMainGUI.showGeneralErrorImportWallet("Error, Invalid private key!");
   return false;
  }
  
@@ -203,6 +203,22 @@ $("#mnemonicword24").html(reorderedWords[23]);
   });
 
 
+
+  $("#GoSetBlockHeight").off("click").on("click", function () {
+
+    $("#SetImportWalletInfoContainer").css('display', 'none');
+    $("#SetBlockHeightContainer").css('display', 'block');
+
+  });
+
+  $("#BacktoSetImportWalletInfo").off("click").on("click", function () {
+
+    $("#SetImportWalletInfoContainer").css('display', 'block');
+    $("#SetBlockHeightContainer").css('display', 'none');
+
+  });
+
+
   $("#ImportWallet").off("click").on("click", function () {
 
     // creates wallet from seed
@@ -257,6 +273,11 @@ $("#mnemonicword24").html(reorderedWords[23]);
 
     if (pw != $("#importwalletpassword").val()){
       EticaMainGUI.showGeneralErrorImportWallet("Error, try again!"); // should never happen but extra security measure in case $("#importwalletpassword").val() changes value unexpectedly
+      return false;
+    }
+
+    if($("#importwalletBlockHeight").val() && Number($("#importwalletBlockHeight").val()) <= 0){
+      EticaMainGUI.showGeneralErrorImportWallet("Block height must be a block number. If you dont know your seed block height just let this field to 0");
       return false;
     }
 
@@ -327,6 +348,18 @@ NewWallet.vector = iv.toString('hex');
     NewWallet.autounlock = true; // wallet set to autounlock by default
     NewWallet.unlocktime = 10 * 60; // 10 minutes (in seconds) 
 
+    NewWallet.seedcreationtype = 'importedseed';
+
+
+    let _blockheight = $("#importwalletBlockHeight").val();
+    const _seedblockheight = Number(_blockheight);
+    if (!isNaN(_seedblockheight) && _seedblockheight > 0) {
+      NewWallet.seedblockheight = _seedblockheight; 
+    }
+    else {
+      NewWallet.seedblockheight = 0;
+    }
+
     let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", NewWallet.datadirectory);
 
     ipcRenderer.send("storeWallet", NewWallet);    
@@ -385,7 +418,8 @@ NewWallet.vector = iv.toString('hex');
             if(!stoploop){
               stoploop == true;
               var newaccount = EticaBlockchain.importFromPrivateKey(pk, pw, function (error) {
-                EticaMainGUI.showGeneralErrorImportWallet(error);
+                //EticaMainGUI.showGeneralErrorImportWallet(error);
+                console.log('Import seed Error importFromPrivateKey:', error);
               }, function (account) {
                 if (account) {
 
@@ -394,6 +428,8 @@ NewWallet.vector = iv.toString('hex');
   
                   // close web3Local connection then
                   web3Local.currentProvider.connection.close();
+                  // stopGeth
+                  ipcRenderer.send("stopGeth", null);
                   
                   // save preload for  wallet preload settings connection:
                   let preloadw = {};
@@ -403,12 +439,22 @@ NewWallet.vector = iv.toString('hex');
                   preloadw.walletaddress = _wallet.masteraddress;
                   ipcRenderer.send("InsertOrUpdateWalletPreload", preloadw);
 
-                  
+                  // move to setup:
+                  window.location.replace('./../../../setup.html');
+
+                  /* Removed direct connection to wallet, 
+                  because redrirect to setup instead (above)
+                  (same as redirect to setup but removes ipcRenderer.send("stopGeth", null);)
+                  Former code:
+                  // close web3Local connection then
+                  web3Local.currentProvider.connection.close();
                   // move to index:
                   window.location.replace('./../../../index.html');
+                  Removed direct connection to wallet */
           
                 } else {
-                  EticaMainGUI.showGeneralErrorImportWallet("Error importing account from private key!");
+                  //EticaMainGUI.showGeneralErrorImportWallet("Error importing account from private key!");
+                  console.log('Import seed Error importing account from private key!');
                 }
               });
 
@@ -417,7 +463,8 @@ NewWallet.vector = iv.toString('hex');
           }
         });
       } catch (err) {
-        EticaMainGUI.showGeneralErrorImportWallet(err);
+        //EticaMainGUI.showGeneralErrorImportWallet(err);
+        console.log('Import seed InitializeWeb3toImportAccount try error: ', err);
       }
     }, 2000);
     

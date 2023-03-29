@@ -92,7 +92,6 @@ function StartSyncProcess() {
                   }
                   else {         
                     let _wallet = ipcRenderer.sendSync("getRunningWallet");
-                    console.log('_wallet.seedcreationtype is', _wallet.seedcreationtype);
                     let newcounter = {};
                     newcounter.name = "MainCounter";
                     // New seed case:
@@ -120,8 +119,6 @@ function StartSyncProcess() {
                     else {
                         newcounter.block = 0;
                     }
-                    console.log('newcouter is', newcounter);
-                    console.log('newwallet is', _wallet);
                     ipcRenderer.send("createCounter", newcounter);
                     EticaTransactions.ScanTxs(newcounter, localBlock.number, 500);
 

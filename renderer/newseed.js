@@ -69,7 +69,7 @@ masterSeed = _masterSeed;
  const privateKeyBuffer = Buffer.from(privateKey, 'hex');
 
  if (!util.isValidPrivate(privateKeyBuffer)) {
-  EticaMainGUI.showGeneralErrorNewWallet("Erroor, Invalid private key!");
+  EticaMainGUI.showGeneralErrorNewWallet("Error, Invalid private key!");
   return false;
  }
  
@@ -371,7 +371,8 @@ NewWallet.vector = iv.toString('hex');
             if(!stoploop){
               stoploop == true;
               var newaccount = EticaBlockchain.importFromPrivateKey(pk, pw, function (error) {
-                EticaMainGUI.showGeneralErrorNewWallet(error);
+                //EticaMainGUI.showGeneralErrorNewWallet(error);
+                console.log('New seed importFromPrivateKey error:', error);
               }, function (account) {
                 if (account) {
 
@@ -395,7 +396,8 @@ NewWallet.vector = iv.toString('hex');
                   window.location.replace('./../../../setup.html');
           
                 } else {
-                  EticaMainGUI.showGeneralErrorNewWallet("Error importing account from private key!");
+                  //EticaMainGUI.showGeneralErrorNewWallet("Error importing account from private key!");
+                  console.log('New seed Error importing account from private key!');
                 }
               });
 
@@ -404,7 +406,8 @@ NewWallet.vector = iv.toString('hex');
           }
         });
       } catch (err) {
-        EticaMainGUI.showGeneralErrorNewWallet(err);
+       // EticaMainGUI.showGeneralErrorNewWallet(err);
+       console.log('New seed InitializeWeb3toImportAccount try error: ', err);
       }
     }, 2000);
     

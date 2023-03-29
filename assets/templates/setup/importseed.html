@@ -369,7 +369,7 @@
           </div>
 
             <div class="col-md-12">
-              <button class="btn btn-primary" id="ImportWallet">Start</button>
+              <button class="btn btn-primary" id="GoSetBlockHeight">Next</button>
             </div>
 
           
@@ -402,7 +402,34 @@
       </div>
 
 
+      <div class="container" id="SetBlockHeightContainer">
 
+        <div class="content-center brand" style="position: absolute;top: 27vh;left: 50%;">
+          <h1 class="h1-seo">ETICA•</h1>
+          <h3>Open Source Wallet</h3>
+          <p>Wallet Settings</p>
+
+        </div>
+
+        <div id="SetBlockHeight" class="row" style="position: absolute;top: 52vh;left: 25%;width: 49%;">
+
+          <div id="importwalletBlockHeightDiv" class="col-sm-12 col-lg-12" title="Seed Block height, enter block number of your seed">
+            <i>Seed block height (Let to 0 if you don't know it). Wallet will start scanning transactions from the provided block number)</i>
+            <div class="form-group">
+              <input style="background-color: #141414;" id="importwalletBlockHeight" type="text" value="0" placeholder="Block number" class="form-control" />
+            </div>
+          </div>
+
+            <div class="col-md-12">
+              <button class="btn btn-secondary" id="BacktoSetImportWalletInfo" style="background: #363636;margin-left: 22%;margin-right: 1%;">Back</button>
+              <button class="btn btn-primary" id="ImportWallet">Start</button>
+            </div>
+          
+        </div>
+
+
+
+      </div>
 
 
 
