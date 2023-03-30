@@ -358,6 +358,10 @@ $("#mnemonicword24").html(reorderedWords[23]);
 
     // CHECK FIELDS AGAIN DONE (ALREADY CHECKED BUT ADD CHECK IN CASE FIELDS CAHNGED WHILE IN BLOCK HAIGHT SCREEN) //
 
+    
+    $("#ImportWalletStartLoader").css("display", "block");
+    $("#ImportWalletStartBtns").css("display", "none");
+    
     NewWallet.name = $("#importwalletname").val();
     NewWallet.type = $("input[name='importwallettype']:checked").val();
     NewWallet.masteraddress = address;
@@ -381,6 +385,8 @@ $("#mnemonicword24").html(reorderedWords[23]);
       } 
     } catch (err) {
       console.error("Error creating directory:", err);
+      $("#ImportWalletStartLoader").css("display", "none");
+      $("#ImportWalletStartBtns").css("display", "inline-flex");
       EticaMainGUI.showGeneralErrorNewWallet("Error while creating directory. Please create directory and try again. Directory: ", NewWallet.blockchaindirectory);
     }
 
@@ -421,6 +427,8 @@ NewWallet.vector = iv.toString('hex');
      // Testnet values entered by user
     if($("#importwalletNetworkId").val() == "61803"){
       EticaMainGUI.showGeneralErrorImportWallet("Error, NetworkId can't be equal to mainnet NetworkId (61803) for a Testnet wallet!");
+      $("#ImportWalletStartLoader").css("display", "none");
+      $("#ImportWalletStartBtns").css("display", "inline-flex");
       return false;
     }
     else{
@@ -545,6 +553,8 @@ NewWallet.vector = iv.toString('hex');
                 } else {
                   //EticaMainGUI.showGeneralErrorImportWallet("Error importing account from private key!");
                   console.log('Import seed Error importing account from private key!');
+                  $("#ImportWalletStartLoader").css("display", "none");
+                  $("#ImportWalletStartBtns").css("display", "inline-flex");
                 }
               });
 
@@ -555,6 +565,8 @@ NewWallet.vector = iv.toString('hex');
       } catch (err) {
         //EticaMainGUI.showGeneralErrorImportWallet(err);
         console.log('Import seed InitializeWeb3toImportAccount try error: ', err);
+        $("#ImportWalletStartLoader").css("display", "none");
+        $("#ImportWalletStartBtns").css("display", "inline-flex");
       }
     }, 2000);
     

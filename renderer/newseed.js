@@ -269,6 +269,9 @@ $("#word24").html(reorderedWords[23]);
       return false;
     }
 
+    $("#NewWalletStartLoader").css("display", "block");
+    $("#NewtWalletStartBtns").css("display", "none");
+
     NewWallet.name = $("#walletname").val();
     NewWallet.type = $("input[name='wallettype']:checked").val();
     //NewWallet.masteraddress = address; Warning, dont forget to replace by address aftr tests
@@ -293,6 +296,8 @@ $("#word24").html(reorderedWords[23]);
       }
     } catch (err) {
       console.error("Error creating directory:", err);
+      $("#NewWalletStartLoader").css("display", "none");
+      $("#NewtWalletStartBtns").css("display", "block");
       EticaMainGUI.showGeneralErrorNewWallet("Error while creating directory. Please create directory and try again. Directory: ", NewWallet.blockchaindirectory);
     }
     
@@ -333,6 +338,8 @@ NewWallet.vector = iv.toString('hex');
      // Testnet values entered by user
     if($("#NewWalletNetworkId").val() == "61803"){
       EticaMainGUI.showGeneralErrorImportWallet("Error, NetworkId can't be equal to mainnet NetworkId (61803) for a Testnet wallet!");
+      $("#NewWalletStartLoader").css("display", "none");
+      $("#NewtWalletStartBtns").css("display", "block");
       return false;
     }
     else{
@@ -422,6 +429,8 @@ NewWallet.vector = iv.toString('hex');
                 } else {
                   //EticaMainGUI.showGeneralErrorNewWallet("Error importing account from private key!");
                   console.log('New seed Error importing account from private key!');
+                  $("#NewWalletStartLoader").css("display", "none");
+                  $("#NewtWalletStartBtns").css("display", "block");
                 }
               });
 
@@ -432,6 +441,8 @@ NewWallet.vector = iv.toString('hex');
       } catch (err) {
        // EticaMainGUI.showGeneralErrorNewWallet(err);
        console.log('New seed InitializeWeb3toImportAccount try error: ', err);
+       $("#NewWalletStartLoader").css("display", "none");
+       $("#NewtWalletStartBtns").css("display", "block");
       }
     }, 2000);
     
