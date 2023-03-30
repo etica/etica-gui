@@ -563,7 +563,7 @@ NewWallet.vector = iv.toString('hex');
 
         // ASSIGN FOLDERS TO NEW WALLET //
 
-        $("#importwalletdirectory").off("click").on("click", async function () {
+        $("#Selectimportwalletdirectory").off("click").on("click", async function () {
 
           try {
            let walletpath = ipcRenderer.send("assignWalletFoldertoWalletImport", {});
@@ -579,7 +579,7 @@ NewWallet.vector = iv.toString('hex');
       
         });
     
-        $("#importblockchaindirectory").off("click").on("click", async function () {
+        $("#Selectimportblockchaindirectory").off("click").on("click", async function () {
     
           try {
            let blockchainpath = ipcRenderer.send("assignBlockchainFoldertoWalletImport", {});

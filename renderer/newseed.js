@@ -439,7 +439,7 @@ NewWallet.vector = iv.toString('hex');
 
     // ASSIGN FOLDERS TO NEW WALLET //
 
-    $("#walletdirectory").off("click").on("click", async function () {
+    $("#Selectwalletdirectory").off("click").on("click", async function () {
 
       try {
        let walletpath = ipcRenderer.send("assignWalletFoldertoNewWallet", {});
@@ -455,7 +455,7 @@ NewWallet.vector = iv.toString('hex');
   
     });
 
-    $("#blockchaindirectory").off("click").on("click", async function () {
+    $("#Selectblockchaindirectory").off("click").on("click", async function () {
 
       try {
        let blockchainpath = ipcRenderer.send("assignBlockchainFoldertoNewWallet", {});
