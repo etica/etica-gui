@@ -351,7 +351,7 @@ $("#mnemonicword24").html(reorderedWords[23]);
       return false;
     }
 
-    if($("#importwalletBlockHeight").val() && Number($("#importwalletBlockHeight").val()) <= 0){
+    if($("#importwalletBlockHeight").val() && Number($("#importwalletBlockHeight").val()) < 0){
       EticaMainGUI.showGeneralErrorImportWallet("Block height must be a block number. If you dont know your seed block height just let this field to 0");
       return false;
     }
@@ -384,7 +384,7 @@ $("#mnemonicword24").html(reorderedWords[23]);
       EticaMainGUI.showGeneralErrorNewWallet("Error while creating directory. Please create directory and try again. Directory: ", NewWallet.blockchaindirectory);
     }
 
-    
+
 // ------ ENCRYPT Master seed ---- //
 
 // Generate a 128-bit salt
