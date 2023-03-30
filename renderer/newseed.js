@@ -412,3 +412,48 @@ NewWallet.vector = iv.toString('hex');
     }, 2000);
     
     }
+
+
+    // ASSIGN FOLDERS TO NEW WALLET //
+
+    $("#walletdirectory").off("click").on("click", async function () {
+
+      try {
+       let walletpath = ipcRenderer.send("assignWalletFoldertoNewWallet", {});
+      } catch (error) {
+        if (error.message === "NoNewWalletFolderAssigned") {
+          // Handle user cancelation
+         // console.log("Canceled wallet folder selection");
+        } else {
+          // Handle other errors
+          console.error("Error selecting wallet folder:", error);
+        }
+      }
+  
+    });
+
+    $("#blockchaindirectory").off("click").on("click", async function () {
+
+      try {
+       let blockchainpath = ipcRenderer.send("assignBlockchainFoldertoNewWallet", {});
+      } catch (error) {
+        if (error.message === "NoNewBlockchainFolderAssigned") {
+          // Handle user cancelation
+         // console.log("Canceled wallet folder selection");
+        } else {
+          // Handle other errors
+          console.error("Error selecting wallet folder:", error);
+        }
+      }
+  
+    });
+
+    ipcRenderer.on("NewWalletFolderAssigned", (event, _folderpath) => {
+      $("#walletdirectory").val(_folderpath);
+    });
+
+    ipcRenderer.on("NewBlockchainFolderAssigned", (event, _folderpath) => {
+      $("#blockchaindirectory").val(_folderpath);
+    });
+
+    // ASSIGN FOLDERS TO NEW WALLET //

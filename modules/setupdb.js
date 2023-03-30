@@ -52,9 +52,7 @@ ipcMain.on("selectWalletFile", async (event) => {
 
 ipcMain.on("selectWalletFolder", async (event) => {
   try {
-    const result = await dialog.showOpenDialog({
-      properties: ["openDirectory"],
-    });
+    const result = await dialog.showOpenDialog({ properties: ["openDirectory"] });
     if (!result.canceled && result.filePaths.length > 0) {
       const walletFolderPath = result.filePaths[0];
       event.reply("walletFolderSelected", walletFolderPath);
@@ -64,5 +62,77 @@ ipcMain.on("selectWalletFolder", async (event) => {
     }
   } catch (error) {
     event.reply("NowalletFolderSelected", "");
+  }
+});
+
+
+ipcMain.on("assignWalletFoldertoNewWallet", async (event) => {
+  try {
+    const result = await dialog.showOpenDialog({
+      properties: ["openDirectory"],
+    });
+    if (!result.canceled && result.filePaths.length > 0) {
+      const walletFolderPath = result.filePaths[0];
+      event.reply("NewWalletFolderAssigned", walletFolderPath);
+    } else {
+      event.reply("NoNewWalletFolderAssigned", '');
+      throw new Error("NoNewWalletFolderAssigned");
+    }
+  } catch (error) {
+    event.reply("NoNewWalletFolderAssigned", "");
+  }
+});
+
+
+ipcMain.on("assignBlockchainFoldertoNewWallet", async (event) => {
+  try {
+    const result = await dialog.showOpenDialog({
+      properties: ["openDirectory"],
+    });
+    if (!result.canceled && result.filePaths.length > 0) {
+      const walletFolderPath = result.filePaths[0];
+      event.reply("NewBlockchainFolderAssigned", walletFolderPath);
+    } else {
+      event.reply("NoNewBlockchainFolderAssigned", '');
+      throw new Error("NoNewBlockchainFolderAssigned");
+    }
+  } catch (error) {
+    event.reply("NoNewBlockchainFolderAssigned", "");
+  }
+});
+
+
+ipcMain.on("assignWalletFoldertoWalletImport", async (event) => {
+  try {
+    const result = await dialog.showOpenDialog({
+      properties: ["openDirectory"],
+    });
+    if (!result.canceled && result.filePaths.length > 0) {
+      const walletFolderPath = result.filePaths[0];
+      event.reply("NewWalletFolderAssignedImport", walletFolderPath);
+    } else {
+      event.reply("NoNewWalletFolderAssignedImport", '');
+      throw new Error("NoNewWalletFolderAssignedImport");
+    }
+  } catch (error) {
+    event.reply("NoNewWalletFolderAssignedImport", "");
+  }
+});
+
+
+ipcMain.on("assignBlockchainFoldertoWalletImport", async (event) => {
+  try {
+    const result = await dialog.showOpenDialog({
+      properties: ["openDirectory"],
+    });
+    if (!result.canceled && result.filePaths.length > 0) {
+      const walletFolderPath = result.filePaths[0];
+      event.reply("NewBlockchainFolderAssignedImport", walletFolderPath);
+    } else {
+      event.reply("NoNewBlockchainFolderAssignedImport", '');
+      throw new Error("NoNewBlockchainFolderAssignedImport");
+    }
+  } catch (error) {
+    event.reply("NoNewBlockchainFolderAssignedImport", "");
   }
 });
