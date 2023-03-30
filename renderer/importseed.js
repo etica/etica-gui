@@ -436,7 +436,8 @@ NewWallet.vector = iv.toString('hex');
                   let preloadw = {};
                   preloadw.keyword = 'LastWalletUsed';
                   preloadw.walletname = _wallet.name;
-                  preloadw.walletdirectory = _wallet.datadirectory; 
+                  preloadw.walletdirectory = _wallet.datadirectory;
+                  preloadw.blockchaindirectory = _wallet.blockchaindirectory; 
                   preloadw.walletaddress = _wallet.masteraddress;
                   ipcRenderer.send("InsertOrUpdateWalletPreload", preloadw);
 

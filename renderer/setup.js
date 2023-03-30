@@ -290,7 +290,8 @@ function launchwallet(wallet){
     let preloadw = {};
     preloadw.keyword = 'LastWalletUsed';
     preloadw.walletname = wallet.name;
-    preloadw.walletdirectory = wallet.datadirectory; 
+    preloadw.walletdirectory = wallet.datadirectory;
+    preloadw.blockchaindirectory = wallet.blockchaindirectory; 
     preloadw.walletaddress = wallet.masteraddress;
     ipcRenderer.send("InsertOrUpdateWalletPreload", preloadw);
     // Save preload wallet for preload popup with last wallet used next opening wallet //

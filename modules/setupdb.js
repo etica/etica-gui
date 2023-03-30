@@ -21,7 +21,7 @@ db.loadDatabase(function (err) {
 ipcMain.on("InsertOrUpdateWalletPreload", (event, arg) => {
   db.update(
     { keyword: arg.keyword },
-    { $set: { walletname: arg.walletname, walletdirectory: arg.walletdirectory, walletaddress: arg.walletaddress } },
+    { $set: { walletname: arg.walletname, walletdirectory: arg.walletdirectory, blockchaindirectory: arg.blockchaindirectory, walletaddress: arg.walletaddress } },
     { upsert: true },
     function (err, doc) {
       // do nothing for now
