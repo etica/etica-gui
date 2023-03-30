@@ -5,6 +5,7 @@ const util = require('ethereumjs-util');
 const crypto = require('crypto');
 const HDKey = require('hdkey');
 const path = require("path");
+const fs = require("fs");
 
 let mnemonic;
 let user_mnemonic_order_array = [];
@@ -294,7 +295,7 @@ $("#word24").html(reorderedWords[23]);
       console.error("Error creating directory:", err);
       EticaMainGUI.showGeneralErrorNewWallet("Error while creating directory. Please create directory and try again. Directory: ", NewWallet.blockchaindirectory);
     }
-
+    
 // ------ ENCRYPT Master seed ---- //
 
 // Generate a 128-bit salt
