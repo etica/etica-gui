@@ -4,6 +4,7 @@ const { hdkey } = require('ethereumjs-wallet');
 const util = require('ethereumjs-util');
 const crypto = require('crypto');
 const HDKey = require('hdkey');
+const path = require("path");
 
 let mnemonic;
 let user_mnemonic_order_array = [];
@@ -455,5 +456,23 @@ NewWallet.vector = iv.toString('hex');
     ipcRenderer.on("NewBlockchainFolderAssigned", (event, _folderpath) => {
       $("#blockchaindirectory").val(_folderpath);
     });
+
+    // use this function to pre fill directories fields:
+    function loadpreloadwallet() {
+        
+      let walletpreload = ipcRenderer.sendSync("getWalletPreload", "LastWalletUsed");      
+    
+      if(walletpreload && walletpreload.walletdirectory){
+        let walletfolder = path.dirname(path.dirname(walletpreload.walletdirectory)); // removes walletdata/address subfolders
+        $("#walletdirectory").val(walletfolder);
+      }
+
+      if(walletpreload && walletpreload.blockchaindirectory){
+        $("#blockchaindirectory").val(walletpreload.blockchaindirectory);
+      }
+    
+      }
+    
+      loadpreloadwallet();
 
     // ASSIGN FOLDERS TO NEW WALLET //
