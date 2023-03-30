@@ -207,6 +207,66 @@ $("#mnemonicword24").html(reorderedWords[23]);
 
   $("#GoSetBlockHeight").off("click").on("click", function () {
 
+    if(!$("#importwalletname").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Wallet name cannot be empty!");
+      return false;
+    }
+
+    if(!$("#importblockchaindirectory").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Blockchain directory name cannot be empty!");
+      return false;
+    }
+
+    if(!path.isAbsolute($("#importblockchaindirectory").val())){
+      EticaMainGUI.showGeneralErrorImportWallet("Blockchain directory must be an absolute path!");
+      return false;
+    }
+
+    if(!$("#importwalletdirectory").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Wallet directory name cannot be empty!");
+      return false;
+    }
+
+    if(!path.isAbsolute($("#importwalletdirectory").val())){
+      EticaMainGUI.showGeneralErrorImportWallet("Wallet directory must be an absolute path!");
+      return false;
+    }
+
+
+    if($("input[name='importwallettype']:checked").val() == 'testnet' && !$("#importwalletNetworkId").val()){
+      EticaMainGUI.showGeneralErrorNewWallet("Blockchain Network ID cannot be empty!");
+      return false;
+    }
+    
+    if($("input[name='importwallettype']:checked").val() == 'testnet' && !$("#importwalletEnode").val()){
+      let enodeUrl = $("#importwalletEnode").val();
+      if (!(typeof enodeUrl === "string" && enodeUrl.startsWith("enode://"))) {
+        EticaMainGUI.showGeneralError('Enode is invalid. An enode url should start with enode://');
+        return false;
+      }
+    }
+
+    if($("input[name='importwallettype']:checked").val() == 'testnet' && !$("#importwalletContractAddress").val()){
+      EticaMainGUI.showGeneralErrorNewWallet("Etica smart contract address cannot be empty!");
+      return false;
+    }
+
+    
+    if(!$("#importwalletpassword").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Password cannot be empty!");
+      return false;
+    }
+
+    if($("#importwalletpassword").val() != $("#importwalletpasswordconf").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Passwords do not match!");
+      return false;
+    }
+
+    if (pw != $("#importwalletpassword").val()){
+      EticaMainGUI.showGeneralErrorImportWallet("Error, try again!"); // should never happen but extra security measure in case $("#importwalletpassword").val() changes value unexpectedly
+      return false;
+    }
+
     $("#SetImportWalletInfoContainer").css('display', 'none');
     $("#SetBlockHeightContainer").css('display', 'block');
 
@@ -227,6 +287,7 @@ $("#mnemonicword24").html(reorderedWords[23]);
 
     pw = $("#importwalletpassword").val();
     
+    // CHECK FIELDS AGAIN (ALREADY CHECKED BUT ADD CHECK IN CASE FIELDS CAHNGED WHILE IN BLOCK HAIGHT SCREEN) //
     if(!$("#importwalletname").val()){
       EticaMainGUI.showGeneralErrorImportWallet("Wallet name cannot be empty!");
       return false;
@@ -237,8 +298,18 @@ $("#mnemonicword24").html(reorderedWords[23]);
       return false;
     }
 
+    if(!path.isAbsolute($("#importblockchaindirectory").val())){
+      EticaMainGUI.showGeneralErrorImportWallet("Blockchain directory must be an absolute path!");
+      return false;
+    }
+
     if(!$("#importwalletdirectory").val()){
       EticaMainGUI.showGeneralErrorImportWallet("Wallet directory name cannot be empty!");
+      return false;
+    }
+
+    if(!path.isAbsolute($("#importwalletdirectory").val())){
+      EticaMainGUI.showGeneralErrorImportWallet("Wallet directory must be an absolute path!");
       return false;
     }
 
@@ -281,6 +352,8 @@ $("#mnemonicword24").html(reorderedWords[23]);
       EticaMainGUI.showGeneralErrorImportWallet("Block height must be a block number. If you dont know your seed block height just let this field to 0");
       return false;
     }
+
+    // CHECK FIELDS AGAIN DONE (ALREADY CHECKED BUT ADD CHECK IN CASE FIELDS CAHNGED WHILE IN BLOCK HAIGHT SCREEN) //
 
     NewWallet.name = $("#importwalletname").val();
     NewWallet.type = $("input[name='importwallettype']:checked").val();

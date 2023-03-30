@@ -218,8 +218,18 @@ $("#word24").html(reorderedWords[23]);
       return false;
     }
 
+    if(!path.isAbsolute($("#blockchaindirectory").val())){
+      EticaMainGUI.showGeneralErrorImportWallet("Blockchain directory must be an absolute path!");
+      return false;
+    }
+
     if(!$("#walletdirectory").val()){
       EticaMainGUI.showGeneralErrorNewWallet("Wallet directory name cannot be empty!");
+      return false;
+    }
+
+    if(!path.isAbsolute($("#walletdirectory").val())){
+      EticaMainGUI.showGeneralErrorImportWallet("Wallet directory must be an absolute path!");
       return false;
     }
 
