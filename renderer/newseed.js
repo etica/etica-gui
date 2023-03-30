@@ -264,7 +264,7 @@ $("#word24").html(reorderedWords[23]);
     }
 
     if (pw != $("#walletpassword").val()){
-      EticaMainGUI.showGeneralErrorNewWallet("Error, try again!"); // should never happen but extra security measure in case $("#walletpassword").val() changes value unexpectedly
+      EticaMainGUI.showGeneralErrorNewWallet("Error, Passwords do not match!"); // should never happen but extra security measure in case $("#walletpassword").val() changes value unexpectedly
       return false;
     }
 
@@ -283,6 +283,17 @@ $("#word24").html(reorderedWords[23]);
     NewWallet.datadirectory = $("#datadirectory").val();
 
     */
+
+    // if folder doesnt exist, create folder to avoid geth executable chmod permission issue on linux:
+    try {
+      if (!fs.existsSync(NewWallet.blockchaindirectory)) {
+        fs.mkdirSync(NewWallet.blockchaindirectory, { recursive: true });
+        console.log("Folder created!");
+      }
+    } catch (err) {
+      console.error("Error creating directory:", err);
+      EticaMainGUI.showGeneralErrorNewWallet("Error while creating directory. Please create directory and try again. Directory: ", NewWallet.blockchaindirectory);
+    }
 
 // ------ ENCRYPT Master seed ---- //
 
