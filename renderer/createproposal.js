@@ -167,7 +167,7 @@ $(document).on("render_createProposal", function () {
               // unlock accounts
               let _wallet = ipcRenderer.sendSync("getRunningWallet");
 
-                if(_wallet.autounlock){
+                if(_wallet.autounlock && isunlocked != 'unlocked'){
                       EticaBlockchain.unlockAccounts(_password, _wallet.unlocktime);
                 }
 
