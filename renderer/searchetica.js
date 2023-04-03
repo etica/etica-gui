@@ -35,7 +35,7 @@ class SearchEtica {
      // EticaMainGUI.showGeneralError(error);
     }, async function (data) {
 
-      if( SearchFor != null){
+      if( SearchFor != null && SearchFor != ""){
         
         let _blockchainresp = await EticaSearch.SearchInput(SearchFor);
        

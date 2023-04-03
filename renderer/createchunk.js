@@ -86,14 +86,14 @@ $(document).on("render_createChunk", function () {
         EticaMainGUI.showGeneralError(error);
       }, async function (data) {
 
-        let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+        let isunlocked = await EticaBlockchain.isUnlocked($("#createChunkFromAddress").val());
 
         $("#CreateChunkwalletPassword").show();
         $(".sendTXPass").show();
         $(".sendTXdivider").show();
 
         if(isunlocked == 'unlocked'){
-          $("#dlgCreateChunkiWalletPassword").iziModal();
+          $("#dlgCreateChunkiWalletPassword").iziModal({width: "70%"});
         $("#CreateChunkwalletPassword").val("");
         $("#CreateChunkwalletPassword").hide();
         $(".sendTXPass").hide();
@@ -107,7 +107,7 @@ $(document).on("render_createChunk", function () {
         }
         else{
           // Ask password
-          $("#dlgCreateChunkiWalletPassword").iziModal();
+          $("#dlgCreateChunkiWalletPassword").iziModal({width: "70%"});
         $("#CreateChunkwalletPassword").val("");
         $("#fromEtiAddressInfo").html($("#createChunkFromAddress").val());
         $("#valueToCreateChunkDiseaseHash").html($("#createChunkDiseaseHash").val());
