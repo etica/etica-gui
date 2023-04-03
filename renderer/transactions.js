@@ -79,7 +79,8 @@ class Transactions {
             };
 
             await EticaBlockchain.getPastEvents(options, function (error) {
-              EticaMainGUI.showGeneralError(error);
+              //EticaMainGUI.showGeneralError(error);
+              console.log('getPastEvents() error: ', error);
             }, async function (logevents) {
 
              // console.log('in getPastEvents, logevents loaded');
@@ -888,7 +889,8 @@ class Transactions {
           };
 
           EticaBlockchain.getPastEvents(options, function (error) {
-            EticaMainGUI.showGeneralError(error);
+            //EticaMainGUI.showGeneralError(error);
+            console.log('getPastEvents() error: ', error);
           }, async function (logevents) {
 
           data.transactions.forEach(onetx => {
