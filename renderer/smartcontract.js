@@ -1817,6 +1817,20 @@ async function chunks(_chunkindex) {
 
 }
 
+async chunkProposalsCounter(_index) {
+
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
+  let _chunknbproposals = await chunkProposalsCounter(_index);
+  return _chunknbproposals;
+
+  async function chunkProposalsCounter(_chunkindex) {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _nbproposals = await contract.methods.chunkProposalsCounter(_chunkindex).call();
+    return _nbproposals;
+}
+
+}
+
 async diseaseproposals(_hash, _index) {
 
   const ETICA_ADDRESS = this.ETICA_ADDRESS;

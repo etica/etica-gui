@@ -144,46 +144,39 @@
 
 {{/if}}
 
-<!--
+{{#if ChunkFound}}
 <div class="sendWrapper" style="padding-top:0;">
   <div class="card-panel" style="padding-top: 0px;padding-bottom: 0px;">
       <div class="row">
         <div class="input-field col s6" style="display: inline;">
-          <span style="color:#9e9e9e; font-size:1rem;">Type:</span> &nbsp;<span>Chunk</span>
+          <span style="color:#9e9e9e; font-size:1rem;">Type:</span> &nbsp;<span>Chunk | Index: {{ BlockchainResp.chunk.id }}</span>
         </div>
         <div class="input-field col s6" style="display: inline;">
-          <span style="color:#9e9e9e; font-size:1rem;">Belongs to disease:</span> &nbsp;<span>Malaria</span>
+          <span style="color:#9e9e9e; font-size:1rem;">Belongs to disease:</span> &nbsp;<span>{{ BlockchainResp.disease.name }}</span>
+        </div>
+        <div class="input-field col s12 searchresults">
+          <label>Disease Hash:</label><br>
+          <p class="copyClipboard">{{ BlockchainResp.disease.disease_hash }}</p>
         </div>
         <div class="input-field col s6">
-          <label>Name:</label><br>
-          <p>Diabetes Type 2</p>
-        </div>
-        <div class="input-field col s6">
-          <label>Index:</label><br>
-          <p>88</p>
+          <label>Chunk Title:</label><br>
+          <p>{{ BlockchainResp.chunk.title }}</p>
         </div>
         <div class="input-field col s12">
-          <label>Description:</label><br>
-          <p>Disease Riuh yuguyg uyg uy guy guy ggy uuygf yyhioijoi o jiojio/p>
+          <label>Chunk Description:</label><br>
+          <p>{{ BlockchainResp.chunk.desc }}</p>
         </div>
       </div>
       <div class="row">
         <div class="input-field col s6">
         <label>Proposals:</label><br>
-        <p>16</p>
+        <p>{{ BlockchainResp.chunk.nbproposals }}</p>
         </div>
       </div>
     
   </div>
-</div>  -->
-
-{{#if BlockchainResp}}
-<p>Case 1</p>
+</div>  
 {{/if}}
-
-{{#BlockchainResp}}
-<p>Case 2</p>
-{{/BlockchainResp}}
 
 
 
@@ -276,5 +269,10 @@
 </div>
 {{/if}}
 
+<div class="sendWrapper" style="padding-top:0;">
+{{#if NoresultFound}}
+<p style="margin-left: 3%;font-family: 'Sairalight';">No result found on Etica Blockchain for this query</p> 
+{{/if}}
+</div>
 
 </div>

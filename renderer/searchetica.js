@@ -48,6 +48,9 @@ class SearchEtica {
         if(_blockchainresp && _blockchainresp.type == 'chunk'){
           data.ChunkFound = true;
         }
+        if(_blockchainresp && _blockchainresp.type == 'noresult'){
+          data.NoresultFound = true;
+        }
         data.BlockchainResp = _blockchainresp;
       }
       
@@ -117,8 +120,13 @@ class SearchEtica {
     let _now = Date.now();
     let CurrentDate = moment(_now);
 
-    // search for disease:  
-    let diseaseindex = await EticaContract.diseasesbyIds(_searchhash);
+    // search for disease:
+    let diseaseindex = 0;
+    let isBytes32 = web3Local.utils.isHexStrict(_searchhash) && /^0x[0-9a-f]{64}$/i.test(_searchhash);
+    if(isBytes32){
+      diseaseindex = await EticaContract.diseasesbyIds(_searchhash);
+    }
+      
 
       // disease found:
       if( (diseaseindex > 0) ){
@@ -239,8 +247,12 @@ class SearchEtica {
       else {
 
         // search for proposal: 
-        let _proposal = await EticaContract.proposals(_searchhash);
-        let _chunk = null;
+        let _proposal = [];
+        if(isBytes32){
+        _proposal = await EticaContract.proposals(_searchhash);
+        }
+        
+        let _chunk = [];
 
         // proposal found:
         if(_proposal[0] > 0){
@@ -272,7 +284,30 @@ class SearchEtica {
 
         else {
 
+
+             if(!isNaN(_searchhash)){
+             // search for chunk: 
+             _chunk = await EticaContract.chunks(_searchhash);
+             }
+
+             if(_chunk[0] > 0){
+
+              // get disease:
+              let chunkdiseaseindex =  await EticaContract.diseasesbyIds(_chunk[1]);
+              let _chunkdisease =  await EticaContract.diseases(chunkdiseaseindex);
+              _chunk.nbproposals = await EticaContract.chunkProposalsCounter(_chunk[0]);
+
+              _result['type'] = 'chunk';
+              _result['chunk'] = _chunk;
+              _result['disease'] = _chunkdisease;
+              console.log('_result is', _result);
+              return _result;
+
+             }
+
+
           // nothing found, return empty result:
+          _result['type'] = 'noresult';
           return _result;
 
         }
