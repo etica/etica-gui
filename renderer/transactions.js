@@ -152,7 +152,6 @@ class Transactions {
                         return onevent.event == 'Transfer' 
                       });
 
-                      console.log('I transfereents is: ', transferevents);
                       transferevents.forEach(f => {
                         let _eventindex = txevents.findIndex(e => e.logIndex === f.logIndex);
                   //   console.log('I _eventindex  is: ', _eventindex);
