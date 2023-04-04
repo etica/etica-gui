@@ -82,7 +82,7 @@ $(document).on("render_createDisease", function () {
         EticaMainGUI.showGeneralError(error);
       }, async function (data) {
 
-        let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+        let isunlocked = await EticaBlockchain.isUnlocked($("#createDiseaseFromAddress").val());
 
         $("#CreateDiseasewalletPassword").show();
         $(".sendTXPass").show();
@@ -92,8 +92,8 @@ $(document).on("render_createDisease", function () {
           $("#dlgCreateDiseaseWalletPassword").iziModal();
         $("#CreateDiseasewalletPassword").val("");
         $("#CreateDiseasewalletPassword").hide();
-        $(".sendTXPass").hide();
-        $(".sendTXdivider").hide();
+        $(".sendTXPass").css("display", "none");
+        $(".sendTXdivider").css("display", "none");
         $("#fromEtiAddressInfo").html($("#createDiseaseFromAddress").val());
         $("#valueToCreateDiseaseInfo").html($("#createDiseaseName").val());
         $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
