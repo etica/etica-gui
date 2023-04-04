@@ -458,7 +458,7 @@ $(document).on("render_stakesboard", function () {
                       });
                     }
             
-                    $("#btnSnapStakeWalletPasswordConfirm").off("click").on("click", function () {
+                    $("#btnConsolidateStakesWalletPasswordConfirm").off("click").on("click", function () {
                       doSendTransaction();
                     });
             
