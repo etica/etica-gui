@@ -2,13 +2,13 @@
 
 **Clone and run to see it in action.**
 
-This is a desktop wallet for [EticaProtocol](https://www.eticaprotocol.org/) project.
+GUI desktop wallet for [EticaProtocol](https://www.eticaprotocol.org/)
 
 ## To Use
 
 **OS**
 Linux and Windows
-Mac not tested yet
+(no tests on Mac yet)
 
 
 Windows
