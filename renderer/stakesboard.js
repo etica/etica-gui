@@ -281,19 +281,45 @@ $(document).on("render_stakesboard", function () {
 
                   EticaContract.getTranasctionFee_stakesnap(stakeaddress, stakeindex, input_snapamount, function (error) {
                     EticaMainGUI.showGeneralError(error);
-                  }, function (data) {
+                  }, async function (data) {
+
+                    let isunlocked = await EticaBlockchain.isUnlocked(stakeaddress);
+
+                    $("#SnapStakewalletPassword").show();
+                    $(".sendTXPass").show();
+                    $(".sendTXdivider").show();
+
+                    if(isunlocked == 'unlocked'){
                     $("#dlgSnapStakeWalletPassword").iziModal({width: "70%"});
                     $("#SnapStakewalletPassword").val("");
+                    $("#SnapStakewalletPassword").hide();
+                    $(".sendTXPass").css("display", "none");
+                    $(".sendTXdivider").css("display", "none");
                     $("#fromSnapStakeAddressInfo").html(stakeaddress);
                     $("#valueOfSnapStakeIndex").html(stakeindex);
                     $("#valueOfSnapStakeAmount").html(input_snapamount);
                     $("#feeSnapStakeToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
                     $("#dlgSnapStakeWalletPassword").iziModal("open");
-
+                    }
+                    else{
+                      $("#dlgSnapStakeWalletPassword").iziModal({width: "70%"});
+                      $("#SnapStakewalletPassword").val("");
+                      $("#fromSnapStakeAddressInfo").html(stakeaddress);
+                      $("#valueOfSnapStakeIndex").html(stakeindex);
+                      $("#valueOfSnapStakeAmount").html(input_snapamount);
+                      $("#feeSnapStakeToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+                      $("#dlgSnapStakeWalletPassword").iziModal("open");
+                    }
             
                     function doSendTransaction() {
                       $("#dlgSnapStakeWalletPassword").iziModal("close");
-                      EticaContract.prepareTransaction_stakesnap($("#SnapStakewalletPassword").val(), stakeaddress, stakeindex, input_snapamount, function (error) {
+
+                      let _password = null;
+                      if(isunlocked != 'unlocked') {
+                        _password = $("#SnapStakewalletPassword").val();
+                      }
+
+                      EticaContract.prepareTransaction_stakesnap(_password, stakeaddress, stakeindex, input_snapamount, function (error) {
                         EticaMainGUI.showGeneralError(error);
                       }, function (data) {
                         EticaBlockchain.sendTransaction(data.raw, function (error) {
@@ -306,8 +332,8 @@ $(document).on("render_stakesboard", function () {
                          // unlock accounts
                          let _wallet = ipcRenderer.sendSync("getRunningWallet");
 
-                         if(_wallet.autounlock){
-                              EticaBlockchain.unlockAccounts($("#SnapStakewalletPassword").val(), _wallet.unlocktime);
+                         if(_wallet.autounlock && isunlocked != 'unlocked'){
+                              EticaBlockchain.unlockAccounts(_password, _wallet.unlocktime);
                          }
 
 
