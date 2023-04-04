@@ -61,13 +61,8 @@ class Wallets {
         return false;
       }
 
-      if (!$("#walletPasswordSecond").val()) {
-        EticaMainGUI.showGeneralError("Password cannot be empty!");
-        return false;
-      }
-
-      if ($("#walletPasswordFirst").val() !== $("#walletPasswordSecond").val()) {
-        EticaMainGUI.showGeneralError("Passwords do not match!");
+      if ($("#nbCreateNewAddresses").val() && isNaN($("#nbCreateNewAddresses").val())) {
+        EticaMainGUI.showGeneralError("Number of new addresses to create must be a number!");
         return false;
       }
 
@@ -159,7 +154,7 @@ $(document).on("render_wallets", function () {
   $("#btnNewAddress").off("click").on("click", async function () {
     $("#dlgCreateWalletPassword").iziModal();
     $("#walletPasswordFirst").val("");
-    $("#walletPasswordSecond").val("");
+    $("#nbCreateNewAddresses").val("1");
     $("#dlgCreateWalletPassword").iziModal("open");
 
     async function doCreateNewWallet() {
@@ -167,6 +162,13 @@ $(document).on("render_wallets", function () {
 
 
       if (EticaWallets.validateNewAccountForm()) {
+
+        // set nb of new addresses to create:
+        let nb_newaddreses = 1; // default create 1 address
+        if($("#nbCreateNewAddresses").val()){
+          nb_newaddreses = Number($("#nbCreateNewAddresses").val());
+          nb_newaddreses = Math.min(5, nb_newaddreses);
+        }
 
         // get master seed  from password and creates new deterministic address 
         // if first calculated derived address from seed equals expected masteraddress:
@@ -215,25 +217,33 @@ $(document).on("render_wallets", function () {
           
             // create new address:
             else if(firstDerivedAddress === masteraddress) {
-        
-           // get index of new account:
-           let accounts = await EticaBlockchain.AsyncgetAccounts();
-           const newindex = accounts.length;
 
-           // create new address:
-           const newWallet = hdwallet.derivePath("m/44'/60'/0'/0/"+newindex+"").getWallet();
-           const PrivateKey = newWallet.getPrivateKey();
-           const newPrivateKeyString = PrivateKey.toString('hex');
-
-           EticaBlockchain.importFromPrivateKey(newPrivateKeyString, password, function (error) {
-             EticaMainGUI.showGeneralError(error);
-           }, function (account) {
-
-            EticaWallets.addAddressToList(account);
-            EticaWallets.renderWalletsState();
-            iziToast.success({title: "Created", message: "New wallet address was successfully created", position: "topRight", timeout: 5000});
-
+        let accounts = await EticaBlockchain.AsyncgetAccounts();
+        let newIndex = accounts.length;
+        const newAddresses = [];
+      
+        for (let i = 0; i < nb_newaddreses; i++) {
+          const newWallet = hdwallet.derivePath("m/44'/60'/0'/0/" + (newIndex + i) + "").getWallet();
+          const privateKey = newWallet.getPrivateKey();
+          const newPrivateKeyString = privateKey.toString('hex');
+      
+          const newAddressPromise = new Promise((resolve, reject) => {
+            EticaBlockchain.importFromPrivateKey(newPrivateKeyString, password, function (error) {
+              reject(error);
+            }, function (account) {
+              newAddresses.push(account);
+              resolve();
+            });
+          });
+          await newAddressPromise;
+        }
+      
+        // all accounts created successfully
+        newAddresses.forEach(address => {
+          EticaWallets.addAddressToList(address);
         });
+        EticaWallets.renderWalletsState();
+        iziToast.success({title: "Created", message: "New wallet addresses were successfully created", position: "topRight", timeout: 5000});
 
       }
         
