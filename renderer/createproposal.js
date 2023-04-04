@@ -68,6 +68,14 @@ class CreateProposal {
       $("#createProposalTitle").val("");
     }
   }
+
+  shortenString(string, maxlenght) {
+    if (string.length > 60) {
+      string = string.slice(0, maxlenght) + "...";
+    }
+    return string;
+  }
+
 }
 
 $(document).on("render_createProposal", function () {
@@ -121,12 +129,12 @@ $(document).on("render_createProposal", function () {
         $(".sendTXdivider").hide();
         $("#fromCreateProposalAddressInfo").html($("#createProposalFromAddress").val());
         $("#valueToCreateProposalDiseaseHash").html($("#createProposalDiseaseHash").val());
-        $("#valueToCreateProposalDiseaseName").html(diseasename);
-        $("#valueToCreateProposalTitle").html($("#createProposalTitle").val());
-        $("#valueToCreateProposalDescription").html($("#createProposalDescription").val());
+        $("#valueToCreateProposalDiseaseName").html(ProposalCreate.shortenString(diseasename, 60));
+        $("#valueToCreateProposalTitle").html(ProposalCreate.shortenString($("#createProposalTitle").val(),60));
+        $("#valueToCreateProposalDescription").html(ProposalCreate.shortenString($("#createProposalDescription").val(),60));
         $("#valueToCreateProposalChunkId").html($("#createProposalChunkId").val());
-        $("#valueToCreateProposalRawReleaseHash").html($("#createProposalRawReleaseHash").val());
-        $("#valueToCreateProposalFreefield").html($("#createProposalFreefield").val());
+        $("#valueToCreateProposalRawReleaseHash").html(ProposalCreate.shortenString($("#createProposalRawReleaseHash").val(),60));
+        $("#valueToCreateProposalFreefield").html(ProposalCreate.shortenString($("#createProposalFreefield").val(),50));
         $("#feeCreateProposalToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCreateProposalWalletPassword").iziModal("open");
         }
@@ -136,12 +144,12 @@ $(document).on("render_createProposal", function () {
         $("#CreateProposalwalletPassword").val("");
         $("#fromCreateProposalAddressInfo").html($("#createProposalFromAddress").val());
         $("#valueToCreateProposalDiseaseHash").html($("#createProposalDiseaseHash").val());
-        $("#valueToCreateProposalDiseaseName").html(diseasename);
-        $("#valueToCreateProposalTitle").html($("#createProposalTitle").val());
-        $("#valueToCreateProposalDescription").html($("#createProposalDescription").val());
+        $("#valueToCreateProposalDiseaseName").html(ProposalCreate.shortenString(diseasename,60));
+        $("#valueToCreateProposalTitle").html(ProposalCreate.shortenString($("#createProposalTitle").val(),60));
+        $("#valueToCreateProposalDescription").html(ProposalCreate.shortenString($("#createProposalDescription").val(),60));
         $("#valueToCreateProposalChunkId").html($("#createProposalChunkId").val());
-        $("#valueToCreateProposalRawReleaseHash").html($("#createProposalRawReleaseHash").val());
-        $("#valueToCreateProposalFreefield").html($("#createProposalFreefield").val());
+        $("#valueToCreateProposalRawReleaseHash").html(ProposalCreate.shortenString($("#createProposalRawReleaseHash").val(),60));
+        $("#valueToCreateProposalFreefield").html(ProposalCreate.shortenString($("#createProposalFreefield").val(),60));
         $("#feeCreateProposalToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCreateProposalWalletPassword").iziModal("open");
         }

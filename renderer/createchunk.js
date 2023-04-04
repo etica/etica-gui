@@ -62,6 +62,14 @@ class CreateChunk {
       $("#createChunkTitle").val("");
     }
   }
+
+  shortenString(string, maxlenght) {
+    if (string.length > 60) {
+      string = string.slice(0, maxlenght) + "...";
+    }
+    return string;
+  }
+
 }
 
 $(document).on("render_createChunk", function () {
@@ -88,32 +96,32 @@ $(document).on("render_createChunk", function () {
 
         let isunlocked = await EticaBlockchain.isUnlocked($("#createChunkFromAddress").val());
 
-        $("#CreateChunkwalletPassword").show();
+        $("#CreateChunkwalletPasswordDiv").show();
         $(".sendTXPass").show();
         $(".sendTXdivider").show();
 
         if(isunlocked == 'unlocked'){
           $("#dlgCreateChunkiWalletPassword").iziModal({width: "70%"});
         $("#CreateChunkwalletPassword").val("");
-        $("#CreateChunkwalletPassword").hide();
+        $("#CreateChunkwalletPasswordDiv").hide();
         $(".sendTXPass").hide();
         $(".sendTXdivider").hide();
-        $("#fromEtiAddressInfo").html($("#createChunkFromAddress").val());
+        $("#valueToCreateChunkAddressInfo").html($("#createChunkFromAddress").val());
         $("#valueToCreateChunkDiseaseHash").html($("#createChunkDiseaseHash").val());
-        $("#valueToCreateChunkTitle").html($("#createChunkTitle").val());
-        $("#valueToCreateChunkDescription").html($("#createChunkDescription").val());
-        $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#valueToCreateChunkTitle").html(ChunkCreate.shortenString($("#createChunkTitle").val(),60));
+        $("#valueToCreateChunkDescription").html(ChunkCreate.shortenString($("#createChunkDescription").val(),60));
+        $("#feeToCreateChunkPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCreateChunkiWalletPassword").iziModal("open");
         }
         else{
           // Ask password
           $("#dlgCreateChunkiWalletPassword").iziModal({width: "70%"});
         $("#CreateChunkwalletPassword").val("");
-        $("#fromEtiAddressInfo").html($("#createChunkFromAddress").val());
+        $("#valueToCreateChunkAddressInfo").html($("#createChunkFromAddress").val());
         $("#valueToCreateChunkDiseaseHash").html($("#createChunkDiseaseHash").val());
-        $("#valueToCreateChunkTitle").html($("#createChunkTitle").val());
-        $("#valueToCreateChunkDescription").html($("#createChunkDescription").val());
-        $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#valueToCreateChunkTitle").html(ChunkCreate.shortenString($("#createChunkTitle").val(),60));
+        $("#valueToCreateChunkDescription").html(ChunkCreate.shortenString($("#createChunkDescription").val(),60));
+        $("#feeToCreateChunkPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCreateChunkiWalletPassword").iziModal("open");
         }
 

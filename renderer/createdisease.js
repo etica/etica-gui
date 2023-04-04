@@ -49,6 +49,13 @@ class CreateDisease {
       $("#createDiseaseName").val("");
     }
   }
+
+  shortenString(string, maxlenght) {
+    if (string.length > 35) {
+      string = string.slice(0, maxlenght) + "...";
+    }
+    return string;
+  }
 }
 
 $(document).on("render_createDisease", function () {
@@ -84,28 +91,28 @@ $(document).on("render_createDisease", function () {
 
         let isunlocked = await EticaBlockchain.isUnlocked($("#createDiseaseFromAddress").val());
 
-        $("#CreateDiseasewalletPassword").show();
+        $("#CreateDiseasewalletPasswordDiv").show();
         $(".sendTXPass").show();
         $(".sendTXdivider").show();
 
         if(isunlocked == 'unlocked'){
           $("#dlgCreateDiseaseWalletPassword").iziModal();
         $("#CreateDiseasewalletPassword").val("");
-        $("#CreateDiseasewalletPassword").hide();
+        $("#CreateDiseasewalletPasswordDiv").hide();
         $(".sendTXPass").css("display", "none");
         $(".sendTXdivider").css("display", "none");
-        $("#fromEtiAddressInfo").html($("#createDiseaseFromAddress").val());
-        $("#valueToCreateDiseaseInfo").html($("#createDiseaseName").val());
-        $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#fromCreateDiseaseAddressInfo").html($("#createDiseaseFromAddress").val());
+        $("#valueToCreateDiseaseInfo").html(DiseaseCreate.shortenString($("#createDiseaseName").val(),35));
+        $("#feeCreateDiseaseToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCreateDiseaseWalletPassword").iziModal("open");
         }
         else{
           // Ask password
           $("#dlgCreateDiseaseWalletPassword").iziModal();
         $("#CreateDiseasewalletPassword").val("");
-        $("#fromEtiAddressInfo").html($("#createDiseaseFromAddress").val());
-        $("#valueToCreateDiseaseInfo").html($("#createDiseaseName").val());
-        $("#feeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+        $("#fromCreateDiseaseAddressInfo").html($("#createDiseaseFromAddress").val());
+        $("#valueToCreateDiseaseInfo").html(DiseaseCreate.shortenString($("#createDiseaseName").val(),35));
+        $("#feeCreateDiseaseToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgCreateDiseaseWalletPassword").iziModal("open");
         }
 

@@ -129,14 +129,14 @@ $(document).on("render_commitVote", function () {
 
         let isunlocked = await EticaBlockchain.isUnlocked($("#commitVoteFromAddress").val());
 
-        $("#CommitVotewalletPassword").show();
+        $("#CommitVotewalletPasswordDiv").show();
         $(".sendTXPass").show();
         $(".sendTXdivider").show();
 
         if(isunlocked == 'unlocked'){
           $("#dlgCommitVoteWalletPassword").iziModal({width: "70%"});
         $("#CommitVotewalletPassword").val("");
-        $("#CommitVotewalletPassword").hide();
+        $("#CommitVotewalletPasswordDiv").hide();
         $(".sendTXPass").hide();
         $(".sendTXdivider").hide();
         $("#fromCommitVoteAddressInfo").html($("#commitVoteFromAddress").val());
