@@ -205,7 +205,7 @@ $(document).on("render_stakesboard", function () {
 
                     }
                     else{
-
+                      // Ask password
                       $("#dlgClaimStakeWalletPassword").iziModal({width: "70%"});
                       $("#ClaimStakewalletPassword").val("");
                       $("#fromClaimStakeAddressInfo").html(stakeaddress);
@@ -302,6 +302,7 @@ $(document).on("render_stakesboard", function () {
                     $("#dlgSnapStakeWalletPassword").iziModal("open");
                     }
                     else{
+                      // Ask password
                       $("#dlgSnapStakeWalletPassword").iziModal({width: "70%"});
                       $("#SnapStakewalletPassword").val("");
                       $("#fromSnapStakeAddressInfo").html(stakeaddress);
@@ -400,17 +401,43 @@ $(document).on("render_stakesboard", function () {
 
                   EticaContract.getTranasctionFee_stakescsldt(stakeaddress, _endtime, _minlimit, input_maxindex, function (error) {
                     EticaMainGUI.showGeneralError(error);
-                  }, function (data) {
-                    $("#dlgConsolidateStakesWalletPassword").iziModal({width: "70%"});
-                    $("#ConsolidateStakeswalletPassword").val("");
-                    $("#fromConsolidateStakesAddressInfo").html(stakeaddress);
-                    $("#feeConsolidateStakesToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
-                    $("#dlgConsolidateStakesWalletPassword").iziModal("open");
+                  }, async function (data) {
+
+                    let isunlocked = await EticaBlockchain.isUnlocked(stakeaddress);
+
+                    $("#ConsolidateStakeswalletPassword").show();
+                    $(".sendTXPass").show();
+                    $(".sendTXdivider").show();
+
+                    if(isunlocked == 'unlocked'){
+                      $("#dlgConsolidateStakesWalletPassword").iziModal({width: "70%"});
+                      $("#ConsolidateStakeswalletPassword").val("");
+                      $("#ConsolidateStakeswalletPassword").hide();
+                      $(".sendTXPass").css("display", "none");
+                      $(".sendTXdivider").css("display", "none");
+                      $("#fromConsolidateStakesAddressInfo").html(stakeaddress);
+                      $("#feeConsolidateStakesToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+                      $("#dlgConsolidateStakesWalletPassword").iziModal("open");
+                    }
+                    else {
+                      // Ask password
+                      $("#dlgConsolidateStakesWalletPassword").iziModal({width: "70%"});
+                      $("#ConsolidateStakeswalletPassword").val("");
+                      $("#fromConsolidateStakesAddressInfo").html(stakeaddress);
+                      $("#feeConsolidateStakesToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+                      $("#dlgConsolidateStakesWalletPassword").iziModal("open");
+                    }
 
             
                     function doSendTransaction() {
                       $("#dlgConsolidateStakesWalletPassword").iziModal("close");
-                      EticaContract.prepareTransaction_stakescsldt($("#ConsolidateStakeswalletPassword").val(), stakeaddress, input_endtime, input_minlimit, input_maxindex, function (error) {
+
+                      let _password = null;
+                      if(isunlocked != 'unlocked') {
+                         _password = $("#ConsolidateStakeswalletPassword").val();
+                      }
+
+                      EticaContract.prepareTransaction_stakescsldt(_password, stakeaddress, input_endtime, input_minlimit, input_maxindex, function (error) {
                         EticaMainGUI.showGeneralError(error);
                       }, function (data) {
                         EticaBlockchain.sendTransaction(data.raw, function (error) {
@@ -423,7 +450,7 @@ $(document).on("render_stakesboard", function () {
                          // unlock accounts
                          let _wallet = ipcRenderer.sendSync("getRunningWallet");
 
-                         if(_wallet.autounlock){
+                         if(_wallet.autounlock && isunlocked != 'unlocked'){
                               EticaBlockchain.unlockAccounts($("#ConsolidateStakeswalletPassword").val(), _wallet.unlocktime);
                          }
 
