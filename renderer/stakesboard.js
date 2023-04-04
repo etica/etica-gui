@@ -181,19 +181,51 @@ $(document).on("render_stakesboard", function () {
 
                   EticaContract.getTranasctionFee_stakeclmidx(stakeaddress, stakeindex, function (error) {
                     EticaMainGUI.showGeneralError(error);
-                  }, function (data) {
-                    $("#dlgClaimStakeWalletPassword").iziModal({width: "70%"});
-                    $("#ClaimStakewalletPassword").val("");
-                    $("#fromClaimStakeAddressInfo").html(stakeaddress);
-                    $("#valueOfClaimStakeIndex").html(stakeindex);
-                    $("#valueOfClaimStakeAmount").html(stakeamount);
-                    $("#feeClaimStakeToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
-                    $("#dlgClaimStakeWalletPassword").iziModal("open");
+                  }, async function (data) {
+
+
+                    let isunlocked = await EticaBlockchain.isUnlocked($(stakeaddress).val());
+
+                    $("#ClaimStakewalletPassword").show();
+                    $(".sendTXPass").show();
+                    $(".sendTXdivider").show();
+
+                    if(isunlocked == 'unlocked'){
+
+                      $("#dlgClaimStakeWalletPassword").iziModal({width: "70%"});
+                      $("#ClaimStakewalletPassword").val("");
+                      $("#ClaimStakewalletPassword").hide();
+                      $(".sendTXPass").css("display", "none");
+                      $(".sendTXdivider").css("display", "none");
+                      $("#fromClaimStakeAddressInfo").html(stakeaddress);
+                      $("#valueOfClaimStakeIndex").html(stakeindex);
+                      $("#valueOfClaimStakeAmount").html(stakeamount);
+                      $("#feeClaimStakeToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+                      $("#dlgClaimStakeWalletPassword").iziModal("open");
+
+                    }
+                    else{
+
+                      $("#dlgClaimStakeWalletPassword").iziModal({width: "70%"});
+                      $("#ClaimStakewalletPassword").val("");
+                      $("#fromClaimStakeAddressInfo").html(stakeaddress);
+                      $("#valueOfClaimStakeIndex").html(stakeindex);
+                      $("#valueOfClaimStakeAmount").html(stakeamount);
+                      $("#feeClaimStakeToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
+                      $("#dlgClaimStakeWalletPassword").iziModal("open");
+
+                    }
 
             
                     function doSendTransaction() {
                       $("#dlgClaimStakeWalletPassword").iziModal("close");
-                      EticaContract.prepareTransaction_stakeclmidx($("#ClaimStakewalletPassword").val(), stakeaddress, stakeindex, function (error) {
+
+                      let _password = null;
+                      if(isunlocked != 'unlocked') {
+                        _password = $("#ClaimStakewalletPassword").val();
+                      }
+
+                      EticaContract.prepareTransaction_stakeclmidx(_password, stakeaddress, stakeindex, function (error) {
                         EticaMainGUI.showGeneralError(error);
                       }, function (data) {
                         EticaBlockchain.sendTransaction(data.raw, function (error) {
@@ -206,8 +238,8 @@ $(document).on("render_stakesboard", function () {
                          // unlock accounts
                          let _wallet = ipcRenderer.sendSync("getRunningWallet");
 
-                         if(_wallet.autounlock){
-                              EticaBlockchain.unlockAccounts($("#ClaimStakewalletPassword").val(), _wallet.unlocktime);
+                         if(_wallet.autounlock && isunlocked != 'unlocked'){
+                              EticaBlockchain.unlockAccounts(_password, _wallet.unlocktime);
                          }
 
                         });
