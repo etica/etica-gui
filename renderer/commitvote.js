@@ -105,10 +105,6 @@ $(document).on("render_commitVote", function () {
 
       let vote_checked_choice = null;
       let vote_checked_choice_text = null;
-      console.log("document.getElementById('commitVoteApprovalChoice').checked", document.getElementById('commitVoteApprovalChoice').checked);
-      console.log("document.getElementById('commitVoteDisapprovalChoice').checked", document.getElementById('commitVoteDisapprovalChoice').checked);
-      console.log("document.getElementById('commitVoteApprovalChoice').value", document.getElementById('commitVoteApprovalChoice').value);
-      console.log("document.getElementById('commitVoteDisapprovalChoice').value", document.getElementById('commitVoteDisapprovalChoice').value);
       if (document.getElementById('commitVoteApprovalChoice').checked && !document.getElementById('commitVoteDisapprovalChoice').checked) {
         vote_checked_choice = true;
         vote_checked_choice_text = 'Approve';
@@ -125,8 +121,6 @@ $(document).on("render_commitVote", function () {
       }
 
       let commitvotehash = VoteCommit.calculateHash($("#commitVoteProposalHash").val(), vote_checked_choice, $("#commitVoteFromAddress").val(), $("#commitVotePrivacy").val());
-      console.log('commitvotehash returned value is: ', commitvotehash);
-      console.log('$("#commitVoteAmount").val() is: ', $("#commitVoteAmount").val());
       
       EticaContract.getTranasctionFee_commitvote($("#commitVoteFromAddress").val(), commitvotehash, $("#commitVoteAmount").val(), function (error) {
         EticaMainGUI.showGeneralError(error);
