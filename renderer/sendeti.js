@@ -36,7 +36,7 @@ class SendEti {
       }
 
       if (Number($("#sendEtiAmmount").val()) <= 0) {
-        EticaMainGUI.showGeneralError("Send ammount must be greater then zero!");
+        EticaMainGUI.showGeneralError("Send amount must be greater then zero!");
         return false;
       }
 
