@@ -114,7 +114,7 @@ $(document).on("render_createProposal", function () {
         $(".sendTXdivider").show();
 
         if(isunlocked == 'unlocked'){
-          $("#dlgCreateProposalWalletPassword").iziModal({width: "70%"});
+          $("#dlgCreateProposalWalletPassword").iziModal({width: "75%"});
         $("#CreateProposalwalletPassword").val("");
         $("#CreateProposalwalletPassword").hide();
         $(".sendTXPass").hide();
@@ -132,7 +132,7 @@ $(document).on("render_createProposal", function () {
         }
         else{
           // Ask password
-          $("#dlgCreateProposalWalletPassword").iziModal({width: "70%"});
+          $("#dlgCreateProposalWalletPassword").iziModal({width: "75%"});
         $("#CreateProposalwalletPassword").val("");
         $("#fromCreateProposalAddressInfo").html($("#createProposalFromAddress").val());
         $("#valueToCreateProposalDiseaseHash").html($("#createProposalDiseaseHash").val());

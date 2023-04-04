@@ -230,7 +230,7 @@ class SearchEtica {
 
                 oneproposal.revealopen = _revealopen;
                 oneproposal.revealpassed = _revealpassed;
-                oneproposal._claimopen = _claimopen;
+                oneproposal.claimopen = _claimopen;
                
                diseaseproposals.push(oneproposal); 
 
@@ -258,7 +258,7 @@ class SearchEtica {
         if(_proposal[0] > 0){
 
           let _proposaldata = await EticaContract.propsdatas(_proposal[1]);
-          _proposal[10] = _proposaldata;  // oneproposal[10] contains propsdatas struct          
+          _proposal[10] = _proposaldata;  // _proposal[10] contains propsdatas struct          
           
           // if chunk get chunk:
           if(_proposal[4] != 0){
@@ -271,6 +271,79 @@ class SearchEtica {
 
           // get period:
           let _period =  await EticaContract.periods(_proposal[3]);
+
+
+          _proposal[10] = _proposaldata; // _proposal[10] contains propsdatas struct
+
+          if(_proposal[10].status == 0){
+           _rejected = true;
+         }
+         if(_proposal[10].status == 1){
+           _approved = true;
+         }
+         if(_proposal[10].status == 2){
+           _pending = true;
+         }
+
+         _proposal.rejected = _rejected;
+         _proposal.pending = _pending;
+         _proposal.approved = _approved;
+
+          let _propstart = _proposal[10][0];
+          let _propend = _proposal[10][1]; // endtime
+          
+          let seconds_claimable = (parseInt(_period[1]) + parseInt(MIN_CLAIM_INTERVAL)) * parseInt(REWARD_INTERVAL);
+
+          let _timestamp_claimable = moment.unix(seconds_claimable).format("YYYY-MM-DD HH:mm:ss");
+
+         //let _hashproposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
+         let _deadline = moment.unix(parseInt(_propend)).add(DEFAULT_REVEALING_TIME,'seconds');
+           
+         _proposal.proposaldeadline = _deadline.format("YYYY-MM-DD HH:mm:ss");
+         //_proposal.proposalend = moment(_hashproposalend).format("YYYY-MM-DD HH:mm:ss");
+         _proposal.proposalend = moment.unix(parseInt(_propend)).format("YYYY-MM-DD HH:mm:ss");
+         _proposal.proposalstart = moment.unix(parseInt(_propstart)).format("YYYY-MM-DD HH:mm:ss");
+         _proposal.timestampclaimable = moment(_timestamp_claimable).format("YYYY-MM-DD HH:mm:ss");
+
+         _proposal.forvotes = web3Local.utils.fromWei(_proposal[10].forvotes, "ether");
+         _proposal.againstvotes = web3Local.utils.fromWei(_proposal[10].againstvotes, "ether");
+
+         if(_proposal[10].forvotes > 0 || _proposal[10].againstvotes > 0){
+         let _forvotesbn = web3Local.utils.toBN(_proposal[10].forvotes);
+         let _againstvotesbn = web3Local.utils.toBN(_proposal[10].againstvotes);
+         let _ratio_numerator = web3Local.utils.toBN("10000").mul(_forvotesbn); // multiply by 1000 then div by 10 to get in %
+         let _ratio_denumerator = _forvotesbn.add(_againstvotesbn);
+         let _ratiobn = _ratio_numerator.div(_ratio_denumerator);
+         let _ratio = parseInt(_ratiobn)/100;
+   
+         _ratio = parseFloat(_ratio.toString());
+         _ratio = _ratio.toFixed(2);
+         _proposal.votesratio = _ratio+ '%';
+         }
+         else {
+           _proposal.votesratio = "novotes";
+         }
+
+         _proposal.approvalthreshold = _proposal[10].approvalthreshold/100;
+         
+         if( CurrentDate.isAfter(_proposal.proposalend) && CurrentDate.isBefore(_proposal.proposaldeadline) ){
+           _revealopen = true;
+          }
+        else if (CurrentDate.isAfter(_proposal.proposaldeadline)){
+           _revealpassed = true;
+          }
+
+        if( CurrentDate.isAfter(_timestamp_claimable)){
+            _claimopen = true;
+           } 
+
+           _proposal.revealopen = _revealopen;
+           _proposal.revealpassed = _revealpassed;
+           _proposal.claimopen = _claimopen;
+
+
+
+
 
 
           _result['type'] = 'proposal';
