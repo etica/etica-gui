@@ -38,6 +38,8 @@ class Settings {
 }
 
 $(document).on("render_settings", async function () {
+
+  /*
   $("#btnSettingsCleanTransactions").off("click").on("click", async function () {
     if (isFullySynced) {
       EticaMainGUI.showGeneralConfirmation("Do you really want to resync transactions?", async function (result) {
@@ -137,6 +139,8 @@ $(document).on("render_settings", async function () {
       }
     });
   });
+
+  */
 
   $("#btnCloseWallet").off("click").on("click", function () {
 
