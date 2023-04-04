@@ -268,7 +268,7 @@ $(document).on("render_commithistory", function () {
 
 
 
-                    let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+                    let isunlocked = await EticaBlockchain.isUnlocked(_commit.voter);
 
                     $("#RevealCommitwalletPassword").show();
                     $(".sendTXPass").show();
@@ -374,7 +374,7 @@ $(document).on("render_commithistory", function () {
                   }, async function (data) {
 
 
-                    let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+                    let isunlocked = await EticaBlockchain.isUnlocked(commitvoter);
 
                     $("#ClaimCommitwalletPassword").show();
                     $(".sendTXPass").show();

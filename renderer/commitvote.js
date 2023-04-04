@@ -133,7 +133,7 @@ $(document).on("render_commitVote", function () {
       }, async function (data) {
 
 
-        let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+        let isunlocked = await EticaBlockchain.isUnlocked($("#commitVoteFromAddress").val());
 
         $("#CommitVotewalletPassword").show();
         $(".sendTXPass").show();

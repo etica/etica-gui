@@ -107,7 +107,7 @@ $(document).on("render_createProposal", function () {
       }, async function (data) {
 
 
-        let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+        let isunlocked = await EticaBlockchain.isUnlocked($("#createProposalFromAddress").val());
 
         $("#CreateProposalwalletPassword").show();
         $(".sendTXPass").show();

@@ -71,7 +71,7 @@ $(document).on("render_commithistory", function () {
                   }, async function (data) {
 
 
-                    let isunlocked = await EticaBlockchain.isUnlocked($("#sendEtiFromAddress").val());
+                    let isunlocked = await EticaBlockchain.isUnlocked(proposer);
 
                     $("#ClaimProposalwalletPassword").show();
                     $(".sendTXPass").show();
