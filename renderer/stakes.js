@@ -120,6 +120,7 @@ $(document).on("render_stakes", function () {
         $(".sendTXPass").hide();
         $(".sendTXdivider").hide();
         $("#fromStakeEtiAddressInfo").html($("#stakeEtiFromAddress").val());
+        $("#valueToStakeEtiInfo").html($("#stakeEtiAmount").val());
         $("#feeStakeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgStakeEtiWalletPassword").iziModal("open");
         }
@@ -128,6 +129,7 @@ $(document).on("render_stakes", function () {
           $("#dlgStakeEtiWalletPassword").iziModal();
         $("#walletPasswordStakeEti").val("");
         $("#fromStakeEtiAddressInfo").html($("#stakeEtiFromAddress").val());
+        $("#valueToStakeEtiInfo").html($("#stakeEtiAmount").val());
         $("#feeStakeEtiToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
         $("#dlgStakeEtiWalletPassword").iziModal("open");
         }
