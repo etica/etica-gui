@@ -160,6 +160,10 @@ class SearchEtica {
                // get chunk:
                if(oneproposal[4] != 0){
                 oneproposal[4] = await EticaContract.chunks(oneproposal[4]);
+                oneproposal.haschunk = true;
+               }
+               else {
+                oneproposal.haschunk = false;
                }
                
                let oneproposaldata = await EticaContract.propsdatas(prophash);
@@ -257,12 +261,28 @@ class SearchEtica {
         // proposal found:
         if(_proposal[0] > 0){
 
+          let _revealopen = false;
+          let _revealpassed = false;
+          let _claimopen = false;
+          let _rejected = false;
+          let _approved = false;
+          let _pending = false;
+
+          let DEFAULT_REVEALING_TIME = await EticaContract.DEFAULT_REVEALING_TIME();
+          let DEFAULT_VOTING_TIME = await EticaContract.DEFAULT_VOTING_TIME();
+          let REWARD_INTERVAL = await EticaContract.REWARD_INTERVAL();
+          let MIN_CLAIM_INTERVAL = parseInt(((parseInt(DEFAULT_VOTING_TIME) + parseInt(DEFAULT_REVEALING_TIME)) / parseInt(REWARD_INTERVAL)) + 1);
+
           let _proposaldata = await EticaContract.propsdatas(_proposal[1]);
           _proposal[10] = _proposaldata;  // _proposal[10] contains propsdatas struct          
           
           // if chunk get chunk:
           if(_proposal[4] != 0){
             _chunk = await contract.chunks(_proposal[4]); 
+            _proposal.haschunk = true;
+          }
+          else{
+            _proposal.haschunk = false;
           }
           
           // get disease:

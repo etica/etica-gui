@@ -68,15 +68,21 @@
           <span style="color:#9e9e9e; font-size:1rem;">Title:</span> &nbsp;<span>{{ title }}</span>
         </div>
         <div class="input-field col s4" style="display: inline;">
-          <span style="color:#9e9e9e; font-size:1rem;" class="copyClipboard">Chunk Id:</span> &nbsp;
+          <span>Chunk Id:</span> &nbsp;
+          {{#if haschunk}}
+          <span>{{ chunk.id }}</span>
+          {{else}}
+          <span>No chunk</span>
+          {{/if}}
+          <span> | Status:</span> &nbsp;
           {{#if pending}}
-          <span>{{ chunk_id }} | Status: Pending</span>
+          <span>Pending</span>
           {{/if}}
           {{#if approved}}
-          <span>{{ chunk_id }} | Status: Approved</span>
+          <span>Approved</span>
           {{/if}}
           {{#if rejected}}
-          <span>{{ chunk_id }} | Status: Rejected</span>
+          <span>Rejected</span>
           {{/if}}
         </div>
         <div class="input-field col s12 searchresults">
@@ -191,7 +197,16 @@
           <span style="color:#9e9e9e; font-size:1rem;">Type:</span> &nbsp;<span>{{ BlockchainResp.type}}</span>
         </div>
         <div class="input-field col s6" style="margin-top: 1.5vh;">
-          <span style="color:#9e9e9e; font-size:1rem;">Status:</span> &nbsp;<span>Pending</span>
+          <span style="color:#9e9e9e; font-size:1rem;">Status:</span> &nbsp;
+          {{#if BlockchainResp.proposal.pending}}
+          <span>Pending</span>
+          {{/if}}
+          {{#if BlockchainResp.proposal.approved}}
+          <span>Approved</span>
+          {{/if}}
+          {{#if BlockchainResp.proposal.rejected}}
+          <span>Rejected</span>
+          {{/if}}
         </div>
         <div class="input-field col s6 searchresults">
           <label>Title:</label><br>
@@ -208,7 +223,11 @@
         </div>
         <div class="input-field col s6 searchresults">
           <label>Belongs to chunk:</label><br>
-          <p>No chunk </p>
+          {{#if BlockchainResp.proposal.haschunk}}
+          <p>{{ BlockchainResp.proposal.chunk.id }} </p>
+          {{else}}
+          <p>No chunk</p>
+          {{/if}}
         </div>
         <div class="input-field col s6 searchresults">
           <label>Hash:</label><br>
@@ -219,49 +238,65 @@
           <p style="font-size: 0.8em;" class="copyClipboard">{{BlockchainResp.proposal.raw_release_hash}}</p>
         </div>
         <div class="input-field col s6 searchresults">
-          <label>Description:</label><br>
-          <p>{{BlockchainResp.proposal.description}}</p>
+          <label>Free Field:</label><br>
+          <p>{{BlockchainResp.proposal.freefield}}</p>
         </div>
       </div>
+      <div class="input-field col s12 searchresults">
+        <label>Description:</label><br>
+        <p style="font-size: 0.8em;" class="copyClipboard">{{BlockchainResp.proposal.description}}</p>
+      </div>
       <div class="row">
+
         <div class="input-field col s4 searchresults">
-        <label>Created:</label><br>
-        <p>2022/12/04 16:00</p>
-        </div>
-        <div class="input-field col s4 searchresults">
-          <label>Votes close:</label><br>
-          <p>2022/12/04 16:00</p>
-        </div>
-        <div class="input-field col s4 searchresults">
-          <label>Claims open on:</label><br>
-          <p>2023/01/07 16:00</p>
-        </div>
-        <div class="input-field col s3 searchresults">
-          <label>Threshold:</label><br>
-          <p>80.21%</p>
-        </div>
-        <div class="input-field col s3 searchresults">
-          <label>Votes ratio:</label><br>
-          <p>84.4%</p>
-        </div>
-        <div class="input-field col s3 searchresults">
-          <label>Approval Votes:</label><br>
-          <p>
-            <span style="display: inline-block;">
-            <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-            1500.321 ETI
-            </span>
-          </p>
-        </div>
-        <div class="input-field col s3 searchresults">
-          <label>Disaproval votes:</label><br>
-          <p>
-            <span style="display: inline-block;">
-            <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
-            150.321 ETI
-            </span>
-          </p>
-        </div>
+          <label>Created:</label><br>
+          <p>{{ BlockchainResp.proposal.proposalstart }}</p>
+          </div>
+          <div class="input-field col s4 searchresults">
+            <label>Votes close:</label><br>
+            <p>{{ BlockchainResp.proposal.proposalend }}</p>
+          </div>
+          <div class="input-field col s4 searchresults">
+            <label>Claims open on:</label><br>
+            <p>{{ BlockchainResp.proposal.timestampclaimable }}</p>
+          </div>
+
+          <div class="input-field col s3 searchresults">
+            <label>Threshold:</label><br>
+            <p>{{ BlockchainResp.proposal.approvalthreshold }}%</p>
+          </div>
+
+          {{#if BlockchainResp.proposal.revealpassed}}
+          <div class="input-field col s3 searchresults">
+            <label>Result ratio:</label><br>
+            <p>{{ BlockchainResp.proposal.votesratio }}</p>
+          </div>
+          {{else}}
+          <div class="input-field col s3 searchresults">
+            <label>Current ratio:</label><br>
+            <p>{{ BlockchainResp.proposal.votesratio }}</p>
+          </div>
+          {{/if}}
+
+
+          <div class="input-field col s3 searchresults">
+            <label>Approval Votes:</label><br>
+            <p>
+              <span style="display: inline-block;">
+              <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+              {{ BlockchainResp.proposal.forvotes }} ETI
+              </span>
+            </p>
+          </div>
+          <div class="input-field col s3 searchresults">
+            <label>Disaproval votes:</label><br>
+            <p>
+              <span style="display: inline-block;">
+              <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+              {{ BlockchainResp.proposal.againstvotes }} ETI
+              </span>
+            </p>
+          </div>
 
       </div>
     
