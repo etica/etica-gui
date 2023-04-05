@@ -416,6 +416,9 @@ $(document).on("render_stakesboard", function () {
                       $(".sendTXPass").css("display", "none");
                       $(".sendTXdivider").css("display", "none");
                       $("#fromConsolidateStakesAddressInfo").html(stakeaddress);
+                      $("#valueConsolidateStakesNewEndDate").html(_endtimestring);
+                      $("#valueConsolidateStakesMinDate").html(_minlimitstring);
+                      $("#valueConsolidateStakesMaxIndex").html(input_maxindex);
                       $("#feeConsolidateStakesToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
                       $("#dlgConsolidateStakesWalletPassword").iziModal("open");
                     }
@@ -424,6 +427,9 @@ $(document).on("render_stakesboard", function () {
                       $("#dlgConsolidateStakesWalletPassword").iziModal({width: "70%"});
                       $("#ConsolidateStakeswalletPassword").val("");
                       $("#fromConsolidateStakesAddressInfo").html(stakeaddress);
+                      $("#valueConsolidateStakesNewEndDate").html(_endtimestring);
+                      $("#valueConsolidateStakesMinDate").html(_minlimitstring);
+                      $("#valueConsolidateStakesMaxIndex").html(input_maxindex);
                       $("#feeConsolidateStakesToPayInfo").html(parseFloat(web3Local.utils.fromWei(data.toString(), "ether")));
                       $("#dlgConsolidateStakesWalletPassword").iziModal("open");
                     }
@@ -437,7 +443,7 @@ $(document).on("render_stakesboard", function () {
                          _password = $("#ConsolidateStakeswalletPassword").val();
                       }
 
-                      EticaContract.prepareTransaction_stakescsldt(_password, stakeaddress, input_endtime, input_minlimit, input_maxindex, function (error) {
+                      EticaContract.prepareTransaction_stakescsldt(_password, stakeaddress, _endtime, _minlimit, input_maxindex, function (error) {
                         EticaMainGUI.showGeneralError(error);
                       }, function (data) {
                         EticaBlockchain.sendTransaction(data.raw, function (error) {
