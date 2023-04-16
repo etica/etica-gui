@@ -92,7 +92,7 @@ const template = [
       }, {
         label: "Report issue on GitHub",
         click() {
-          shell.openExternal("https://github.com/def670/Xero-Wallet/issues");
+          shell.openExternal("https://github.com/etica/etica-gui/issues");
         }
       }
     ]
