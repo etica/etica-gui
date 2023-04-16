@@ -18,7 +18,9 @@
       "renderer/*",
       "package.json",
       "main.js",
-      "index.html"
+      "index.html",
+      "setup.html",
+      "EticaRelease.json"
     ],
     "win": {
       "target": "7z",
@@ -53,13 +55,14 @@
     "Desktop",
     "Wallet"
   ],
-  "author": "Edited by def",
+  "author": "Etica Protocol",
   "license": "CC0-1.0",
   "dependencies": {
     "@unibeautify/beautifier-js-beautify": "^0.4.0",
     "adm-zip": "^0.4.13",
     "app-root-path": "^2.1.0",
     "bip39": "^3.0.4",
+    "bufferutil": "^4.0.7",
     "crypto": "^1.0.1",
     "electron-reload": "^1.4.1",
     "electron-storage": "^1.0.7",
@@ -71,7 +74,8 @@
     "moment": "^2.23.0",
     "nedb": "^1.8.0",
     "pm2": "^5.2.2",
-    "single-instance": "0.0.1"
+    "single-instance": "0.0.1",
+    "utf-8-validate": "^5.0.10"
   },
   "devDependencies": {
     "electron": "^23.1.1",
