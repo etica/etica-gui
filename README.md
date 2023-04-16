@@ -41,8 +41,10 @@ Linux:
 $ git clone https://github.com/etica/etica-gui.git
 # Go into the repository
 $ cd etica-gui/
-# Install dependencies
+# Install npm
 $ sudo apt-get install npm
+# Install dependencies
+$ sudo npm install
 # Launch wallet
 $ npm start
 ```
