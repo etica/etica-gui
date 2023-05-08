@@ -285,6 +285,12 @@ $("#mnemonicword24").html(reorderedWords[23]);
 
   $("#ImportWallet").off("click").on("click", function () {
 
+    ImportWallet();
+
+  });
+
+  function ImportWallet() {
+
     // creates wallet from seed
     let NewWallet = {};
 
@@ -474,7 +480,7 @@ NewWallet.vector = iv.toString('hex');
       }); 
     }
 
-  });
+  };
 
   $("#ResetImportMnemonic").off("click").on("click", function () {
 
@@ -516,7 +522,27 @@ NewWallet.vector = iv.toString('hex');
               stoploop == true;
               var newaccount = EticaBlockchain.importFromPrivateKey(pk, pw, function (error) {
                 //EticaMainGUI.showGeneralErrorImportWallet(error);
-                console.log('Import seed Error importFromPrivateKey:', error);
+                //console.log('Import seed Error importFromPrivateKey:', error);
+                //console.log('Type of Error importFromPrivateKey:', typeof error);
+
+                if (error && error.toString().includes('account already exists')) {
+
+                    // delete former keystore wallet directory:
+                    //console.log('Cannot import from private key because address keystore already exist, deleting keystore before retry');
+                    ipcResult = ipcRenderer.sendSync("deleteAddressKeystore", _wallet.keystoredirectory);
+                    ipcRenderer.send("stopGeth", null);
+                    //console.log('Keystore deleted ', _wallet.keystoredirectory);
+                    //console.log('now retrying ImportWallet');
+
+                    ImportWallet();
+
+                }
+                else {
+                  console.log('Error importing private key', error);
+                  $("#ImportWalletStartLoader").css("display", "none");
+                  $("#ImportWalletStartBtns").css("display", "inline-flex");
+                }
+
               }, function (account) {
                 if (account) {
 

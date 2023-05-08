@@ -216,3 +216,25 @@ ipcMain.on("deleteBlockchainData", (event, arg) => {
   deleteFolderRecursive(getBlockchainDataLocation());
   event.returnValue = true;
 });
+
+
+ipcMain.on("deleteAddressKeystore", (event, arg) => {
+
+  var deleteKeytore = function (){
+  // deletes all files in address keysotre, make sure file starts with UTC-- 
+  //to make sure not to delete unwanted files even if we assume only keystore files should be in that folder:
+  const keystorePath = arg;
+  if (fs.existsSync(keystorePath)) {
+    fs.readdirSync(keystorePath).forEach((file) => {
+      const filePath = path.join(keystorePath, file);
+      if (fs.lstatSync(filePath).isFile() && file.startsWith('UTC--')) {
+        fs.unlinkSync(filePath);
+      }
+    });
+  }
+  };
+
+  deleteKeytore();
+  event.returnValue = true;
+
+});
