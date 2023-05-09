@@ -106,19 +106,6 @@ $(document).on("render_settings", async function () {
     }
   });
 
-  $("#btnSettingsCleanWallets").off("click").on("click", function () {
-    EticaMainGUI.showGeneralConfirmation("Do you really want to delete wallets data?", function (result) {
-      if (result) {
-        ipcResult = ipcRenderer.sendSync("deleteWalletData", null);
-
-        if (ipcResult.success) {
-          iziToast.success({title: "Success", message: "Wallet names were succesfully cleaned", position: "topRight", timeout: 5000});
-        } else {
-          EticaMainGUI.showGeneralError("Error clearing wallet names: " + ipcResult.error);
-        }
-      }
-    });
-  });
 */
 
   $("#btnSettingsCleanBlockchain").off("click").on("click", function () {
