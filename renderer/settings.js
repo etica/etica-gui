@@ -119,28 +119,69 @@ $(document).on("render_settings", async function () {
       }
     });
   });
+*/
 
   $("#btnSettingsCleanBlockchain").off("click").on("click", function () {
-    EticaMainGUI.showGeneralConfirmation("Do you really want to delete the blockchain data? Wallet will close and you will need to restart it!", function (result) {
+    EticaMainGUI.showGeneralConfirmation("Before we proceed, please confirm this operation. This is only recommended if your wallet is experiencing issues syncing with the network or is stuck at a certain block. Please note that this process will delete your blockchain data and resync from block 0, however, your wallet addresses, transactions, and keys will not be affected. Once the resync is complete, your wallet should return to normal operation.", function (result) {
       if (result) {
-        var loading_screen = pleaseWait({logo: "assets/images/logo.png", backgroundColor: "#000000", loadingHtml: "<div class='spinner'><div class='bounce bounce1'></div><div class='bounce bounce2'></div><div class='bounce bounce3'></div></div><div class='loadingText'>Deleting blockchain data, wallet will automatically close, please wait...</div>"});
+        let _wallet = ipcRenderer.sendSync("getRunningWallet");
+        // first stop the geth process
+        ipcRenderer.send("stopGeth", null);
+        var loading_screen = pleaseWait({logo: "assets/images/logo.png", backgroundColor: "#000000", loadingHtml: "<div class='spinner'><div class='bounce bounce1'></div><div class='bounce bounce2'></div><div class='bounce bounce3'></div></div><div class='loadingText'>Deleting blockchain data for resync, please wait...</div>"});
 
         setTimeout(() => {
-          // first stop the geth process
-          ipcResult = ipcRenderer.send("stopGeth", null);
-
           setTimeout(() => {
             // delete the blockchain date async and wait for 5 seconds
-           // ipcResult = ipcRenderer.sendSync("deleteBlockchainData", null);
-            // finally quit the application
-            ipcResult = ipcRenderer.send("appQuit", null);
+  if(_wallet && _wallet.blockchaindirectory != ''){
+
+    if (!ipcRenderer.listenerCount("deleteBlockchainDataResponse")) {
+      ipcRenderer.on("deleteBlockchainDataResponse", (event, success) => {
+        
+        if (success) {
+          //console.log('deleteBlockchainResponse ok');
+          ipcRenderer.send("initializeGeth", _wallet);
+        } else {
+          console.log('deleteBlockchainResponse not ok');
+          console.error("Error deleting blockchain data");
+          loading_screen.finish();
+          EticaMainGUI.showGeneralError('Error while deleting blockchain folder, please try again.');
+        }
+      });
+    }
+               
+      ipcRenderer.on("initializeGethResponse", (event, code) => {    
+      let IsGethRunning = ipcRenderer.sendSync("IsGethRunning", null);
+      if(IsGethRunning){
+       // first stop the geth process
+       ipcResult = ipcRenderer.send("stopGeth", null);
+      }
+    
+      if(web3Local && web3Local.currentProvider){
+        //console.log('closing web3Local provider connection');
+        web3Local.currentProvider.connection.close();
+      }
+      window.location.replace('./setup.html');
+      //ipcRenderer.send("startGeth", _wallet);
+      });
+
+    let ipcResult = ipcRenderer.send("deleteBlockchainData", _wallet.blockchaindirectory);
+
+  }
+  else {
+
+    console.log('wallet not found issue');
+    loading_screen.finish();
+    EticaMainGUI.showGeneralError('Error of wallet not found while deleting blockchain folder, please try again.');
+
+  }
+
           }, 5000);
         }, 2000);
       }
     });
+
   });
 
-  */
 
   $("#btnCloseWallet").off("click").on("click", function () {
 
