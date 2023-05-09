@@ -178,6 +178,11 @@ $(document).on("render_settings", async function () {
        // first stop the geth process
        ipcResult = ipcRenderer.send("stopGeth", null);
     }
+
+    if(web3Local && web3Local.currentProvider){
+      //console.log('closing web3Local provider connection');
+      web3Local.currentProvider.connection.close();
+    }
     
     // move to setup:
     window.location.replace('./setup.html');
