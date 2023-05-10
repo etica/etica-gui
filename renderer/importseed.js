@@ -362,6 +362,12 @@ $("#mnemonicword24").html(reorderedWords[23]);
       return false;
     }
 
+    if($("#importwalletNewAddressesNb").val() && Number($("#importwalletNewAddressesNb").val()) <= 0){
+      EticaMainGUI.showGeneralErrorImportWallet("Number of addresses to import must be at least 1. If you just want to import first address let this field to 1");
+      return false;
+    }
+
+
     // CHECK FIELDS AGAIN DONE (ALREADY CHECKED BUT ADD CHECK IN CASE FIELDS CAHNGED WHILE IN BLOCK HAIGHT SCREEN) //
 
     
@@ -376,11 +382,17 @@ $("#mnemonicword24").html(reorderedWords[23]);
     NewWallet.keystoredirectory = ''+$("#importwalletdirectory").val()+'/keystores/'+NewWallet.masteraddress+'/keystore';
     NewWallet.datadirectory = ''+$("#importwalletdirectory").val()+'/walletdata/'+NewWallet.masteraddress+'';
 
+    let nb_newaddreses = 1;
+    if($("#importwalletNewAddressesNb").val()){
+      nb_newaddreses = Number($("#importwalletNewAddressesNb").val());
+      nb_newaddreses = Math.min(50, nb_newaddreses); // max 50
+      nb_newaddreses = nb_newaddreses; // #importwalletNewAddressesNb contains nb of addresses to create (by default 10)
+    }
+
     /* Used if advanced settings:
     NewWallet.blockchaindirectory = $("#blockchaindirectory").val();
     NewWallet.keystoredirectory = $("#keystoredirectory").val();
     NewWallet.datadirectory = $("#datadirectory").val();
-
     */
 
     // if folder doesnt exist, create folder to avoid geth executable chmod permission issue on linux:
@@ -476,7 +488,7 @@ NewWallet.vector = iv.toString('hex');
         _wallet.pw = pw;
         ipcRenderer.send("startGeth", _wallet);
         _wallet.pw = '';
-        InitializeWeb3toImportAccount(_wallet);
+        InitializeWeb3toImportAccount(_wallet, nb_newaddreses);
       }); 
     }
 
@@ -505,7 +517,7 @@ NewWallet.vector = iv.toString('hex');
   });
 
 
-  function InitializeWeb3toImportAccount(_wallet) {
+  function InitializeWeb3toImportAccount(_wallet, _nb_newaddreses) {
     let stoploop = false;
     var InitWeb3 = setInterval(async function () {
       try {
@@ -513,38 +525,61 @@ NewWallet.vector = iv.toString('hex');
         let _provider = new Web3.providers.WebsocketProvider("ws://localhost:8551");
         web3Local = new Web3(_provider);
 
-        web3Local.eth.net.isListening(function (error, success) {
+        web3Local.eth.net.isListening(async function (error, success) {
           //Geth is ready
           if (!error) {
             clearInterval(InitWeb3);
 
             if(!stoploop){
               stoploop == true;
-              var newaccount = EticaBlockchain.importFromPrivateKey(pk, pw, function (error) {
-                //EticaMainGUI.showGeneralErrorImportWallet(error);
-                //console.log('Import seed Error importFromPrivateKey:', error);
-                //console.log('Type of Error importFromPrivateKey:', typeof error);
+              let creation_success = false; // var updated to true only if first addrees created successfully
 
-                if (error && error.toString().includes('account already exists')) {
+              const hdwallet = hdkey.fromMasterSeed(Buffer.from(masterSeed, 'hex'));
+              // Derive first wallet from decrypted seed to verify it equals masteraddress:
+              const firstWallet = hdwallet.derivePath("m/44'/60'/0'/0/0").getWallet();
+              const firstPublicKey = firstWallet.getPublicKey();
+              let firstaddress_without0x = util.pubToAddress(firstPublicKey, true).toString('hex');
+              const firstDerivedAddress = '0x' + firstaddress_without0x;
 
-                    // delete former keystore wallet directory:
-                    //console.log('Cannot import from private key because address keystore already exist, deleting keystore before retry');
-                    ipcResult = ipcRenderer.sendSync("deleteAddressKeystore", _wallet.keystoredirectory);
-                    ipcRenderer.send("stopGeth", null);
-                    //console.log('Keystore deleted ', _wallet.keystoredirectory);
-                    //console.log('now retrying ImportWallet');
+              const newAddresses = [];
+              const newAddressesErrors = [];
 
-                    ImportWallet();
+      
+              for (let i = 0; i < _nb_newaddreses; i++) {
+                const newWallet = hdwallet.derivePath("m/44'/60'/0'/0/" + (i) + "").getWallet();
+                const privateKey = newWallet.getPrivateKey();
+                const newPrivateKeyString = privateKey.toString('hex');
+            
+                const newAddressPromise = new Promise((resolve, reject) => {
+                  EticaBlockchain.importFromPrivateKey(newPrivateKeyString, pw, function (error) {              
 
-                }
-                else {
-                  console.log('Error importing private key', error);
-                  $("#ImportWalletStartLoader").css("display", "none");
-                  $("#ImportWalletStartBtns").css("display", "inline-flex");
-                }
+                    newAddressesErrors.push(i);
+                    // for first address, deletes keystore if already exists:
+                    if (error && error.toString().includes('account already exists') && i == 0) {
 
-              }, function (account) {
-                if (account) {
+                      // delete former keystore wallet directory:
+                      console.log('Cannot import from private key because address keystore already exist, deleting keystore before retry');
+                      ipcResult = ipcRenderer.sendSync("deleteAddressKeystore", _wallet.keystoredirectory);
+                      ipcRenderer.send("stopGeth", null);
+                      console.log('Keystore deleted ', _wallet.keystoredirectory);
+                      console.log('now retrying ImportWallet');
+  
+                      ImportWallet();
+  
+                  }
+
+                  }, function (account) {
+                    if(i == 0){
+                      creation_success = true;
+                    }
+                    newAddresses.push(account);
+                    resolve();
+                  });
+                });
+                await newAddressPromise;
+              }
+      
+                if (creation_success && newAddressesErrors.length == 0 && newAddresses.length == _nb_newaddreses) {
 
                   pk = '';
                   pw = '';
@@ -576,16 +611,17 @@ NewWallet.vector = iv.toString('hex');
                   window.location.replace('./../../../index.html');
                   Removed direct connection to wallet */
           
-                } else {
-                  //EticaMainGUI.showGeneralErrorImportWallet("Error importing account from private key!");
-                  console.log('Import seed Error importing account from private key!');
-                  $("#ImportWalletStartLoader").css("display", "none");
-                  $("#ImportWalletStartBtns").css("display", "inline-flex");
                 }
-              });
+                else {
 
+                    console.log('Error importing private key', error);
+                    console.log('account', i,'already exists');
+                    ipcRenderer.send("stopGeth", null);
+                    $("#ImportWalletStartLoader").css("display", "none");
+                    $("#ImportWalletStartBtns").css("display", "inline-flex");
+                  
+                }
             }
-
           }
         });
       } catch (err) {
