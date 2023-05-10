@@ -58,14 +58,15 @@
     <h6>Main Settings</h6>  
   <div class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
       <form class="col s12">
+
+        <span style="color: #856c53;">Master address: {{ wallet.masteraddress }}</span>
         {{#if wallet.ismainnet}}
-        <span style="color:#55a362;">Wallet Type: {{ wallet.type }}</span>
+        <span style="color:#55a362;position: absolute;right: 5%;border: solid #55a362 3px;padding: 6px;">Wallet Type: {{ wallet.type }}</span>
         {{/if}}
         {{#if wallet.istestnet}}
-        <span style="color:#8476ffe3;">Wallet Type: {{ wallet.type }}</span>
+        <span style="color:#8476ffe3;position: absolute;right: 5%;border: solid #8476ffe3 3px;padding: 6px;">Wallet Type: {{ wallet.type }}</span>
         {{/if}}
 
-        <span style="color: #856c53;position:absolute;right:5%;">Master address: {{ wallet.masteraddress }}</span>
         <div class="row" style="margin-bottom: 0;margin-top: 2vh;">
           <div class="input-field col s5">
             <input id="settingsWalletName" class="" placeholder="Enter wallet name" type="text" value="{{ wallet.name }}" style="color: #ffffff;">
