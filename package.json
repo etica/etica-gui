@@ -27,7 +27,8 @@
       "icon": "build/icon.ico",
       "artifactName": "Windows-${productName}-${version}.${ext}",
       "extraResources": [
-        "bin/win/*"
+        "bin/win/*",
+        "needs/*"
       ]
     },
     "linux": {
@@ -35,7 +36,8 @@
       "icon": "build/icon.icns",
       "artifactName": "Linux-${productName}-${version}.${ext}",
       "extraResources": [
-        "bin/linux/*"
+        "bin/linux/*",
+        "needs/*"
       ]
     },
     "mac": {
@@ -43,7 +45,8 @@
       "icon": "build/icon.icns",
       "artifactName": "MacOS-${productName}-${version}.${ext}",
       "extraResources": [
-        "bin/macos/*"
+        "bin/macos/*",
+        "needs/*"
       ]
     }
   },
