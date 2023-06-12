@@ -60,10 +60,12 @@ class Geth {
       wallet.pw = '';
     }
     this.wallet = wallet;
+    let _mainnetenodes = '';
 
     let _networkid = '';
     if(wallet.type == 'mainnet'){
       _networkid = '61803';
+      _mainnetenodes = ", enode://19b64dca1f38cbaad3f8c16f08c888bb6d3095c8672fe7a7b5e67d8fbc35d8c3f07b9227b4c8ab83db9bf490c213a743d2f460f191853408a5bc846a5a716d89@127.0.0.1:30303, enode://985d6066ef0bf6814debbef15e7529001ef63ceca9862034d9f42e0d216d05dcf09ae7de2abf020dfd582ac33d584785f8ebe02085b6acb4455f19c7fae713e8@188.166.33.30:30303, enode://45dd40d3be1f059f30a89716dc085181a0081dbb41160da06e34c7d1a3bab04d94e8b1b88ecd98a997acb922cccc55e487ec3d59d87d63b5b25c129b9e5e05b4@72.137.255.179:30319"
     }
     else {
       _networkid = wallet.networkid;
@@ -79,54 +81,7 @@ class Geth {
     try {
       this.isRunning = true;
       const gethPath = path.join(this.binaries, "geth");
-      /*this.gethProcess = child_process.spawn(gethPath, [
-        "--allow-insecure-unlock",
-        "--ws",
-        "--ws.origins",
-        "*",
-        "--ws.addr",
-        "127.0.0.1",
-        "--ws.port",
-        "8551",
-        "--port",
-        "30317",
-        "--datadir=./.etica",
-        "--ws.api",
-        "admin,eth,net,miner,personal,web3",
-        "--networkid",
-        "61803",
-        "--syncmode",
-        "snap",
-        "--ethstats",
-        "wall:etica@72.137.255.182:3100",
-        "--bootnodes",
-        "enode://98e3be4308da968b5e3fff851294b4f179c0542a8bdf6d981fb298d493b63ac0a31f35a67ab99bc0fcc293b38c120ddcc3ba659bb97554e8dfb0c2439f6601f3@72.137.255.180:30320",
-      ]); */
 
-      /* PROD
-      this.gethProcess = child_process.spawn(gethPath, [
-        "--allow-insecure-unlock",
-        "--ws",
-        "--ws.origins",
-        "*",
-        "--ws.addr",
-        "127.0.0.1",
-        "--ws.port",
-        "8551",
-        "--port",
-        "30317",
-        "--datadir=./.etica",
-        "--ws.api",
-        "admin,eth,net,miner,personal,web3",
-        "--networkid",
-        "61803",
-        "--syncmode",
-        "snap",
-        "--bootnodes",
-        "enode://b0e97d2f1a37b2035a34b97f32fb31ddd93ae822b603c56b7f17cfb189631ea2ef17bfbed904f8bc564765634f2d9db0a128835178c8af9f1dde68ee6b5e2bf7@167.172.47.195:30303",
-      ]); PROD */
-
-      // LOCAL DEV NODE FOR TESTING //
       this.gethProcess = child_process.spawn(gethPath, [
         "--allow-insecure-unlock",
         "--ws",
@@ -147,8 +102,8 @@ class Geth {
         "--syncmode",
         "snap",
         "--bootnodes",
-        ""+wallet.enode+""
-      ]); // LOCAL DEV NODE FOR TESTING //
+        ""+wallet.enode+""+_mainnetenodes+""
+      ]);
 
       if (!this.gethProcess) {
         dialog.showErrorBox("Error starting application", "Geth failed to start!");
