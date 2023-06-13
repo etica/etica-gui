@@ -21,9 +21,10 @@ class Geth {
       fs.mkdirSync(app.getPath("userData"));
     }
 
+    /*
     if (this.logGethEvents) {
       this.logStream = fs.createWriteStream(path.join(app.getPath("userData"), "gethlog.txt"), {flags: "a"});
-    }
+    } */
 
     if (appRoot.path.indexOf("app.asar") > -1) {
       this.rootPath = path.dirname(appRoot.path);
@@ -47,14 +48,14 @@ class Geth {
   }
 
   _writeLog(text) {
-    if (this.logGethEvents) {
+    if (this.logGethEvents && this.logStream) {
       this.logStream.write(text);
     }
   }
 
   startGeth(wallet) {
     console.log('startGeth called!');
-    //EticaGeth._writeLog('startGeth called!' + "\n");
+
     if(wallet.pw != ''){
       this.#walletpw = wallet.pw;
       wallet.pw = '';
@@ -71,10 +72,12 @@ class Geth {
       _networkid = wallet.networkid;
     }
 
-    if (this.logGethEvents && this.wallet) {
+    if (this.logGethEvents && this.wallet && !this.logStream) {
       this.logStream = fs.createWriteStream(path.join(this.wallet.datadirectory, "gethlog.txt"), {flags: "a"});
     }
-
+    
+    EticaGeth._writeLog('startGeth called!' + "\n");
+    
     // let _blockchaindirectory = 'D:/EticaWalletDataDir/blockchaindata';
     //let _keystoredirectory = 'D:/EticaWalletDataDir/keystore';
     // get the path of get and execute the child process
@@ -120,10 +123,10 @@ class Geth {
           }
         });
         this.gethProcess.stderr.on("data", function (data) {
-         // EticaGeth._writeLog(data.toString() + "\n");
+        EticaGeth._writeLog(data.toString() + "\n");
         });
         this.gethProcess.stdout.on("data", function (data) {
-         // EticaGeth._writeLog(data.toString() + "\n");
+        EticaGeth._writeLog(data.toString() + "\n");
         });
       }
     } catch (err) {
@@ -137,14 +140,18 @@ class Geth {
     const datadir = wallet.blockchaindirectory;
     const nodekeyPath = `${datadir}/geth/nodekey`;
 
+    if (this.logGethEvents && wallet && !this.logStream) {
+      this.logStream = fs.createWriteStream(path.join(wallet.datadirectory, "gethlog.txt"), {flags: "a"});
+    }
+
     if (fs.existsSync(nodekeyPath)) {
        console.log('Geth data directory has already been initialized, abort');
-      // EticaGeth._writeLog("Geth data directory has already been initialized, abort" + "\n");
+       EticaGeth._writeLog("Geth data directory has already been initialized, abort" + "\n");
        event.sender.send('initializeGethResponse', 2);
        return false;
     } else {
        console.log('Geth data directory has not been initialized, keep going');
-      // EticaGeth._writeLog("Geth data directory has not been initialized, keep going" + "\n");
+       EticaGeth._writeLog("Geth data directory has not been initialized, keep going" + "\n");
     }
 
     let genesisfile = '';
@@ -164,9 +171,9 @@ class Geth {
       //console.log('initialising geth --datadir', datadir);
       //console.log('initialising geth --networkid', _networkid);
       //console.log('initialising geth genesisfile', genesisfile);
-      //EticaGeth._writeLog('initialising geth --datadir'+ datadir + "\n");
-      //EticaGeth._writeLog('initialising geth --networkid'+ _networkid + "\n");
-      //EticaGeth._writeLog('initialising geth genesisfile'+ genesisfile + "\n");
+      EticaGeth._writeLog('initialising geth --datadir'+ datadir + "\n");
+      EticaGeth._writeLog('initialising geth --networkid'+ _networkid + "\n");
+      EticaGeth._writeLog('initialising geth genesisfile'+ genesisfile + "\n");
 
       this.gethInitProcess = child_process.spawn(gethPath, [
         "--datadir="+datadir+"",
@@ -181,37 +188,37 @@ class Geth {
       } else {
         this.gethInitProcess.on("error", function (err) {
           console.log(`err: ${err}`);
-          //EticaGeth._writeLog(`err initialising Geth: ${err}`);
+          EticaGeth._writeLog(`err initialising Geth: ${err}`);
           dialog.showErrorBox("Error initialising Geth", "Geth error when attempts to initialize with this blockchain directory!", err);
         });
         this.gethInitProcess.stdout.on('data', (data) => {
           console.log(`stdout: ${data}`);
-          //EticaGeth._writeLog(`stdout initialising Geth: ${data}`);
+          EticaGeth._writeLog(`stdout initialising Geth: ${data}`);
         });
         this.gethInitProcess.stderr.on('data', (data) => {
           console.error(`stderr: ${data}`);
-          //EticaGeth._writeLog(`stderr initialising Geth: ${data}`);
+          EticaGeth._writeLog(`stderr initialising Geth: ${data}`);
         });
         this.gethInitProcess.on("close", function (code) {
             console.log(`gethInitProcess closed with code ${code}`);
-           // EticaGeth._writeLog(`gethInitProcess closed with code ${code}`);
+            EticaGeth._writeLog(`gethInitProcess closed with code ${code}`);
         });
         this.gethInitProcess.on('exit', (code) => {
           console.log(`gethInitProcess exited with code ${code}`);
-          // EticaGeth._writeLog(`gethInitProcess closed with code ${code}`);
+          EticaGeth._writeLog(`gethInitProcess closed with code ${code}`);
           event.sender.send('initializeGethResponse', code);
           // Do any necessary cleanup or data saving here
         });
       }
     } catch (err) {
       dialog.showErrorBox("Error initialising Geth", err.message);
-     // EticaGeth._writeLog(`Error initialising Geth: ${err}`);
+      EticaGeth._writeLog(`Error initialising Geth: ${err}`);
     }
   }
 
   stopGeth() {
     console.log('stopGeth called');
-    //EticaGeth._writeLog('stopGeth called' + "\n");
+    EticaGeth._writeLog('stopGeth called' + "\n");
     this.isRunning = false;
     this.wallet = null;
 
