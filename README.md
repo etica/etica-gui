@@ -73,6 +73,7 @@ Open dev tools: Ctrl + MAJ + I
 Reload current page: Ctrl + R 
 
 
+
 ## License
 
 [CC0 1.0 (Public Domain)](LICENSE.md)
