@@ -66,6 +66,10 @@
         loading_screen.finish();
       });
 
+      $(document).on("DOMContentLoaded", function () {
+        ReloadHandler.SetReloadWindowOff();
+      });
+
       $(window).on("beforeunload", function () {
         EticaBlockchain.closeConnection();
       })
@@ -179,6 +183,7 @@
         require('./renderer/commitvote.js');
         require('./renderer/commithistory.js');
         require('./renderer/proposalhistory.js');
+        require('./renderer/reloadhandlerfront.js');
       </script>
     </div>
 

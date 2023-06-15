@@ -299,6 +299,7 @@ function launchwallet(wallet){
     // launch wallet
     let setwalletdirectory = ipcRenderer.send("setWalletDataDbPath", wallet.datadirectory);
     ipcRenderer.send("startGeth", wallet);
+    ipcRenderer.send("SetReloadWindowsOn"); // will reload page from reloadshandler.js in case of blank page error (only hhappens rare times on computers with hardware limits)
     window.location.replace('./index.html');
 
 }

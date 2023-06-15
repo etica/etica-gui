@@ -101,8 +101,7 @@ require("./modules/commitsdatabase.js");
 require("./modules/proposalsdatabase.js");
 require("./modules/hashinputsdatabase.js");
 require("./modules/counters.js");
-
 require("./modules/menu.js");
-
 require("./modules/walletsdatabase.js");
 require("./modules/setupdb.js");
+require("./modules/reloadshandler.js");
