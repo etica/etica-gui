@@ -68,6 +68,10 @@ npm run dist-linux
 ```
 
 
+## Sortcuts
+Open dev tools: Ctrl + MAJ + I
+Reload current page: Ctrl + R 
+
 
 ## License
 
