@@ -31,7 +31,7 @@ SyncProgress = new ProgressBar.Line("#syncProgress", {
 });
 
 // set initial value for the progress text
-SyncProgress.setText("Connecting to peers, please wait...");
+SyncProgress.setText("Connecting to peers, (may take few minutes) please wait ...");
 isFullySynced = false;
 
 initWeb3Passed =false;
