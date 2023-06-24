@@ -131,8 +131,8 @@ class Transactions {
                     }); */
 
                     var txevents = logevents.filter(function(onelogevent) {
-                      if (onelogevent.event == 'Transfer' && !addressListlowercase.includes((onelogevent.returnValues.to).toLowerCase())) {
-                        return false; // exclude this element because transfer from batch payment that doesnt belong to this wallet
+                      if (onelogevent.event == 'Transfer' && !(addressListlowercase.includes((onelogevent.returnValues.to).toLowerCase()) || addressListlowercase.includes((onelogevent.returnValues.from).toLowerCase()))) {
+                        return false; // exclude this element because transfer doesnt belong to this wallet (probably a transfer from a batch payment)
                       } else {
                         return onelogevent.transactionHash == onetx.hash; // keep this element
                       }
@@ -932,8 +932,8 @@ class Transactions {
 
 
                   var txevents = logevents.filter(function(onelogevent) {
-                    if (onelogevent.event == 'Transfer' && !EticaWallets.getAddressExists((onelogevent.returnValues.to).toLowerCase())) {
-                      return false; // exclude this element because transfer from batch payment that doesnt belong to this wallet
+                    if (onelogevent.event == 'Transfer' && !(EticaWallets.getAddressExists((onelogevent.returnValues.to).toLowerCase()) || EticaWallets.getAddressExists((onelogevent.returnValues.from).toLowerCase()))) {
+                      return false; // exclude this element because transfer doesnt belong to this wallet (probably a transfer from a batch payment)
                     } else {
                       return onelogevent.transactionHash == onetx.hash; // keep this element
                     }
