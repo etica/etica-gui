@@ -29,29 +29,36 @@ class AddressBook {
   }
 
   enableButtonTooltips() {
-    EticaUtils.createToolTip("#btnNewAddress2", "Add an address to Addresses Book (receiving addresses)");
+    EticaUtils.createToolTip("#btnNewAddress2", "Add address to Addresses Book (receiving addresses)");
   }
 
   renderAddressBook() {
-    var addressObject = EticaAddressBook.getAddressList();
-    var renderData = {};
-    renderData.addressData = [];
   
-
-    for (var key in addressObject) {
-      if (addressObject.hasOwnProperty(key)) {
-        var addressEntry = {};
-        addressEntry.name = addressObject[key];
-        addressEntry.address = key;
-        renderData.addressData.push(addressEntry);
-      }
-    }
-
     EticaBlockchain.getAccountsData(function (error) {
       //EticaMainGUI.showGeneralError(error);
     }, function (data) {
 
-      EticaMainGUI.renderTemplate("addressBook.html", data);
+      var addressBook = EticaDatabase.getAddresses();
+      var renderData = {};
+      renderData.addressData = [];
+
+      console.log('addressBook is', addressBook);
+
+      renderData.sumBalanceEti = data.sumBalanceEti;
+      renderData.sumBalance = data.sumBalance;
+
+      for (var address in addressBook.names) {
+        if (addressBook.names.hasOwnProperty(address)) {
+          renderData.addressData.push({
+            name: addressBook.names[address],
+            address: address
+          });
+        }
+      }
+
+      console.log('renderData', renderData);
+      
+      EticaMainGUI.renderTemplate("addressBook.html", renderData);
       $(document).trigger("render_addressBook");
       EticaAddressBook.enableButtonTooltips();
     
@@ -78,12 +85,27 @@ $(document).on("render_addressBook", function () {
 
       if (!EticaBlockchain.isAddress($("#addressHash").val())) {
         EticaMainGUI.showGeneralError("Address must be a valid address!");
-      } else {
+      } 
+      
+      else {
+
+        var addressBook = EticaDatabase.getAddresses();
+        var normalizedAddress = $("#addressHash").val().toUpperCase();
+        var addressExists = Object.keys(addressBook.names).includes(normalizedAddress);
+
+      if(addressExists){
+          EticaMainGUI.showGeneralError("This address is already in your Address Book!");
+          return;
+        }
+
+      else {
         EticaAddressBook.setAddressName($("#addressHash").val(), $("#addressName").val());
         EticaAddressBook.renderAddressBook();
-
-        iziToast.success({title: "Created", message: "New address was successfully created", position: "topRight", timeout: 5000});
+        iziToast.info({title: "Address saved", message: "Address was added to address book", position: "topRight", timeout: 4000});
       }
+
+    }
+
     }
 
     $("#btnCreateAddressConfirm").off("click").on("click", function () {

@@ -125,18 +125,30 @@ $(document).on("render_sendEti", function () {
 
   $("#btnAddToAddressBookEti").off("click").on("click", function () {
     if (EticaBlockchain.isAddress($("#sendEtiToAddress").val())) {
+
+      var addressBook = EticaDatabase.getAddresses();
+      var normalizedAddress = $("#sendEtiToAddress").val().toUpperCase();
+      var addressExists = Object.keys(addressBook.names).includes(normalizedAddress);
+
+      if(addressExists){
+        EticaMainGUI.showGeneralError("This address is already in your Address Book!");
+        return;
+    }
+
+
       $("#dlgEtiAddAddressToBook").iziModal();
       $("#inputAddressNameEti").val("");
       $("#dlgEtiAddAddressToBook").iziModal("open");
 
       function doAddAddressToAddressBook() {
+
         EticaAddressBook.setAddressName($("#sendEtiToAddress").val(), $("#inputAddressNameEti").val());
         $("#dlgEtiAddAddressToBook").iziModal("close");
-
         iziToast.info({title: "Address saved", message: "Address was added to address book", position: "topRight", timeout: 4000});
+      
       }
     } else {
-      EticaMainGUI.showGeneralError("Recipient address is not valid!");
+      EticaMainGUI.showGeneralError("Address must be a valid address!");
     }
 
     $("#btnAddAddressToBookConfirmEti").off("click").on("click", function () {

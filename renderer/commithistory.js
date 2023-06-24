@@ -109,7 +109,7 @@ $(document).on("render_commithistory", function () {
     $("#addressTable").floatThead();
   }
 
-  $("#btnNewAddress2").off("click").on("click", function () {
+  $("#btnNewAddressFromCommits2").off("click").on("click", function () {
     $("#dlgCreateAddressAndName").iziModal();
     $("#addressName").val("");
     $("#addressHash").val("");
@@ -128,7 +128,7 @@ $(document).on("render_commithistory", function () {
       }
     }
 
-    $("#btnCreateAddressConfirm").off("click").on("click", function () {
+    $("#btnCreateAddressFromCommitsConfirm").off("click").on("click", function () {
       doCreateNewWallet();
     });
 
