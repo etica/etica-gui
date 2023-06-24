@@ -89,30 +89,35 @@ ipcMain.on("getTransactions", (event, arg) => {
 });
 
 ipcMain.on("getJSONFile", (event, arg) => {
-  storage.get(arg, (err, data) => {
+  const filePath = path.join(arg);
+  fs.readFile(filePath, "utf8", (err, data) => {
     if (err) {
       event.returnValue = null;
     } else {
-      event.returnValue = data;
+      try {
+        const jsonData = JSON.parse(data);
+        event.returnValue = jsonData;
+      } catch (parseError) {
+        event.returnValue = null;
+      }
     }
   });
 });
 
 ipcMain.on("setJSONFile", (event, arg) => {
-  storage.set(arg.file, arg.data, err => {
+  const filePath = path.join(arg.file);
+  const jsonData = JSON.stringify(arg.data);
+
+  fs.writeFile(filePath, jsonData, "utf8", (err) => {
     if (err) {
-      event.returnValue = {
-        success: false,
-        error: err
-      };
+      event.returnValue = { success: false, error: err };
     } else {
-      event.returnValue = {
-        success: true,
-        error: null
-      };
+      event.returnValue = { success: true, error: null };
     }
   });
 });
+
+
 
 ipcMain.on("deleteTransactions", (event, arg) => {
 

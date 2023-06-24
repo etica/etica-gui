@@ -133,7 +133,7 @@ $(document).on("render_send", function () {
         EticaAddressBook.setAddressName($("#sendToAddress").val(), $("#inputAddressName").val());
         $("#dlgAddAddressToBook").iziModal("close");
 
-        iziToast.success({title: "Success", message: "Address was added to address book", position: "topRight", timeout: 2000});
+        iziToast.info({title: "Address saved", message: "Address was added to address book", position: "topRight", timeout: 4000});
       }
     } else {
       EticaMainGUI.showGeneralError("Recipient address is not valid!");

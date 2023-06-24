@@ -11,7 +11,7 @@ class Datatabase {
   getAddressesNames() {
     let runningwallet = ipcRenderer.sendSync("getRunningWallet");
     let dbWalletDataDirectory = runningwallet.datadirectory;
-    let _filepath = dbWalletDataDirectory+'/wallets.json';
+    let _filepath = dbWalletDataDirectory+'/walletsnames.json';
     var addressesnames = ipcRenderer.sendSync("getJSONFile", _filepath);
 
     if (!addressesnames) {
@@ -26,7 +26,7 @@ class Datatabase {
   setAddressesNames(addressesnames) {
     let runningwallet = ipcRenderer.sendSync("getRunningWallet");
     let dbWalletDataDirectory = runningwallet.datadirectory;
-    let _filepath = dbWalletDataDirectory+'/wallets.json';
+    let _filepath = dbWalletDataDirectory+'/walletsnames.json';
     ipcRenderer.sendSync("setJSONFile", {
       file: _filepath,
       data: addressesnames
@@ -53,7 +53,7 @@ class Datatabase {
     let dbWalletDataDirectory = runningwallet.datadirectory;
     let _filepath = dbWalletDataDirectory+'/addresses.json';
     ipcRenderer.sendSync("setJSONFile", {
-      file: "addresses.json",
+      file: _filepath,
       data: addresses
     });
   }

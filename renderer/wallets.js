@@ -279,7 +279,7 @@ $(document).on("render_wallets", function () {
     });
   });
 
-  $(".btnChangWalletName").off("click").on("click", function () {
+  $(".btnChangeWalletName").off("click").on("click", function () {
     var walletAddress = $(this).attr("data-wallet");
     var walletName = $(this).attr("data-name");
 
