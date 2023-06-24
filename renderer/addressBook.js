@@ -50,10 +50,7 @@ class AddressBook {
     EticaBlockchain.getAccountsData(function (error) {
       //EticaMainGUI.showGeneralError(error);
     }, function (data) {
-      renderData.sumBalanceEti = data.sumBalanceEti;
-      renderData.sumBalance = data.sumBalance;
-      data.addressData = renderData.addressData;
-      
+
       EticaMainGUI.renderTemplate("addressBook.html", data);
       $(document).trigger("render_addressBook");
       EticaAddressBook.enableButtonTooltips();
