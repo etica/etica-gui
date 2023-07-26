@@ -1,4 +1,5 @@
 const {ipcRenderer} = require("electron");
+const v8 = require('v8');
 
 class Transactions {
   constructor() {
@@ -735,7 +736,7 @@ class Transactions {
           }
 
         });
-
+        //console.log('syncTransactionsofWalletAddresses done for block', startBlock);
         return 'done';
       
    /* } else {
@@ -757,14 +758,13 @@ class Transactions {
     let startBlock = maincounter.block;
     let data = await EticaBlockchain.getAccounts_nocallback();
     
-    
     var scanTxsInterval = setInterval(async function () {
     let nextBatchLimit = startBlock + batchSize;
-    let maxBlock = Math.min(nextBatchLimit, lastBlock);
+    var maxBlock = Math.min(nextBatchLimit, lastBlock);
       
-              for(let blocknb=startBlock; blocknb <= maxBlock; blocknb++){
-                let result = await EticaTransactions.syncTransactionsofWalletAddresses(data, blocknb, maxBlock);
-                
+              for(var blocknb=startBlock; blocknb <= maxBlock; blocknb++){
+                await EticaTransactions.syncTransactionsofWalletAddresses(data, blocknb, maxBlock);
+                //console.log('blocknb is now: ', blocknb);
                 startBlock = blocknb + 1;
 
                 if(blocknb >= maxBlock){
@@ -791,13 +791,98 @@ class Transactions {
 
                      if (scanTxsInterval) {
                         clearInterval(scanTxsInterval);
-                    }
+                     }
+
+                     if (checkJSHeapInterval) {
+                      clearInterval(checkJSHeapInterval);
+                     }
+
+                    const currentPageURL = window.location.href;
+                    const url_parts = currentPageURL.split('/');
+                    const currentPageName = url_parts[url_parts.length - 1];
+      
+                    // If was on scanning.html redirect to index.html once scanning long txs done
+                    if(currentPageName != 'index.html'){
+                           var _wallet = ipcRenderer.sendSync("getRunningWallet");     
+                           ipcRenderer.send("stopGeth", null);
+
+                           // need to close existing connection otherwise fails to suscribe to syncing again:
+                           if(web3Local && web3Local.currentProvider){
+                            web3Local.currentProvider.connection.close();
+                          }
+                           
+                           // wait 600 ms before calling startGeth
+                           setTimeout(() => {
+                           ipcRenderer.send("startGeth", _wallet);
+                           window.location.replace('./index.html');
+                           }, 600);
+                          
+                      }
+                      // --- if on good page, check heap usage ratio and reload page if heap usage too high --- //
+                    else {
+                        const heapStats = EticaTransactions.getHeapStatistics();
+                        const usageHeapRatio = heapStats.total_physical_size / heapStats.total_available_size;
+                        const MaxHeapSizePercentage = 0.70; // Heap max allowed size is 70% of heapStats.total_available_size
+
+                        if(usageHeapRatio >= MaxHeapSizePercentage){
+                          // reload page if heap too high (if heap size reaches at least 70% percent of available size):
+                          var _wallet = ipcRenderer.sendSync("getRunningWallet");     
+                           ipcRenderer.send("stopGeth", null);
+                           // need to close existing connection otherwise fails to suscribe to syncing again:
+                           if(web3Local && web3Local.currentProvider){
+                            web3Local.currentProvider.connection.close();
+                          }
+                           
+                           // wait 600 ms before calling startGeth
+                           setTimeout(() => {
+                           ipcRenderer.send("startGeth", _wallet);
+                           ipcRenderer.send("SetReloadWindowsOn");
+                           }, 600);
+                          
+                        }
+                      }
+                      // --- if on good page, check heap usage ratio and reload page if heap usage too high --- //
 
                   }
               }
 
   }, 2000);
+
+
+
+  var checkJSHeapInterval = setInterval(function () {
+    const MaxHeapSizePercentage = 0.70; // Heap max allowed size is 70% of heapStats.total_available_size
+    const heapStats = EticaTransactions.getHeapStatistics();
+    //console.log(heapStats);
+    const limitReference = heapStats.total_available_size * MaxHeapSizePercentage;
+
+    //console.log('Current heap usage limit: ', (heapStats.total_physical_size / limitReference) * 100, '%');
+
+    if( (heapStats.total_physical_size >= limitReference) || (heapStats.total_heap_size >= limitReference)){
+
+      const currentPageURL = window.location.href;
+      const url_parts = currentPageURL.split('/');
+      const currentPageName = url_parts[url_parts.length - 1];
+      //console.log('currentPage', currentPageName);
+      
+     if(currentPageName != 'scanning.html'){
+      //go to scanning.html (page dedicated for scanning long time with easier reloads):
+      window.location.replace('./scanning.html');
+     }
+     else {
+      //heap limit reached, reloading scanning page:
+      ipcRenderer.send("SetReloadWindowsOn");
+     }
+
+    }
+    }, 10000);
               
+  }
+
+
+  getHeapStatistics() {
+    const heapStatistics = v8.getHeapStatistics();
+    return heapStatistics;
   }
 
 
