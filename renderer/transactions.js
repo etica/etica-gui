@@ -789,13 +789,7 @@ class Transactions {
                      $(document).trigger("onSyncComplete");
                      SyncProgress.setText("Scanning transactions is complete.");
 
-                     if (scanTxsInterval) {
-                        clearInterval(scanTxsInterval);
-                     }
-
-                     if (checkJSHeapInterval) {
-                      clearInterval(checkJSHeapInterval);
-                     }
+                     
 
                     const currentPageURL = window.location.href;
                     const url_parts = currentPageURL.split('/');
@@ -821,10 +815,12 @@ class Transactions {
                       // --- if on good page, check heap usage ratio and reload page if heap usage too high --- //
                     else {
                         const heapStats = EticaTransactions.getHeapStatistics();
-                        const usageHeapRatio = heapStats.total_physical_size / heapStats.total_available_size;
-                        const MaxHeapSizePercentage = 0.70; // Heap max allowed size is 70% of heapStats.total_available_size
+                        const MaxHeapSizePercentage = 0.55; // Heap max allowed size is 55% of heapStats.total_available_size
+                        const limitReference = heapStats.total_available_size * MaxHeapSizePercentage;
 
-                        if(usageHeapRatio >= MaxHeapSizePercentage){
+                        if((heapStats.total_physical_size >= limitReference) || (heapStats.total_heap_size >= limitReference)){
+                                                                  
+                          
                           // reload page if heap too high (if heap size reaches at least 70% percent of available size):
                           var _wallet = ipcRenderer.sendSync("getRunningWallet");     
                            ipcRenderer.send("stopGeth", null);
@@ -836,12 +832,21 @@ class Transactions {
                            // wait 600 ms before calling startGeth
                            setTimeout(() => {
                            ipcRenderer.send("startGeth", _wallet);
-                           ipcRenderer.send("SetReloadWindowsOn");
+                           //ipcRenderer.send("SetReloadWindowsOn");
+                           window.location.replace('./cooling.html');
                            }, 600);
-                          
+
                         }
                       }
                       // --- if on good page, check heap usage ratio and reload page if heap usage too high --- //
+
+                      if (scanTxsInterval) {
+                        clearInterval(scanTxsInterval);
+                     }
+
+                     if (checkJSHeapInterval) {
+                      clearInterval(checkJSHeapInterval);
+                     }
 
                   }
               }
@@ -856,7 +861,8 @@ class Transactions {
     //console.log(heapStats);
     const limitReference = heapStats.total_available_size * MaxHeapSizePercentage;
 
-    //console.log('Current heap usage limit: ', (heapStats.total_physical_size / limitReference) * 100, '%');
+    //console.log('Current total_physical_size heap usage limit: ', (heapStats.total_physical_size / limitReference) * 100, '%');
+    //console.log('Current total_heap_size heap usage limit: ', (heapStats.total_heap_size / limitReference) * 100, '%');
 
     if( (heapStats.total_physical_size >= limitReference) || (heapStats.total_heap_size >= limitReference)){
 
@@ -864,15 +870,11 @@ class Transactions {
       const url_parts = currentPageURL.split('/');
       const currentPageName = url_parts[url_parts.length - 1];
       //console.log('currentPage', currentPageName);
-      
-     if(currentPageName != 'scanning.html'){
-      //go to scanning.html (page dedicated for scanning long time with easier reloads):
-      window.location.replace('./scanning.html');
-     }
-     else {
-      //heap limit reached, reloading scanning page:
-      ipcRenderer.send("SetReloadWindowsOn");
-     }
+
+      if(web3Local && web3Local.currentProvider){
+        web3Local.currentProvider.connection.close();
+      }
+      window.location.replace('./coolingscanning.html'); // will redirect to scanning.html as soon as heap size is ok
 
     }
     }, 10000);

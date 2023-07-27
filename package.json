@@ -20,6 +20,9 @@
       "main.js",
       "index.html",
       "setup.html",
+      "scanning.html",
+      "cooling.html",
+      "coolingscanning.html",
       "EticaRelease.json"
     ],
     "win": {

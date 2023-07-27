@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset="UTF-8">
+    <title>Etica GUI Wallet</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <link rel="stylesheet" href="./assets/styles/materialize.min.css">
+    <link rel="stylesheet" href="./assets/styles/datatables.min.css">
+    <link rel="stylesheet" href="./assets/styles/iziModal.min.css">
+    <link rel="stylesheet" href="./assets/styles/iziToast.min.css">
+    <link rel="stylesheet" href="./assets/styles/transactions.css">
+    <link rel="stylesheet" href="./assets/styles/please-wait.css">
+    <link rel="stylesheet" href="./assets/styles/indicators.css">
+    <link rel="stylesheet" href="./assets/styles/tablesort.css">
+    <link rel="stylesheet" href="./assets/styles/all.min.css">
+    <link rel="stylesheet" href="./assets/styles/spinner.css">
+    <link rel="stylesheet" href="./assets/styles/buttons.css">
+    <link rel="stylesheet" href="./assets/styles/style.css">
+    <link rel="stylesheet" href="./assets/styles/forms.css">
+    <link rel="stylesheet" href="./assets/styles/loading-bar.css">
+    <link rel="stylesheet" href="./assets/styles/walletfonts.css">
+    <!-- Insert this line above script imports -->
+    <script>
+      if (typeof module === 'object') {
+        window.module = module;
+        module = undefined;
+      }
+    </script>
+
+    <!-- normal script imports etc -->
+    <script src="https://cdn.jsdelivr.net/gh/ethereum/web3.js@1.0.0-beta.36/dist/web3.min.js" integrity="sha256-nWBTbvxhJgjslRyuAKJHK+XcZPlCnmIAAMixz6EefVk=" crossorigin="anonymous"></script>
+    <script src="./assets/scripts/jquery.min.js"></script>
+    <script src="./assets/scripts/handlebars.js"></script>
+    <script src="./assets/scripts/materialize.min.js"></script>
+    <script src="./assets/scripts/datatables.min.js"></script>
+    <script src="./assets/scripts/iziModal.min.js"></script>
+    <script src="./assets/scripts/iziToast.min.js"></script>
+    <script src="./assets/scripts/tippy.min.js"></script>
+    <script src="./assets/scripts/progressbar.min.js"></script>
+    <script src="./assets/scripts/sprintf.min.js"></script>
+    <script src="./assets/scripts/please-wait.js "></script>
+    <script src="./assets/scripts/moment.min.js"></script>
+    <script src="./assets/scripts/datetime-moment.js"></script>
+    <script src="./assets/scripts/datatables-absolute.js"></script>
+    <script src="./assets/scripts/jquery.floatThead.min.js"></script>
+    <script src="./assets/scripts/tablesort.min.js"></script>
+    <script src="./assets/scripts/tablesort.number.min.js"></script>
+    <script src="./assets/scripts/jquery.qrcode.min.js"></script>
+    <script src="./assets/scripts/all.min.js"></script>
+    <script src="./assets/scripts/Chart.js"></script>
+    <script src="./assets/scripts/loading-bar.js"></script>
+
+    <!-- Insert this line after script imports -->
+    <script>
+      if (window.module)
+        module = window.module;
+    </script>
+  </head>
+
+  <body>
+    <script>
+      var loading_screen = pleaseWait({logo: "assets/images/etica-logo-fond-noir.png", backgroundColor: "#000000", loadingHtml: "<div class='spinner'><div class='bounce bounce1'></div><div class='bounce bounce2'></div><div class='bounce bounce3'></div></div><div class='loadingText' style='color:#ffffff;font-family:juramedium;'>Heap memory cooling, please wait...</div>"});
+
+      $(window).on("beforeunload", function () {
+        EticaBlockchain.closeConnection();
+      })
+
+      function delay(ms) {
+       return new Promise(resolve => setTimeout(resolve, ms));
+      }
+    </script>
+    <script>
+
+const v8 = require('v8');
+
+function getHeapStatistics() {
+    const heapStatistics = v8.getHeapStatistics();
+    return heapStatistics;
+  }
+
+  var checkJSHeapInterval = setInterval(function () {
+    const MaxHeapSizePercentage = 0.10; // Heap max allowed size is 10% of heapStats.total_available_size
+    const heapStats = getHeapStatistics();
+    //console.log(heapStats);
+    const limitReference = heapStats.total_available_size * MaxHeapSizePercentage;
+
+    //console.log('Current total_phisical_siz heap usage limit (from cooling): ', (heapStats.total_physical_size / limitReference) * 100, '%');
+    //console.log('Current total_heap_siz heap usage limit (from cooling): ', (heapStats.total_heap_size / limitReference) * 100, '%');
+
+    if( (heapStats.total_physical_size <= limitReference) || (heapStats.total_heap_size <= limitReference)){
+     
+          window.location.replace('./index.html');
+    }
+    }, 10000);
+
+    </script>
+
+     <div class="inner">
+      <!-- The sidebar -->
+      <div class="sidebar">
+        <div style="margin-bottom: 1vh;">
+            <img src='assets/images/etica-logo-sanstexte.png' style="width: 44px;position: relative;left: 37%;top:0.25vh;"></img>
+        </div>
+        <div class="sidebarIconWrapper iconSelected" id="mainNavBtnWalletsWrapper" data-tippy="Your wallet addresses" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnWallets" href="#">
+            Wallet
+          </a>
+        </div>
+        <div class="sidebarIconWrapper iconSelected" id="mainNavBtnAddressBookWrapper" data-tippy="Foreign addresses" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnAddressBook" href="#">
+            Addresses Book
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnSendWrapper" data-tippy="Send EGAZ" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnSend" href="#">
+            Send EGAZ
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnSendEtiWrapper" data-tippy="Send ETI" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnSendEti" href="#">
+            Send ETI
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnTransactionsWrapper" data-tippy="Transactions" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnTransactions" href="#">
+            Transactions
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnStakesWrapper" data-tippy="Your Stakes" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnStakes" href="#">
+            Stakes
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnCommitVoteWrapper" data-tippy="Make new votes" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnCommitVote" href="#">
+            New Commits
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnCommitHistoryWrapper" data-tippy="Votes History" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnCommitHistory" href="#">
+            Commits History
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnProposalHistoryWrapper" data-tippy="Proposals history" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnProposalHistory" href="#">
+            Your Proposals
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnCreateProposalWrapper" data-tippy="Submit Proposal" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnCreateProposal" href="#">
+           Submit Proposal
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnCreateDiseaseWrapper" data-tippy="Create Disease" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnCreateDisease" href="#">
+            Create Disease
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnCreateChunkWrapper" data-tippy="Create Chunk" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnCreateChunk" href="#">
+            Create Chunk
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnSearchEticaaWrapper" data-tippy="Search Etica" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnSearchEtica" href="#">
+            Search
+          </a>
+        </div>
+        <div class="sidebarIconWrapper" id="mainNavBtnSettingsWrapper" data-tippy="Settings" data-tippy-delay="500">
+          <a class="sidebarIcon" id="mainNavBtnSettings" href="#">
+            Settings
+          </a>
+        </div>
+        <div>
+          <span id="peerCount">Peer Count: 0</span><img src="./assets/images/lockgrey.png" id="iconCloseWallet" title="Lock wallet">
+        </div>
+      </div>
+      <div id="mainContent"></div>
+      <div id="syncProgress"></div>
+      <div id='ResyncTxsProgress'><div class='loaderspinner' style="position: absolute;top: 45%;left: 47%;"></div><div style="position: absolute;top: 50%;left: 33%;">Transactions Rescync initiated, it may take few minutes please wait...</div><p id='ResyncTxsProgressP'></p></div>
+      <script>
+        // You can also require other files to run in this process
+      </script>
+    </div>
+
+    <!-- The modal for general error -->
+    <div id="dlgGeneralError" class="modalDialog" data-izimodal-title="Application Error" data-izimodal-subtitle="Something went wrong, don't kill the fish..." data-izimodal-icon="icon-home">
+      <div class="modalBody">
+        <div class="form-group">
+          <span id="txtGeneralError"></span>
+        </div>
+        <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnGeneralErrorOK">OK</button>
+      </div>
+    </div>
+
+    <!-- The modal for general confirmation -->
+    <div id="dlgGeneralConfirm" class="modalDialog" data-izimodal-title="Confirmation" data-izimodal-subtitle="" data-izimodal-icon="icon-home">
+      <div class="modalBody" style="height: auto;">
+        <div class="form-group">
+          <span id="txtGeneralConfirm"></span>
+        </div>
+        <button type="button" class="btn btn-etica btn-dialog-cancel" id="btnGeneralConfirmNo">No</button>
+        <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnGeneralConfirmYes">Yes</button>
+      </div>
+    </div>
+
+    <!-- The modal for about info -->
+    <div id="dlgAboutInfo" class="modalDialog" data-izimodal-title="About Etica Wallet" data-izimodal-icon="icon-home">
+      <div class="modalBody">
+        <div class="aboutInfo">
+          <div class="infoText" id="aboutInfoWallet">Etica Wallet</div>
+          <div class="infoText" id="aboutInfoGitHub">GitHub:
+            <a id="urlOpenGitHub" href="https://github.com/etica/etica-gui">https://github.com/etica/etica-gui</a>
+          </div>
+          <div class="infoText" id="aboutInfoLicence">Made under
+            <a id="urlOpenLicence" href="https://choosealicense.com/licenses/gpl-3.0">GPL v3.0</a>
+            licence
+          </div>
+          <div class="infoText" id="aboutInfoVersion">Version:
+            <span id="versionNumber"></span></div>
+        </div>
+        <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnAboutInfoClose">Close</button>
+      </div>
+    </div>
+  </body>
+
+  <!-- The modal for QR-Code info -->
+  <div id="dlgShowAddressQRCode" class="modalDialog" data-izimodal-title="Address QR-Code" data-izimodal-subtitle="Scan the QR-Code to get the address..." data-izimodal-icon="icon-home">
+    <div class="modalBody">
+      <div id="addrQRCode"></div>
+      <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnScanQRCodeClose">Close</button>
+    </div>
+  </div>
+
+</html>
