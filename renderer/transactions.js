@@ -780,12 +780,12 @@ class Transactions {
                 if((blocknb % 10000 === 0) || ((blocknb - 1) % 10000 === 0)){
                   estimatedTimeMs = ((lastBlock - blocknb) / batchSize) * timePerBatch;
                   estimatedTimeMinutes = (estimatedTimeMs / 60000).toFixed(2);
-                  SyncProgress.setText(vsprintf("Estimated time remaining %d minutes, please wait", [
+                  SyncProgress.setText(vsprintf("Estimated scanning time remaining %d minutes. Ready to send transactions...", [
                     estimatedTimeMinutes
                   ]));
                 }
                 else if((blocknb % 1000 === 0)){
-                  SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (%d%%)", [
+                  SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (%d%%). Ready to send transactions...", [
                     blocknb,
                     lastBlock,
                     Math.floor(blocknb / lastBlock * 100)

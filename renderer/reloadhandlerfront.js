@@ -16,6 +16,12 @@ class HandlerReload {
 
   } 
 
+  SetReloadWindowOn() {
+
+    ipcRenderer.send("SetReloadWindowsOn"); // will reload page from reloadshandler.js in case of blank page error (only hhappens rare times on computers with hardware limits)
+
+  } 
+
 }
 
 // create new blockchain variable
