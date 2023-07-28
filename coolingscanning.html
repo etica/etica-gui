@@ -72,6 +72,7 @@
     </script>
     <script>
 const v8 = require('v8');
+const {ipcRenderer} = require("electron");
 
 function getHeapStatistics() {
     const heapStatistics = v8.getHeapStatistics();
@@ -92,7 +93,7 @@ function getHeapStatistics() {
       const url_parts = currentPageURL.split('/');
       const currentPageName = url_parts[url_parts.length - 1];
       //console.log('currentPage', currentPageName);
-      
+      ipcRenderer.send("SetReloadWindowsOn"); // will reload page from reloadshandler.js in case of blank page error (only hhappens rare times on computers with hardware limits)
       window.location.replace('./scanning.html');
 
     }

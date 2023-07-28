@@ -757,6 +757,9 @@ class Transactions {
     EticaTransactions.setIsSyncing(true);
     let startBlock = maincounter.block;
     let data = await EticaBlockchain.getAccounts_nocallback();
+    var timePerBatch = 2000; // In milliseconds
+    var estimatedTimeMs = ((lastBlock - maincounter.block) / batchSize) * timePerBatch;
+    var estimatedTimeMinutes = (estimatedTimeMs / 60000).toFixed(2);
     
     var scanTxsInterval = setInterval(async function () {
     let nextBatchLimit = startBlock + batchSize;
@@ -772,7 +775,16 @@ class Transactions {
                   ipcRenderer.send("updateCounter", maincounter);
                 }
 
-                if((blocknb % 1000 === 0)){
+                
+                
+                if((blocknb % 10000 === 0) || ((blocknb - 1) % 10000 === 0)){
+                  estimatedTimeMs = ((lastBlock - blocknb) / batchSize) * timePerBatch;
+                  estimatedTimeMinutes = (estimatedTimeMs / 60000).toFixed(2);
+                  SyncProgress.setText(vsprintf("Estimated time remaining %d minutes, please wait", [
+                    estimatedTimeMinutes
+                  ]));
+                }
+                else if((blocknb % 1000 === 0)){
                   SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (%d%%)", [
                     blocknb,
                     lastBlock,
@@ -851,7 +863,7 @@ class Transactions {
                   }
               }
 
-  }, 2000);
+  }, timePerBatch);
 
 
 
@@ -861,8 +873,8 @@ class Transactions {
     //console.log(heapStats);
     const limitReference = heapStats.total_available_size * MaxHeapSizePercentage;
 
-    //console.log('Current total_physical_size heap usage limit: ', (heapStats.total_physical_size / limitReference) * 100, '%');
-    //console.log('Current total_heap_size heap usage limit: ', (heapStats.total_heap_size / limitReference) * 100, '%');
+    console.log('Current total_physical_size heap usage limit: ', (heapStats.total_physical_size / limitReference) * 100, '%');
+    console.log('Current total_heap_size heap usage limit: ', (heapStats.total_heap_size / limitReference) * 100, '%');
 
     if( (heapStats.total_physical_size >= limitReference) || (heapStats.total_heap_size >= limitReference)){
 
