@@ -60,7 +60,7 @@
 
   <body>
     <script>
-      var loading_screen = pleaseWait({logo: "assets/images/etica-logo-fond-noir.png", backgroundColor: "#000000", loadingHtml: "<div class='spinner'><div class='bounce bounce1'></div><div class='bounce bounce2'></div><div class='bounce bounce3'></div></div><div class='loadingText' style='color:#ffffff;font-family:juramedium;'>Heap memory cooling, please wait...</div>"});
+      var loading_screen = pleaseWait({logo: "assets/images/etica-logo-fond-noir.png", backgroundColor: "#000000", loadingHtml: "<div class='spinner'><div class='bounce bounce1'></div><div class='bounce bounce2'></div><div class='bounce bounce3'></div></div><div class='loadingText' style='color:#ffffff;font-family:juramedium;'>Optimizing memory usage. Please wait...</div>"});
 
       $(window).on("beforeunload", function () {
         EticaBlockchain.closeConnection();
@@ -89,7 +89,7 @@ function getHeapStatistics() {
     //console.log('Current total_heap_siz heap usage limit (from cooling): ', (heapStats.total_heap_size / limitReference) * 100, '%');
 
     if( (heapStats.total_physical_size <= limitReference) || (heapStats.total_heap_size <= limitReference)){
-     
+          ReloadHandler.SetReloadWindowOn();
           window.location.replace('./index.html');
     }
     }, 10000);
@@ -181,6 +181,7 @@ function getHeapStatistics() {
       <div id='ResyncTxsProgress'><div class='loaderspinner' style="position: absolute;top: 45%;left: 47%;"></div><div style="position: absolute;top: 50%;left: 33%;">Transactions Rescync initiated, it may take few minutes please wait...</div><p id='ResyncTxsProgressP'></p></div>
       <script>
         // You can also require other files to run in this process
+        require('./renderer/reloadhandlerfront.js');
       </script>
     </div>
 
