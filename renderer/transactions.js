@@ -873,8 +873,8 @@ class Transactions {
     //console.log(heapStats);
     const limitReference = heapStats.total_available_size * MaxHeapSizePercentage;
 
-    console.log('Current total_physical_size heap usage limit: ', (heapStats.total_physical_size / limitReference) * 100, '%');
-    console.log('Current total_heap_size heap usage limit: ', (heapStats.total_heap_size / limitReference) * 100, '%');
+    //console.log('Current total_physical_size heap usage limit: ', (heapStats.total_physical_size / limitReference) * 100, '%');
+    //console.log('Current total_heap_size heap usage limit: ', (heapStats.total_heap_size / limitReference) * 100, '%');
 
     if( (heapStats.total_physical_size >= limitReference) || (heapStats.total_heap_size >= limitReference)){
 
