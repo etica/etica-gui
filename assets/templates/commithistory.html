@@ -1,7 +1,4 @@
 <div class="walletsToolbar">
-  <button type="button" class="btn btn-etica" id="btnNewAddressFromCommits2">
-    <i class="fas fa-plus"></i>
-  </button>
 
   <div class="sumBalanceHeader">
       <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;font-family: cinzelmedium;">
@@ -113,89 +110,38 @@
   {{/if}}
 </div>
 
-<div id="dlgCreateAddressAndName" class="modalDialog" data-izimodal-title="Add a new Address" data-izimodal-subtitle="Enter the name and the address" data-izimodal-icon="icon-home">
-  <div class="modalBody">
-    <div class="form-group">
-      <label for="addressName">Name:</label>
-      <input type="text" class="form-control" id="addressName">
-    </div>
-    <div class="form-group">
-      <label for="addressHash">Address:</label>
-      <input type="text" class="form-control" id="addressHash">
-    </div>
-    <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnCreateAddressFromCommitsConfirm">Confirm</button>
-  </div>
-</div>
-
 <!-- The modal to add Commits Inputs -->
 <div id="dlgAddCommitInputs" class="modalDialog" data-izimodal-title="Add Parameters of Commit" data-izimodal-subtitle="Enter vote parameters you used for this commit" data-izimodal-icon="icon-home">
   <div class="modalBody">
     <div class="form-group">
       <label>Commit Hash:</label>
-      <input id="CommitVoteHash" style="font-size: 1em;" disabled>
+      <input id="AddCommitVoteHash" style="font-size: 1em;" disabled>
     </div>
     <div class="form-group">
       <label>Voter (Address used to make the commit):</label>
-      <input id="CommitVoter" disabled>
+      <input id="AddCommitVoter" disabled>
     </div>
     <div class="form-group">
       <label for="usr">Enter the proposal hash:</label>
-      <input type="text" class="form-control" id="inputProposalHash">
+      <input type="text" class="form-control" id="AddCommitProposalHash">
     </div>
     <div class="form-group">
       <div class="row" style="margin-bottom: 0;">
-        <div class="input-field col s12" id="inputVoteChoice">
+        <div class="input-field col s12" id="AddCommitChoice">
           <div>
-            <label for="commitVoteChoice" class="active">Enter choice of the commit:</label> <br><br>
-            <input class="approvalchoiceradio" type="radio" id="inputVoteApprovalChoice" name="commitchoice" value="true">
-            <label class="approvalchoicelabellight" for="inputVoteApprovalChoice">Approval</label>
+            <label class="active">Enter choice of the commit:</label> <br><br>
+            <input class="approvalchoiceradio" type="radio" id="AddCommitApprovalChoice" name="addcommitchoice" value="true">
+            <label class="approvalchoicelabellight" for="AddCommitApprovalChoice">Approval</label>
 
-            <input class="approvalchoiceradio" type="radio" id="inputVoteDisapprovalChoice" name="commitchoice" value="false">
-            <label class="approvalchoicelabellight" for="inputVoteDisapprovalChoice">Disapproval</label>
+            <input class="approvalchoiceradio" type="radio" id="AddCommitDisapprovalChoice" name="addcommitchoice" value="false">
+            <label class="approvalchoicelabellight" for="AddCommitDisapprovalChoice">Disapproval</label>
           </div>
        </div>
       </div>
     </div>
     <div class="form-group">
       <label for="usr">If there is one, Enter privacy phrase of the commit:</label>
-      <input type="text" class="form-control" id="inputPrivacy">
-    </div>
-    <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnAddCommitInputsConfirm">Confirm</button>
-  </div>
-</div>
-
-<!-- The modal to reveal Commits Votes -->
-<div id="dlgRevealCommit" class="modalDialog" data-izimodal-title="Add Parameters of Commit" data-izimodal-subtitle="Enter vote parameters you used for this commit" data-izimodal-icon="icon-home">
-  <div class="modalBody">
-    <div class="form-group">
-      <label>Commit Hash:</label>
-      <input id="CommitVoteHash" style="font-size: 1em;" disabled>
-    </div>
-    <div class="form-group">
-      <label>Voter (Address used to make the commit):</label>
-      <input id="CommitVoter" disabled>
-    </div>
-    <div class="form-group">
-      <label for="usr">Enter the proposal hash:</label>
-      <input type="text" class="form-control" id="inputProposalHash">
-    </div>
-    <div class="form-group">
-      <div class="row" style="margin-bottom: 0;">
-        <div class="input-field col s12" id="inputVoteChoice">
-          <div>
-            <label for="commitVoteChoice" class="active">Enter choice of the commit:</label> <br><br>
-            <input class="approvalchoiceradio" type="radio" id="inputVoteApprovalChoice" name="commitchoice" value="true">
-            <label class="approvalchoicelabellight" for="inputVoteApprovalChoice">Approval</label>
-
-            <input class="approvalchoiceradio" type="radio" id="inputVoteDisapprovalChoice" name="commitchoice" value="false">
-            <label class="approvalchoicelabellight" for="inputVoteDisapprovalChoice">Disapproval</label>
-          </div>
-       </div>
-      </div>
-    </div>
-    <div class="form-group">
-      <label for="usr">If there is one, Enter privacy phrase of the commit:</label>
-      <input type="text" class="form-control" id="inputPrivacy">
+      <input type="text" class="form-control" id="AddCommitPrivacy">
     </div>
     <button type="button" class="btn btn-etica btn-dialog-confirm" id="btnAddCommitInputsConfirm">Confirm</button>
   </div>
@@ -208,7 +154,7 @@
     <div class="form-group sendTXInfo">
       <i class="fas fa-dollar-sign"></i>
       <label class="nameFieldsConfirmTxs">Commit Vote Hash:</label>
-      <label class="valueFieldsConfirmTxs" id="valueToCommitVoteHash"></label>
+      <label class="valueFieldsConfirmTxs" id="valueOfRevealCommitHash"></label>
     </div>
     <div class="form-group sendTXInfo">
       <i class="fas fa-wallet"></i>

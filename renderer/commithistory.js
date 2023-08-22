@@ -3,40 +3,11 @@ const {ipcRenderer} = require("electron");
 class CommitHistory {
   constructor() {}
 
-  setAddressName(address, name) {
-    var addressBook = EticaDatabase.getAddresses();
-
-    // set the wallet name from the dialog box
-    addressBook.names[address.toUpperCase()] = name;
-    EticaDatabase.setAddresses(addressBook);
-  }
-
-  getAddressName(address) {
-    var addressBook = EticaDatabase.getAddresses();
-    // set the wallet name from the dialog box
-    return addressBook.names[address.toUpperCase()] || "";
-  }
-
-  getAddressList() {
-    var addressBook = EticaDatabase.getAddresses();
-    return addressBook.names;
-  }
-
-  deleteAddress(address) {
-    var addressBook = EticaDatabase.getAddresses();
-    delete addressBook.names[address];
-    EticaDatabase.setAddresses(addressBook);
-  }
-
-
-
   calculateHash(_proposalhash, _choice, _voter, _vary) {
 
       let _votehash = web3Local.utils.keccak256(web3Local.eth.abi.encodeParameters([ "bytes32", "bool", "address", "string" ], [_proposalhash, _choice, _voter, _vary]));
       return _votehash;
   }
-  
-  enableButtonTooltips() {}
 
   renderCommitHistory() {
 
@@ -70,7 +41,6 @@ class CommitHistory {
       
       EticaMainGUI.renderTemplate("commithistory.html", data);
       $(document).trigger("render_commithistory");
-      EticaCommitHistory.enableButtonTooltips();
     
   });
   }
@@ -109,57 +79,26 @@ $(document).on("render_commithistory", function () {
     $("#addressTable").floatThead();
   }
 
-  $("#btnNewAddressFromCommits2").off("click").on("click", function () {
-    $("#dlgCreateAddressAndName").iziModal();
-    $("#addressName").val("");
-    $("#addressHash").val("");
-    $("#dlgCreateAddressAndName").iziModal("open");
-
-    function doCreateNewWallet() {
-      $("#dlgCreateAddressAndName").iziModal("close");
-
-      if (!EticaBlockchain.isAddress($("#addressHash").val())) {
-        EticaMainGUI.showGeneralError("Address must be a valid address!");
-      } else {
-        EticaCommitHistory.setAddressName($("#addressHash").val(), $("#addressName").val());
-        EticaCommitHistory.renderCommitHistory();
-
-        iziToast.success({title: "Created", message: "New address was successfully created", position: "topRight", timeout: 5000});
-      }
-    }
-
-    $("#btnCreateAddressFromCommitsConfirm").off("click").on("click", function () {
-      doCreateNewWallet();
-    });
-
-    $("#dlgCreateAddressAndName").off("keypress").on("keypress", function (e) {
-      if (e.which == 13) {
-        doCreateNewWallet();
-      }
-    });
-  });
-
   $(".btnAddCommitInputs").off("click").on("click", function () {
     var commitvotehash = $(this).attr("data-votehash");
     var commitvoter = $(this).attr("data-voter");
 
     $("#dlgAddCommitInputs").iziModal();
-    $("#CommitVoter").val(commitvoter);
-    $("#CommitVoteHash").val(commitvotehash);
+    $("#AddCommitVoter").val(commitvoter);
+    $("#AddCommitVoteHash").val(commitvotehash);
 
     // reset input fields:
-    $("#inputProposalHash").val("");
-    $("#inputPrivacy").val("");
-    document.getElementById('inputVoteApprovalChoice').checked = false;
-    document.getElementById('inputVoteDisapprovalChoice').checked = false;
+    $("#AddCommitProposalHash").val("");
+    $("#AddCommitPrivacy").val("");
+    document.getElementById('AddCommitApprovalChoice').checked = false;
+    document.getElementById('AddCommitDisapprovalChoice').checked = false;
 
     $("#dlgAddCommitInputs").iziModal("open");
 
     async function doAddParameterstoCommit() {
-      //EticaCommitHistory.setAddressName(walletAddress, $("#inputAddressName").val());
 
-      let commitproposalhash = $("#inputProposalHash").val();
-      let commitprivacyphrase = $("#inputPrivacy").val();
+      let commitproposalhash = $("#AddCommitProposalHash").val();
+      let commitprivacyphrase = $("#AddCommitPrivacy").val();
 
     // load proposal info:
       let _proposal = await EticaContract.proposals(commitproposalhash);
@@ -172,11 +111,11 @@ $(document).on("render_commithistory", function () {
       
       let vote_checked_choice = null;
       let vote_checked_choice_text = null;
-      if (document.getElementById('inputVoteApprovalChoice').checked && !document.getElementById('inputVoteDisapprovalChoice').checked) {
+      if (document.getElementById('AddCommitApprovalChoice').checked && !document.getElementById('AddCommitDisapprovalChoice').checked) {
         vote_checked_choice = true;
         vote_checked_choice_text = 'Approve';
       }
-      if (!document.getElementById('inputVoteApprovalChoice').checked && document.getElementById('inputVoteDisapprovalChoice').checked) {
+      if (!document.getElementById('AddCommitApprovalChoice').checked && document.getElementById('AddCommitDisapprovalChoice').checked) {
         vote_checked_choice = false;
         vote_checked_choice_text = 'Disapprove';
       }
