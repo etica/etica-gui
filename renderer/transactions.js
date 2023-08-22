@@ -807,8 +807,10 @@ class Transactions {
                     const url_parts = currentPageURL.split('/');
                     const currentPageName = url_parts[url_parts.length - 1];
       
-                    // If was on scanning.html redirect to index.html once scanning long txs done
-                    if(currentPageName != 'index.html'){
+                    // If was on scanning.html redirect to index.html once scanning long txs done. 
+                    //If user clicked on menu to navigate to other screens like "search screen/page" then Current page will be index.html#
+                    // If user stayed on home page Current page will be index.html
+                    if(currentPageName != 'index.html' && currentPageName != 'index.html#'){
                            var _wallet = ipcRenderer.sendSync("getRunningWallet");     
                            ipcRenderer.send("stopGeth", null);
 
