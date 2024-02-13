@@ -31,6 +31,9 @@ git clone https://github.com/etica/etica-gui.git`
 cd etica-gui/
 # Install dependencies
 npm install
+
+# For windows, before launching wallet you need to unzip the geth.exe file in /bin/win/geth-unzip-in-this-folder
+
 # Launch wallet
 npm start
 ```
