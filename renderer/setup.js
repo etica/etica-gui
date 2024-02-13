@@ -334,6 +334,142 @@ function former_used_wallets.find_wallet_launchwallet(i){
   }
   */
 
+
+  $("#SetupShowWalletSettingsBox").off("click").on("click", function () {
+    
+    $("#setupupdatesettings").css("display", "block");
+    $("#setupconnection").css("display", "none");
+    $("#SetupConnectionBtns").css("display", "none");
+    $("#SetupConnectError").html('');
+
+    $("#SetupUpdateWalletSettingsBtn").css("display", "inline-flex");
+    $("#SetupUpdateSettingsSuccess").html('');
+
+
+    let address = $("#SetupConnectAddress").val();
+
+    // if user is using popup with preload settings to connect to wallet
+    if($("#PreLoadWalletMode").val() == 'preloadmode'){
+      let preloaddirectory = $("#PreLoadDirectory").val();
+      ipcRenderer.send("checkWalletDataDbPath", preloaddirectory);
+    }
+    // user is using a wallet selected from a folder
+    else {
+      const selected_wallet = wallets.find(onewallet => onewallet.masteraddress === address);
+      ipcRenderer.send("checkWalletDataDbPath", selected_wallet.datadirectory);
+    }
+
+    var walletAddress = address;
+    let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: walletAddress});
+
+    console.log('address:', address)
+    console.log('_wallet:', _wallet)
+
+    $("#setupsettingsWalletWsAddress").val(_wallet.wsaddress);
+    $("#setupsettingsWalletPort").val(_wallet.port);
+    $("#setupsettingsWalletWsPort").val(_wallet.wsport);
+    $("#setupsettingsWalletEnode").val(_wallet.enode);
+
+  });
+
+  $("#SetupSettingsBackBtn").off("click").on("click", function () {
+
+    $("#setupsettingsWalletWsAddress").val('');
+    $("#setupsettingsWalletPort").val('');
+    $("#setupsettingsWalletWsPort").val('');
+
+    $("#setupsettingsWalletEnode").val('');
+
+    $("#setupupdatesettings").css("display", "none");
+    $("#setupconnection").css("display", "block");
+    $("#SetupConnectionBtns").css("display", "inline-flex");
+    $("#SetupConnectError").html('')
+
+  });
+
+
+  $("#SetupUpdateWalletSettingsBtn").off("click").on("click", function () {
+    
+    $("#SetupConnectionLoader").css("display", "none");
+    $("#SetupConnectionBtns").css("display", "none");
+    $("#SetupConnectError").html('');
+
+    let address = $("#SetupConnectAddress").val();
+
+    // if user is using popup with preload settings to connect to wallet
+    if($("#PreLoadWalletMode").val() == 'preloadmode'){
+      let preloaddirectory = $("#PreLoadDirectory").val();
+      ipcRenderer.send("checkWalletDataDbPath", preloaddirectory);
+    }
+    // user is using a wallet selected from a folder
+    else {
+      const selected_wallet = wallets.find(onewallet => onewallet.masteraddress === address);
+      ipcRenderer.send("checkWalletDataDbPath", selected_wallet.datadirectory);
+    }
+
+    updateenode(address);
+
+  });
+
+
+  function updateenode(_address){
+
+  var walletAddress = _address;
+  let NewWallet = ipcRenderer.sendSync("getWallet", {masteraddress: walletAddress});
+  
+  if(NewWallet){
+    
+    ipcRenderer.send("setWalletDataDbPath", NewWallet.datadirectory);
+
+    let enodeUrl = $("#setupsettingsWalletEnode").val();
+    
+    if (!(typeof enodeUrl === "string" && enodeUrl.startsWith("enode://"))) {
+      $("#SetupUpdateSettingsError").html('Enode is invalid. An enode url should start with enode://');
+      return false;
+    } 
+
+    NewWallet.enode = enodeUrl;
+
+    // Wallet port:
+    if($("#setupsettingsWalletPort").val() && $("#setupsettingsWalletPort").val() != ''){
+      NewWallet.port= $("#setupsettingsWalletPort").val();
+    }
+    else{
+      $("#SetupUpdateSettingsError").html('port cannot be empty!');
+      return false;
+    }
+    
+    
+    // Wallet wsport:
+    if($("#setupsettingsWalletWsPort").val() && $("#setupsettingsWalletWsPort").val() != ''){
+      NewWallet.wsport= $("#setupsettingsWalletWsPort").val();
+    }
+    else{
+      $("#SetupUpdateSettingsError").html('ws.port cannot be empty!');
+      return false;
+    }
+
+    ipcRenderer.send("updateWalletAdvancedSettings", NewWallet); 
+
+    // retrieve updated wallet to pass it to Geth:
+    // Check if the event listener has already been added before adding it again and create issue multiple popups
+     if (!ipcRenderer.listenerCount("updateWalletAdvancedSettingsResponse")) {
+        ipcRenderer.on("updateWalletAdvancedSettingsResponse", (event, updatedWallet) => {
+          // `updatedWallet` contains the response from the `updateWalletAdvancedSettings` event
+          $("#SetupUpdateSettingsSuccess").html('settings updated');
+          $("#SetupUpdateWalletSettingsBtn").css("display", "none");
+        });
+    }
+
+  }
+  else{
+    $("#SetupUpdateSettingsError").html('error no wallet selected');
+    return false;
+  }
+
+
+  }
+
   ipcRenderer.on("ScanedFolderWalletsFound", (event, _res) => {
     wallets = _res.wallets;
     ScannedFolderPath = _res.folderPath;

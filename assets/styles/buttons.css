@@ -8,7 +8,8 @@
   background: #fff;
   box-shadow: 0px 2px 10px 5px #1abc9c;
   color: #000;
-  },
+}
+
 .btn-etica:focus,
 .btn-etica:active,
 .btn-etica.active,
@@ -189,6 +190,158 @@ fieldset[disabled] .btn-etica.active {
 }
 
 .button4:focus { outline:0; }
+
+
+
+.button5 {
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 2px;
+  position: relative;
+  background-color: #7d8989;
+  border: none;
+  color: #fff;
+  padding: 8px;
+  width: 150px;
+  text-align: center;
+  transition-duration: 0.4s;
+  overflow: hidden;
+  box-shadow: 0 5px 15px #193047;
+  border-radius: 4px;
+}
+
+.button5:hover {
+  background: #fff;
+  box-shadow: 0px 2px 10px 5px #1abc9c;
+  color: #000;
+}
+
+.button5:after {
+  content: "";
+  background: #42be1e;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s
+}
+
+.button5:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+.button5:focus { outline:0; 
+  background: #42be1e;
+}
+
+.button6 {
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 2px;
+  position: relative;
+  background-color: #42be1e;
+  border: none;
+  color: #fff;
+  padding: 8px;
+  width: 150px;
+  text-align: center;
+  transition-duration: 0.4s;
+  overflow: hidden;
+  box-shadow: 0 5px 15px #193047;
+  border-radius: 4px;
+}
+
+.button6:hover {
+  background: #fff;
+  box-shadow: 0px 2px 10px 5px #1abc9c;
+  color: #000;
+}
+
+.button6:after {
+  content: "";
+  background: #42be1e;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s
+}
+
+.button6:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+.button6:focus { outline:0; 
+  background: #42be1e;
+}
+
+
+.btn-selectrecover {
+  text-align: center;
+  text-transform: uppercase;
+  cursor: pointer;
+  font-size: 12px;
+  letter-spacing: 2px;
+  position: relative;
+  top:-1vh;
+  background-color: #993939;
+  border: none;
+  color: #fff;
+  /*padding: 8px;
+  width: 150px;*/
+  text-align: center;
+  transition-duration: 0.4s;
+  overflow: hidden;
+  box-shadow: 0 5px 15px #193047;
+  border-radius: 4px;
+}
+
+.btn-selectrecover:hover {
+  background: #fff;
+  box-shadow: 0px 2px 10px 5px #1abc9c;
+  color: #000;
+}
+
+.btn-selectrecover:after {
+  content: "";
+  background: #993939;
+  display: block;
+  position: absolute;
+  padding-top: 300%;
+  padding-left: 350%;
+  margin-left: -20px !important;
+  margin-top: -120%;
+  opacity: 0;
+  transition: all 0.8s
+}
+
+.btn-selectrecover:active:after {
+  padding: 0;
+  margin: 0;
+  opacity: 1;
+  transition: 0s
+}
+
+.btn-selectrecover:active:after {
+  :focus { outline:0; 
+  background: #993939;
+}
 
 
 .buttonback {

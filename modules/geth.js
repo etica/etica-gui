@@ -64,9 +64,16 @@ class Geth {
     let _mainnetenodes = '';
 
     let _networkid = '';
+    let _chainflagname = '';
     if(wallet.type == 'mainnet'){
+      _chainflagname = '--etica';
       _networkid = '61803';
-      _mainnetenodes = ", enode://19b64dca1f38cbaad3f8c16f08c888bb6d3095c8672fe7a7b5e67d8fbc35d8c3f07b9227b4c8ab83db9bf490c213a743d2f460f191853408a5bc846a5a716d89@127.0.0.1:30303, enode://985d6066ef0bf6814debbef15e7529001ef63ceca9862034d9f42e0d216d05dcf09ae7de2abf020dfd582ac33d584785f8ebe02085b6acb4455f19c7fae713e8@188.166.33.30:30303, enode://45dd40d3be1f059f30a89716dc085181a0081dbb41160da06e34c7d1a3bab04d94e8b1b88ecd98a997acb922cccc55e487ec3d59d87d63b5b25c129b9e5e05b4@72.137.255.179:30319"
+      _mainnetenodes = ", enode://16623935be2a6e6fa33dbac1ece5c234f41a3fd547081c70d56ae732bfa03f6dd6c11eb351708236c81281798535b5e7e9fc9592904e05b08aa5c0b77d542ef0@149.102.133.68:38430, enode://4d2750b64f0538297861289ccf4aa30c81d94c44b381dc8a49a537b4dcb12c7fa19e6b0e3ff3cf59c68259ee6f8f5b5292db3ebcedf9c9cfb281c28adcaa9a04@72.137.255.179:60588, enode://995472c711aaeabb40bfca0e3901fec76e934da6b7b63ac372845027308416abb622ccd409689e2a53e6e2dcbac3bacd973eacc2db60967660e994dc10d720fa@109.205.180.147:37842, enode://363a353e050862630ea27807c454eb118d5893600ea0cc1aa66fcdf427d0da458da50d5ac4c43b95205acaa2c21b949f7f1000158a2a63819926f71571172356@142.93.138.113:30303, enode://b0e97d2f1a37b2035a34b97f32fb31ddd93ae822b603c56b7f17cfb189631ea2ef17bfbed904f8bc564765634f2d9db0a128835178c8af9f1dde68ee6b5e2bf7@167.172.47.195:30303, enode://985d6066ef0bf6814debbef15e7529001ef63ceca9862034d9f42e0d216d05dcf09ae7de2abf020dfd582ac33d584785f8ebe02085b6acb4455f19c7fae713e8@188.166.33.30:30303, enode://19b64dca1f38cbaad3f8c16f08c888bb6d3095c8672fe7a7b5e67d8fbc35d8c3f07b9227b4c8ab83db9bf490c213a743d2f460f191853408a5bc846a5a716d89@46.101.129.218:52222"
+    }
+    else if(wallet.networkid == 61888){
+      _chainflagname = '--crucible';
+      _networkid = '61888';
+      _mainnetenodes = ", enode://0c0c00f5602de8c1a7f6537f243ab96b95792e3cc44274c035b89f0db25b0e7502c7e950cb0d8962ccc47f535fa83fe5375c76fbd004b2c3173ae6e7ee0a354d@72.137.255.180:40101, enode://44ecbb31b636532d224b3567400d66631c3e43f880ec73563d708ffe93ec7adb806e3efaab3d5d5d9c7718153591575471a925b0caa150efd99ebf8460161e74@72.137.255.180:40102, enode://09780202c3472f132ea785d0714afd2f98c069705f8c479dfe89eb05b40207cfcf65fdb41e606c3bbb145b68dc925d2bded3860a8350bb1179f61a7dfe8c57d6@72.137.255.179:40103, enode://4daa37e171cd0d4d57113f4c94c958ceca7074e254544b568bf3c134536e1cb73e8fc3b562133717e63cc1cc480821c8263c21976e8a8133cdbe33b7a6c9c8e6@72.137.255.180:40104"
     }
     else {
       _networkid = wallet.networkid;
@@ -85,28 +92,37 @@ class Geth {
       this.isRunning = true;
       const gethPath = path.join(this.binaries, "geth");
 
-      this.gethProcess = child_process.spawn(gethPath, [
+      const args = [
         "--allow-insecure-unlock",
         "--ws",
-        "--ws.origins",
-        "*",
+        "--ws.origins=*",
         "--ws.addr",
         ""+wallet.wsaddress+"",
         "--ws.port",
         ""+wallet.wsport+"",
+        "--authrpc.port",
+        "8545",
         "--port",
         ""+wallet.port+"",
         "--datadir="+wallet.blockchaindirectory+"",
         "--keystore="+wallet.keystoredirectory+"",
         "--ws.api",
-        "admin,eth,net,miner,personal,web3",
-        "--networkid",
-        ""+_networkid+"",
+        "eth,net,web3,personal",
         "--syncmode",
         "snap",
         "--bootnodes",
         ""+wallet.enode+""+_mainnetenodes+""
-      ]);
+      ];
+
+      if (_chainflagname != '') {
+        args.unshift(_chainflagname);
+      }
+      else {
+        args.unshift(wallet.networkid);
+        args.unshift("--networkid");
+      }
+
+      this.gethProcess = child_process.spawn(gethPath, args);
 
       if (!this.gethProcess) {
         dialog.showErrorBox("Error starting application", "Geth failed to start!");
@@ -160,6 +176,10 @@ class Geth {
     if(wallet.type == 'mainnet'){
       _networkid = '61803';
       genesisfile = path.join(this.rootPath, "needs", "etica_genesis.json");
+    }
+    else if (wallet.networkid == 61888){
+      _networkid = wallet.networkid;
+      genesisfile = path.join(this.rootPath, "needs", "crucible_genesis.json");
     }
     else {
       _networkid = wallet.networkid;

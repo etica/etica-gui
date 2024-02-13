@@ -1,5 +1,8 @@
 node_modules
 
+bin/win/geth.exe
+bin/linux/geth.exe
+
 dist/
 
 package-lock.json

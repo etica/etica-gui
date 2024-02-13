@@ -170,7 +170,7 @@ class Transactions {
                   let _slashduration = null;
                   let _slashamount = null;
                   let _inorout = 'neutral'; // if tx is received: received, if tx is sent: sent
-                  let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'StakeClaimed', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
+                  let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'StakeClaimed', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed', 'NewRecover'];
                   var _toaddress = onetx.to.toLowerCase();
 
                 // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
@@ -296,6 +296,14 @@ class Transactions {
 
                     _valueeti = onetxevent.returnValues.snapamount;
                     _fromaddreti = onetxevent.returnValues.staker;
+                    _toaddreti = onetx.to;
+
+                  }
+
+                  if(onetxevent.event == 'NewRecover'){
+
+                    _valueeti = onetxevent.returnValues.amount;
+                    _fromaddreti = onetxevent.returnValues._voter;
                     _toaddreti = onetx.to;
 
                   }
@@ -1062,7 +1070,7 @@ class Transactions {
                 let _toaddreti = null;
                 let _slashduration = null;
                 let _inorout = 'neutral'; // if tx is received: received, if tx is sent: sent
-                let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'StakeClaimed', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed'];
+                let includedevents = ['Transfer', 'NewCommit', 'NewProposal', 'NewChunk', 'NewDisease', 'NewFee', 'NewSlash', 'NewReveal', 'NewStake', 'StakeClaimed', 'RewardClaimed', 'NewStakesnap', 'NewStakescsldt', 'TieClaimed', 'NewRecover'];
                 var _toaddress = onetx.to.toLowerCase();
 
                 // if event is not among the ones shown to users we skip, example, CreatedPeriod event (event created at new proposal txs for first proposer of the period):
@@ -1188,6 +1196,14 @@ class Transactions {
 
                   _valueeti = onetxevent.returnValues.snapamount;
                   _fromaddreti = onetxevent.returnValues.staker;
+                  _toaddreti = onetx.to;
+
+                }
+
+                if(onetxevent.event == 'NewRecover'){
+
+                  _valueeti = onetxevent.returnValues.amount;
+                  _fromaddreti = onetxevent.returnValues._voter;
                   _toaddreti = onetx.to;
 
                 }

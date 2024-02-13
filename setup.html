@@ -259,6 +259,9 @@
           <div id="SetupConnectionBtns" class="col-md-12" style="text-align:center;display: inline-flex;">
             <button class="btn btn-secondary" id="SetupBackBtn" style="background: #363636;margin-left: 22%;margin-right: 1%;">Back</button> <button class="btn btn-secondary" id="SetupBackBtnFromPreload" style="background: #363636;display: none;margin-left: 22%;margin-right: 1%;">Back</button> <button class="btn btn-primary" id="SetupConnectBtn">Connect</button>
           </div>
+          <div id="SetupUpdateWalletSettingBtns" class="col-md-12" style="text-align:center;display: inline-flex;margin-top: 2vh;">
+            <span style="margin-left: 6%;">Connection issue? </span> &nbsp; <span id="SetupShowWalletSettingsBox" style="cursor:pointer;text-decoration: underline;">Update wallet connection settings</span>
+          </div>
           <div id="SetupConnectionLoader" class="col-md-12" style="text-align:center;">
             <div class="loader-middle">
               <div class="loader-bar loader-bar1"></div>
@@ -275,6 +278,63 @@
         </div>
 
        </div>
+
+
+       <div id="setupupdatesettings" style="display:none;">
+
+        <div class="btn-wrapper text-center">
+          <a href="#" class="btn btn-neutral btn-icon" style="background-color: #202020 !important;background-image: unset;">
+            <img src="./assets/images/etica-logo-sanstexte.png">
+          </a>
+          <a href="#" class="btn btn-neutral btn-icon" style="background-color: #202020 !important;background-image: unset;">
+            <img src="./assets/images/etica-logo-fond-noir-sanstitre.png">
+          </a>
+        </div>
+        <div class="text-center text-muted mb-4 mt-3">
+          <small style="color:#ffffff;">Update wallet settings</small>
+        </div>
+
+
+        <div class="card-panel" style="padding-bottom: 0px;background-color:#030404;">
+
+          <div class="col-sm-12 col-lg-12">
+            <div class="form-group">
+              <div>
+              <label class="active" style="color:#9e9e9e;">--ws.addr:</label> 
+              <input style="background-color: #141414; color: #ffffff;" id="setupsettingsWalletWsAddress" placeholder="ws address (node websocket address)" type="text" disabled class="form-control" /> 
+              </div>
+
+              <div>
+                <label class="active" style="color:#9e9e9e;" for="setupsettingsWalletPort">--port:</label>  
+                <input style="background-color: #141414; color: #ffffff;" id="setupsettingsWalletPort" placeholder="port (node port)" type="text" class="form-control" />
+              </div>
+
+              <div>
+                <label class="active" style="color:#9e9e9e;" for="setupsettingsWalletWsPort">--ws.port:</label>  
+                <input style="background-color: #141414; color: #ffffff;" id="setupsettingsWalletWsPort" placeholder="ws port (node websocket port)" type="text" class="form-control" />
+              </div>
+
+              <div>
+                <label class="active" style="color:#9e9e9e;" for="setupsettingsWalletEnode">Enode (the initial peer the wallet should connect to):</label> 
+                <input style="background-color: #141414; color: #ffffff;" id="setupsettingsWalletEnode" placeholder="Enter the new main peer enode" type="text" class="form-control" />   
+              </div>
+
+              <i id="SetupUpdateSettingsSuccess" style="color:#08e500;margin-left: 1%;"></i>
+              <i id="SetupUpdateSettingsError" style="color:#e50000;margin-left: 1%;"></i>
+              <div class="row" style="margin-top: -1vh;margin-bottom: 0;">
+                <div class="input-field col s12">
+                  <button class="btn btn-secondary" id="SetupSettingsBackBtn" style="background: #363636;margin-left: 22%;margin-right: 1%;">Back</button> <button type="button" class="btn btn-primary" id="SetupUpdateWalletSettingsBtn">Update</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+       </div>
+
+
         
         </div>
       </div>

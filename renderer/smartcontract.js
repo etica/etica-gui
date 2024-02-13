@@ -826,7 +826,7 @@ class SmartContract {
               var txData = web3Local.eth.abi.encodeFunctionCall({
                 name: 'commitvote',
                 type: 'function',
-                inputs: [,
+                inputs: [
                   {
                     type: 'uint256',
                     name: '_amount'
@@ -1527,6 +1527,247 @@ class SmartContract {
    // CLAIM STAKE // 
 
 
+   //  RECOVER COMMIT //
+
+   getTranasctionFee_recovercommit(fromAddress, _proposed_release_hash, _approved, _vary, clbError, clbSuccess) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
+    web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+      if (error) {
+        clbError(error);
+      } else {
+
+        var txData = web3Local.eth.abi.encodeFunctionCall({
+          name: 'recovercommit',
+          type: 'function',
+          inputs: [{
+              type: 'bytes32',
+              name: '_proposed_release_hash'
+          },
+          {
+            type: 'bool',
+            name: '_approved'
+          },
+          {
+            type: 'string',
+            name: '_vary'
+          }
+      ]
+      }, [_proposed_release_hash, _approved, _vary]);
+
+        var RawTransaction = {
+          from: fromAddress,
+          to: ETICA_ADDRESS,
+          value: 0,
+          nonce: result,
+          data: txData
+        };
+
+        web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+            var usedGas = result + 1;
+            web3Local.eth.getGasPrice(function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                clbSuccess(result * usedGas);
+              }
+            });
+          }
+        });
+
+      }
+    });
+  }
+
+
+  async prepareTransaction_recovercommit(password, fromAddress, _proposed_release_hash, _approved, _vary, clbError, clbSuccess) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
+    let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+    if(isunlocked == 'locked'){
+        await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+        if (error) {
+          clbError("Wrong password for the selected address!");
+        }
+      });
+    }
+
+        web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+
+          var txData = web3Local.eth.abi.encodeFunctionCall({
+              name: 'recovercommit',
+          type: 'function',
+          inputs: [{
+              type: 'bytes32',
+              name: '_proposed_release_hash'
+          },
+          {
+            type: 'bool',
+            name: '_approved'
+          },
+          {
+            type: 'string',
+            name: '_vary'
+          }
+          ]
+          }, [_proposed_release_hash, _approved, _vary]);
+
+            var RawTransaction = {
+              from: fromAddress,
+              to: ETICA_ADDRESS,
+              value: 0,
+              nonce: result,
+              data: txData
+            };
+
+            web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                RawTransaction.gas = result + 1;
+                web3Local.eth.getGasPrice(function (error, result) {
+                  if (error) {
+                    clbError(error);
+                  } else {
+                    RawTransaction.gasPrice = result;
+                    web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                      if (error) {
+                        clbError(error);
+                      } else {
+                        clbSuccess(result);
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+
+  }
+
+   // RECOVER COMMIT //
+
+
+   //  RECOVER LOST COMMIT //
+
+   getTranasctionFee_recoverlostcommit(fromAddress, votehash, clbError, clbSuccess) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
+    web3Local.eth.getTransactionCount(fromAddress, function (error, result) {
+      if (error) {
+        clbError(error);
+      } else {
+        
+        var txData = web3Local.eth.abi.encodeFunctionCall({
+          name: 'recoverlostcommit',
+          type: 'function',
+          inputs: [
+            {
+              type: 'bytes32',
+              name: '_votehash'
+            }
+    ]
+      }, [votehash]);
+
+        var RawTransaction = {
+          from: fromAddress,
+          to: ETICA_ADDRESS,
+          value: 0,
+          nonce: result,
+          data: txData
+        };
+
+        web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+            var usedGas = result + 1;
+            web3Local.eth.getGasPrice(function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                clbSuccess(result * usedGas);
+              }
+            });
+          }
+        });
+
+      }
+    });
+  }
+
+
+  async prepareTransaction_recoverlostcommit(password, fromAddress, votehash, clbError, clbSuccess) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
+    
+    let isunlocked = await EticaBlockchain.isUnlocked(fromAddress);
+
+      if(isunlocked == 'locked'){
+        await web3Local.eth.personal.unlockAccount(fromAddress, password, function (error, result) { 
+        if (error) {
+          clbError("Wrong password for the selected address!");
+        }
+      });
+    }
+
+        web3Local.eth.getTransactionCount(fromAddress, "pending", function (error, result) {
+          if (error) {
+            clbError(error);
+          } else {
+
+            var txData = web3Local.eth.abi.encodeFunctionCall({
+              name: 'recoverlostcommit',
+              type: 'function',
+              inputs: [
+              {
+                  type: 'bytes32',
+                  name: '_votehash'
+              }
+        ]
+          }, [votehash]);
+
+            var RawTransaction = {
+              from: fromAddress,
+              to: ETICA_ADDRESS,
+              value: 0,
+              nonce: result,
+              data: txData
+            };
+
+            web3Local.eth.estimateGas(RawTransaction, function (error, result) {
+              if (error) {
+                clbError(error);
+              } else {
+                RawTransaction.gas = result + 1;
+                web3Local.eth.getGasPrice(function (error, result) {
+                  if (error) {
+                    clbError(error);
+                  } else {
+                    RawTransaction.gasPrice = result;
+                    web3Local.eth.signTransaction(RawTransaction, fromAddress, function (error, result) {
+                      if (error) {
+                        clbError(error);
+                      } else {
+                        clbSuccess(result);
+                      }
+                    });
+                  }
+                });
+              }
+            });
+          }
+        });
+
+  }
+
+   // RECOVER LOST COMMIT //
+
+
 
 
    // GETTER FUNCTIONS
@@ -1760,6 +2001,21 @@ class SmartContract {
 
 }
 
+
+//returns whole disease object from global index, returns 0 if disease doesnt exists:
+async getcommit(_address, _hash) {
+
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
+  let commit = await commits(_address, _hash);
+  return commit;
+
+async function commits(_diseaseindex) {
+  let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _commit = await contract.methods.commits(_address, _hash).call();
+    return _commit;
+}
+
+}
 
 
 async diseasesbyIds(_hash) {

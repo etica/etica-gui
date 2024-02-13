@@ -29,6 +29,9 @@ class MainGUI {
         case "commitVote":
         $("#mainNavBtnCommitVoteWrapper").addClass("iconSelected");
         break;
+        case "commitRecover":
+        $("#mainNavBtnCommitRecoverWrapper").addClass("iconSelected");
+        break;
       case "createDisease":
         $("#mainNavBtnCreateDiseaseWrapper").addClass("iconSelected");
         break;
@@ -188,6 +191,11 @@ $("#mainNavBtnSendEti").click(function () {
 $("#mainNavBtnCommitVote").click(function () {
   EticaMainGUI.changeAppState("commitVote");
   VoteCommit.renderSendState();
+});
+
+$("#mainNavBtnCommitRecover").click(function () {
+  EticaMainGUI.changeAppState("commitRecover");
+  RecoverCommit.renderSendState();
 });
 
 $("#mainNavBtnCreateDisease").click(function () {

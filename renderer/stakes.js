@@ -191,7 +191,6 @@ $(document).on("render_stakes", function () {
   });
 
   $(".btnShowAddressStakesBoard").off("click").on("click", function () {
-    console.log('clicked on .btnShowAddressStakesBoard');
     //BoardStakes.setFilter($(this).attr("data-address"));
     //EticaMainGUI.changeAppState("stakesBoard");
     BoardStakes.renderStakesBoard($(this).attr("data-address"));

@@ -1,0 +1,178 @@
+<div class="walletsHeader">
+  <div class="sumBalanceHeader">
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;font-family: cinzelmedium;">
+      <img src="assets/images/etica-logo-fond-noir-sanstitre.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+      {{sumBalance}} EGAZ
+    </span>
+    <span class="sumBalance" style="color:rgb(255, 255, 255);display: inline-block;font-family: cinzelmedium;">
+      <img src="assets/images/etica-logo-sanstexte.png" alt height="22" style="width: 19px;top: 0.5vh;height: 19px;position: relative;" /> <!-- added style width and height because etica logo appeared too small  -->
+      {{sumBalanceEti}} ETI
+    </span>
+  </div>
+</div>
+
+<button type="button" class="button6 MarginRight5" id="btnCommitRecoverSetSystem1">Recover with parameters</button>
+<button type="button" class="button5 MarginRight5" id="btnCommitRecoverSetSystem2">Lost commit</button>
+
+<div class="sendWrapper">
+  <div class="card-panel" style="padding-bottom: 0px;">
+    <form class="col s12">
+      <div class="row">
+        <span id="warningMsgCommitRecoverSetSystem1" style="font-family: cinzelmedium;color:rgb(255, 0, 0);">RECOVER COMMIT from parameters (ONLY USE IN LAST RESORT, APPLIES 10% FEE plus ADDITIONAL SLASH AND FEES)</span>
+        <span id="warningMsgCommitRecoverSetSystem2" style="font-family: cinzelmedium;color:rgb(255, 0, 0);">RECOVER LOST COMMIT (ONLY USE IN LAST RESORT, APPLIES 21% FEE)</span>
+
+        <div class="input-field col s6">
+          <select id="commitRecoverFromAddress">
+            <option value="" disabled="disabled" selected="selected">Choose your address</option>
+            {{#addressData}}
+              <option value="{{address}}">{{name}}
+                -
+                {{address}}</option>
+            {{/addressData}}
+          </select>
+          <label for="commitRecoverFromAddress">From address:</label>
+          <small id="commitRecoverFromAddressName" class="form-text text-muted"></small>
+        </div>
+        <div class="input-field col s6" style="top:2vh;position: relative; left:3%;">
+          <i id="commitRecoverEtiAvailable" class="MarginRight5" style="font-family: sairaregular;">0</i><i style="font-family: sairalight;">ETI available on this address</i>
+        </div>
+      </div>
+      <div id="commitRecoverProposalHashDiv" class="row" style="margin-bottom: 0;">
+        <div class="input-field col s6">
+          <input id="commitRecoverProposalHash" class="" placeholder="Enter Proposal Hash" type="text" value="">
+          <label for="commitRecoverProposalHash" class="active">Proposal Hash:</label>
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 0;" id="commitRecoverChoiceDiv">
+        <div class="input-field col s12" id="commitRecoverChoice">
+          <div>
+            <label for="commitRecoverChoice" class="active">Commit Choice:</label> <br><br>
+            <input class="approvalchoiceradio" type="radio" id="commitRecoverApprovalChoice" name="commitchoice" value="true">
+            <label class="approvalchoicelabel" for="commitRecoverApprovalChoice">Approval</label>
+
+            <input class="approvalchoiceradio" type="radio" id="commitRecoverDisapprovalChoice" name="commitchoice" value="false">
+            <label class="approvalchoicelabel" for="commitRecoverDisapprovalChoice">Disapproval</label>
+          </div>
+       </div>
+      </div>
+      <div class="row" style="margin-bottom: 0;" id="commitRecoverPrivacyDiv">
+        <div class="input-field col s6">
+          <input id="commitRecoverPrivacy" class="" placeholder="Enter commit privacy phrase" type="text" value="">
+          <label for="commitRecoverPrivacy" class="active">Privacy Phrase (optional):</label>
+        </div>
+      </div>
+      <div class="row" style="margin-bottom: 0;" id="commitRecoverLostVotehashDiv">
+        <div class="input-field col s6">
+          <input id="commitRecoverLostVotehash" class="" placeholder="Enter commit hash" type="text" value="">
+          <label for="commitRecoverLostVotehash" class="active">Commithash:</label>
+        </div>
+      </div>
+      <div class="row">
+        <div class="input-field col s6">
+          <div style="display:inline;position:relative;left:4%;"><label class="MarginRight5">hash:</label><span id="commitRecoverHash" class="MarginRight5" style="font-family: sairaregular;"></span></div>
+          <div style="display:inline;position:relative;left:4%;"><label class="MarginRight5">amount:</label><span id="commitRecoverExistingAmount" class="MarginRight5" style="font-family: sairaregular;">0</span></div>
+          <div style="display:inline;position:relative;left:4%;"><label class="MarginRight5">timestamp:</label><span id="commitRecoverExistingTimestamp" class="MarginRight5" style="font-family: sairaregular;">0</span><span style="font-family: cinzelmedium;"></span></div>
+          <br>
+          <div style="display:inline;position:relative;left:4%;"><label></label><span id="commitRecoverExistingMessage" style="font-family: sairaregular;"></span></div>
+        </div>
+
+      </div>
+      <div id="btnCommitRecoverDiv" class="row" style="position: relative;bottom: 4vh;">
+        <div class="input-field col s12">
+          <button type="button" class="button4 MarginRight5" id="btnCommitRecoverExistence">Check existence</button>
+          <button type="button" class="button4 MarginRight5" id="btnCommitRecover">Recover commit</button>
+        </div>
+      </div>
+      <div id="btnCommitRecoverLostDiv" class="row" style="position: relative;bottom: 4vh;">
+        <div class="input-field col s12">
+          <button type="button" class="button4 MarginRight5" id="btnCommitRecoverLostExistence">Check existence</button>
+          <button type="button" class="button4 MarginRight5" id="btnCommitRecoverLost">Recover commit</button>
+        </div>
+      </div>
+    </form>
+  </div>
+
+</div>
+
+<!-- send details dialog -->
+<div id="dlgCommitRecoverWalletPassword" class="modalDialog" data-izimodal-title="Confirm Transaction" data-izimodal-subtitle="To commit your vote on this proposal, please confirm transaction" data-izimodal-icon="icon-home">
+  <div class="modalBody">
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label class="nameFieldsConfirmTxs">Commit Vote Hash:</label>
+      <label class="valueFieldsConfirmTxs" id="valueToCommitRecoverHash"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-wallet"></i>
+      <label class="nameFieldsConfirmTxs">From address:</label>
+      <label class="valueFieldsConfirmTxs" id="fromCommitRecoverAddressInfo"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label class="nameFieldsConfirmTxs">Proposal Hash:</label>
+      <label class="valueFieldsConfirmTxs" id="valueToCommitRecoverProposalHash"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label class="nameFieldsConfirmTxs">Vote choice:</label>
+      <label class="valueFieldsConfirmTxs" id="valueToCommitRecoverChoice"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label class="nameFieldsConfirmTxs">Privacy Phrase:</label>
+      <label class="valueFieldsConfirmTxs" id="valueToCommitRecoverPrivacy"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label class="nameFieldsConfirmTxs">Commit Amount:</label>
+      <label class="valueFieldsConfirmTxs" id="valueToCommitRecoverAmount"></label>
+      <label class="currencyTicker">ETI</label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label class="nameFieldsConfirmTxs">Fee to pay:</label>
+      <label class="valueFieldsConfirmTxs" id="feeCommitRecoverToPayInfo"></label>
+      <label class="currencyTicker valueFieldsConfirmTxs">EGAZ</label>
+    </div>
+    <hr class="sendTXdivider">
+    <div class="form-group sendTXPass" id="CommitRecoverwalletPasswordDiv">
+      <label for="usr">Enter your Password:</label>
+      <input type="password" class=" form-control" id="CommitRecoverwalletPassword">
+    </div>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnCommitRecoverWalletPasswordConfirm">Confirm</button>
+  </div>
+</div>
+
+<div id="dlgCommitRecoverLostWalletPassword" class="modalDialog" data-izimodal-title="Confirm Transaction" data-izimodal-subtitle="To recover commit, confirm transaction" data-izimodal-icon="icon-home">
+  <span style="color:red;">Warning using this recovery function will aplly a 21% fee of your commit. Only use it as a last resort if you forgot your vote parameters.</span>
+  <div class="modalBody">
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label class="nameFieldsConfirmTxs">Commit Vote Hash:</label>
+      <label class="valueFieldsConfirmTxs" id="valueToCommitRecoverLostHash"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-wallet"></i>
+      <label class="nameFieldsConfirmTxs">From address:</label>
+      <label class="valueFieldsConfirmTxs" id="fromCommitRecoverLostAddressInfo"></label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label class="nameFieldsConfirmTxs">Commit Amount:</label>
+      <label class="valueFieldsConfirmTxs" id="valueToCommitRecoverLostAmount"></label>
+      <label class="currencyTicker">ETI</label>
+    </div>
+    <div class="form-group sendTXInfo">
+      <i class="fas fa-dollar-sign"></i>
+      <label class="nameFieldsConfirmTxs">Fee to pay:</label>
+      <label class="valueFieldsConfirmTxs" id="feeCommitRecoverLostToPayInfo"></label>
+      <label class="currencyTicker valueFieldsConfirmTxs">EGAZ</label>
+    </div>
+    <hr class="sendTXdivider">
+    <div class="form-group sendTXPass" id="CommitRecoverLostwalletPasswordDiv">
+      <label for="usr">Enter your Password:</label>
+      <input type="password" class=" form-control" id="CommitRecoverLostwalletPassword">
+    </div>
+    <button type="button" class="btn button3 btn-dialog-confirm" id="btnCommitRecoverLostWalletPasswordConfirm">Confirm</button>
+  </div>
+</div>

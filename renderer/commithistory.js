@@ -390,6 +390,12 @@ $(document).on("render_commithistory", function () {
 
     iziToast.success({title: "Copied", message: "Address was copied to clipboard", position: "topRight", timeout: 2000});
   });
+
+  $(".btnShowRecoverCommitPage").off("click").on("click", function () {
+    RecoverCommit.renderRecoverCommit($(this).attr("data-proposalhash"));
+  });
+
+
 });
 
 EticaCommitHistory = new CommitHistory();
