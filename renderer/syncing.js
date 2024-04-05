@@ -247,6 +247,26 @@ function setEticaContractAddress() {
 
   }
 
+  async function checkTxsMissingCommits() {
+
+    // get running wallet:
+    let _txs_missing_commit = ipcRenderer.sendSync("getTransactionsByEventType", {eventtype: 'NewCommit'});
+
+    if(_txs_missing_commit){
+      for(_onetx of _txs_missing_commit){
+
+        let _exist_commit = ipcRenderer.sendSync("getCommitbyTransactionHash", {txhash: _onetx.txhash});
+        // If wallet failed to store commit, rescan the block so that it adds the Commit to the database:
+        if(!_exist_commit){
+          let data = await EticaBlockchain.getAccounts_nocallback();
+          await EticaTransactions.syncTransactionsofWalletAddresses(data, _onetx.block, 1);
+        }
+     
+      } 
+    }
+
+  }
+
 var RetrySuscribeSyncing = setInterval( function () {
   try {
     //console.log('Inside RetrySuscribeSyncing');
@@ -329,6 +349,7 @@ var InitWeb3 = setInterval(async function () {
         StartSyncProcess();
         setEticaContractAddress();
         autounlockWallet();
+        checkTxsMissingCommits();
       } else{
         //console.log('InitializeWeb3.web3Local.eth.net.isListening() error is:', error);
         restartGeth_counter = restartGeth_counter + 1;

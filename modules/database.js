@@ -88,6 +88,61 @@ ipcMain.on("getTransactions", (event, arg) => {
   });
 });
 
+ipcMain.on("getTransactionsByEventType", (event, arg) => {
+  db.find({ eventtype: arg.eventtype }).exec(function (err, docs) {
+    ResultData = [];
+
+    // sort the data
+    docs.sort((a, b) => {
+      if (!b.block && a.block) {
+        return 1;
+      } else if (b.block && !a.block) {
+        return -1;
+      } else if (!b.block && !a.block) {
+        return (moment(b.timestamp, "YYYY-MM-DD HH:mm:ss").toDate() - moment(a.timestamp, "YYYY-MM-DD HH:mm:ss").toDate());
+      } else {
+        return b.block - a.block;
+      }
+    });
+
+    for (i = 0; i < Math.min(docs.length, 500); i++) {
+      /*ResultData.push([
+        docs[i].block,
+        docs[i].timestamp,
+        docs[i].txhash,
+        docs[i].fromaddr,
+        docs[i].toaddr,
+        docs[i].value,
+        docs[i].valueeti,
+        docs[i].fromaddreti,
+        docs[i].toaddreti,
+        docs[i].eventtype,
+        docs[i].slashduration,
+        docs[i].inorout
+      ]);*/
+
+      ResultData.push({
+          block: docs[i].block,
+          timestamp: docs[i].timestamp,
+          txhash: docs[i].txhash,
+          fromaddr: docs[i].fromaddr,
+          toaddr: docs[i].toaddr,
+          value: docs[i].value,
+          valueeti: docs[i].valueeti,
+          fromaddreti: docs[i].fromaddreti,
+          toaddreti: docs[i].toaddreti,
+          eventtype: docs[i].eventtype,
+          slashduration: docs[i].slashduration,
+          inorout: docs[i].inorout
+        });
+
+    }
+
+    // return the transactions data
+    event.returnValue = ResultData;
+  });
+});
+
 ipcMain.on("getJSONFile", (event, arg) => {
   const filePath = path.join(arg);
   fs.readFile(filePath, "utf8", (err, data) => {
