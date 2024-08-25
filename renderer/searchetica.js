@@ -278,7 +278,7 @@ class SearchEtica {
           
           // if chunk get chunk:
           if(_proposal[4] != 0){
-            _chunk = await contract.chunks(_proposal[4]); 
+            _chunk = await EticaContract.chunks(_proposal[4]); 
             _proposal.haschunk = true;
           }
           else{
