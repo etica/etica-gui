@@ -763,6 +763,8 @@ class Transactions {
     SyncProgress.setText("Scanning wallet transactions");
     // sync all the transactions to the current block
     EticaTransactions.setIsSyncing(true);
+    // make sure ETICA_ADDRESS is loaded in smartcontract.js and blockchain.js
+    EticaTransactions.setEticaContractAddress();
     let startBlock = maincounter.block;
     let data = await EticaBlockchain.getAccounts_nocallback();
     var timePerBatch = 2000; // In milliseconds
@@ -1685,7 +1687,35 @@ class Transactions {
       // success
     });
   }
+
+
+  setEticaContractAddress() {
+
+    // get running wallet:
+    let _wallet = ipcRenderer.sendSync("getRunningWallet");
+    
+    if(_wallet.contractaddress){
+    
+      let etica_contract = EticaContract.getEticaContractAddress();
+      let etica_blockchain = EticaBlockchain.getEticaContractAddress();
+      if(etica_contract != _wallet.contractaddress){
+        EticaContract.setEticaContractAddress(_wallet);
+      }
+      if(etica_blockchain != _wallet.contractaddress){
+        EticaBlockchain.setEticaContractAddress(_wallet);
+      }
+    
+    }
+    // should never happen:
+    else {
+      EticaMainGUI.showGeneralError('Error, no smart contract address provided');
+    }
+  
+  }
+
+  
 }
 
 // create new transactions variable
 EticaTransactions = new Transactions();
+
