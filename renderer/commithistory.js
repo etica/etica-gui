@@ -9,6 +9,28 @@ class CommitHistory {
       return _votehash;
   }
 
+  static formatDuration(seconds) {
+    const days = Math.floor(seconds / 86400);
+    const hours = Math.floor((seconds % 86400) / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+  
+    let result = [];
+  
+    if (days > 0) {
+      result.push(`${days} day${days !== 1 ? 's' : ''}`);
+    }
+  
+    if (hours > 0) {
+      result.push(`${hours} hour${hours !== 1 ? 's' : ''}`);
+    }
+  
+    if (result.length === 0 || (days === 0 && hours === 0)) {
+      result.push(`${minutes} minute${minutes !== 1 ? 's' : ''}`);
+    }
+  
+    return result.join(' ');
+  }
+
   renderCommitHistory() {
 
     var renderData = {};
@@ -25,7 +47,7 @@ class CommitHistory {
         element['slashamount'] = web3Local.utils.fromWei(element['slashamount'], "ether");
       }
       if(element['slashduration']){
-        element['slashduration'] = moment.duration(element['slashduration'], 'seconds').humanize();
+        element['slashduration'] = CommitHistory.formatDuration(element['slashduration']);
       }
       if(element['fee']){
         element['fee'] = web3Local.utils.fromWei(element['fee'], "ether");
