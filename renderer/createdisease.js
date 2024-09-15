@@ -7,7 +7,9 @@ class CreateDisease {
   renderSendState() {
     EticaBlockchain.getAccountsData(function (error) {
      // EticaMainGUI.showGeneralError(error);
-    }, function (data) {
+    }, async function (data) {
+      var _creationamount = await EticaContract.DISEASE_CREATION_AMOUNT();
+      data.creationamount = _creationamount;
       EticaMainGUI.renderTemplate("createdisease.html", data);
       $(document).trigger("render_createDisease");
     });

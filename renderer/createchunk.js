@@ -7,7 +7,9 @@ class CreateChunk {
   renderSendState() {
     EticaBlockchain.getAccountsData(function (error) {
      // EticaMainGUI.showGeneralError(error);
-    }, function (data) {
+    }, async function (data) {
+      var _creationamount = await EticaContract.CHUNK_CREATION_AMOUNT();
+      data.creationamount = _creationamount;
       EticaMainGUI.renderTemplate("createchunk.html", data);
       $(document).trigger("render_createChunk");
     });

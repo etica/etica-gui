@@ -2247,6 +2247,52 @@ async function intervalduration() {
 }
 
 
+async PROPOSAL_DEFAULT_VOTE() {
+
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
+  let _proposaldefaultvote = await proposaldefaultvote();
+  return _proposaldefaultvote;
+
+async function proposaldefaultvote() {
+    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _collateral = await contract.methods.PROPOSAL_DEFAULT_VOTE().call();
+    return web3Local.utils.fromWei(_collateral, "ether");
+}
+
+}
+
+
+async DISEASE_CREATION_AMOUNT() {
+
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
+  let _diseasecost = await diseasecost();
+  return _diseasecost;
+
+async function diseasecost() {
+    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _cost = await contract.methods.DISEASE_CREATION_AMOUNT().call();
+    return web3Local.utils.fromWei(_cost, "ether");
+}
+
+}
+
+
+async CHUNK_CREATION_AMOUNT() {
+
+  const ETICA_ADDRESS = this.ETICA_ADDRESS;
+  let _chunkcost = await chunkcost();
+  return _chunkcost;
+
+async function chunkcost() {
+    let contract =  new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    let _diseasecost = await contract.methods.DISEASE_CREATION_AMOUNT().call();
+    let _chunkcost = web3Local.utils.toBN(_diseasecost).div(web3Local.utils.toBN("5"));
+    let _result = web3Local.utils.fromWei(_chunkcost, "ether");
+    return _result;
+}
+
+}
+
 
 
    // GETTER FUNCTIONS

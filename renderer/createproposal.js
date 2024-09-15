@@ -5,9 +5,12 @@ class CreateProposal {
   constructor() {}
 
   renderSendState() {
+
     EticaBlockchain.getAccountsData(function (error) {
      // EticaMainGUI.showGeneralError(error);
-    }, function (data) {
+    }, async function (data) {
+      var _collateral = await EticaContract.PROPOSAL_DEFAULT_VOTE();
+      data.collateral = _collateral;
       EticaMainGUI.renderTemplate("createproposal.html", data);
       $(document).trigger("render_createProposal");
     });
