@@ -136,3 +136,21 @@ ipcMain.on("assignBlockchainFoldertoWalletImport", async (event) => {
     event.reply("NoNewBlockchainFolderAssignedImport", "");
   }
 });
+
+
+ipcMain.on("assignBlockchainFoldertoWalletResyncSetup", async (event) => {
+  try {
+    const result = await dialog.showOpenDialog({
+      properties: ["openDirectory"],
+    });
+    if (!result.canceled && result.filePaths.length > 0) {
+      const walletFolderPath = result.filePaths[0];
+      event.reply("NewBlockchainFolderAssignedResyncSetup", walletFolderPath);
+    } else {
+      event.reply("NoNewBlockchainFolderAssignedResyncSetup", '');
+      throw new Error("NoNewBlockchainFolderAssignedResyncSetup");
+    }
+  } catch (error) {
+    event.reply("NoNewBlockchainFolderAssignedResyncSetup", "");
+  }
+});

@@ -1,5 +1,6 @@
 const {ipcRenderer} = require("electron");
 const path = require("path");
+const fs = require("fs");
 
 let walletFilePath;
 let ScannedFolderPath;
@@ -93,6 +94,13 @@ let wallets;
     this.classList.toggle('fa-eye-slash');
 });
 
+  $("#toggleResyncPassword").off("click").on("click", function () {
+    // toggle the type attribute
+    const type = $("#SetupResyncPw").attr('type') === 'password' ? 'text' : 'password';
+    $("#SetupResyncPw").attr('type', type);
+    // toggle the eye slash icon
+    this.classList.toggle('fa-eye-slash');
+});
 
 
 
@@ -387,7 +395,6 @@ function former_used_wallets.find_wallet_launchwallet(i){
 
   });
 
-
   $("#SetupUpdateWalletSettingsBtn").off("click").on("click", function () {
     
     $("#SetupConnectionLoader").css("display", "none");
@@ -469,6 +476,433 @@ function former_used_wallets.find_wallet_launchwallet(i){
 
 
   }
+
+
+  // ------------------------- RESYNC WALLET SYSTEM | END  ----------------------------------- //
+
+  $("#SetupShowWalletResyncBox").off("click").on("click", function () {
+    
+    
+    $("#setupresyncwallet").css("display", "block");
+    $("#setupconnection").css("display", "none");
+    $("#SetupConnectionBtns").css("display", "none");
+    $("#SetupConnectError").html('');
+
+    $("#SetupResyncWalletSettingsBtn").css("display", "inline-flex");
+    $("#SetupResyncSettingsSuccess").html('');
+
+
+    let address = $("#SetupConnectAddress").val();
+
+    // if user is using popup with preload settings to connect to wallet
+    if($("#PreLoadWalletMode").val() == 'preloadmode'){
+      let preloaddirectory = $("#PreLoadDirectory").val();
+      ipcRenderer.send("checkWalletDataDbPath", preloaddirectory);
+    }
+    // user is using a wallet selected from a folder
+    else {
+      const selected_wallet = wallets.find(onewallet => onewallet.masteraddress === address);
+      ipcRenderer.send("checkWalletDataDbPath", selected_wallet.datadirectory);
+    }
+
+    $("#SetupResyncWalletAddress").html(address);
+    var walletAddress = address;
+    let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: walletAddress});
+
+    $("#SetupResyncWalletName").html(_wallet.name);
+
+    $("#setupresyncnewblockchain").val('');
+
+  });
+
+  $("#SetupResyncBackBtn").off("click").on("click", function () {
+
+    $("#setupresyncnewblockchain").val('');
+
+    $("#setupresyncwallet").css("display", "none");
+    $("#setupconnection").css("display", "block");
+    $("#SetupConnectionBtns").css("display", "inline-flex");
+    $("#SetupConnectError").html('')
+
+  });
+
+
+  $("#SetupResyncWalletSettingsBtn").off("click").on("click", function () {
+    
+    $("#SetupResyncLoader").css("display", "block");
+    $("#SetupResyncBtns").css("display", "none");
+    $("#SetupResyncSettingsError").html('');
+
+    let pw = $("#SetupResyncPw").val();
+    let address = $("#SetupConnectAddress").val();
+
+    if (!$("#SetupResyncPw").val()) {
+      $("#SetupResyncSettingsError").html('Please enter wallet password.');
+      $("#SetupResyncLoader").css("display", "none");
+      $("#SetupResyncBtns").css("display", "inline-flex");
+      return false;
+    }
+
+    if (!$("#setupresyncnewblockchain").val()) {
+      $("#SetupResyncSettingsError").html('Please enter blockchain directory.');
+      $("#SetupResyncLoader").css("display", "none");
+      $("#SetupResyncBtns").css("display", "inline-flex");
+      return false;
+    }
+
+    if(!path.isAbsolute($("#setupresyncnewblockchain").val())){
+      $("#SetupResyncSettingsError").html('Blockchain directory must be an absolute path.');
+      $("#SetupResyncLoader").css("display", "none");
+      $("#SetupResyncBtns").css("display", "inline-flex");
+      return false;
+    }
+
+    // if user is using popup with preload settings to connect to wallet
+    if($("#PreLoadWalletMode").val() == 'preloadmode'){
+      let preloaddirectory = $("#PreLoadDirectory").val();
+      ipcRenderer.send("checkWalletDataDbPath", preloaddirectory);
+    }
+    // user is using a wallet selected from a folder
+    else {
+      const selected_wallet = wallets.find(onewallet => onewallet.masteraddress === address);
+      ipcRenderer.send("checkWalletDataDbPath", selected_wallet.datadirectory);
+    }
+
+
+    let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: address});
+    if(_wallet){
+      checkpasswordthenresync(_wallet, pw);
+    }
+    else {
+      $("#SetupResyncSettingsError").html('Wallet not found.');
+      $("#SetupResyncLoader").css("display", "none");
+      $("#SetupResyncBtns").css("display", "inline-flex");
+      return false;
+    }
+
+    //resyncblockhain(address, pw);
+
+  });
+
+  $("#SelectResyncblockchaindirectory").off("click").on("click", async function () {
+
+    try {
+     let blockchainpath = ipcRenderer.send("assignBlockchainFoldertoWalletResyncSetup", {});
+    } catch (error) {
+      if (error.message === "NoNewBlockchainFolderAssignedResyncSetup") {
+        // Handle user cancelation
+       // console.log("Canceled wallet folder selection");
+      } else {
+        // Handle other errors
+        console.error("Error selecting wallet folder:", error);
+      }
+    }
+
+  });
+
+
+  ipcRenderer.on("NewBlockchainFolderAssignedResyncSetup", (event, _folderpath) => {
+    $("#setupresyncnewblockchain").val(_folderpath);
+  });
+
+
+  // checks wallet password:
+  async function checkpasswordthenresync(_wallet, _pw){
+      
+    if(_wallet){
+      _wallet.pw = _pw;
+      ipcRenderer.send("setWalletDataDbPath", _wallet.datadirectory);
+      ipcRenderer.send("startGeth", _wallet);
+    }
+    else{
+      ipcRenderer.send("stopGeth", null);
+      $("#SetupResyncSettingsError").html('error wallet not found');
+      $("#SetupResyncLoader").css("display", "none");
+      $("#SetupResyncBtns").css("display", "inline-flex");
+      return false;
+    }
+  
+  
+  let stoploop = false;
+  let successconnect = false;
+  let restartGeth_counter = 1;
+      var InitWeb3 = setInterval(async function () {
+        try {
+  
+          let _provider = new Web3.providers.WebsocketProvider("ws://localhost:8551");
+          web3Local = new Web3(_provider);
+  
+          web3Local.eth.net.isListening(async function (error, success) {
+            //Geth is ready
+            if (!error) {
+              clearInterval(InitWeb3);
+  
+              if(!stoploop){
+                stoploop == true;
+                let _address = _wallet.masteraddress;
+                await web3Local.eth.personal.unlockAccount(_address, _pw, function (error, result) { 
+                  if (error) {
+                    if (error.message.includes("could not decrypt")) {
+                      ipcRenderer.send("stopGeth", null);
+                      $("#SetupResyncSettingsError").html('wrong password I');
+                      $("#SetupResyncLoader").css("display", "none");
+                      $("#SetupResyncBtns").css("display", "inline-flex");
+                      console.error("Error unlocking account:", error);
+                      return false;
+                    } else if(error.message.includes("no key for given address or file")){
+
+                      $("#SetupResyncSettingsError").html('No keystore registered for this wallet address. Cannot resync, need to Import as new wallet instead.');
+                      $("#SetupResyncLoader").css("display", "none");
+                      $("#SetupResyncBtns").css("display", "inline-flex");
+                      console.error("Error unlocking account:", error);
+                      if(!successconnect){
+                        ipcRenderer.send("stopGeth", null);
+                      }
+                      return false;
+                    }
+                    else {
+                      // Handle other errors here
+                      $("#SetupResyncSettingsError").html('error starting the new node');
+                      $("#SetupResyncLoader").css("display", "none");
+                      $("#SetupResyncBtns").css("display", "inline-flex");
+                      console.error("Error unlocking account:", error);
+                      if(!successconnect){
+                        ipcRenderer.send("stopGeth", null);
+                      }
+                      return false;
+                    }
+                  }
+                });
+  
+                let isunlocked = await EticaBlockchain.isUnlocked(_address);
+  
+                if(isunlocked == 'unlocked'){
+                  successconnect = true; // avoid late call to stopGeth by web3Local.eth.personal.unlockAccount() error because could get wallet stuck if called after last startgeth
+                  
+                  // stop geth before launching wallet:
+                  web3Local.currentProvider.connection.close();
+                  ipcRenderer.send("stopGeth", null);
+                  resyncblockhain(_address, _pw);
+
+                }
+  
+                else {
+                  //console.log('wallet not unlocked');
+                  //ipcResult = ipcRenderer.send("stopGeth", null);
+                  //$("#SetupConnectError").html('wallet not unlocked yet');
+                  return false;
+                }
+  
+              }
+  
+            } else{
+              console.log('web3Local.eth.net.isListening() error is:', error);
+              restartGeth_counter = restartGeth_counter + 1;
+              // InitWeb3 = setInterval() is called every 2 secs
+              // so restartGeth() will be called every 12 seconds
+              // every 12 seconds if failing to connect to wsport we restart Geth:
+              if( (restartGeth_counter % 6 === 0) && !stoploop){
+                restartGeth(_wallet, restartGeth_counter);
+              }
+              
+            }
+          });
+        } catch (err) {
+          ipcRenderer.send("stopGeth", null);
+          clearInterval(InitWeb3);
+          $("#SetupResyncSettingsError").html(err);
+          $("#SetupResyncLoader").css("display", "none");
+          $("#SetupResyncBtns").css("display", "inline-flex");
+        }
+      }, 2000);
+  
+  
+  }
+
+
+  function resyncblockhain(_address, _pw){
+
+    var walletAddress = _address;
+    let NewWallet = ipcRenderer.sendSync("getWallet", {masteraddress: walletAddress});
+    
+    if(NewWallet){
+  
+      let newBlockchainFolder = $("#setupresyncnewblockchain").val();
+      
+      if (!(typeof newBlockchainFolder === "string")) {
+        $("#SetupResyncSettingsError").html('Invalid new blockchain directory');
+        return false;
+      } 
+
+
+      // if folder doesnt exist, create folder to avoid geth executable chmod permission issue on linux:
+      try {
+        if (!fs.existsSync(NewWallet.blockchaindirectory)) {
+          fs.mkdirSync(NewWallet.blockchaindirectory, { recursive: true }); // creates folder
+          console.log("Folder created!");
+        }
+      } catch (err) {
+        console.error("Error creating directory:", err);
+        $("#SetupResyncSettingsError").html('Error while creating directory. Please create the directory and try again.');
+        $("#SetupResyncLoader").css("display", "none");
+        $("#SetupResyncBtns").css("display", "inline-flex");
+      }
+
+
+      ipcRenderer.send("setWalletDataDbPath", NewWallet.datadirectory);
+      NewWallet.blockchaindirectory = newBlockchainFolder;
+
+      const responseHandler = (event, code) => {
+        ipcRenderer.removeListener("initializeGethResponse", responseHandler);
+        
+        if(code == 0) {
+          startresyncedwallet(NewWallet, _pw, newBlockchainFolder);
+        }
+        // case 2 should never happen because initializeGethForResync() doesnt return error if node already initialised to let users resync with existing blockchain directories
+        else if(code == 2) {
+          $("#SetupResyncSettingsError").html('This blockchain directory has already been initialized, please select an empty directory.');
+          $("#SetupResyncLoader").css("display", "none");
+          $("#SetupResyncBtns").css("display", "inline-flex");
+        } else {
+          $("#SetupResyncSettingsError").html('blockchain directory error, please select another blockchain directory.');
+          $("#SetupResyncLoader").css("display", "none");
+          $("#SetupResyncBtns").css("display", "inline-flex");
+        }
+      };
+  
+      ipcRenderer.on("initializeGethResponse", responseHandler);
+      ipcRenderer.send("initializeGethForResync", NewWallet);
+
+    }
+    else{
+      $("#SetupResyncSettingsError").html('error no wallet selected');
+      return false;
+    }
+  
+  
+    }
+
+
+    function startresyncedwallet(_wallet, _pw, _newBlockchainFolder){
+
+      if(_wallet){
+        _wallet.pw = _pw;
+        ipcRenderer.send("setWalletDataDbPath", _wallet.datadirectory);
+        ipcRenderer.send("startGeth", _wallet);
+      }
+      else{
+        ipcRenderer.send("stopGeth", null);
+        $("#SetupResyncSettingsError").html('error wallet not found');
+        $("#SetupResyncLoader").css("display", "none");
+        $("#SetupResyncBtns").css("display", "inline-flex");
+        return false;
+      }
+    
+    
+    let stoploop = false;
+    let successconnect = false;
+    let restartGeth_counter = 1;
+        var InitWeb3 = setInterval(async function () {
+          try {
+    
+            let _provider = new Web3.providers.WebsocketProvider("ws://localhost:8551");
+            web3Local = new Web3(_provider);
+    
+            web3Local.eth.net.isListening(async function (error, success) {
+              //Geth is ready
+              if (!error) {
+                clearInterval(InitWeb3);
+    
+                if(!stoploop){
+                  stoploop == true;
+                  let _address = _wallet.masteraddress;
+                  await web3Local.eth.personal.unlockAccount(_address, _pw, function (error, result) { 
+                    if (error) {
+                      if (error.message.includes("could not decrypt")) {
+                        ipcRenderer.send("stopGeth", null);
+                        $("#SetupResyncSettingsError").html('wrong password');
+                        $("#SetupResyncLoader").css("display", "none");
+                        $("#SetupResyncBtns").css("display", "inline-flex");
+                        console.error("Error unlocking account:", error);
+                        return false;
+                      } else if(error.message.includes("no key for given address or file")){
+
+                        $("#SetupResyncSettingsError").html('No keystore registered for this wallet address. Cannot resync, need to Import as new wallet instead.');
+                        $("#SetupResyncLoader").css("display", "none");
+                        $("#SetupResyncBtns").css("display", "inline-flex");
+                        console.error("Error unlocking account:", error);
+                        if(!successconnect){
+                          ipcRenderer.send("stopGeth", null);
+                        }
+                        return false;
+                      }
+                      else {
+                        // Handle other errors here
+                        $("#SetupResyncSettingsError").html('error starting the new node');
+                        $("#SetupResyncLoader").css("display", "none");
+                        $("#SetupResyncBtns").css("display", "inline-flex");
+                        console.error("Error unlocking account:", error);
+                        if(!successconnect){
+                          ipcRenderer.send("stopGeth", null);
+                        }
+                        return false;
+                      }
+                    }
+                  });
+    
+                  let isunlocked = await EticaBlockchain.isUnlocked(_address);
+    
+                  if(isunlocked == 'unlocked'){
+                    successconnect = true; // avoid late call to stopGeth by web3Local.eth.personal.unlockAccount() error because could get wallet stuck if called after last startgeth
+                   // console.log('password verified');
+
+                    // if reaches here means pw ok and new blockchain directory successfully initiated, thus we actualize the wallet blockchain directory:
+                    _wallet.blockchaindirectory = _newBlockchainFolder;
+                    ipcRenderer.send("storeWallet", _wallet);  
+                    
+                    // stop geth before launching wallet:
+                    web3Local.currentProvider.connection.close();
+                    ipcRenderer.send("stopGeth", null);
+                    
+                    _wallet.pw = _pw;
+                    launchwallet(_wallet);
+    
+                  }
+    
+                  else {
+                    //console.log('wallet not unlocked');
+                    //ipcResult = ipcRenderer.send("stopGeth", null);
+                    //$("#SetupConnectError").html('wallet not unlocked yet');
+                    return false;
+                  }
+    
+                }
+    
+              } else{
+                console.log('web3Local.eth.net.isListening() error is:', error);
+                restartGeth_counter = restartGeth_counter + 1;
+                // InitWeb3 = setInterval() is called every 2 secs
+                // so restartGeth() will be called every 12 seconds
+                // every 12 seconds if failing to connect to wsport we restart Geth:
+                if( (restartGeth_counter % 6 === 0) && !stoploop){
+                  restartGeth(_wallet, restartGeth_counter);
+                }
+                
+              }
+            });
+          } catch (err) {
+            ipcRenderer.send("stopGeth", null);
+            clearInterval(InitWeb3);
+            $("#SetupResyncSettingsError").html(err);
+            $("#SetupResyncLoader").css("display", "none");
+            $("#SetupResyncBtns").css("display", "inline-flex");
+          }
+        }, 2000);
+    
+    
+    }  
+
+    // ------------------------- RESYNC WALLET SYSTEM | END  ----------------------------------- //
 
   ipcRenderer.on("ScanedFolderWalletsFound", (event, _res) => {
     wallets = _res.wallets;

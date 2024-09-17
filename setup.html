@@ -57,6 +57,10 @@
     display: none;
   }
 
+  #SetupResyncLoader{
+    display: none;
+  }
+
 .loader-bar {
   width: 1px;
   height: 15px;
@@ -259,8 +263,12 @@
           <div id="SetupConnectionBtns" class="col-md-12" style="text-align:center;display: inline-flex;">
             <button class="btn btn-secondary" id="SetupBackBtn" style="background: #363636;margin-left: 22%;margin-right: 1%;">Back</button> <button class="btn btn-secondary" id="SetupBackBtnFromPreload" style="background: #363636;display: none;margin-left: 22%;margin-right: 1%;">Back</button> <button class="btn btn-primary" id="SetupConnectBtn">Connect</button>
           </div>
-          <div id="SetupUpdateWalletSettingBtns" class="col-md-12" style="text-align:center;display: inline-flex;margin-top: 2vh;">
-            <span style="margin-left: 6%;">Connection issue? </span> &nbsp; <span id="SetupShowWalletSettingsBox" style="cursor:pointer;text-decoration: underline;">Update wallet connection settings</span>
+          <div id="SetupUpdateWalletSettingBtns" class="col-md-12" style="text-align:center;margin-top: 3vh;right: 3%;">
+            <span style="margin-left: 6%;color: #8bbdbbcc;">Connection issue? </span>
+            <br>
+            <span id="SetupShowWalletSettingsBox" style="cursor:pointer;text-decoration: underline;color: #627978cc;">Update wallet connection settings</span>
+            <br>
+            <span id="SetupShowWalletResyncBox" style="cursor:pointer;text-decoration: underline;color: #7c7766;">Resync blockchain directory</span>
           </div>
           <div id="SetupConnectionLoader" class="col-md-12" style="text-align:center;">
             <div class="loader-middle">
@@ -324,6 +332,78 @@
               <div class="row" style="margin-top: -1vh;margin-bottom: 0;">
                 <div class="input-field col s12">
                   <button class="btn btn-secondary" id="SetupSettingsBackBtn" style="background: #363636;margin-left: 22%;margin-right: 1%;">Back</button> <button type="button" class="btn btn-primary" id="SetupUpdateWalletSettingsBtn">Update</button>
+                </div>
+              </div>
+
+            </div>
+          </div>
+
+        </div>
+
+       </div>
+
+
+       <div id="setupresyncwallet" style="display:none;">
+
+       <!-- <div class="btn-wrapper text-center">
+          <a href="#" class="btn btn-neutral btn-icon" style="background-color: #202020 !important;background-image: unset;">
+            <img src="./assets/images/etica-logo-sanstexte.png">
+          </a>
+          <a href="#" class="btn btn-neutral btn-icon" style="background-color: #202020 !important;background-image: unset;">
+            <img src="./assets/images/etica-logo-fond-noir-sanstitre.png">
+          </a>
+        </div> -->
+        <div class="text-center text-muted mb-4 mt-3" style="margin-bottom: 1vh !important;">
+          <small style="color:#ffffff;">Resync Wallet - <span id="SetupResyncWalletAddress"></span></small>
+          <br>
+          <small style="color:#ffffff;"><span id="SetupResyncWalletName"></span></small>
+          <br>
+          <i style="color: #639063;">Resyncs wallet by creating a brand new blockchain directory</i>
+        </div>
+
+
+        <div class="card-panel" style="padding-bottom: 0px;position: relative;top: 0vh;">
+
+          <div class="col-sm-12 col-lg-12">
+            <div class="form-group">
+              
+              <div style="margin-bottom: 1vh;">
+                <i style="color: rgb(121 121 120);">Enter Wallet password</i>
+                <br>
+                <input style="background-color: #141414;" id="SetupResyncPw" type="password" value="" placeholder="wallet password" class="form-control" />
+                <i class="far fa-eye" id="toggleResyncPassword" style="cursor: pointer;position: absolute;right: 2%;top: 5.3vh;color: #b5b5b5;"></i>
+              </div>
+
+              <div style="margin-top: 1.75vh;">
+                <i>2 options</i>
+                <br>
+                <i style="color:rgb(146 146 146);">a) Create a brand new empty blockchain directory. Make sure the new folder actually exists on your system</i>
+                <br>
+                <i style="color: rgb(121 121 120);">b) Or select a working Etica blockchain directory. Make sure it's an Etica blockchain directory that is successfully used with another wallet.</i>
+                <br>
+                <div style="display: inline-flex;width: 100%;">
+                <input title="Blockchain Directory. Where new Blockchain is stored" style="background-color: #141414;width: 93%;" id="setupresyncnewblockchain" type="text" value="" placeholder="Blockchain directory (Example D:\Etica\Blockchain)" class="form-control" />
+                <span id="SelectResyncblockchaindirectory" title="Select Directory (Where Blockchain is stored)" style="right: 9%;position: relative;"><img src="./assets/images/foldericon.png" alt height="22" style="width: 39px;height: 39px;position: relative;cursor:pointer;" /></span>
+                </div>
+              </div>
+
+              <i id="SetupResyncSettingsSuccess" style="color:#08e500;margin-left: 1%;"></i>
+              <i id="SetupResyncSettingsError" style="color:#e50000;margin-left: 1%;"></i>
+              <div id="SetupResyncBtns" class="row" style="margin-top: -1vh;margin-bottom: 0;width: 100%;">
+                <div class="input-field col s12" style="display: inline-flex;">
+                  <button class="btn btn-secondary" id="SetupResyncBackBtn" style="background: #363636;margin-left: 14%;margin-right: 1%;text-align: center;">Back</button> <button type="button" id="SetupResyncWalletSettingsBtn" class="btn btn-primary" style="margin-left: 4%;">Resync</button>
+                </div>
+              </div>
+              <div id="SetupResyncLoader" class="col-md-12" style="text-align:center;">
+                <div class="loader-middle">
+                  <div class="loader-bar loader-bar1"></div>
+                  <div class="loader-bar loader-bar2"></div>
+                  <div class="loader-bar loader-bar3"></div>
+                  <div class="loader-bar loader-bar4"></div>
+                  <div class="loader-bar loader-bar5"></div>
+                  <div class="loader-bar loader-bar6"></div>
+                  <div class="loader-bar loader-bar7"></div>
+                  <div class="loader-bar loader-bar8"></div>
                 </div>
               </div>
 

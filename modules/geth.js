@@ -256,6 +256,90 @@ class Geth {
     return _p;
   }
 
+
+  // New function created specifically for the new Resync system, don't stop the process if Geth already initialised to allow users to resync with blockchain folders already initialised:
+  initializeGethForResync(wallet, event) {
+    
+    const datadir = wallet.blockchaindirectory;
+    const nodekeyPath = `${datadir}/geth/nodekey`;
+
+    if (this.logGethEvents && wallet && !this.logStream) {
+      this.logStream = fs.createWriteStream(path.join(wallet.datadirectory, "gethlog.txt"), {flags: "a"});
+    }
+
+    if (fs.existsSync(nodekeyPath)) {
+       console.log('Since it is for resyncing with an existing initialised blockchain directory dont send error, keep going the process');
+       //EticaGeth._writeLog("Geth data directory has already been initialized, abort" + "\n");
+       event.sender.send('initializeGethResponse', 0);
+       return false;
+    } else {
+       console.log('Geth data directory has not been initialized, keep going');
+       EticaGeth._writeLog("Geth data directory has not been initialized, keep going" + "\n");
+    }
+
+    let genesisfile = '';
+    let _networkid = '';
+
+    if(wallet.type == 'mainnet'){
+      _networkid = '61803';
+      genesisfile = path.join(this.rootPath, "needs", "etica_genesis.json");
+    }
+    else if (wallet.networkid == 61888){
+      _networkid = wallet.networkid;
+      genesisfile = path.join(this.rootPath, "needs", "crucible_genesis.json");
+    }
+    else {
+      _networkid = wallet.networkid;
+      genesisfile = path.join(this.rootPath, "needs", "testnet_genesis.json");
+    }
+
+    try {
+      const gethPath = path.join(this.binaries, "geth");
+      EticaGeth._writeLog('initialising geth --datadir'+ datadir + "\n");
+      EticaGeth._writeLog('initialising geth --networkid'+ _networkid + "\n");
+      EticaGeth._writeLog('initialising geth genesisfile'+ genesisfile + "\n");
+
+      this.gethInitProcess = child_process.spawn(gethPath, [
+        "--datadir="+datadir+"",
+        "--networkid",
+        ""+_networkid+"",
+        "init",
+         ""+genesisfile+""
+      ]);
+
+      if (!this.gethInitProcess) {
+        dialog.showErrorBox("Error initialising Geth", "Geth to initialize this blockchain directory!");
+      } else {
+        this.gethInitProcess.on("error", function (err) {
+          console.log(`err: ${err}`);
+          EticaGeth._writeLog(`err initialising Geth: ${err}`);
+          dialog.showErrorBox("Error initialising Geth", "Geth error when attempts to initialize with this blockchain directory!", err);
+        });
+        this.gethInitProcess.stdout.on('data', (data) => {
+          console.log(`stdout: ${data}`);
+          EticaGeth._writeLog(`stdout initialising Geth: ${data}`);
+        });
+        this.gethInitProcess.stderr.on('data', (data) => {
+          console.error(`stderr: ${data}`);
+          EticaGeth._writeLog(`stderr initialising Geth: ${data}`);
+        });
+        this.gethInitProcess.on("close", function (code) {
+            console.log(`gethInitProcess closed with code ${code}`);
+            EticaGeth._writeLog(`gethInitProcess closed with code ${code}`);
+        });
+        this.gethInitProcess.on('exit', (code) => {
+          console.log(`gethInitProcess exited with code ${code}`);
+          EticaGeth._writeLog(`gethInitProcess closed with code ${code}`);
+          event.sender.send('initializeGethResponse', code);
+          // Do any necessary cleanup or data saving here
+        });
+      }
+    } catch (err) {
+      dialog.showErrorBox("Error initialising Geth", err.message);
+      EticaGeth._writeLog(`Error initialising Geth: ${err}`);
+    }
+  }
+
 }
 
 ipcMain.on("stopGeth", (event, arg) => {
@@ -268,6 +352,10 @@ ipcMain.on("startGeth", (event, arg) => {
 
 ipcMain.on("initializeGeth", (event, arg) => {
   EticaGeth.initializeGeth(arg, event);
+});
+
+ipcMain.on("initializeGethForResync", (event, arg) => {
+  EticaGeth.initializeGethForResync(arg, event);
 });
 
 ipcMain.on("getRunningWallet", (event, arg) => {
