@@ -571,7 +571,7 @@ function former_used_wallets.find_wallet_launchwallet(i){
 
     let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: address});
     if(_wallet){
-      checkpasswordthenresync(_wallet, pw);
+      resyncblockhain(address, pw);
     }
     else {
       $("#SetupResyncSettingsError").html('Wallet not found.');
@@ -604,120 +604,6 @@ function former_used_wallets.find_wallet_launchwallet(i){
   ipcRenderer.on("NewBlockchainFolderAssignedResyncSetup", (event, _folderpath) => {
     $("#setupresyncnewblockchain").val(_folderpath);
   });
-
-
-  // checks wallet password:
-  async function checkpasswordthenresync(_wallet, _pw){
-      
-    if(_wallet){
-      _wallet.pw = _pw;
-      ipcRenderer.send("setWalletDataDbPath", _wallet.datadirectory);
-      ipcRenderer.send("startGeth", _wallet);
-    }
-    else{
-      ipcRenderer.send("stopGeth", null);
-      $("#SetupResyncSettingsError").html('error wallet not found');
-      $("#SetupResyncLoader").css("display", "none");
-      $("#SetupResyncBtns").css("display", "inline-flex");
-      return false;
-    }
-  
-  
-  let stoploop = false;
-  let successconnect = false;
-  let restartGeth_counter = 1;
-      var InitWeb3 = setInterval(async function () {
-        try {
-  
-          let _provider = new Web3.providers.WebsocketProvider("ws://localhost:8551");
-          web3Local = new Web3(_provider);
-  
-          web3Local.eth.net.isListening(async function (error, success) {
-            //Geth is ready
-            if (!error) {
-              clearInterval(InitWeb3);
-  
-              if(!stoploop){
-                stoploop == true;
-                let _address = _wallet.masteraddress;
-                await web3Local.eth.personal.unlockAccount(_address, _pw, function (error, result) { 
-                  if (error) {
-                    if (error.message.includes("could not decrypt")) {
-                      ipcRenderer.send("stopGeth", null);
-                      $("#SetupResyncSettingsError").html('wrong password I');
-                      $("#SetupResyncLoader").css("display", "none");
-                      $("#SetupResyncBtns").css("display", "inline-flex");
-                      console.error("Error unlocking account:", error);
-                      return false;
-                    } else if(error.message.includes("no key for given address or file")){
-
-                      $("#SetupResyncSettingsError").html('No keystore registered for this wallet address. Cannot resync, need to Import as new wallet instead.');
-                      $("#SetupResyncLoader").css("display", "none");
-                      $("#SetupResyncBtns").css("display", "inline-flex");
-                      console.error("Error unlocking account:", error);
-                      if(!successconnect){
-                        ipcRenderer.send("stopGeth", null);
-                      }
-                      return false;
-                    }
-                    else {
-                      // Handle other errors here
-                      $("#SetupResyncSettingsError").html('error starting the new node');
-                      $("#SetupResyncLoader").css("display", "none");
-                      $("#SetupResyncBtns").css("display", "inline-flex");
-                      console.error("Error unlocking account:", error);
-                      if(!successconnect){
-                        ipcRenderer.send("stopGeth", null);
-                      }
-                      return false;
-                    }
-                  }
-                });
-  
-                let isunlocked = await EticaBlockchain.isUnlocked(_address);
-  
-                if(isunlocked == 'unlocked'){
-                  successconnect = true; // avoid late call to stopGeth by web3Local.eth.personal.unlockAccount() error because could get wallet stuck if called after last startgeth
-                  
-                  // stop geth before launching wallet:
-                  web3Local.currentProvider.connection.close();
-                  ipcRenderer.send("stopGeth", null);
-                  resyncblockhain(_address, _pw);
-
-                }
-  
-                else {
-                  //console.log('wallet not unlocked');
-                  //ipcResult = ipcRenderer.send("stopGeth", null);
-                  //$("#SetupConnectError").html('wallet not unlocked yet');
-                  return false;
-                }
-  
-              }
-  
-            } else{
-              console.log('web3Local.eth.net.isListening() error is:', error);
-              restartGeth_counter = restartGeth_counter + 1;
-              // InitWeb3 = setInterval() is called every 2 secs
-              // so restartGeth() will be called every 12 seconds
-              // every 12 seconds if failing to connect to wsport we restart Geth:
-              if( (restartGeth_counter % 6 === 0) && !stoploop){
-                restartGeth(_wallet, restartGeth_counter);
-              }
-              
-            }
-          });
-        } catch (err) {
-          ipcRenderer.send("stopGeth", null);
-          clearInterval(InitWeb3);
-          $("#SetupResyncSettingsError").html(err);
-          $("#SetupResyncLoader").css("display", "none");
-          $("#SetupResyncBtns").css("display", "inline-flex");
-        }
-      }, 2000);
-  
-  
-  }
 
 
   function resyncblockhain(_address, _pw){
