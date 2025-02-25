@@ -26,7 +26,7 @@ INSTALL FROM SOURCE CODE:
 Windows
 ```bash
 # Clone this repository
-git clone https://github.com/etica/etica-gui.git`
+git clone https://github.com/etica/etica-gui.git
 # Go into the repository
 cd etica-gui/
 # Install dependencies
