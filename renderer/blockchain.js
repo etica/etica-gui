@@ -46,6 +46,45 @@ class Blockchain {
     });
   }
 
+  /**
+   * Get past events for a range of blocks (batch fetching).
+   * Returns a Promise for easier async/await usage.
+   * @param {number} fromBlock - Start block number
+   * @param {number} toBlock - End block number
+   * @returns {Promise<Array>} - Array of events
+   */
+  getPastEventsForRange(fromBlock, toBlock) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
+    let contract = new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    return contract.getPastEvents('allEvents', {
+      fromBlock: fromBlock,
+      toBlock: toBlock
+    });
+  }
+
+  /**
+   * Fetch multiple blocks in parallel.
+   * @param {Array<number>} blockNumbers - Array of block numbers to fetch
+   * @param {boolean} includeData - Whether to include full transaction data
+   * @returns {Promise<Array>} - Array of block objects (in same order as input)
+   */
+  async getBlocksParallel(blockNumbers, includeData) {
+    const promises = blockNumbers.map(blockNum =>
+      web3Local.eth.getBlock(blockNum, includeData)
+    );
+    return Promise.all(promises);
+  }
+
+  /**
+   * Fetch a single block as a Promise (for easier async/await).
+   * @param {number} blockNumber - Block number to fetch
+   * @param {boolean} includeData - Whether to include full transaction data
+   * @returns {Promise<Object>} - Block object
+   */
+  getBlockAsync(blockNumber, includeData) {
+    return web3Local.eth.getBlock(blockNumber, includeData);
+  }
+
   getAccounts(clbError, clbSuccess) {
     web3Local.eth.getAccounts(function (err, res) {
       if (err) {
