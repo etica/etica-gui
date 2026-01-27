@@ -153,14 +153,29 @@ class Transactions {
   async syncTransactionsBatch(addressList, fromBlock, toBlock, parallelBlockFetch = 10) {
     let addressListlowercase = addressList.map(element => element.toLowerCase());
 
+    // Helper to check if error is a connection/timeout issue
+    const isConnectionError = (error) => {
+      if (!error) return false;
+      const errorMsg = error.message || error.toString();
+      return errorMsg.includes('timed out') ||
+             errorMsg.includes('connection') ||
+             errorMsg.includes('CONNECTION') ||
+             errorMsg.includes('ECONNREFUSED') ||
+             errorMsg.includes('WebSocket');
+    };
+
     try {
       // Fetch all events for the block range at once
       let allEvents = [];
       try {
         allEvents = await EticaBlockchain.getPastEventsForRange(fromBlock, toBlock);
       } catch (eventError) {
+        // If it's a connection error, throw it up to trigger recovery
+        if (isConnectionError(eventError)) {
+          throw eventError;
+        }
         console.log('Batch event fetch failed, falling back to block-by-block:', eventError);
-        // Fallback to original method if batch fetch fails
+        // Fallback to original method if batch fetch fails (non-connection error)
         for (let blocknb = fromBlock; blocknb <= toBlock; blocknb++) {
           await this.syncTransactionsofWalletAddresses(addressList, blocknb, toBlock);
         }
@@ -176,6 +191,9 @@ class Transactions {
         }
         eventsByBlock.get(blockNum).push(event);
       }
+
+      // Debug logging
+      console.log('[syncTransactionsBatch] Blocks:', fromBlock, '-', toBlock, '| Events found:', allEvents.length, '| Blocks with events:', eventsByBlock.size);
 
       // Fetch blocks in parallel batches
       const blockNumbers = [];
@@ -206,7 +224,11 @@ class Transactions {
       return 'done';
     } catch (error) {
       console.log('syncTransactionsBatch error:', error);
-      // Fallback to original sequential processing
+      // If it's a connection error, throw it up to trigger recovery at ScanTxs level
+      if (isConnectionError(error)) {
+        throw error;
+      }
+      // Fallback to original sequential processing for non-connection errors
       for (let blocknb = fromBlock; blocknb <= toBlock; blocknb++) {
         await this.syncTransactionsofWalletAddresses(addressList, blocknb, toBlock);
       }
@@ -1482,143 +1504,269 @@ class Transactions {
 
   async ScanTxs(maincounter, lastBlock, batchSize) {
 
-    SyncProgress.setText("Scanning wallet transactions");
+    // Prevent multiple simultaneous scans
+    if (EticaTransactions.getIsSyncing()) {
+      console.log('[ScanTxs] BLOCKED - scan already in progress');
+      return;
+    }
+
+    console.log('[ScanTxs] START - initialBlock:', maincounter.block, 'lastBlock:', lastBlock, 'batchSize:', batchSize);
+
     // sync all the transactions to the current block
     EticaTransactions.setIsSyncing(true);
     // make sure ETICA_ADDRESS is loaded in smartcontract.js and blockchain.js
     EticaTransactions.setEticaContractAddress();
     let startBlock = maincounter.block;
-    let data = await EticaBlockchain.getAccounts_nocallback();
-
-    var timePerBatch = 100;
-    var estimatedTimeMs = ((lastBlock - maincounter.block) / batchSize) * timePerBatch;
-    var estimatedTimeMinutes = (estimatedTimeMs / 60000).toFixed(2);
+    let data;
+    try {
+      data = await EticaBlockchain.getAccounts_nocallback();
+    } catch (accountsError) {
+      console.log('[ScanTxs] Failed to get accounts, connection may be lost:', accountsError);
+      EticaTransactions.setIsSyncing(false);
+      SyncProgress.setText("Connection error. Restarting...");
+      setTimeout(() => {
+        window.location.replace('./coolingscanning.html');
+      }, 1000);
+      return;
+    }
 
     const parallelBlockFetch = 10;
+    const initialBlock = maincounter.block;
+    const scanStartTime = Date.now();
+    var lastEstimateTime = 0;
+    var cachedEstimateMinutes = null; // Store calculated estimate to avoid flickering
+    const ESTIMATE_INTERVAL_MS = 30000; // Show estimated time every 30 seconds
+    const ESTIMATE_DISPLAY_MS = 5000; // Show estimate for 5 seconds
+    var batchCount = 0;
+    var stopScanning = false;
+    var batchInProgress = false; // Guard against overlapping batches (defensive)
+    var lastEstimateBlock = initialBlock; // Track block at last estimate for rolling speed calculation
+    var lastEstimateTimestamp = scanStartTime;
 
-    var scanTxsInterval = setInterval(async function () {
-    let nextBatchLimit = startBlock + batchSize;
-    var maxBlock = Math.min(nextBatchLimit, lastBlock);
+    // Show initial progress immediately
+    SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (0%%)", [
+      startBlock,
+      lastBlock
+    ]));
 
-              try {
-                await EticaTransactions.syncTransactionsBatch(data, startBlock, maxBlock, parallelBlockFetch);
-              } catch (batchError) {
-                console.log('Batch processing failed, falling back to sequential:', batchError);
-                // Fallback to original method if batch fails
-                for(var blocknb=startBlock; blocknb <= maxBlock; blocknb++){
-                  await EticaTransactions.syncTransactionsofWalletAddresses(data, blocknb, maxBlock);
-                }
-              }
+    // Use sequential processing instead of setInterval to avoid race conditions
+    async function processNextBatch() {
+      if (stopScanning) return;
 
-              // Update counter and progress
-              maincounter.block = maxBlock;
-              ipcRenderer.send("updateCounter", maincounter);
-              startBlock = maxBlock + 1;
+      // Defensive guard - should not happen with sequential processing but kept for safety
+      if (batchInProgress) {
+        console.log('[ScanTxs] SKIPPED - previous batch still in progress (unexpected)');
+        setTimeout(processNextBatch, 100);
+        return;
+      }
+      batchInProgress = true;
 
-              // Update progress display
-              if((maxBlock % 10000 === 0) || ((maxBlock - 1) % 10000 === 0)){
-                estimatedTimeMs = ((lastBlock - maxBlock) / batchSize) * timePerBatch;
-                estimatedTimeMinutes = (estimatedTimeMs / 60000).toFixed(2);
-                SyncProgress.setText(vsprintf("Estimated scanning time remaining %d minutes. Ready to send transactions...", [
-                  estimatedTimeMinutes
-                ]));
-              }
-              else if((maxBlock % 1000 === 0) || (maxBlock % batchSize === 0)){
-                SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (%d%%). Ready to send transactions...", [
-                  maxBlock,
-                  lastBlock,
-                  Math.floor(maxBlock / lastBlock * 100)
-                ]));
-              }
+      batchCount++;
+      let nextBatchLimit = startBlock + batchSize;
+      var maxBlock = Math.min(nextBatchLimit, lastBlock);
 
-                  if(maxBlock >= lastBlock){
+      // Debug logging - log every 10 batches to track progress
+      var batchStartTime = Date.now();
+      if (batchCount % 10 === 0) {
+        console.log('[ScanTxs] Batch #' + batchCount + ' - processing blocks ' + startBlock + ' to ' + maxBlock);
+      }
 
-                     EticaTransactions.setIsSyncing(false);
-                     maincounter.block = maxBlock;
-                     ipcRenderer.send("updateCounter", maincounter);
-                     // signal that the sync is complete
-                     $(document).trigger("onSyncComplete");
-                     SyncProgress.setText("Scanning transactions is complete.");
+      try {
+        await EticaTransactions.syncTransactionsBatch(data, startBlock, maxBlock, parallelBlockFetch);
+        // Log batch completion time every 10 batches
+        if (batchCount % 10 === 0) {
+          var batchDuration = Date.now() - batchStartTime;
+          console.log('[ScanTxs] Batch #' + batchCount + ' completed in ' + batchDuration + 'ms');
+        }
+      } catch (batchError) {
+        const errorMsg = batchError.message || batchError.toString();
+        const isConnectionError = errorMsg.includes('timed out') ||
+                                  errorMsg.includes('connection') ||
+                                  errorMsg.includes('CONNECTION') ||
+                                  errorMsg.includes('ECONNREFUSED') ||
+                                  errorMsg.includes('WebSocket');
 
-                    const currentPageURL = window.location.href;
-                    const url_parts = currentPageURL.split('/');
-                    const currentPageName = url_parts[url_parts.length - 1];
+        if (isConnectionError) {
+          console.log('[ScanTxs] Connection error detected, triggering recovery:', errorMsg);
+          // Stop scanning and trigger recovery
+          stopScanning = true;
+          batchInProgress = false;
+          if (checkJSHeapInterval) {
+            clearInterval(checkJSHeapInterval);
+          }
+          EticaTransactions.setIsSyncing(false);
 
-                    // If was on scanning.html redirect to index.html once scanning long txs done.
-                    //If user clicked on menu to navigate to other screens like "search screen/page" then Current page will be index.html#
-                    // If user stayed on home page Current page will be index.html
-                    if(currentPageName != 'index.html' && currentPageName != 'index.html#'){
-                           var _wallet = ipcRenderer.sendSync("getRunningWallet");
-                           ipcRenderer.send("stopGeth", null);
+          // Save progress before redirecting
+          maincounter.block = startBlock;
+          ipcRenderer.send("updateCounter", maincounter);
 
-                           // need to close existing connection otherwise fails to suscribe to syncing again:
-                           if(web3Local && web3Local.currentProvider){
-                            web3Local.currentProvider.connection.close();
-                          }
+          // Show error and redirect to cooling page to trigger Geth restart
+          SyncProgress.setText("Connection lost. Restarting...");
+          if (web3Local && web3Local.currentProvider) {
+            try {
+              web3Local.currentProvider.connection.close();
+            } catch (e) {
+              // Ignore close errors
+            }
+          }
+          // Redirect to cooling/scanning page which will restart Geth
+          setTimeout(() => {
+            window.location.replace('./coolingscanning.html');
+          }, 1000);
+          return;
+        }
 
-                           // wait 600 ms before calling startGeth
-                           setTimeout(() => {
-                           ipcRenderer.send("startGeth", _wallet);
-                           window.location.replace('./index.html');
-                           }, 600);
+        console.log('[ScanTxs] Batch processing failed, falling back to sequential:', batchError);
+        // Fallback to original method if batch fails (non-connection error)
+        try {
+          for (var blocknb = startBlock; blocknb <= maxBlock; blocknb++) {
+            await EticaTransactions.syncTransactionsofWalletAddresses(data, blocknb, maxBlock);
+          }
+        } catch (fallbackError) {
+          console.log('[ScanTxs] Fallback also failed:', fallbackError);
+          // If fallback also fails, continue to next batch
+        }
+      }
 
-                      }
-                      // --- if on good page, check heap usage ratio and reload page if heap usage too high --- //
-                    else {
-                        const heapStats = EticaTransactions.getHeapStatistics();
-                        const MaxHeapSizePercentage = 0.55; // Heap max allowed size is 55% of heapStats.total_available_size
-                        const limitReference = heapStats.total_available_size * MaxHeapSizePercentage;
+      // Update counter and progress
+      maincounter.block = maxBlock;
+      ipcRenderer.send("updateCounter", maincounter);
+      startBlock = maxBlock + 1;
 
-                        if((heapStats.total_physical_size >= limitReference) || (heapStats.total_heap_size >= limitReference)){
+      // Update progress display every batch
+      var progressPercent = Math.floor(maxBlock / lastBlock * 100);
+      var currentTime = Date.now();
+      var timeSinceLastEstimate = currentTime - lastEstimateTime;
 
-                          // reload page if heap too high (if heap size reaches at least 70% percent of available size):
-                          var _wallet = ipcRenderer.sendSync("getRunningWallet");
-                           ipcRenderer.send("stopGeth", null);
-                           // need to close existing connection otherwise fails to suscribe to syncing again:
-                           if(web3Local && web3Local.currentProvider){
-                            web3Local.currentProvider.connection.close();
-                          }
+      // Every 30 seconds, calculate and show estimated time for 5 seconds
+      // But only after 2 minutes of scanning (to get stable average speed)
+      var elapsedSinceStart = currentTime - scanStartTime;
+      var MIN_TIME_BEFORE_ESTIMATE = 120000; // 2 minutes
 
-                           // wait 600 ms before calling startGeth
-                           setTimeout(() => {
-                           ipcRenderer.send("startGeth", _wallet);
-                           //ipcRenderer.send("SetReloadWindowsOn");
-                           window.location.replace('./cooling.html');
-                           }, 600);
+      if (timeSinceLastEstimate >= ESTIMATE_INTERVAL_MS && elapsedSinceStart >= MIN_TIME_BEFORE_ESTIMATE) {
+        // Calculate estimate once when entering the display window
+        if (cachedEstimateMinutes === null) {
+          var elapsedMs = currentTime - scanStartTime;
+          var blocksScanned = maxBlock - initialBlock;
+          if (blocksScanned > 0) {
+            var msPerBlock = elapsedMs / blocksScanned;
+            var blocksRemaining = lastBlock - maxBlock;
+            cachedEstimateMinutes = Math.round((blocksRemaining * msPerBlock) / 60000);
+          }
+        }
 
-                        }
-                      }
-                      // --- if on good page, check heap usage ratio and reload page if heap usage too high --- //
+        // Show cached estimate for 5 seconds
+        if (timeSinceLastEstimate < ESTIMATE_INTERVAL_MS + ESTIMATE_DISPLAY_MS && cachedEstimateMinutes !== null) {
+          // Format time in human-friendly way
+          var estimateText;
+          if (cachedEstimateMinutes >= 60) {
+            var hours = Math.floor(cachedEstimateMinutes / 60);
+            var mins = cachedEstimateMinutes % 60;
+            estimateText = hours + "h " + mins + "min";
+          } else {
+            estimateText = cachedEstimateMinutes + " minutes";
+          }
+          SyncProgress.setText("Estimated time remaining: " + estimateText);
+        } else {
+          // Reset timer and clear cache after 5 seconds
+          lastEstimateTime = currentTime;
+          cachedEstimateMinutes = null;
+          SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (%d%%)", [
+            maxBlock,
+            lastBlock,
+            progressPercent
+          ]));
+        }
+      } else {
+        // Show block progress
+        SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (%d%%)", [
+          maxBlock,
+          lastBlock,
+          progressPercent
+        ]));
+      }
 
-                      if (scanTxsInterval) {
-                        clearInterval(scanTxsInterval);
-                     }
+      batchInProgress = false; // Release the lock
 
-                     if (checkJSHeapInterval) {
-                      clearInterval(checkJSHeapInterval);
-                     }
+      // Check if scanning is complete
+      if (maxBlock >= lastBlock) {
+        console.log('[ScanTxs] COMPLETE - Total batches:', batchCount, 'Final block:', maxBlock);
+        stopScanning = true;
+        if (checkJSHeapInterval) {
+          clearInterval(checkJSHeapInterval);
+        }
+        EticaTransactions.setIsSyncing(false);
+        maincounter.block = maxBlock;
+        ipcRenderer.send("updateCounter", maincounter);
+        // signal that the sync is complete
+        $(document).trigger("onSyncComplete");
+        SyncProgress.setText("Scanning transactions is complete.");
 
-                  }
+        const currentPageURL = window.location.href;
+        const url_parts = currentPageURL.split('/');
+        const currentPageName = url_parts[url_parts.length - 1];
 
-  }, timePerBatch);
+        // If was on scanning.html redirect to index.html once scanning long txs done.
+        if (currentPageName != 'index.html' && currentPageName != 'index.html#') {
+          var _wallet = ipcRenderer.sendSync("getRunningWallet");
+          ipcRenderer.send("stopGeth", null);
+
+          if (web3Local && web3Local.currentProvider) {
+            web3Local.currentProvider.connection.close();
+          }
+
+          setTimeout(() => {
+            ipcRenderer.send("startGeth", _wallet);
+            window.location.replace('./index.html');
+          }, 600);
+
+        } else {
+          // Check heap usage and reload if too high
+          const heapStats = EticaTransactions.getHeapStatistics();
+          const MaxHeapSizePercentage = 0.55;
+          const limitReference = heapStats.total_available_size * MaxHeapSizePercentage;
+
+          if ((heapStats.total_physical_size >= limitReference) || (heapStats.total_heap_size >= limitReference)) {
+            var _wallet = ipcRenderer.sendSync("getRunningWallet");
+            ipcRenderer.send("stopGeth", null);
+
+            if (web3Local && web3Local.currentProvider) {
+              web3Local.currentProvider.connection.close();
+            }
+
+            setTimeout(() => {
+              ipcRenderer.send("startGeth", _wallet);
+              window.location.replace('./cooling.html');
+            }, 600);
+          }
+        }
+        return; // Stop processing
+      }
+
+      // Schedule next batch (use setTimeout to allow UI to update)
+      setTimeout(processNextBatch, 10);
+    }
+
+    // Start processing
+    processNextBatch();
 
 
 
   var checkJSHeapInterval = setInterval(function () {
     const MaxHeapSizePercentage = 0.70; // Heap max allowed size is 70% of heapStats.total_available_size
     const heapStats = EticaTransactions.getHeapStatistics();
-    //console.log(heapStats);
     const limitReference = heapStats.total_available_size * MaxHeapSizePercentage;
 
-    //console.log('Current total_physical_size heap usage limit: ', (heapStats.total_physical_size / limitReference) * 100, '%');
-    //console.log('Current total_heap_size heap usage limit: ', (heapStats.total_heap_size / limitReference) * 100, '%');
+    // Log heap usage every check
+    const physicalPercent = Math.round((heapStats.total_physical_size / heapStats.total_available_size) * 100);
+    const heapPercent = Math.round((heapStats.total_heap_size / heapStats.total_available_size) * 100);
+    console.log('[Heap] Physical:', physicalPercent + '%', '| Heap:', heapPercent + '%', '| Limit:', Math.round(MaxHeapSizePercentage * 100) + '%');
 
     if( (heapStats.total_physical_size >= limitReference) || (heapStats.total_heap_size >= limitReference)){
-
+      console.log('[Heap] LIMIT EXCEEDED - triggering cooling page');
       const currentPageURL = window.location.href;
       const url_parts = currentPageURL.split('/');
       const currentPageName = url_parts[url_parts.length - 1];
-      //console.log('currentPage', currentPageName);
 
       if(web3Local && web3Local.currentProvider){
         web3Local.currentProvider.connection.close();

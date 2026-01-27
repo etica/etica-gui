@@ -373,7 +373,9 @@ $("#mnemonicword24").html(reorderedWords[23]);
     
     $("#ImportWalletStartLoader").css("display", "block");
     $("#ImportWalletStartBtns").css("display", "none");
-    
+    $("#ImportConnectionStatusContainer").css("display", "block");
+    $("#ImportConnectionStatus").html("Initializing Geth node...");
+
     NewWallet.name = $("#importwalletname").val();
     NewWallet.type = $("input[name='importwallettype']:checked").val();
     NewWallet.masteraddress = address;
@@ -405,6 +407,7 @@ $("#mnemonicword24").html(reorderedWords[23]);
       console.error("Error creating directory:", err);
       $("#ImportWalletStartLoader").css("display", "none");
       $("#ImportWalletStartBtns").css("display", "inline-flex");
+      $("#ImportConnectionStatusContainer").css("display", "none");
       EticaMainGUI.showGeneralErrorNewWallet("Error while creating directory. Please create directory and try again. Directory: ", NewWallet.blockchaindirectory);
     }
 
@@ -485,11 +488,12 @@ NewWallet.vector = iv.toString('hex');
     if (!ipcRenderer.listenerCount("initializeGethResponse")) {
       ipcRenderer.on("initializeGethResponse", (event, code) => {
        // console.log('code response is', code);
+        $("#ImportConnectionStatus").html("Starting Geth node...");
         _wallet.pw = pw;
         ipcRenderer.send("startGeth", _wallet);
         _wallet.pw = '';
         InitializeWeb3toImportAccount(_wallet, nb_newaddreses);
-      }); 
+      });
     }
 
   };
@@ -517,9 +521,54 @@ NewWallet.vector = iv.toString('hex');
   });
 
 
+  // Store address count for retry functionality (wallet is fetched fresh from DB using address)
+  let pendingImportAddressCount = 0;
+
   function InitializeWeb3toImportAccount(_wallet, _nb_newaddreses) {
     let stoploop = false;
+    let connectionAttempts = 0;
+    const MAX_CONNECTION_ATTEMPTS = 60; // 60 attempts * 2 seconds = 2 minutes max
+
+    // Store address count for potential retry (wallet will be fetched fresh from DB)
+    pendingImportAddressCount = _nb_newaddreses;
+
+    // Update connection status UI
+    function updateConnectionStatus(message, isError = false) {
+      if ($("#ImportConnectionStatus").length) {
+        $("#ImportConnectionStatus").html(message);
+        $("#ImportConnectionStatus").css('color', isError ? '#ff6b6b' : '#aaffaa');
+      }
+    }
+
+    // Show connection timeout error with enode retry option
+    function showConnectionTimeoutError() {
+      stoploop = true;
+      clearInterval(InitWeb3);
+      ipcRenderer.send("stopGeth", null);
+
+      $("#ImportWalletStartLoader").css("display", "none");
+      $("#ImportConnectionStatusContainer").css("display", "none");
+
+      // Show enode retry UI instead of just an error
+      $("#ImportEnodeRetryContainer").css("display", "block");
+      $("#ImportEnodeError").css("display", "none");
+
+      // Pre-fill with current enode for reference
+      $("#ImportAlternativeEnode").val(_wallet.enode);
+    }
+
     var InitWeb3 = setInterval(async function () {
+      connectionAttempts++;
+
+      // Update status with attempt count
+      updateConnectionStatus(`Connecting to Etica network... (attempt ${connectionAttempts}/${MAX_CONNECTION_ATTEMPTS})`);
+
+      // Check for timeout
+      if (connectionAttempts >= MAX_CONNECTION_ATTEMPTS) {
+        showConnectionTimeoutError();
+        return;
+      }
+
       try {
 
         let _provider = new Web3.providers.WebsocketProvider("ws://localhost:8551");
@@ -531,7 +580,8 @@ NewWallet.vector = iv.toString('hex');
             clearInterval(InitWeb3);
 
             if(!stoploop){
-              stoploop == true;
+              stoploop = true;
+              updateConnectionStatus("Connected! Importing wallet addresses...");
               let creation_success = false; // var updated to true only if first addrees created successfully
 
               const hdwallet = hdkey.fromMasterSeed(Buffer.from(masterSeed, 'hex'));
@@ -614,25 +664,86 @@ NewWallet.vector = iv.toString('hex');
                 }
                 else {
 
-                    console.log('Error importing private key', error);
-                    console.log('account', i,'already exists');
+                    console.log('Error importing addresses. Success count:', newAddresses.length, 'Expected:', _nb_newaddreses, 'Errors:', newAddressesErrors.length);
                     ipcRenderer.send("stopGeth", null);
                     $("#ImportWalletStartLoader").css("display", "none");
                     $("#ImportWalletStartBtns").css("display", "inline-flex");
-                  
+                    $("#ImportConnectionStatusContainer").css("display", "none");
+                    EticaMainGUI.showGeneralErrorImportWallet("Error importing wallet addresses. Please try again.");
+
                 }
             }
           }
         });
       } catch (err) {
-        //EticaMainGUI.showGeneralErrorImportWallet(err);
-        console.log('Import seed InitializeWeb3toImportAccount try error: ', err);
-        $("#ImportWalletStartLoader").css("display", "none");
-        $("#ImportWalletStartBtns").css("display", "inline-flex");
+        // Connection attempt failed, will retry on next interval
+        console.log('Import seed connection attempt failed: ', err.message || err);
+        updateConnectionStatus(`Connection attempt ${connectionAttempts} failed, retrying...`, true);
       }
     }, 2000);
-    
+
     }
+
+  // Retry connection with alternative enode
+  $("#ImportRetryWithEnode").off("click").on("click", function () {
+    let newEnode = $("#ImportAlternativeEnode").val().trim();
+
+    // Validate enode format
+    if (!newEnode || !newEnode.startsWith("enode://")) {
+      $("#ImportEnodeError").html("Invalid enode format. Must start with enode://");
+      $("#ImportEnodeError").css("display", "block");
+      return;
+    }
+
+    // address is derived from the seed - it's our single source of truth
+    if (!address) {
+      $("#ImportEnodeError").html("Error: No wallet address found. Please start over.");
+      $("#ImportEnodeError").css("display", "block");
+      return;
+    }
+
+    // Fetch wallet fresh from DB using the seed-derived address (single source of truth)
+    let _wallet = ipcRenderer.sendSync("getWallet", {masteraddress: address});
+
+    if (!_wallet) {
+      $("#ImportEnodeError").html("Error: Could not find wallet data. Please start over.");
+      $("#ImportEnodeError").css("display", "block");
+      return;
+    }
+
+    // Hide retry UI, show loader
+    $("#ImportEnodeRetryContainer").css("display", "none");
+    $("#ImportWalletStartLoader").css("display", "block");
+    $("#ImportConnectionStatusContainer").css("display", "block");
+    $("#ImportConnectionStatus").html("Stopping current connection...");
+
+    // Update wallet enode
+    _wallet.enode = newEnode;
+
+    // Update stored wallet with new enode
+    ipcRenderer.send("storeWallet", _wallet);
+
+    // Stop existing Geth first, then restart with new enode
+    ipcRenderer.send("stopGeth", null);
+
+    // Wait a moment for Geth to stop, then restart
+    setTimeout(function() {
+      $("#ImportConnectionStatus").html("Starting with new enode...");
+      _wallet.pw = pw;
+      ipcRenderer.send("startGeth", _wallet);
+      _wallet.pw = '';
+
+      // Restart connection process
+      InitializeWeb3toImportAccount(_wallet, pendingImportAddressCount);
+    }, 2000);
+  });
+
+  // Cancel retry and go back to form
+  $("#ImportCancelRetry").off("click").on("click", function () {
+    $("#ImportEnodeRetryContainer").css("display", "none");
+    $("#ImportWalletStartBtns").css("display", "inline-flex");
+    pendingImportAddressCount = 0;
+  });
 
 
         // ASSIGN FOLDERS TO NEW WALLET //

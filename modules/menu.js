@@ -1,6 +1,6 @@
 const {app, Menu, ipcMain, shell} = require("electron");
 
-/*
+
 const template = [
   {
     label: "File",
@@ -99,9 +99,9 @@ const template = [
     ]
   }
 ];
-*/
 
-const template = [];
+
+//const template = [];
 
 if (process.platform === "darwin") {
   const name = app.getName();

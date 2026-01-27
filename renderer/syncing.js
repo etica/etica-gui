@@ -139,6 +139,10 @@ function StartSyncProcess() {
       console.log('error suscribe sync', error);
     }
   }).on("data", function (sync) {
+    // Skip blockchain sync progress updates if transaction scanning is active
+    if (EticaTransactions && EticaTransactions.getIsSyncing()) {
+      return;
+    }
     if (sync && sync.HighestBlock > 0) {
       SyncProgress.animate(sync.CurrentBlock / sync.HighestBlock);
       SyncProgress.setText(vsprintf("%d/%d (%d%%)", [
@@ -150,6 +154,10 @@ function StartSyncProcess() {
   }).on("changed", function (isSyncing) {
     if (isSyncing) {
       nodeSyncInterval = setInterval(function () {
+        // Skip blockchain sync progress updates if transaction scanning is active
+        if (EticaTransactions && EticaTransactions.getIsSyncing()) {
+          return;
+        }
         web3Local.eth.isSyncing(function (error, sync) {
           if (!error && sync) {
             SyncProgress.animate(sync.currentBlock / sync.highestBlock);
