@@ -192,8 +192,8 @@ class Transactions {
         eventsByBlock.get(blockNum).push(event);
       }
 
-      // Debug logging
-      console.log('[syncTransactionsBatch] Blocks:', fromBlock, '-', toBlock, '| Events found:', allEvents.length, '| Blocks with events:', eventsByBlock.size);
+      // Debug logging (uncomment for troubleshooting)
+      // console.log('[syncTransactionsBatch] Blocks:', fromBlock, '-', toBlock, '| Events found:', allEvents.length, '| Blocks with events:', eventsByBlock.size);
 
       // Fetch blocks in parallel batches
       const blockNumbers = [];
@@ -1565,19 +1565,19 @@ class Transactions {
       let nextBatchLimit = startBlock + batchSize;
       var maxBlock = Math.min(nextBatchLimit, lastBlock);
 
-      // Debug logging - log every 10 batches to track progress
-      var batchStartTime = Date.now();
-      if (batchCount % 10 === 0) {
-        console.log('[ScanTxs] Batch #' + batchCount + ' - processing blocks ' + startBlock + ' to ' + maxBlock);
-      }
+      // Debug logging - uncomment for troubleshooting
+      // var batchStartTime = Date.now();
+      // if (batchCount % 10 === 0) {
+      //   console.log('[ScanTxs] Batch #' + batchCount + ' - processing blocks ' + startBlock + ' to ' + maxBlock);
+      // }
 
       try {
         await EticaTransactions.syncTransactionsBatch(data, startBlock, maxBlock, parallelBlockFetch);
-        // Log batch completion time every 10 batches
-        if (batchCount % 10 === 0) {
-          var batchDuration = Date.now() - batchStartTime;
-          console.log('[ScanTxs] Batch #' + batchCount + ' completed in ' + batchDuration + 'ms');
-        }
+        // Debug logging - uncomment for troubleshooting
+        // if (batchCount % 10 === 0) {
+        //   var batchDuration = Date.now() - batchStartTime;
+        //   console.log('[ScanTxs] Batch #' + batchCount + ' completed in ' + batchDuration + 'ms');
+        // }
       } catch (batchError) {
         const errorMsg = batchError.message || batchError.toString();
         const isConnectionError = errorMsg.includes('timed out') ||
@@ -1757,13 +1757,13 @@ class Transactions {
     const heapStats = EticaTransactions.getHeapStatistics();
     const limitReference = heapStats.total_available_size * MaxHeapSizePercentage;
 
-    // Log heap usage every check
-    const physicalPercent = Math.round((heapStats.total_physical_size / heapStats.total_available_size) * 100);
-    const heapPercent = Math.round((heapStats.total_heap_size / heapStats.total_available_size) * 100);
-    console.log('[Heap] Physical:', physicalPercent + '%', '| Heap:', heapPercent + '%', '| Limit:', Math.round(MaxHeapSizePercentage * 100) + '%');
+    // Debug logging - uncomment for troubleshooting
+    // const physicalPercent = Math.round((heapStats.total_physical_size / heapStats.total_available_size) * 100);
+    // const heapPercent = Math.round((heapStats.total_heap_size / heapStats.total_available_size) * 100);
+    // console.log('[Heap] Physical:', physicalPercent + '%', '| Heap:', heapPercent + '%', '| Limit:', Math.round(MaxHeapSizePercentage * 100) + '%');
 
     if( (heapStats.total_physical_size >= limitReference) || (heapStats.total_heap_size >= limitReference)){
-      console.log('[Heap] LIMIT EXCEEDED - triggering cooling page');
+      // console.log('[Heap] LIMIT EXCEEDED - triggering cooling page');
       const currentPageURL = window.location.href;
       const url_parts = currentPageURL.split('/');
       const currentPageName = url_parts[url_parts.length - 1];

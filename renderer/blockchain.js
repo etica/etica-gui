@@ -22,7 +22,7 @@ class Blockchain {
   withTimeout(promise, timeoutMs, operationName = 'Operation') {
     return new Promise((resolve, reject) => {
       const timeoutId = setTimeout(() => {
-        console.log('[Blockchain] TIMEOUT:', operationName, 'after', timeoutMs + 'ms');
+        // console.log('[Blockchain] TIMEOUT:', operationName, 'after', timeoutMs + 'ms');
         reject(new Error(`${operationName} timed out after ${timeoutMs}ms - Geth connection may be lost`));
       }, timeoutMs);
 
@@ -33,7 +33,7 @@ class Blockchain {
         })
         .catch((error) => {
           clearTimeout(timeoutId);
-          console.log('[Blockchain] ERROR in', operationName + ':', error.message || error);
+          // console.log('[Blockchain] ERROR in', operationName + ':', error.message || error);
           reject(error);
         });
     });
