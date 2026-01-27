@@ -1544,7 +1544,7 @@ class Transactions {
     var lastEstimateTimestamp = scanStartTime;
 
     // Show initial progress immediately
-    SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (0%%)", [
+    SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (0%%) - ready to send txs \u2713", [
       startBlock,
       lastBlock
     ]));
@@ -1671,7 +1671,7 @@ class Transactions {
           // Reset timer and clear cache after 5 seconds
           lastEstimateTime = currentTime;
           cachedEstimateMinutes = null;
-          SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (%d%%)", [
+          SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (%d%%) - ready to send txs \u2713", [
             maxBlock,
             lastBlock,
             progressPercent
@@ -1679,7 +1679,7 @@ class Transactions {
         }
       } else {
         // Show block progress
-        SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (%d%%)", [
+        SyncProgress.setText(vsprintf("Scanning wallet transactions %d/%d (%d%%) - ready to send txs \u2713", [
           maxBlock,
           lastBlock,
           progressPercent
