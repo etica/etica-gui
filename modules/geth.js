@@ -9,6 +9,32 @@ class Geth {
 
   #walletpw; // privateVariable
 
+  // Mainnet bootstrap enodes (verified active as of 2026-01-28)
+  // Run `node scripts/check-all-enodes.js` to verify and update
+  static MAINNET_ENODES = [
+    "enode://b0e97d2f1a37b2035a34b97f32fb31ddd93ae822b603c56b7f17cfb189631ea2ef17bfbed904f8bc564765634f2d9db0a128835178c8af9f1dde68ee6b5e2bf7@167.172.47.195:30303",
+    "enode://363a353e050862630ea27807c454eb118d5893600ea0cc1aa66fcdf427d0da458da50d5ac4c43b95205acaa2c21b949f7f1000158a2a63819926f71571172356@142.93.138.113:30303",
+    "enode://7f2d5370b11c604f348da0ce62ad21aafa32cf7136c94496dbf39bf261e6c317dea25e41dfc20894f89e30c4a4b1a76f52e3742fffd77c690f8d5e1c3ae1c2b4@62.72.177.101:30310",
+    "enode://44024f1df7351de1e0de9484f9289cc49255ed8dea626acf18e8fe70fa87e42f7202e52c048a8ff24bebf0cb5cb5d97eaf3557bb6a32d9724f0a205b1dfea6d4@62.72.177.101:30303",
+    "enode://05e849326b412dd1c22886a246f71f87268410724623e0defa93a7d658fae4ae2bcdf249c3044292062224d322834e39161649b2fcb879d8455f567e3213113a@62.72.177.101:30303",
+    "enode://7deed4aa7e35420266ee09c11f0040c66977f86a85d8e45403215651974d0e0f491d0426c82dce96ccdb361d8b0431592eb591ecb7a66af5f950a2e539ceb0e5@156.67.29.122:30303",
+    "enode://c74c0784a05533722cdbd10c4ebd99fc9effaf13b180f146183899ee380e7e30ea3f4da00454780d114408d0fe48856d99013473f6034730912e0b97fde3c4e4@128.199.38.119:30303",
+    "enode://72626a3059948842b1b978bbdb7abc1e7427ace2cb7d94a719b4b1d114d4c57dbabb35b7270feb11c64d0d04f3a1a121624523b15efaf006c96b4c2e38fb35b1@167.86.96.115:30317",
+    "enode://363a411c017a8a1413b1c8b96cb15340f871973d20c5d7436f5f771c8cd52ad4a55e2b634d866e02796aae70bef0b26c6c3aefdb8d1caab6c61ee378aebaf65d@46.101.129.218:30303",
+    "enode://2d49074560bb529f6e21f1f4218ab51e0ded6528e27c1f7f9abec0f2b388bbb45a6b6f8ad16c287fa8e509e2c0c59b0d6778bcd8ec842ca0c745672cea568e4c@77.57.208.155:30303",
+    "enode://68f47b809269209d4248356f4d5f0b618f2afd5f0db3f063eb5aca9c9fffefaa894ce87a64a13cee594bcb67c2f73d3a22da3ba7414b761afc73f6f230c28cf3@149.50.110.33:30303"
+  ];
+
+  // Crucible testnet bootstrap enodes
+  static CRUCIBLE_ENODES = [
+    "enode://0ec6601481d306247570eb37a4afea48c64e4e732cb2c314df996ad92850ec52a9c3283a6c3c981fbe4447ea4888b26f67ef4ea53177c71c228496a5b09db8c1@173.212.202.226:30303",
+    "enode://d02285519beae603f99898592734303a57e128fb2308410761a7bc91e77af99f2f1cbac037c4fe2154225b7cb538d5b516c66015352886a4326b74d59224cca1@72.137.255.178:47422",
+    "enode://977e304183463414fa9ce158aea6b8b8d0c6062c1ea1167a496067cb77bdf0237f28d8a267efe4bf28ec7fac7720921ba7370bb510845247985cdddfaefa2dfe@141.98.153.127:37582",
+    "enode://7e7b8f546a5b961020bacca64fed5dc832d30c6b8f9d95ce1a91456804f9fe8101c80c533315870c21a97119f09f1a4a2479fffea9499a62c3b8a0516fc50006@72.137.255.178:58680",
+    "enode://d6c7e5d382cae46765ecd7eadfc3bf5a0a4ed15ab422b59bb51c1d6ed17a867adc45462068fd95987d09a4d2a41aa6a2ceae167c82476deffbae8bccfcc6b999@72.137.255.179:48294",
+    "enode://02c2c9c0a4ac4e5269a6821d072d1b1b1afd9d5f7b12d8b9581c240f146189a565baace858e5925241a0a2890cc56b41f28d4d7ac9b9344bb1a18c5976b40ad3@72.137.255.180:35122"
+  ];
+
   constructor() {
     this.isRunning = false;
     this.gethProcess = null;
@@ -53,6 +79,101 @@ class Geth {
     }
   }
 
+  /**
+   * Fisher-Yates shuffle algorithm to randomize array order.
+   * This distributes load across bootstrap nodes by randomizing connection order.
+   * @param {Array} array - Array to shuffle
+   * @returns {Array} - Shuffled array (new array, original unchanged)
+   */
+  _shuffleArray(array) {
+    const shuffled = [...array]; // Create a copy
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    return shuffled;
+  }
+
+  /**
+   * Load additional enodes from static-nodes.json if it exists.
+   * @returns {Array} - Array of enode strings from static-nodes.json, or empty array if not found
+   */
+  _loadStaticNodes() {
+    try {
+      const staticNodesPath = path.join(this.rootPath, "needs", "static-nodes.json");
+      if (fs.existsSync(staticNodesPath)) {
+        const content = fs.readFileSync(staticNodesPath, 'utf8');
+        const nodes = JSON.parse(content);
+        if (Array.isArray(nodes)) {
+          // Filter to only valid enode strings
+          return nodes.filter(node => typeof node === 'string' && node.startsWith('enode://'));
+        }
+      }
+    } catch (err) {
+      console.log('Failed to load static-nodes.json:', err.message);
+    }
+    return [];
+  }
+
+  /**
+   * Get randomized bootnode string for a given network type.
+   * Combines hardcoded enodes with static-nodes.json, removes duplicates, and shuffles.
+   * @param {string} networkType - 'mainnet', 'crucible', or 'custom'
+   * @param {string} userEnode - User-configured enode (optional)
+   * @returns {string} - Comma-separated enode string for --bootnodes flag
+   */
+  _getBootnodes(networkType, userEnode = null) {
+    let enodes = [];
+
+    // Get network-specific enodes
+    if (networkType === 'mainnet') {
+      enodes = [...Geth.MAINNET_ENODES];
+    } else if (networkType === 'crucible') {
+      enodes = [...Geth.CRUCIBLE_ENODES];
+    }
+
+    // Load and merge static-nodes.json (mainnet only)
+    if (networkType === 'mainnet') {
+      const staticNodes = this._loadStaticNodes();
+      enodes = enodes.concat(staticNodes);
+    }
+
+    // Remove duplicates (by enode ID, not full URL in case ports differ)
+    const seen = new Set();
+    enodes = enodes.filter(enode => {
+      // Extract enode ID (the part between enode:// and @)
+      const match = enode.match(/enode:\/\/([a-fA-F0-9]+)@/);
+      if (match) {
+        const enodeId = match[1].toLowerCase();
+        if (seen.has(enodeId)) {
+          return false;
+        }
+        seen.add(enodeId);
+        return true;
+      }
+      return true; // Keep if we can't parse (shouldn't happen)
+    });
+
+    // Shuffle to distribute load across nodes
+    enodes = this._shuffleArray(enodes);
+
+    // Add user enode at the beginning if provided (user's preferred node gets priority)
+    if (userEnode && typeof userEnode === 'string' && userEnode.startsWith('enode://')) {
+      // Remove user enode from list if it's already there (to avoid duplicate)
+      const userMatch = userEnode.match(/enode:\/\/([a-fA-F0-9]+)@/);
+      if (userMatch) {
+        const userId = userMatch[1].toLowerCase();
+        enodes = enodes.filter(e => {
+          const m = e.match(/enode:\/\/([a-fA-F0-9]+)@/);
+          return !m || m[1].toLowerCase() !== userId;
+        });
+      }
+      enodes.unshift(userEnode);
+    }
+
+    return enodes.join(',');
+  }
+
   startGeth(wallet) {
     console.log('startGeth called!');
 
@@ -61,23 +182,29 @@ class Geth {
       wallet.pw = '';
     }
     this.wallet = wallet;
-    let _mainnetenodes = '';
 
     let _networkid = '';
     let _chainflagname = '';
+    let _networkType = 'custom';
+    let _bootnodes = '';
+
     if(wallet.type == 'mainnet'){
       _chainflagname = '--etica';
       _networkid = '61803';
-      _mainnetenodes = ", enode://16623935be2a6e6fa33dbac1ece5c234f41a3fd547081c70d56ae732bfa03f6dd6c11eb351708236c81281798535b5e7e9fc9592904e05b08aa5c0b77d542ef0@149.102.133.68:38430, enode://4d2750b64f0538297861289ccf4aa30c81d94c44b381dc8a49a537b4dcb12c7fa19e6b0e3ff3cf59c68259ee6f8f5b5292db3ebcedf9c9cfb281c28adcaa9a04@72.137.255.179:60588, enode://995472c711aaeabb40bfca0e3901fec76e934da6b7b63ac372845027308416abb622ccd409689e2a53e6e2dcbac3bacd973eacc2db60967660e994dc10d720fa@109.205.180.147:37842, enode://363a353e050862630ea27807c454eb118d5893600ea0cc1aa66fcdf427d0da458da50d5ac4c43b95205acaa2c21b949f7f1000158a2a63819926f71571172356@142.93.138.113:30303, enode://b0e97d2f1a37b2035a34b97f32fb31ddd93ae822b603c56b7f17cfb189631ea2ef17bfbed904f8bc564765634f2d9db0a128835178c8af9f1dde68ee6b5e2bf7@167.172.47.195:30303, enode://985d6066ef0bf6814debbef15e7529001ef63ceca9862034d9f42e0d216d05dcf09ae7de2abf020dfd582ac33d584785f8ebe02085b6acb4455f19c7fae713e8@188.166.33.30:30303, enode://19b64dca1f38cbaad3f8c16f08c888bb6d3095c8672fe7a7b5e67d8fbc35d8c3f07b9227b4c8ab83db9bf490c213a743d2f460f191853408a5bc846a5a716d89@46.101.129.218:52222"
+      _networkType = 'mainnet';
     }
     else if(wallet.networkid == 61888){
       _chainflagname = '--crucible';
       _networkid = '61888';
-      _mainnetenodes = ", enode://0ec6601481d306247570eb37a4afea48c64e4e732cb2c314df996ad92850ec52a9c3283a6c3c981fbe4447ea4888b26f67ef4ea53177c71c228496a5b09db8c1@173.212.202.226:30303, enode://d02285519beae603f99898592734303a57e128fb2308410761a7bc91e77af99f2f1cbac037c4fe2154225b7cb538d5b516c66015352886a4326b74d59224cca1@72.137.255.178:47422, enode://977e304183463414fa9ce158aea6b8b8d0c6062c1ea1167a496067cb77bdf0237f28d8a267efe4bf28ec7fac7720921ba7370bb510845247985cdddfaefa2dfe@141.98.153.127:37582, enode://7e7b8f546a5b961020bacca64fed5dc832d30c6b8f9d95ce1a91456804f9fe8101c80c533315870c21a97119f09f1a4a2479fffea9499a62c3b8a0516fc50006@72.137.255.178:58680, enode://d6c7e5d382cae46765ecd7eadfc3bf5a0a4ed15ab422b59bb51c1d6ed17a867adc45462068fd95987d09a4d2a41aa6a2ceae167c82476deffbae8bccfcc6b999@72.137.255.179:48294, enode://02c2c9c0a4ac4e5269a6821d072d1b1b1afd9d5f7b12d8b9581c240f146189a565baace858e5925241a0a2890cc56b41f28d4d7ac9b9344bb1a18c5976b40ad3@72.137.255.180:35122"
+      _networkType = 'crucible';
     }
     else {
       _networkid = wallet.networkid;
+      _networkType = 'custom';
     }
+
+    // Get randomized bootnodes (combines hardcoded + static-nodes.json, shuffled for load distribution)
+    _bootnodes = this._getBootnodes(_networkType, wallet.enode);
 
     if (this.logGethEvents && this.wallet && !this.logStream) {
       this.logStream = fs.createWriteStream(path.join(this.wallet.datadirectory, "gethlog.txt"), {flags: "a"});
@@ -111,7 +238,7 @@ class Geth {
         "--syncmode",
         "snap",
         "--bootnodes",
-        ""+wallet.enode+""+_mainnetenodes+""
+        _bootnodes
       ];
 
       if (_chainflagname != '') {
