@@ -4,11 +4,57 @@ const {ipcRenderer} = require("electron");
 let EticaContractJSON = require('../EticaRelease.json');
 
 class Blockchain {
-  
+
   constructor() {
     this.txSubscribe = null;
     this.bhSubscribe = null;
     this.ETICA_ADDRESS = null;
+    this.DEFAULT_TIMEOUT = 30000; // 30 seconds default timeout for web3 calls
+  }
+
+  /**
+   * Wrap a promise with a timeout to prevent hanging when WebSocket disconnects.
+   * @param {Promise} promise - The promise to wrap
+   * @param {number} timeoutMs - Timeout in milliseconds
+   * @param {string} operationName - Name of operation for error message
+   * @returns {Promise} - Promise that rejects if timeout is reached
+   */
+  withTimeout(promise, timeoutMs, operationName = 'Operation') {
+    return new Promise((resolve, reject) => {
+      const timeoutId = setTimeout(() => {
+        // console.log('[Blockchain] TIMEOUT:', operationName, 'after', timeoutMs + 'ms');
+        reject(new Error(`${operationName} timed out after ${timeoutMs}ms - Geth connection may be lost`));
+      }, timeoutMs);
+
+      promise
+        .then((result) => {
+          clearTimeout(timeoutId);
+          resolve(result);
+        })
+        .catch((error) => {
+          clearTimeout(timeoutId);
+          // console.log('[Blockchain] ERROR in', operationName + ':', error.message || error);
+          reject(error);
+        });
+    });
+  }
+
+  /**
+   * Check if web3 connection is alive.
+   * @param {number} timeoutMs - Timeout in milliseconds
+   * @returns {Promise<boolean>} - True if connected, false otherwise
+   */
+  async isConnected(timeoutMs = 5000) {
+    try {
+      await this.withTimeout(
+        web3Local.eth.net.isListening(),
+        timeoutMs,
+        'Connection check'
+      );
+      return true;
+    } catch (error) {
+      return false;
+    }
   }
 
   setEticaContractAddress(_wallet) {
@@ -44,6 +90,59 @@ class Blockchain {
         clbSuccess(block);
       }
     });
+  }
+
+  /**
+   * Get past events for a range of blocks (batch fetching).
+   * Returns a Promise for easier async/await usage.
+   * Includes timeout to prevent hanging when Geth disconnects.
+   * @param {number} fromBlock - Start block number
+   * @param {number} toBlock - End block number
+   * @param {number} timeoutMs - Optional timeout in milliseconds (default: 30s)
+   * @returns {Promise<Array>} - Array of events
+   */
+  getPastEventsForRange(fromBlock, toBlock, timeoutMs = null) {
+    const ETICA_ADDRESS = this.ETICA_ADDRESS;
+    const timeout = timeoutMs || this.DEFAULT_TIMEOUT;
+    let contract = new web3Local.eth.Contract(EticaContractJSON.abi, ETICA_ADDRESS);
+    const eventsPromise = contract.getPastEvents('allEvents', {
+      fromBlock: fromBlock,
+      toBlock: toBlock
+    });
+    return this.withTimeout(eventsPromise, timeout, `getPastEvents(${fromBlock}-${toBlock})`);
+  }
+
+  /**
+   * Fetch multiple blocks in parallel.
+   * Includes timeout to prevent hanging when Geth disconnects.
+   * @param {Array<number>} blockNumbers - Array of block numbers to fetch
+   * @param {boolean} includeData - Whether to include full transaction data
+   * @param {number} timeoutMs - Optional timeout in milliseconds (default: 30s)
+   * @returns {Promise<Array>} - Array of block objects (in same order as input)
+   */
+  async getBlocksParallel(blockNumbers, includeData, timeoutMs = null) {
+    const timeout = timeoutMs || this.DEFAULT_TIMEOUT;
+    const promises = blockNumbers.map(blockNum =>
+      web3Local.eth.getBlock(blockNum, includeData)
+    );
+    return this.withTimeout(Promise.all(promises), timeout, `getBlocksParallel(${blockNumbers.length} blocks)`);
+  }
+
+  /**
+   * Fetch a single block as a Promise (for easier async/await).
+   * Includes timeout to prevent hanging when Geth disconnects.
+   * @param {number} blockNumber - Block number to fetch
+   * @param {boolean} includeData - Whether to include full transaction data
+   * @param {number} timeoutMs - Optional timeout in milliseconds (default: 30s)
+   * @returns {Promise<Object>} - Block object
+   */
+  getBlockAsync(blockNumber, includeData, timeoutMs = null) {
+    const timeout = timeoutMs || this.DEFAULT_TIMEOUT;
+    return this.withTimeout(
+      web3Local.eth.getBlock(blockNumber, includeData),
+      timeout,
+      `getBlock(${blockNumber})`
+    );
   }
 
   getAccounts(clbError, clbSuccess) {
@@ -82,8 +181,13 @@ class Blockchain {
 
   }
 
-  getAccounts_nocallback() {
-    return web3Local.eth.getAccounts();
+  getAccounts_nocallback(timeoutMs = null) {
+    const timeout = timeoutMs || this.DEFAULT_TIMEOUT;
+    return this.withTimeout(
+      web3Local.eth.getAccounts(),
+      timeout,
+      'getAccounts'
+    );
   }
 
   isAddress(address) {

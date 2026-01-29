@@ -498,6 +498,24 @@
                 <div class="loader-bar loader-bar8"></div>
               </div>
             </div>
+
+            <div id="ImportConnectionStatusContainer" class="col-md-12" style="text-align:center;margin-top:15px;display:none;">
+              <p id="ImportConnectionStatus" style="color:#aaffaa;font-size:14px;">Initializing connection...</p>
+            </div>
+
+            <div id="ImportEnodeRetryContainer" class="col-md-12" style="display:none;margin-top:20px;">
+              <p style="color:#ff9966;font-size:14px;margin-bottom:10px;">Connection failed. Try an alternative enode:</p>
+              <div style="display:inline-flex;width:100%;margin-bottom:10px;">
+                <input style="background-color:#141414;width:85%;" id="ImportAlternativeEnode" type="text" placeholder="enode://..." class="form-control" />
+              </div>
+              <p id="ImportEnodeError" style="color:#ff6b6b;font-size:12px;display:none;"></p>
+              <p style="color:#aaaaaa;font-size:12px;margin-bottom:15px;">
+                Enter an enode URL to try connecting to a different peer.<br>
+                Format: enode://&lt;node-id&gt;@&lt;ip&gt;:&lt;port&gt;
+              </p>
+              <button class="btn btn-primary" id="ImportRetryWithEnode" style="margin-right:10px;">Retry with this enode</button>
+              <button class="btn btn-secondary" id="ImportCancelRetry" style="background:#363636;">Cancel</button>
+            </div>
           
         </div>
 

@@ -1,6 +1,6 @@
 {
   "name": "eticawallet",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "Desktop wallet for ETI and EGAZ crypto currencies",
   "main": "main.js",
   "scripts": {
